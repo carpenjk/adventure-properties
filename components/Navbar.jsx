@@ -1,60 +1,45 @@
-import Link from 'next/link';
-
-//configs
-
-import { NavMenu_config } from '../compConfig';
-import { NavToggle_config } from '../compConfig';
-
+import styled from 'styled-components';
+import { Media } from './Media';
 //components
-import NavMenu from './NavMenu';
-import NavToggle from './NavToggle';
+// import MobileNavbar from './MobileNavbar';
+import WideNavbarLayout from './WideNavbarLayout';
+import { TwMobileMenu } from 'tw-mobile-menu';
+
+//data
+import { navData } from '../data/data';
 
 //assets
 const logo = '../static/assets/LogoMain.svg';
 
-const Navbar = () => {
+const StyledNavbar = styled.div`
+  height: 80px;
+  width: 100%;
+  display: flex;
+  background-color: var(--globalWhite);
+
+  > * {
+    width: 100%;
+  }
+`;
+const Navbar = (props) => {
+  const { mobileBreakpoint } = props;
   return (
-    <div className="navbar">
-      <Link href="/">
-        <div className="logoContainer">
-          <img src={logo} alt="logo" />
-        </div>
-      </Link>
-      <NavToggle
-        position={NavToggle_config.position}
-        height="80px"
-        maxWidth="350px"
-        itemMinWidth="80px"
-        items={NavToggle_config.items}
-      />
-      <NavMenu
-        position={NavMenu_config.position}
-        height="80px"
-        maxWidth="400px"
-        itemMinWidth="85px"
-        items={NavMenu_config.items}
-      />
-      <style jsx>
-        {`
-          .navbar {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            grid-template-rows: 1fr;
-            grid-gap: 20px;
-            justify-items: stretch;
-            align-items: center;
-            height: 80px;
-            padding: 0 20px 0 20px;
-            box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.15);
-          }
-          .logoContainer {
-            grid-column: 0 / 1;
-            display: flex;
-            justify-content: flex-start;
-          }
-        `}
-      </style>
-    </div>
+    <StyledNavbar>
+      <Media lessThan="lg">
+        <TwMobileMenu
+          data={{ nav: navData.nav }}
+          focusOnOpen={true}
+          key="twMobileMenu"
+        />
+      </Media>
+      <Media greaterThanOrEqual="lg">
+        <WideNavbarLayout
+          data={navData}
+          logo={logo}
+          mobileBreakpoint={mobileBreakpoint}
+        />
+      </Media>
+    </StyledNavbar>
   );
 };
 

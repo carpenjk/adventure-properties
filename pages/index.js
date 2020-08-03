@@ -1,28 +1,47 @@
-import Link from 'next/link';
+import { ThemeProvider } from 'styled-components';
+import { theme } from '../theme';
+import CardContainer from '../components/cards/CardContainer';
+import PropertyCardLayout from '../components/cards/PropertyCardLayout';
+import Head from 'next/head';
+import { mediaStyles } from '../components/Media';
 import Navbar from '../components/Navbar';
 import HeroContainer from '../components/HeroContainer';
-import InputDate from '../components/react-day-light/InputDate';
-import { SearchBar_config } from '../compConfig';
 
-import { GlobalStyles } from '../global/base.jsx';
-import HeroBanner from '../components/HeroBanner';
+import { breakpoints } from '../static/global/breakpoints';
 
-const Index = () => (
-  <div>
-    <Navbar />
-    <HeroContainer />
-    <InputDate input={SearchBar_config.inputs[2]} width="38rem" />
-    <h1>Hello from home</h1>
-    <GlobalStyles />
-    <style jsx>
-      {`
-        .hero {
-          width: 100%;
-          object-fit: cover;
-        }
-      `}
-    </style>
-  </div>
-);
+//*configs
+import { GlobalStyles } from '../static/global/base';
+
+const Index = () => {
+  return (
+    <ThemeProvider theme={theme}>
+      <React.Fragment>
+        <Head>
+          <title>Adventure Properties</title>
+          <style
+            type="text/css"
+            dangerouslySetInnerHTML={{ __html: mediaStyles }}
+          />
+          <meta
+            name="viewport"
+            content="initial-scale=1.0, width=device-width"
+          />
+        </Head>
+        <header style={{ position: 'fixed', zIndex: 9999999, width: '100%' }}>
+          <Navbar mobileBreakpoint={breakpoints.mobileM} />
+        </header>
+        <HeroContainer />
+        <section className="features">
+          <div style={{ padding: '15px' }}>
+            <CardContainer
+              renderLayout={() => <PropertyCardLayout style="large" />}
+            />
+          </div>
+        </section>
+        <GlobalStyles />
+      </React.Fragment>
+    </ThemeProvider>
+  );
+};
 
 export default Index;

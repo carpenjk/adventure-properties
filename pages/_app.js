@@ -1,14 +1,17 @@
 import React from 'react';
 import App from 'next/app';
-import { ConfigProvider } from '../context';
+import { ConfigProvider } from '../contexts/context';
+import { MediaContextProvider } from '../components/Media';
 
 class MyApp extends App {
   render() {
     const { Component, pageProps } = this.props;
     return (
-      <ConfigProvider>
-        <Component {...pageProps} />
-      </ConfigProvider>
+      <MediaContextProvider>
+        <ConfigProvider>
+          <Component {...pageProps} />
+        </ConfigProvider>
+      </MediaContextProvider>
     );
   }
 }
