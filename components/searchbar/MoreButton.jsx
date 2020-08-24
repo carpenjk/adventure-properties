@@ -1,15 +1,22 @@
 import styled from 'styled-components';
+import {
+  getBackgroundColor,
+  getColor,
+  getFontFamily,
+  getFontSize,
+  getFontWeight,
+  getLetterSpacing,
+} from 'themeweaver';
 
 const Button = styled.button`
   flex: none;
   padding: 0;
-
-  color: var(--lightText);
-  font-family: var(--headerFont);
-  font-style: normal;
-  font-weight: normal;
-  font-size: 1.6rem;
-  letter-spacing: 0.025em;
+  background-color: ${getBackgroundColor('button.expander', 'initial')};
+  color: ${getColor('button.expander', 'inherit')};
+  font-family: ${getFontFamily('button.expander', 'inherit')};
+  font-weight: ${getFontWeight('button.expander', 'normal')};
+  font-size: ${getFontSize('button.expander', '1.6rem')};
+  letter-spacing: ${getLetterSpacing('button.expander', '0.025em')};
 
   background: none;
   border: none;

@@ -1,116 +1,140 @@
 import styled from 'styled-components';
+import {
+  breakpoint,
+  getBackgroundColor,
+  getBorderRadius,
+  getHeight,
+  getWidth,
+  getMaxWidth,
+  getMarginTop,
+  getMarginRight,
+  getMarginBottom,
+  getMarginLeft,
+  getPaddingTop,
+  getPaddingRight,
+  getPaddingBottom,
+  getPaddingLeft,
+} from 'themeweaver';
+
+import { getProp } from '../../utils/themeweaver-utils';
+
 //hooks
-import { useContext, useRef, useEffect, useLayoutEffect } from 'react';
+import { useContext, useRef } from 'react';
 import useIsoOnClickOutside from '../hooks/UseIsoOnClickOutside';
 import useIsoLayoutEffect from '../hooks/UseIsoLayoutEffect';
-import useWindowSize from '../hooks/UseWindowSize';
 import { SearchBarContext } from './searchBarContext';
+import useWindowSize from '../hooks/UseWindowSize';
 
 //components
-import MenuInputHandler from './MenuInputHandler';
 import SearchButton from '../SearchButton';
 import MoreButton from './MoreButton';
 import SearchFilters from './SearchFilters';
 import PopupModal from '../PopupModal';
+import InputGroup from './InputGroup';
+import PrimarySearchLayout from './PrimarySearchLayout';
+import SecondarySearchLayout from './SecondarySearchLayout';
 
-//configs
-import { SearchBar_config } from '../../compConfig';
+//global var
+const DEFAULT_OFFSET_TOP_PX = 20;
 
-const SearchBar = styled.div`
+const StyledSearchBar = styled.div`
   position: absolute;
-  top: 20px;
-  left: 50%;
+  top: ${getProp('offsetTop')}px;
+  left: ${getProp('offsetLeft')};
   display: flex;
   flex-direction: column;
   -webkit-transform: translateX(-50%);
   transform: translateX(-50%);
   box-sizing: content-box;
-  padding: 0;
-  border-radius: 8px;
-  background: white;
-  width: 95vw;
-  max-width: ${(props) => props.mobileMaxWidth};
+  background-color: ${getBackgroundColor('searchBar', 'none')};
+  margin-top: ${getMarginTop('searchBar', '0')};
+  margin-right: ${getMarginRight('searchBar', '0')};
+  margin-bottom: ${getMarginBottom('searchBar', '0')};
+  margin-left: ${getMarginLeft('searchBar', '0')};
+
+  ${(props) =>
+    props.isSearchBarOpen &&
+    `
+    padding-top: ${getPaddingTop('searchBar', '1rem')(props)};
+    padding-right: ${getPaddingRight('searchBar', '1rem')(props)};
+    padding-bottom: ${getPaddingBottom('searchBar', '1rem')(props)};
+    padding-left: ${getPaddingLeft('searchBar', '1rem')(props)};
+  `}
+
+  ${(props) =>
+    props.isSearchFiltersOpen &&
+    `
+    height: ${getHeight('searchBar', '82vh')(props)}; 
+    `}
+
+  max-width: ${getMaxWidth('searchBar', 'none')};
+  width: ${getWidth('searchBar', 'auto')};
   z-index: 999999;
+  border-radius: ${getBorderRadius('searchBar', '8px')};
 
-  .searchFields {
-    display: flex;
-    flex-direction: column;
-  }
-  .buttonsContainer {
-    display: none;
-    justify-content: space-between;
-    padding: 2.3rem 1rem 1.8rem 0.5rem;
-    border-top: 1px solid rgba(151,151,151, .35);
-  }
-  &.searchBar-isOpen {
-    padding: 1rem 0.5rem 1rem 0.5rem;
-    top: 10px;
-  }
-  &.searchBar-isOpen > .buttonsContainer {
-    display: flex;
-  }
-  &.searchBar-isFiltersOpen {
-    height: 82vh;
-  }
-  &.searchBar-isFiltersOpen > .searchFields {
-    padding-bottom: 20px;
-  }
-  .searchFields > * {
-    margin: 0 0 1rem 0;
-  }
-
-  .searchFields > .lastMobile {
-    margin: 0;
-  }
-
-  >* {
+  > * {
     box-sizing: border-box;
   }
 
-  @media (${(props) => props.mobileBreakpoint}) {
-      top: 20px;
-      padding: 0.5rem;
-      width: auto;
-      max-width: 95vw;
-    .searchFields {
-      display: flex;
-      justify-content: center;
-      flex-direction: row;
-    }
-    &.searchBar-isOpen {
-      padding: 0.5rem;
-      top: 20px;
-    }
-    &.searchBar-isFiltersOpen {
+  ${breakpoint(1)`
+  top: ${getProp('offsetTop', 1)}px;
+  background-color: ${getBackgroundColor('searchBar', 'none')};
+  margin-top: ${getMarginTop('searchBar', '0')};
+  margin-right: ${getMarginRight('searchBar', '0')};
+  margin-bottom: ${getMarginBottom('searchBar', '0')};
+  margin-left: ${getMarginLeft('searchBar', '0')};
+  padding-top: ${getPaddingTop('searchBar', '0')};
+  padding-right: ${getPaddingRight('searchBar', '0')};
+  padding-bottom: ${getPaddingBottom('searchBar', '0')};
+  padding-left: ${getPaddingLeft('searchBar', '0')};
+  width: ${getWidth('searchBar', 'auto')};
+  max-width: ${getMaxWidth('searchbar', 'none')};
+  border-radius: ${getBorderRadius('searchBar', '8px')};
+  
+  ${({ isSearchFiltersOpen }) =>
+    isSearchFiltersOpen &&
+    `
       width: 90vw;
       max-width: 1000px;
       padding: 2.5rem;
-    }
-    .searchFields > * {
-      margin: 0 1.3rem 0 0;
-    }
-    .searchFields > .lastPortal {
-      margin: 0 1.3rem 0 0;
-    }
-    .searchFields > .lastDesktop {
-      margin: 0;
-    }
-  }
-  }
+    `}}
+`}
+`;
+
+const StyledSearchFields = styled.div`
+  display: flex;
+  flex-direction: column;
+  ${({ isSearchFiltersOpen }) => isSearchFiltersOpen && 'margin-bottom: 20px;'}
+  ${breakpoint(1)`
+    flex-direction: row;
+  `}
+`;
+
+StyledSearchBar.defaultProps = {
+  position: 'absolute',
+  offsetTop: DEFAULT_OFFSET_TOP_PX,
+  offsetLeft: '50%',
+};
+
+const StyledButtonContainer = styled.div`
+  display: ${({ isSearchBarOpen }) => (isSearchBarOpen ? 'flex' : 'none')};
+  justify-content: space-between;
+  padding-top: ${getPaddingTop('searchBar_container.buttons', '0')};
+  padding-right: ${getPaddingRight('searchBar_container.buttons', '0')};
+  padding-bottom: ${getPaddingBottom('searchBar_container.buttons', '0')};
+  padding-left: ${getPaddingLeft('searchBar_container.buttons', '0')};
+  border-top: ${({ isSearchFiltersOpen }) =>
+    isSearchFiltersOpen ? '1px solid rgba(151, 151, 151, 0.35)' : 'none'};
 `;
 
 //******************************************************************
 //* Beginning of Functional Component ******************************
 const SearchBarMenu = (props) => {
-  const { inputs } = SearchBar_config;
-  const { mobileBreakpoint, mobileMaxWidth, popupMaxScreenWidth } = props;
-  const windowSize = useWindowSize();
+  const { offsetTop } = props;
   //* context *********************************************************
   const {
     updateSearch,
     getSearchValue,
-    updateFilters,
-    getFilterValue,
     isStarted,
     isSearchBarOpen,
     setIsSearchBarOpen,
@@ -121,31 +145,8 @@ const SearchBarMenu = (props) => {
 
   //* Dom References ***********************************************
   const searchBarRef = useRef(null);
-  const searchFieldsRef = useRef(null);
-  const inputRefs = useRef([]);
-
-  //* helper functions ***************************************************
-  const isLastDesktop = (input) => input === inputs[inputs.length - 1];
-  const isLastMobile = (input) => {
-    let lastMobileField = [];
-    if (isSearchBarOpen) {
-      lastMobileField = inputs.slice(-1)[0];
-    } else {
-      lastMobileField = inputs
-        .filter((mobileField) => mobileField.hideInitialMobile !== true)
-        .slice(-1)[0];
-    }
-    return input === lastMobileField;
-  };
-
-  function getWrapperClass(input) {
-    if (windowSize.width <= popupMaxScreenWidth) {
-      if (isLastMobile(input)) return 'lastMobile';
-    } else {
-      if (isLastDesktop(input)) return 'lastDesktop';
-    }
-    return '';
-  }
+  const visibleInputRefs = useRef([]);
+  const hidableInputRefs = useRef([]);
 
   //* event handlers ***********************************************
   const handleFocus = (e) => {
@@ -166,55 +167,70 @@ const SearchBarMenu = (props) => {
 
   useIsoOnClickOutside(searchBarRef, onClickOutsideEffect, [isStarted]);
 
+  useIsoLayoutEffect(() => {
+    const top = offsetTop ? offsetTop : DEFAULT_OFFSET_TOP_PX;
+    if (!isSearchFiltersOpen) {
+      const searchBarPaddingTop = window
+        .getComputedStyle(searchBarRef.current)
+        .getPropertyValue('padding-top')
+        .split('px')[0];
+      searchBarRef.current.style.top = `${top - searchBarPaddingTop}px`;
+    }
+  }, [isSearchBarOpen, isSearchFiltersOpen]);
+
   //* component rendering ********************************************************
 
   return (
     <React.Fragment>
       {!(isSearchBarOpen && isPopup) || (
         <PopupModal
-          open={isSearchBarOpen && isPopup}
+          isOpen={[isSearchBarOpen, isSearchFiltersOpen]}
           className={isSearchBarOpen && isPopup ? 'popupOpen' : ''}
         />
       )}
-      <SearchBar
-        key="1"
-        mobileBreakpoint={mobileBreakpoint}
-        mobileMaxWidth={mobileMaxWidth}
-        className={`searchBar ${isSearchBarOpen ? 'searchBar-isOpen' : ''} ${
-          isSearchFiltersOpen ? 'searchBar-isFiltersOpen' : ''
-        }`}
+      <StyledSearchBar
+        isSearchBarOpen={isSearchBarOpen}
+        isSearchFiltersOpen={isSearchFiltersOpen}
+        offsetTop={offsetTop}
         ref={searchBarRef}
       >
-        <div className="searchFields" ref={searchFieldsRef}>
-          {inputs.map((input, index) => {
-            return (
-              <MenuInputHandler
-                key={input.id}
-                name={input.id}
-                valueFunctions={{ get: getSearchValue, set: updateSearch }}
-                input={input}
-                hide={isPopup && input.hideInitialMobile && !isSearchBarOpen}
-                wrapperClass={getWrapperClass(input)}
-                mobileBreakpoint={mobileBreakpoint}
-                onFocus={handleFocus}
-                inputRef={(el) => (inputRefs.current[index] = el)}
-                nextFocusRef={
-                  input.focusNext ? inputRefs.current[index + 1] : undefined
-                }
-                height="4rem" //! refactor? Set height of React-Select objects to match input styling:
-              />
-            );
-          })}
-        </div>
-        <SearchFilters mobileBreakpoint={mobileBreakpoint} />
-        <div className="buttonsContainer">
+        <StyledSearchFields isSearchFiltersOpen={isSearchFiltersOpen}>
+          <InputGroup
+            key="primarySearch"
+            isVisible={true}
+            isSearchBarOpen={isSearchBarOpen}
+            InputFields={PrimarySearchLayout}
+            inputRefs={visibleInputRefs}
+            valueFunctions={{ get: getSearchValue, set: updateSearch }}
+            onInputFocus={handleFocus}
+            lastBottomMargin={[true, true]}
+            lastRightMargin={[true, true]}
+          />
+          <InputGroup
+            key="secondarySearch"
+            isVisible={[isSearchBarOpen, true]}
+            isSearchBarOpen={isSearchBarOpen}
+            InputFields={SecondarySearchLayout}
+            inputRefs={hidableInputRefs}
+            valueFunctions={{ get: getSearchValue, set: updateSearch }}
+            onInputFocus={handleFocus}
+            lastBottomMargin={[false, true]}
+            lastRightMargin={[true, false]}
+          />
+        </StyledSearchFields>
+
+        <SearchFilters />
+        <StyledButtonContainer
+          isSearchBarOpen={isSearchBarOpen}
+          isSearchFiltersOpen={isSearchFiltersOpen}
+        >
           <MoreButton
             onClick={() => setIsSearchFiltersOpen(() => !isSearchFiltersOpen)}
             expanded={isSearchFiltersOpen}
           />
           <SearchButton />
-        </div>
-      </SearchBar>
+        </StyledButtonContainer>
+      </StyledSearchBar>
     </React.Fragment>
   );
 };

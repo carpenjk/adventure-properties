@@ -1,8 +1,8 @@
 const FilterHandler = (props) => {
-  const { type, id } = props;
+  const { input } = props;
   const { set, get } = props.valueFunctions;
   const handleSelectFilterChange = (option) => {
-    set({ [id]: Number(option.value) });
+    set({ [input.id]: Number(option.value) });
   };
 
   const handleCheckFilterChange = (e) => {
@@ -17,7 +17,7 @@ const FilterHandler = (props) => {
   };
 
   const getHandler = () => {
-    if (fnChangeMap[type]) return fnChangeMap[type];
+    if (fnChangeMap[input.type]) return fnChangeMap[input.type];
     return fnChangeMap['default'];
   };
   // const DynamicInput = input.component;

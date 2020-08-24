@@ -1,32 +1,47 @@
 import styled from 'styled-components';
-import HeroBanner from './HeroBanner';
-import SearchBar from './searchbar/SearchBar';
-// import withPortalBackground from './searchbar/PortalBackground';
-import { breakpoints, size } from '../static/global/breakpoints';
+import { getHeight, getWidth, getBackgroundColor } from 'themeweaver';
+import { getProp } from '../utils/themeweaver-utils';
 
-//! refactor to pass in header height offset ***********************************************
-const StyleWrapper = styled.div`
-  position: relative;
-  top: 80px;
-  width: 100%;
-  height: 81.5vh;
-  background: url(../static/assets/lofoten-2220461.png) no-repeat center / cover;
-  .hero {
-    width: 100%;
-    object-fit: cover;
-  }
+import HeroBanner from './HeroBanner';
+
+const StyledHeroContainer = styled.div`
+  overflow-x: hidden;
+  position: ${getProp('position')};
+  top: ${getProp('offsetTop', '0')};
+  width: ${getWidth('hero', '100%')};
+  height: ${getHeight('hero', '100%')};
+  background-color: ${getBackgroundColor('hero', 'unset')};
 `;
 
-const HeroContainer = () => {
+StyledHeroContainer.defaultProps = {
+  position: 'relative',
+  offsetTop: '0',
+  backgroundImage: 'none',
+};
+
+const StyledHero = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: calc(100vw + 17px);
+  background-image: url(${getProp('backgroundImage')});
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+`;
+
+StyledHero.defaultProps = {
+  backgroundImage: 'none',
+};
+
+const HeroContainer = (props) => {
+  const { backgroundImage, position, offsetTop } = props;
   return (
-    <StyleWrapper>
-      <HeroBanner mobileBreakpoint={breakpoints.mobileM} />
-      <SearchBar
-        mobileBreakpoint={breakpoints.mobileM}
-        mobileMaxWidth={'500px'}
-        popupMaxScreenWidth={size.mobileM}
-      />
-    </StyleWrapper>
+    <StyledHeroContainer {...props}>
+      <StyledHero backgroundImage={backgroundImage} />
+      <HeroBanner />
+    </StyledHeroContainer>
   );
 };
 

@@ -7,17 +7,14 @@ import CheckFilters from './CheckFilters';
 
 import { checkFilters as filters } from '../../compConfig';
 
-const StyledSearchFilter = styled.ul`
-  display: ${({ isSearchFiltersOpen }) =>
-    isSearchFiltersOpen ? 'flex' : 'none'};
-  flex-direction: column;
+const StyleWrapper = styled.ul`
+  display: none;
   flex-grow: 1;
   overflow-y: scroll;
-  list-style: none;
-  margin-block-start: 0px;
-  margin-block-end: 0px;
-  padding-inline-start: 0px;
-
+  &.searchFiltersOpen {
+    display: flex;
+    flex-direction: column;
+  }
   ul {
     margin: 0;
   }
@@ -32,23 +29,26 @@ const SearchFilters = (props) => {
     toggleBooleanFilter,
   } = useContext(SearchBarContext);
 
+  const { mobileBreakpoint } = props;
   return (
-    <StyledSearchFilter
+    <StyleWrapper
       key="priceWrapper"
-      isSearchFiltersOpen={isSearchFiltersOpen}
       className={`searchFilters ${
         isSearchFiltersOpen ? 'searchFiltersOpen' : ''
       }`}
+      mobileBreakpoint={mobileBreakpoint}
     >
       <li key={'priceFilter'}>
         <PriceFilter
           title={'Price'}
+          mobileBreakpoint={mobileBreakpoint}
           valueFunctions={{ get: getFilterValue, set: updateFilters }}
         />
       </li>
       <li key={'bedFilter'}>
         <RoomsFilter
           title={'Rooms'}
+          mobileBreakpoint={mobileBreakpoint}
           valueFunctions={{ get: getFilterValue, set: updateFilters }}
         />
       </li>
@@ -58,12 +58,13 @@ const SearchFilters = (props) => {
             <CheckFilters
               title={filter.title}
               filters={filter.filters}
+              mobileBreakpoint={mobileBreakpoint}
               valueFunctions={{ get: getFilterValue, set: toggleBooleanFilter }}
             />
           </li>
         );
       })}
-    </StyledSearchFilter>
+    </StyleWrapper>
   );
 };
 

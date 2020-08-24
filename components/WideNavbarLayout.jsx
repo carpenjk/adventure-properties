@@ -1,12 +1,11 @@
 import styled from 'styled-components';
+import { getMaxHeight } from 'themeweaver';
+//components
 import Link from 'next/link';
-import NavMenu from './NavMenu';
 import NavToggle from './NavToggle';
+import NavList from './NavList';
 
-import { NavMenu_config } from '../compConfig';
-import { NavToggle_config } from '../compConfig';
-
-const StyleWrapper = styled.div`
+const StyledWideNavbar = styled.div`
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   grid-template-rows: 1fr;
@@ -14,15 +13,8 @@ const StyleWrapper = styled.div`
   justify-items: stretch;
   align-items: stretch;
 
-  height: 80px;
-  padding: 0 20px 0 20px;
-  box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.15);
+  max-height: ${(getMaxHeight('nav.main'), '100px')};
 
-  .logoContainer {
-    grid-column: 1 / 2;
-    display: flex;
-    justify-content: flex-start;
-  }
   & > :nth-child(2) {
     grid-column: 2 / 3;
     align-self: stretch;
@@ -40,23 +32,25 @@ const StyleWrapper = styled.div`
   }
 `;
 
+const StyledLogo = styled.div`
+  grid-column: 1 / 2;
+  display: flex;
+  justify-content: flex-start;
+  cursor: pointer;
+`;
+
 const WideNavbarLayout = (props) => {
-  const { mobileBreakpoint, logo, data, displayVertical } = props;
-  const items = props.data.nav.items;
+  const { logo } = props;
   return (
-    <StyleWrapper mobileBreakpoint={mobileBreakpoint}>
-      <Link href="/">
-        <div className="logoContainer">
+    <StyledWideNavbar>
+      <Link href="/index">
+        <StyledLogo>
           <img src={logo} alt="logo" />
-        </div>
+        </StyledLogo>
       </Link>
-      {items.map((item) => {
-        let { Component, key, props, ...rest } = item;
-        if (Component) {
-          return <Component key={key} data={{ nav: rest }} {...props} />;
-        }
-      })}
-    </StyleWrapper>
+      <NavToggle key="navToggle" displayVertical={false} />
+      <NavList />
+    </StyledWideNavbar>
   );
 };
 

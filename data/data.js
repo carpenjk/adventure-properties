@@ -1,5 +1,8 @@
 import NavToggle from '../components/NavToggle';
 import NavList from '../components/NavList';
+import HeroBanner from '../components/HeroBanner';
+import SearchBar from '../components/searchbar/SearchBar';
+import HeroContainer from '../components/HeroContainer';
 
 export const navData = {
   nav: {
@@ -9,11 +12,9 @@ export const navData = {
     items: [
       {
         Component: NavToggle,
-        key: 'comp2',
+        key: 'navToggle',
         props: {
           displayVertical: [true, false],
-          maxWidth: 'none',
-          itemMinWidth: 'none',
         },
         items: [
           { key: 'buyToggle', text: 'Buy' },
@@ -23,11 +24,8 @@ export const navData = {
       },
       {
         Component: NavList,
-        key: 'comp1',
-        props: {
-          maxWidth: 'none',
-          itemMinWidth: '75px',
-        },
+        key: 'navList',
+        props: {},
         items: [
           {
             key: 'about',
@@ -50,6 +48,30 @@ export const navData = {
             link: './signUp',
           },
         ],
+      },
+    ],
+  },
+};
+
+export const heroData = {
+  hero: {
+    Component: HeroContainer,
+    props: {
+      offsetTop: '80px',
+      backgroundImage: '../static/assets/lofoten-2220461.png',
+    },
+    items: [
+      {
+        Component: HeroBanner,
+        key: 'herobanner',
+        Layout: undefined,
+        props: { prop1: 'value' },
+      },
+      {
+        Component: SearchBar,
+        key: 'searchbar',
+        Layout: undefined,
+        props: { prop1: 'value' },
       },
     ],
   },

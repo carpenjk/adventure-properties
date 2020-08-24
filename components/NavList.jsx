@@ -40,19 +40,22 @@ const StyledUl = styled.ul`
   `}
 `;
 
-const NavList = (props) => {
-  const { maxWidth, itemMinWidth } = props;
-  const items = props.data.nav.items;
+const NavList = () => {
   return (
-    <StyledNav className="navlist" maxWidth={maxWidth}>
-      <StyledUl className="navlist__list" itemMinWidth={itemMinWidth}>
-        {items.map((item) => {
-          return (
-            <li key={item.key}>
-              <NavLink href={item.link} text={item.text} />
-            </li>
-          );
-        })}
+    <StyledNav className="navlist">
+      <StyledUl className="navlist__list">
+        <li>
+          <NavLink href="./about" text="About" />
+        </li>
+        <li>
+          <NavLink href="./owner" text="Owner" />
+        </li>
+        <li>
+          <NavLink href="./logIn" text="Log In" />
+        </li>
+        <li>
+          <NavLink href="./signUp" text="Sign Up" />
+        </li>
       </StyledUl>
     </StyledNav>
   );

@@ -1,38 +1,38 @@
-import { useContext } from 'react';
-import { ThemeContext } from 'styled-components';
 import CustomSelect from '../CustomSelect';
 import withFilterGroup from './WithFilterGroup';
+import FilterHandler from './FilterHandler';
 
 import { roomsFilters as inputs } from '../../compConfig';
 
-const RoomsFilter = (props) => {
-  const { valueFunctions } = props;
-  const theme = useContext(ThemeContext);
+const componentMap = {
+  CustomSelect: CustomSelect,
+};
 
+const RoomsFilter = (props) => {
+  const { mobileBreakpoint, valueFunctions } = props;
+
+  const BedComponent = componentMap[inputs.bedroom.type];
+  const BathComponent = componentMap[inputs.bathroom.type];
   return (
     <React.Fragment>
-      <CustomSelect
-        theme={theme}
+      <FilterHandler
+        component={BedComponent}
         key="bedFilter"
         name={inputs.bedroom.id}
-        placeholder={inputs.bedroom.placeholder}
-        width={inputs.bedroom.width}
-        textOffset={inputs.bedroom.textOffset}
-        options={inputs.bedroom.options}
         wrapperClass="roomsFilter"
+        input={inputs.bedroom}
         height="4rem" //! refactor? Set height of React-Select objects to match input styling
+        mobileBreakpoint={mobileBreakpoint}
         valueFunctions={valueFunctions}
       />
-      <CustomSelect
-        theme={theme}
+      <FilterHandler
+        component={BathComponent}
         key="bathFilter"
         name={inputs.bathroom.id}
-        placeholder={inputs.bathroom.placeholder}
-        width={inputs.bathroom.width}
-        textOffset={inputs.bathroom.textOffset}
-        options={inputs.bathroom.options}
         wrapperClass="roomsFilter"
+        input={inputs.bathroom}
         height="4rem" //! refactor? Set height of React-Select objects to match input styling
+        mobileBreakpoint={mobileBreakpoint}
         valueFunctions={valueFunctions}
       />
     </React.Fragment>

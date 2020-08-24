@@ -1,26 +1,21 @@
 import { Component, createRef } from 'react';
 import DateHandler from './DateHandler';
 
-//for dynamically rendering React elements from JSON
-const Components = {
-  DateHandler: DateHandler,
-};
-
 class DateRange extends Component {
   constructor(props) {
     super(props);
 
-    const { input, valueFunctions } = props;
+    const { startProps, endProps, valueFunctions } = props;
     const { get } = valueFunctions;
     this.state = {
       startDate: {
-        id: input.startDate.id,
+        id: startProps.id,
         ref: createRef(),
       },
       endDate: {
-        id: input.endDate.id,
+        id: endProps.id,
         ref: createRef(),
-        minDate: new Date(get(input.endDate.id)),
+        minDate: new Date(get(endProps.id)),
       },
     };
   }
@@ -50,11 +45,18 @@ class DateRange extends Component {
     if (nextFocusRef) nextFocusRef.focus();
   };
 
+  handleChange = (date, id) => {
+    this.props.valueFunctions.set({ [id]: date });
+  };
   handleStartChange = (date) => {
-    this.props.onInputChange(date, this.state.startDate.id);
+    const { onInputChange } = this.props;
+    const change = onInputChange ? onInputChange : this.handleChange;
+    change(date, this.state.startDate.id);
   };
   handleEndChange = (date) => {
-    this.props.onInputChange(date, this.state.endDate.id);
+    const { onInputChange } = this.props;
+    const change = onInputChange ? onInputChange : this.handleChange;
+    change(date, this.state.endDate.id);
   };
 
   //* external methods*******************************************************
@@ -64,33 +66,26 @@ class DateRange extends Component {
   }
 
   render() {
-    const {
-      valueFunctions,
-      input,
-      hide,
-      wrapperClass,
-      mobileBreakpoint,
-      onFocus,
-    } = this.props;
-    const StartElement = Components[input.startDate.type];
-    const EndElement = Components[input.endDate.type];
+    const { startProps, endProps, valueFunctions, onFocus } = this.props;
 
     //get values for each controlled component
 
     const { get } = valueFunctions;
-    const startDate = get(input.startDate.id);
-    const endDate = get(input.endDate.id);
+    const startDate = get(startProps.id);
+    const endDate = get(endProps.id);
 
     // this.setState().setDate(endMinDate.getDate() + 1);
 
     return (
       <React.Fragment>
         {/* Picker for start of range */}
-        <StartElement
-          input={input.startDate}
-          wrapperClass={wrapperClass}
-          hide={hide}
-          mobileBreakpoint={mobileBreakpoint}
+        <DateHandler
+          id={startProps.id}
+          placeholder={startProps.placeholder}
+          icon={startProps.icon.url}
+          iconOffset={startProps.icon.iconOffset}
+          textOffset={startProps.textOffset}
+          width={startProps.width}
           selected={startDate}
           startDate={startDate}
           endDate={endDate}
@@ -103,11 +98,13 @@ class DateRange extends Component {
           allowSameDay={true}
         />
         {/* Picker for end of range */}
-        <EndElement
-          input={input.endDate}
-          wrapperClass={wrapperClass}
-          hide={hide}
-          mobileBreakpoint={mobileBreakpoint}
+        <DateHandler
+          id={endProps.id}
+          placeholder={endProps.placeholder}
+          icon={endProps.icon.url}
+          iconOffset={endProps.icon.iconOffset}
+          textOffset={endProps.textOffset}
+          width={endProps.width}
           selected={endDate}
           startDate={startDate}
           endDate={endDate}

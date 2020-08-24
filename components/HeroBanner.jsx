@@ -2,49 +2,81 @@ import useWindowSize from './hooks/UseWindowSize';
 import useIsoLayoutEffect from './hooks/UseIsoLayoutEffect';
 import { useRef } from 'react';
 import styled from 'styled-components';
+import { getProp } from '../utils/themeweaver-utils';
 
-const Banner = styled.div`
+import {
+  breakpoint,
+  getPaddingTop,
+  getPaddingBottom,
+  getPaddingRight,
+  getPaddingLeft,
+  getWidth,
+  getMaxWidth,
+  getZIndex,
+} from 'themeweaver';
+
+const StyledBanner = styled.div`
   position: relative;
-  top: 10rem;
+  top: ${getProp('offsetTop')};
+  left: ${getProp('offsetleft')};
+  bottom: ${getProp('offsetBottom')};
+  right: ${getProp('offsetRight')};
   display: flex;
   flex-direction: column;
-  padding 10px;
+  padding-top: ${getPaddingTop('banner', '10px')};
+  padding-right: ${getPaddingRight('banner', '10px')};
+  padding-bottom: ${getPaddingBottom('banner', '10px')};
+  padding-left: ${getPaddingLeft('banner', '10px')};
   margin: auto;
-  width: 90%;
-  max-width: 50.1rem;
-  z-index: 999998;
+  width: ${getWidth('banner', '90%')};
+  max-width: ${getMaxWidth('banner', '50.1rem')};
+  z-index: ${getZIndex('banner', '999998')};
 
-  .wrapper{
-    margin:0;
-  }
-  .banner H1 {
+  &.banner H1 {
     margin: 0 0 10px 0;
   }
-  .banner H2 {
+  &.banner H2 {
     margin: 0;
   }
-  .background{
-    content: '';
-    background: #FFFFFF;
-    opacity: 0.85;
-    
+
+  ${breakpoint(1)`
     position: absolute;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    right: 0;
-    z-index: -1;
-  }
-  @media (${(props) => props.mobileBreakpoint}) {
-    position: absolute;
-    left: 2.5rem;
     top: 10rem;
+    right: ${getProp('offsetRight', 1)};
+    bottom: ${getProp('offsetBottom', 1)};
+    left: ${getProp('offsetLeft', 1)};
+    width: ${getWidth('banner', '90%')};
+    max-width: ${getMaxWidth('banner', '50.1rem')};
     margin: 0;
-  }
+  `}
+`;
+
+StyledBanner.defaultProps = {
+  position: ['relative', 'absolute'],
+  offsetTop: '10rem',
+  offsetRight: 'auto',
+  offsetBottom: 'auto',
+  offsetLeft: ['auto', '2.5rem'],
+};
+
+const StyledBackground = styled.div`
+  content: '';
+  background: #ffffff;
+  opacity: 0.85;
+
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  z-index: -1;
+`;
+
+const StyledWrapper = styled.div`
+  margin: 0;
 `;
 
 const HeroBanner = (props) => {
-  const { mobileBreakpoint } = props;
   const windowSize = useWindowSize();
   const bannerRef = useRef(null);
 
@@ -56,21 +88,17 @@ const HeroBanner = (props) => {
   });
 
   return (
-    <Banner
-      className="banner"
-      mobileBreakpoint={mobileBreakpoint}
-      ref={bannerRef}
-    >
-      <div className="background" />
-      <div className="wrapper">
+    <StyledBanner className="heroBanner" {...props} ref={bannerRef}>
+      <StyledBackground />
+      <StyledWrapper>
         <h1>Live, Work, Play. Build Your Dream Adventure Today!</h1>
         <h2>
           We are a real estate company for people that love adventure and the
           outdoors. Buy or rent a new home for your adventure or creative
           studio.
         </h2>
-      </div>
-    </Banner>
+      </StyledWrapper>
+    </StyledBanner>
   );
 };
 

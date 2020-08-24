@@ -330,12 +330,6 @@ export const priceFilters = {
     name: 'minPrice',
     type: 'CustomSelect',
     placeholder: 'Min',
-    icon: {
-      url: './static/assets/searchbar/icon/na.svg',
-      offset: '0.5rem',
-      width: '1.6rem',
-      height: '1.6rem',
-    },
     textOffset: '0',
     width: '13.5rem',
     options: [
@@ -396,12 +390,6 @@ export const priceFilters = {
     name: 'maxPrice',
     type: 'CustomSelect',
     placeholder: 'Max',
-    icon: {
-      url: './static/assets/searchbar/icon/na.svg',
-      offset: '0.5rem',
-      width: '1.6rem',
-      height: '1.6rem',
-    },
     textOffset: '0',
     width: '13.5rem',
     options: [
@@ -465,12 +453,6 @@ export const roomsFilters = {
     name: 'beds',
     placeholder: 'Beds',
     type: 'CustomSelect',
-    icon: {
-      url: './static/assets/searchbar/icon/na.svg',
-      offset: '0.5rem',
-      width: '1.6rem',
-      height: '1.6rem',
-    },
     textOffset: '0',
     width: '13.5rem',
     options: [
@@ -506,12 +488,6 @@ export const roomsFilters = {
     name: 'baths',
     placeholder: 'Baths',
     type: 'CustomSelect',
-    icon: {
-      url: './static/assets/searchbar/icon/na.svg',
-      offset: '0.5rem',
-      width: '1.6rem',
-      height: '1.6rem',
-    },
     textOffset: '0',
     width: '13.5rem',
     options: [

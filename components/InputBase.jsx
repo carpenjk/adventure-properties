@@ -1,36 +1,72 @@
-import { Component, useRef, createRef } from 'react';
-import { render } from 'react-dom';
+import { Component, createRef } from 'react';
 import styled from 'styled-components';
+import {
+  breakpoint,
+  getColor,
+  getBackgroundColor,
+  getFontFamily,
+  getFontSize,
+  getFontWeight,
+  getLetterSpacing,
+  getMarginTop,
+  getMarginRight,
+  getMarginBottom,
+  getMarginLeft,
+} from 'themeweaver';
+import { getProp } from '../utils/themeweaver-utils';
 
-const Input = styled.input`
+const StyledInput = styled.input`
   display: block;
   box-sizing: border-box;
   width: 100%;
-  padding-left: ${(props) => props.input.textOffset};
-  background-image: url(${(props) => props.input.icon.url});
-  background-repeat: no-repeat;
-  background-position: ${(props) => props.input.icon.offset} 50%;
+  color: ${getColor('input.searchBar', 'inherit')};
+  background-color: ${getBackgroundColor('input.searchBar', 'initial')};
+  font-family: ${getFontFamily('input.searchBar', 'inherit')};
+  font-weight: ${getFontWeight('input.searchBar', 'normal')};
+  font-size: ${getFontSize('input.searchBar', '1.6rem')};
+  letter-spacing: ${getLetterSpacing('input.searchBar', '0.025em')};
 
-  &.show {
-    display: block;
-  }
-  &.hide {
-    display: none;
-  }
-  @media (${(props) => props.mobileBreakpoint}) {
-    width: ${(props) => props.input.width};
-  }
+  padding-left: ${getProp('textOffset')};
+  background-image: url(${getProp('icon')});
+  background-repeat: no-repeat;
+  background-position: ${getProp('iconOffset')} 50%;
+
+  margin-top: ${getMarginTop('input.searchBar', '0')};
+  margin-right: ${getMarginRight('input.searchBar', '0')};
+  margin-bottom: ${getMarginBottom('input.searchBar', '1rem')};
+  margin-left: ${getMarginLeft('input.searchBar', '0')};
+
+  ${breakpoint(1)`
+  width: ${getProp('width', 1)};
+  background-color: ${getBackgroundColor('input.searchBar', 'initial')};
+  font-family: ${getFontFamily('input.searchBar', 'inherit')};
+  font-weight: ${getFontWeight('input.searchBar', 'normal')};
+  font-size: ${getFontSize('input.searchBar', '1.6rem')};
+  letter-spacing: ${getLetterSpacing('input.searchBar', '0.025em')};
+
+  margin-top: ${getMarginTop('input.searchBar', '0')};
+  margin-right: ${getMarginRight('input.searchBar', '1.4rem')};
+  margin-bottom: ${getMarginBottom('input.searchBar', '2rem')};
+  margin-left: ${getMarginLeft('input.searchBar', '0')};
+  `}
 `;
+
+StyledInput.defaultProps = {
+  textOffset: '2.6rem',
+  icon: '',
+  iconOffset: '0.5rem',
+  width: '12.5rem',
+};
 
 class InputBase extends Component {
   constructor(props) {
     super(props);
     this.inputRef = createRef();
-    this.prevWrapperClass = '';
   }
   handleBlur = (e) => {
     const { nextFocusRef, onInputChange } = this.props;
-    onInputChange(e);
+    // onInputChange(e);
+    this.handleInputChange(e);
     if (nextFocusRef) nextFocusRef.focus();
   };
   focus() {
@@ -38,60 +74,45 @@ class InputBase extends Component {
     if (inputRef.current) inputRef.current.focus();
   }
 
-  //* lifecycle and lifecylce helper **********************************
-  addWrapperClass() {
-    const input = this.inputRef.current;
-    if (this.prevWrapperClass) input.classList.remove(this.prevWrapperClass);
-    if (this.props.wrapperClass) {
-      input.classList.add(this.props.wrapperClass);
-      this.prevWrapperClass = this.props.wrapperClass;
-    }
-  }
-  addHideShowClass() {
-    const input = this.inputRef.current;
-    if (this.props.hide) {
-      input.classList.add('hide');
+  handleInputChange = (e) => {
+    if (this.onInputChange) {
+      this.onInputChange(e);
     } else {
-      input.classList.remove('hide');
+      const { id, value } = e.target;
+      if (id) this.props.valueFunctions.set({ [id]: value });
+      e.stopPropagation();
     }
-  }
-  componentDidMount() {
-    this.addWrapperClass(this.props.wrapperClass);
-    this.addHideShowClass();
-  }
-  componentDidUpdate() {
-    this.addWrapperClass(this.props.wrapperClass);
-    this.addHideShowClass();
-  }
+  };
 
   render() {
     const {
-      input,
+      id,
       value,
-      hide,
-      valueFunctions,
-      wrapperClass,
-      mobileBreakpoint,
+      textOffset,
+      icon,
+      iconOffset,
+      width,
+      placeholder,
       onClick,
-      onBlur,
       onFocus,
     } = this.props;
-    //const { get } = valueFunctions;
 
     return (
       <React.Fragment>
-        <Input
+        <StyledInput
           type="text"
           value={value}
-          input={input}
           className="input"
-          mobileBreakpoint={mobileBreakpoint}
-          id={input.id}
-          placeholder={input.placeholder}
+          id={id}
+          placeholder={placeholder}
           onClick={onClick}
           onBlur={this.handleBlur}
           onFocus={onFocus}
           ref={this.inputRef}
+          textOffset={textOffset}
+          icon={icon}
+          iconOffset={iconOffset}
+          width={width}
         />
       </React.Fragment>
     );

@@ -1,8 +1,23 @@
 import { useRef } from 'react';
 import styled from 'styled-components';
+import {
+  getBorderRadius,
+  getColor,
+  getBackgroundColor,
+  getFontFamily,
+  getFontSize,
+  getFontWeight,
+  getLetterSpacing,
+} from 'themeweaver';
+import { getProp } from '../utils/themeweaver-utils';
 
 const StyledLabel = styled.label`
-  color: var(--lightText);
+  color: ${getColor('checkbox.searchBar', 'inherit')};
+  background-color: ${getBackgroundColor('checkbox.searchBar', 'initial')};
+  font-family: ${getFontFamily('checkbox.searchBar', 'inherit')};
+  font-weight: ${getFontWeight('checkbox.searchBar', 'normal')};
+  font-size: ${getFontSize('checkbox.searchBar', '1.6rem')};
+  letter-spacing: ${getLetterSpacing('checkbox.searchBar', '0.025em')};
   display: flex;
   position: relative;
   align-items: center;
@@ -15,15 +30,16 @@ const HiddenCheckbox = styled.input`
   cursor: pointer;
   width: 0;
   height: 0;
+  font-size: inherit;
 
   &:checked ~ .checkbox-custom {
-    background-color: var(--primary);
-    border-radius: 5px;
+    background-color: ${getProp('bg_checked')};
+    border-radius: ${getBorderRadius('checkbox.searchBar', '5px')};
     -webkit-transform: rotate(0deg) scale(1);
     -ms-transform: rotate(0deg) scale(1);
     transform: rotate(0deg) scale(1);
     opacity: 1;
-    border: 2px solid var(--primary);
+    border: 2px solid ${getProp('bg_checked')};
   }
 
   &:checked ~ .checkbox-custom::after {
@@ -33,7 +49,7 @@ const HiddenCheckbox = styled.input`
     opacity: 1;
     width: 0.31em;
     height: 0.68em;
-    border: solid var(--globalWhite);
+    border: solid ${getProp('fg_checked')};
     border-width: 0 2px 2px 0;
     background-color: transparent;
     border-radius: 0;
@@ -47,23 +63,20 @@ const CustomCheckbox = styled.span`
   height: 1.1em;
   width: 1.1em;
   margin-right: 1.5rem;
-  background-color: transparent;
-  border-radius: 5px;
+  background-color: ${getProp('bg')};
+  border-radius: ${getBorderRadius('checkbox.searchBar', '5px')};
   transition: all 0.3s ease-out;
   -webkit-transition: all 0.3s ease-out;
   -moz-transition: all 0.3s ease-out;
   -ms-transition: all 0.3s ease-out;
   -o-transition: all 0.3s ease-out;
-  border: 2px solid var(--primary);
-  &::focus {
-    border: 2px solid var(--secondary);
-  }
+  border: 2px solid ${getProp('fg')};
+
   &::after {
     content: '';
     height: 0px;
     width: 0px;
     border-radius: 5px;
-    border: solid var(--secondary);
     border-width: 0 3px 3px 0;
     -webkit-transform: rotate(0deg) scale(0);
     -ms-transform: rotate(0deg) scale(0);
@@ -78,7 +91,7 @@ const CustomCheckbox = styled.span`
 `;
 
 const Checkbox = (props) => {
-  const { id, name, label, mobileBreakpoint } = props;
+  const { id, name, label, fg, bg, fg_checked, bg_checked } = props;
   const { set, get } = props.valueFunctions;
   const filterRef = useRef(null);
 
@@ -102,6 +115,10 @@ const Checkbox = (props) => {
         name={name}
         type="checkbox"
         tabIndex="-1"
+        fg={fg}
+        bg={bg}
+        fg_checked={fg_checked}
+        bg_checked={bg_checked}
         checked={get(id) || false}
         onChange={handleCheckFilterChange}
       />
@@ -109,8 +126,11 @@ const Checkbox = (props) => {
         id={id}
         name={name}
         className="checkbox-custom"
+        fg={fg}
+        bg={bg}
+        fg_checked={fg_checked}
+        bg_checked={bg_checked}
         tabIndex="0"
-        mobileBreakpoint={mobileBreakpoint}
         onKeyPress={handleKeyPress}
         ref={filterRef}
       />

@@ -1,7 +1,7 @@
 export const colors = {
   menuColor: {
     primary: '#E5707A',
-    hover: '#F6E8E8'
+    hover: '#F6E8E8',
   },
   pallette: {
     primary: '#7789C8',
@@ -10,8 +10,8 @@ export const colors = {
     lightText: '#979797',
     mainText: '#444649',
     secondaryText: '#E5707A',
-    lightBackground: '#F8F8F8'
-  }
+    lightBackground: '#F8F8F8',
+  },
 };
 
 export const GlobalStyles = () => (

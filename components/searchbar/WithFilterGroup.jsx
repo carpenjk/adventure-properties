@@ -1,40 +1,71 @@
 import styled from 'styled-components';
+import {
+  breakpoint,
+  getMarginTop,
+  getMarginRight,
+  getMarginBottom,
+  getMarginLeft,
+  getPaddingTop,
+  getPaddingRight,
+  getPaddingBottom,
+  getPaddingLeft,
+} from 'themeweaver';
 import FilterHeader from '../FilterHeader';
-import { useState, useEffect, Component } from 'react';
 
-const StyleWrapper = styled.div`
+const StyledFilterGroup = styled.div`
   display: flex;
   flex-direction: column;
-  margin-top: 40px;
-  > * {
-    margin: 0 0 1rem 0;
-  }
+  margin-top: ${getMarginTop('searchBar_container.filterGroup', '4rem')};
+  margin-right: ${getMarginRight('searchBar_container.filterGroup', '0')};
+  margin-bottom: ${getMarginBottom('searchBar_container.filterGroup', '0')};
+  margin-left: ${getMarginLeft('searchBar_container.filterGroup', '0')};
+  padding-top: ${getPaddingTop('searchBar_container.filterGroup', '0')};
+  padding-right: ${getPaddingRight('searchBar_container.filterGroup', '0')};
+  padding-bottom: ${getPaddingBottom(
+    'searchBar_container.filterGroup',
+    '1.6rem'
+  )};
+  padding-left: ${getPaddingLeft('searchBar_container.filterGroup', '0')};
 `;
 const FilterContainer = styled.div`
   display: flex;
   flex-direction: column;
   margin-left: 3px;
   & > * {
-    margin: 0 0 1rem 0;
+    margin-top: ${getMarginTop('searchBar_container.filter', '0')};
+    margin-right: ${getMarginRight('searchBar_container.filter', '0')};
+    margin-bottom: ${getMarginBottom('searchBar_container.filter', '0')};
+    margin-left: ${getMarginLeft('searchBar_container.filter', '0')};
+    padding-top: ${getPaddingTop('searchBar_container.filter', '0')};
+    padding-right: ${getPaddingRight('searchBar_container.filter', '0')};
+    padding-bottom: ${getPaddingBottom('searchBar_container.filter', '1rem')};
+    padding-left: ${getPaddingLeft('searchBar_container.filter', '0')};
   }
-  @media (${(props) => props.mobileBreakpoint}) {
+
+  ${breakpoint(1)`
     flex-direction: row;
     & > * {
-      margin-right: 3rem;
+      margin-top: ${getMarginTop('searchBar_container.filter', '0')};
+      margin-right: ${getMarginRight('searchBar_container.filter', '0')};
+      margin-bottom: ${getMarginBottom('searchBar_container.filter', '0')};
+      margin-left: ${getMarginLeft('searchBar_container.filter', '0')};
+      padding-top: ${getPaddingTop('searchBar_container.filter', '0')};
+      padding-right: ${getPaddingRight('searchBar_container.filter', '0')};
+      padding-bottom: ${getPaddingBottom('searchBar_container.filter', '0')};
+      padding-left: ${getPaddingLeft('searchBar_container.filter', '0')};
     }
-  }
+  `}
 `;
 
 const withFilterGroup = (Filter) => {
   const WithFilterGroup = (props) => {
-    const { mobileBreakpoint } = props;
     return (
-      <StyleWrapper key="wrapper">
+      <StyledFilterGroup key="wrapper">
         <FilterHeader headerText={props.title} key="title" />
-        <FilterContainer mobileBreakpoint={mobileBreakpoint}>
+        <FilterContainer>
           <Filter {...props} />
         </FilterContainer>
-      </StyleWrapper>
+      </StyledFilterGroup>
     );
   };
   return WithFilterGroup;

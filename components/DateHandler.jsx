@@ -1,20 +1,31 @@
+import React, { Component, createRef } from 'react';
+import styled from 'styled-components';
+import {
+  breakpoint,
+  getColor,
+  getBackgroundColor,
+  getFontFamily,
+  getFontSize,
+  getFontWeight,
+  getLetterSpacing,
+  getMarginTop,
+  getMarginRight,
+  getMarginBottom,
+  getMarginLeft,
+} from 'themeweaver';
+import { getProp } from '../utils/themeweaver-utils';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import '../static/datepicker.css';
-import React, { Component, createRef } from 'react';
 
-import styled from 'styled-components';
-
-const StyleWrapper = styled.div`
+const StyledDateHandler = styled.div`
 display: block;
 position: relative;
 
-&.show {
-  display: block;
-}
-&.hide {
-  display: none;
-}
+margin-top: ${getMarginTop('date.searchBar', '0')};
+margin-right: ${getMarginRight('date.searchBar', '0')};
+margin-bottom: ${getMarginBottom('date.searchBar', '1rem')};
+margin-left: ${getMarginLeft('date.searchBar', '0')};
 
 .react-datepicker-popper {
   position: relative;
@@ -30,19 +41,45 @@ position: relative;
 }
 .react-datepicker__input-container > input {
   width: 100%;
-  padding-left: ${(props) => props.input.textOffset};
-  background-image: url(${(props) => props.input.icon.url});
+  padding-left: ${getProp('textOffset')};
+  background-image: url(${getProp('icon')});
   background-repeat: no-repeat;
-  background-position: ${(props) => props.input.icon.offset} 50%;
+  background-position: ${getProp('iconOffset')} 50%;
+
+  color: ${getColor('date.searchBar', 'inherit')};
+  background-color: ${getBackgroundColor('date.searchBar', 'initial')};
+  font-family: ${getFontFamily('date.searchBar', 'inherit')};
+  font-weight: ${getFontWeight('date.searchBar', 'normal')};
+  font-size: ${getFontSize('date.searchBar', '1.6rem')};
+  letter-spacing: ${getLetterSpacing('date.searchBar', '0.025em')};
 }
-@media (${(props) => props.mobileBreakpoint}) {
-  width: ${(props) => props.input.width};
+
+${breakpoint(1)`
+  width: ${getProp('width')};
+  margin-top: ${getMarginTop('date.searchBar', '0')};
+  margin-right: ${getMarginRight('date.searchBar', '1.4rem')};
+  margin-bottom: ${getMarginBottom('date.searchBar', '2rem')};
+  margin-left: ${getMarginLeft('date.searchBar', '0')};
 
   .react-datepicker__input-container > input {
-    width: ${(props) => props.input.width};
+    width: ${getProp('width')};
+
+    color: ${getColor('date.searchBar', 'inherit')};
+    background-color: ${getBackgroundColor('date.searchBar', 'initial')};
+    font-family: ${getFontFamily('date.searchBar', 'inherit')};
+    font-weight: ${getFontWeight('date.searchBar', 'normal')};
+    font-size: ${getFontSize('date.searchBar', '1.6rem')};
+    letter-spacing: ${getLetterSpacing('date.searchBar', '0.025em')};
   }
-}
+`}
 `;
+
+StyledDateHandler.defaultProps = {
+  textOffset: '2.6rem',
+  icon: '',
+  iconOffset: '0.5rem',
+  width: '12.5rem',
+};
 
 class DateHandler extends Component {
   constructor(props) {
@@ -59,38 +96,13 @@ class DateHandler extends Component {
       : desktopMargin || 'margin-right: 10px';
   };
 
-  //* lifecycle and lifecylce helper **********************************
-  addWrapperClass() {
-    const input = this.styleRef.current;
-    if (this.prevWrapperClass) input.classList.remove(this.prevWrapperClass);
-    if (this.props.wrapperClass) {
-      input.classList.add(this.props.wrapperClass);
-      this.prevWrapperClass = this.props.wrapperClass;
-    }
-  }
-  addHideShowClass() {
-    const input = this.styleRef.current;
-    if (this.props.hide) {
-      input.classList.add('hide');
-    } else {
-      input.classList.remove('hide');
-    }
-  }
-  componentDidMount() {
-    this.addWrapperClass(this.props.wrapperClass);
-    this.addHideShowClass();
-  }
-  componentDidUpdate() {
-    this.addWrapperClass(this.props.wrapperClass);
-    this.addHideShowClass();
-  }
-
   render() {
     const {
-      input,
-      hide,
-      wrapperClass,
-      mobileBreakpoint,
+      placeholder,
+      icon,
+      iconOffset,
+      textOffset,
+      width,
       startDate,
       endDate,
       selected,
@@ -105,10 +117,11 @@ class DateHandler extends Component {
       openToDate,
     } = this.props;
     return (
-      <StyleWrapper
-        wrapperClass={wrapperClass}
-        input={input}
-        mobileBreakpoint={mobileBreakpoint}
+      <StyledDateHandler
+        icon={icon}
+        iconOffset={iconOffset}
+        textOffset={textOffset}
+        width={width}
         ref={this.styleRef}
       >
         <DatePicker
@@ -123,7 +136,7 @@ class DateHandler extends Component {
           onChange={onChange}
           onFocus={onFocus}
           onSelect={onSelect}
-          placeholderText={input.placeholder}
+          placeholderText={placeholder}
           popperPlacement="bottom"
           popperModifiers={{
             offset: {
@@ -135,7 +148,7 @@ class DateHandler extends Component {
           tabIndex="0"
           ref={inputRef}
         />
-      </StyleWrapper>
+      </StyledDateHandler>
     );
   }
 }

@@ -1,7 +1,11 @@
 import { useContext } from 'react';
 import { GlobalContext } from '../contexts/context';
 import { breakpoint, getMaxWidth } from 'themeweaver';
-import { getPropertyBr, inverseProps } from '../utils/themeweaver-utils';
+import {
+  getProp,
+  getConditionalProp,
+  inverseProps,
+} from '../utils/themeweaver-utils';
 
 //components
 import styled from 'styled-components';
@@ -15,11 +19,13 @@ const StyledNav = styled.nav`
   .navtoggle__list {
     position: relative;
     display: flex;
-    flex-direction: ${({ displayVertical }) =>
-      getPropertyBr(displayVertical, 0) ? 'column' : 'row'};
+    flex-direction: ${getConditionalProp(
+      'displayVertical',
+      ({ displayVertical }) => (displayVertical ? 'column' : 'row')
+    )};
     justify-content: center;
     align-items: stretch;
-    max-width: ${(props) => props.maxWidth};
+    max-width: ${getProp('maxWidth')};
     width: 100%;
     margin-block-start: 0;
     margin-block-end: 0;
@@ -31,15 +37,16 @@ const StyledNav = styled.nav`
     justify-content: center;
     align-items: stretch;
     flex: 1;
-    max-width: ${getMaxWidth('button.nav', 'none')}
     font: inherit;
   }
 
   ${breakpoint(1)`
-
       .navtoggle__list {
-        flex-direction: ${({ displayVertical }) =>
-          getPropertyBr(displayVertical, 1) ? 'column' : 'row'};
+        flex-direction: ${getConditionalProp(
+          'displayVertical',
+          ({ displayVertical }) => (displayVertical ? 'column' : 'row'),
+          1
+        )};
       }
       .navtoggle__list > li {
         max-width: ${getMaxWidth('button.nav', '116px')}
@@ -47,32 +54,44 @@ const StyledNav = styled.nav`
   `}
 `;
 
+StyledNav.defaultProps = {
+  displayVertical: [true, false],
+  maxWidth: 'none',
+};
+
 const NavToggle = (props) => {
   const { appMode, handleAppModeToggle } = useContext(GlobalContext);
 
-  const { maxWidth, itemMinWidth, wrapperClass, displayVertical, data } = props;
-  const items = data.nav.items;
+  const { maxWidth, wrapperClass, displayVertical } = props;
 
   return (
     <StyledNav
       className={wrapperClass}
       maxWidth={maxWidth}
-      itemMinWidth={itemMinWidth}
       displayVertical={displayVertical}
     >
       <ul className="navtoggle__list">
-        {items.map((item) => {
-          return (
-            <li key={item.key}>
-              <ToggleButton
-                selected={item.text.toLowerCase() === appMode}
-                text={item.text}
-                onClick={handleAppModeToggle}
-                showIndicator={inverseProps(displayVertical)}
-              />
-            </li>
-          );
-        })}
+        <ToggleButton
+          key="buy"
+          selected={'buy' === appMode}
+          text={'Buy'}
+          onClick={handleAppModeToggle}
+          showIndicator={inverseProps(displayVertical)}
+        />
+        <ToggleButton
+          key="rent"
+          selected={'rent' === appMode}
+          text={'Rent'}
+          onClick={handleAppModeToggle}
+          showIndicator={inverseProps(displayVertical)}
+        />
+        <ToggleButton
+          key="longTerm"
+          selected={'long term' === appMode}
+          text={'Long Term'}
+          onClick={handleAppModeToggle}
+          showIndicator={inverseProps(displayVertical)}
+        />
       </ul>
     </StyledNav>
   );

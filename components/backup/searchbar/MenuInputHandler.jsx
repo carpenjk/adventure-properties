@@ -1,23 +1,23 @@
-// import InputBase from '../InputBase';
-// import CustomSelect from '../CustomSelect';
-// import DateRange from '../DateRange';
+import InputBase from '../InputBase';
+import CustomSelect from '../CustomSelect';
+import DateRange from '../DateRange';
 
 //for dynamically rendering React elements from JSON
 //Add an entry for each custom component referenced in the file
-// const Components = {
-//   DateRange: DateRange,
-//   CustomSelect: CustomSelect,
-//   InputBase: InputBase,
-// };
+const Components = {
+  DateRange: DateRange,
+  CustomSelect: CustomSelect,
+  InputBase: InputBase,
+};
 
 const MenuInputHandler = (props) => {
-  const { type, inputRef, InputComponent, ...fwdProps } = props;
+  const { inputRef, ...fwdProps } = props;
   const { valueFunctions, input } = fwdProps;
   const { set } = valueFunctions;
-  // const InputType = input.type;
+  const InputType = input.type;
 
   const handleSelectChange = (option) => {
-    set({ [fwdProps.id]: Number(option.value) });
+    set({ [input.id]: Number(option.value) });
   };
 
   const handleDateChange = (date, id) => {
@@ -31,19 +31,19 @@ const MenuInputHandler = (props) => {
   };
 
   const fnChangeMap = {
-    select: handleSelectChange,
-    date: handleDateChange,
+    CustomSelect: handleSelectChange,
+    DateRange: handleDateChange,
     default: handleInputChange,
   };
 
   const getHandler = () => {
-    if (fnChangeMap[type]) return fnChangeMap[type];
+    if (fnChangeMap[InputType]) return fnChangeMap[InputType];
     return fnChangeMap['default'];
   };
 
-  // const DynamicInput = Components[input.type];
+  const DynamicInput = Components[input.type];
   return (
-    <InputComponent ref={inputRef} onInputChange={getHandler()} {...fwdProps} />
+    <DynamicInput ref={inputRef} onInputChange={getHandler()} {...fwdProps} />
   );
 };
 

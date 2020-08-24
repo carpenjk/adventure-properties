@@ -1,8 +1,6 @@
-import { useContext } from 'react';
 import styled from 'styled-components';
-import { ThemeContext } from 'styled-components';
-import { breakpoint } from 'themeweaver';
 import withFilterGroup from './WithFilterGroup';
+import FilterHandler from './FilterHandler';
 import Checkbox from '../Checkbox';
 
 const StyledList = styled.ul`
@@ -11,30 +9,32 @@ const StyledList = styled.ul`
   grid-template-columns: repeat(auto-fit, 175px);
   justify-content: center;
   width: 100%;
-
-  ${breakpoint(1)`
+  @media (${(props) => props.mobileBreakpoint}) {
     justify-content: start;
-  `}
+  }
 `;
 
+const ComponentMap = {
+  Checkbox: Checkbox,
+};
+
 const CheckFilters = (props) => {
-  const { filters, valueFunctions } = props;
-  const theme = useContext(ThemeContext);
+  const { filters, mobileBreakpoint, valueFunctions } = props;
+  const FilterComponent = ComponentMap[filters[0].type];
+
   return (
-    <StyledList>
+    <StyledList mobileBreakpoint={mobileBreakpoint}>
       {filters.map((filter) => {
         return (
           <li key={filter.id}>
-            <Checkbox
+            <FilterHandler
+              component={FilterComponent}
               id={filter.id}
               name={filter.name}
               label={filter.label}
               input={filter}
+              mobileBreakpoint={mobileBreakpoint}
               valueFunctions={valueFunctions}
-              fg={theme.colors.primary}
-              bg={theme.colors.white}
-              fg_checked={theme.colors.white}
-              bg_checked={theme.colors.primary}
             />
           </li>
         );

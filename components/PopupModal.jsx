@@ -1,9 +1,12 @@
 import styled from 'styled-components';
-import {
-  disableBodyScroll,
-  clearAllBodyScrollLocks,
-  enableBodyScroll,
-} from 'body-scroll-lock';
+import { getConditionalProp } from '../utils/componentMaps';
+import useLockBodyScroll from './hooks/UseLockBodyScroll';
+// import {
+//   disableBodyScroll,
+//   clearAllBodyScrollLocks,
+//   enableBodyScroll,
+// } from 'body-scroll-lock';
+
 import { useEffect, useRef } from 'react';
 const StyledPopupModal = styled.div` 
   content: ' ';
@@ -20,19 +23,16 @@ const StyledPopupModal = styled.div`
 
 const PopupModal = (props) => {
   const modalRef = useRef();
-  const { open } = props;
-  useEffect(() => {
-    disableBodyScroll(modalRef.current);
-    return () => {
-      clearAllBodyScrollLocks();
-      // enableBodyScroll(modalRef.current);
-    };
-  });
-  if (open) {
-    return <StyledPopupModal ref={modalRef}>{props.children}</StyledPopupModal>;
-  } else {
-    return <div></div>;
-  }
+  const { isOpen } = props;
+  useLockBodyScroll(true);
+  // useEffect(() => {
+  //   disableBodyScroll(modalRef.current, { reserveScrollBarGap: true });
+  //   return () => {
+  //     clearAllBodyScrollLocks();
+  //     // enableBodyScroll(modalRef.current);
+  //   };
+  // });
+  return <StyledPopupModal ref={modalRef}>{props.children}</StyledPopupModal>;
 };
 
 export default PopupModal;

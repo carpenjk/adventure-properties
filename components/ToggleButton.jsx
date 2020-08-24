@@ -1,6 +1,6 @@
 // import { colors } from '../static/global/base';
 import styled from 'styled-components';
-import { getPropertyBr } from '../utils/themeweaver-utils';
+import { getProp } from '../utils/themeweaver-utils';
 import {
   getColor,
   getFontFamily,
@@ -78,7 +78,7 @@ const SelectIcon = styled.img`
 
   ${breakpoint(1)`
   display: ${({ showIndicator }) =>
-    getPropertyBr(showIndicator, 1) ? 'block' : 'none'};
+    getProp(showIndicator, 1) ? 'block' : 'none'};
   `}
 
   &.selected {
@@ -94,22 +94,21 @@ const ToggleButton = (props) => {
   const { selected, onClick, showIndicator, text } = props;
 
   function handleClick(button) {
+    console.log('toggle click:', button);
     button.blur();
     onClick(text);
   }
 
   return (
-    <React.Fragment>
-      <StyledButton tabIndex="0" onClick={(e) => handleClick(e.target)}>
-        {text}
-      </StyledButton>
+    <StyledButton tabIndex="0" onClick={(e) => handleClick(e.target)}>
+      {text}
       <SelectIcon
         src={selectIcon}
         showIndicator={showIndicator}
         alt="selected"
         className={selected ? 'selected' : 'notSelected'}
       />
-    </React.Fragment>
+    </StyledButton>
   );
 };
 

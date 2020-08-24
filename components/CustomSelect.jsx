@@ -1,76 +1,81 @@
 import React, { Component, createRef } from 'react';
 import withUseRef from './WithUseRef';
-import Select, { components, NonceProvider } from 'react-select';
+import Select, { components } from 'react-select';
 import DropDownIncrArrow from './DropDownIncrArrow';
 import styled from 'styled-components';
+import {
+  breakpoint,
+  getColor,
+  getBackgroundColor,
+  getFontFamily,
+  getFontSize,
+  getFontWeight,
+  getLetterSpacing,
+  getMarginTop,
+  getMarginRight,
+  getMarginBottom,
+  getMarginLeft,
+} from 'themeweaver';
+import { getProp } from '../utils/themeweaver-utils';
 
-const StyleWrapper = styled.div`
+const StyledSelect = styled.div`
   display: block;
-  &.show {
-    display: block;
+
+  margin-top: ${getMarginTop('input.searchBar', '0')};
+  margin-right: ${getMarginRight('input.searchBar', '0')};
+  margin-bottom: ${getMarginBottom('input.searchBar', '1rem')};
+  margin-left: ${getMarginLeft('input.searchBar', '0')};
+
+  & > * {
+    background-color: ${getBackgroundColor('input.searchBar', 'initial')};
+    font-family: ${getFontFamily('input.searchBar', 'inherit')};
+    font-weight: ${getFontWeight('input.searchBar', 'normal')};
+    font-size: ${getFontSize('input.searchBar', '1.6rem')};
+    letter-spacing: ${getLetterSpacing('input.searchBar', '0.025em')};
   }
-  &.hide {
-    display: none;
-  }
-  @media (${(props) => props.mobileBreakpoint}) {
-    width: ${(props) => props.width};
-  }
+
+  ${breakpoint(1)`
+    width: ${getProp('width', 1)};
+    margin-top: ${getMarginTop('input.searchBar', '0')};
+    margin-right: ${getMarginRight('input.searchBar', '1.4rem')};
+    margin-bottom: ${getMarginBottom('input.searchBar', '2rem')};
+    margin-left: ${getMarginLeft('input.searchBar', '0')};
+
+    & > * {
+      background-color: ${getBackgroundColor('input.searchBar', 'initial')};
+      font-family: ${getFontFamily('input.searchBar', 'inherit')};
+      font-weight: ${getFontWeight('input.searchBar', 'normal')};
+      font-size: ${getFontSize('input.searchBar', '1.6rem')};
+      letter-spacing: ${getLetterSpacing('input.searchBar', '0.025em')};
+    }
+
+  `}
 `;
 
 class CustomSelect extends Component {
   constructor(props) {
     super(props);
     this.styleRef = createRef();
-    this.prevWrapperClass = '';
   }
-
-  // handleChange = (option) => {
-  //   const { input, valueFunctions } = this.props;
-  //   const { set } = valueFunctions;
-
-  //   set({ [input.id]: Number(option.value) });
-  // };
 
   focus() {
     if (this.props.useInnerRef)
       if (this.props.useInnerRef) this.props.useInnerRef.current.focus();
   }
 
+  handleSelectChange(option) {
+    this.props.valueFunctions.set({ [this.props.id]: Number(option.value) });
+  }
+
   //* lifecycle and lifecylce helper **********************************
-  addWrapperClass() {
-    const input = this.styleRef.current;
-    if (this.prevWrapperClass) input.classList.remove(this.prevWrapperClass);
-    if (this.props.wrapperClass) {
-      input.classList.add(this.props.wrapperClass);
-      this.prevWrapperClass = this.props.wrapperClass;
-    }
-  }
-  addHideShowClass() {
-    const input = this.styleRef.current;
-    if (this.props.hide) {
-      input.classList.add('hide');
-    } else {
-      input.classList.remove('hide');
-    }
-  }
-  componentWillUnmount() {
-    console.log('custom select will unmount', this.props.input.id);
-  }
-  componentDidMount() {
-    this.addWrapperClass(this.props.wrapperClass);
-    this.addHideShowClass();
-  }
-  componentDidUpdate() {
-    this.addWrapperClass(this.props.wrapperClass);
-    this.addHideShowClass();
-  }
 
   render() {
     const {
-      input,
-      wrapperClass,
+      theme,
+      placeholder,
+      width,
+      options,
       height,
-      mobileBreakpoint,
       onInputChange,
       onBlur,
       useInnerRef,
@@ -99,14 +104,14 @@ class CustomSelect extends Component {
       display: 'flex',
       ':before': {
         content: '" "',
-        background: `url(${input.icon.url}) center no-repeat`,
+        background: `url(${getProp('icon')(this.props)}) center no-repeat`,
         overflow: 'hidden',
         display: 'flex',
         alignItems: 'center',
         position: 'absolute',
-        left: input.icon.offset,
-        height: input.icon.height,
-        width: input.icon.width,
+        left: getProp('iconOffset')(this.props),
+        height: getProp('iconHeight')(this.props),
+        width: getProp('iconWidth')(this.props),
       },
     });
 
@@ -125,7 +130,7 @@ class CustomSelect extends Component {
         ...icon(),
         width: '100%',
         boxSizing: 'border-box',
-        paddingLeft: input.textOffset,
+        paddingLeft: getProp('textOffset')(this.props),
         // This line disable the blue border
         boxShadow: 'none',
       }),
@@ -151,12 +156,12 @@ class CustomSelect extends Component {
           ...defaultStyles,
           opacity,
           transition,
-          color: 'var(--primary)',
+          color: getColor('select.searchBar', 'inherit'),
         };
       },
       placeholder: (defaultStyles) => ({
         ...defaultStyles,
-        color: 'var(--lightText)',
+        color: getProp('placeholderColor')(this.props),
       }),
       menu: (defaultStyles, state) => ({
         ...defaultStyles,
@@ -169,7 +174,6 @@ class CustomSelect extends Component {
       }),
       menuList: (defaultStyles, state) => ({
         ...defaultStyles,
-        backgroundColor: 'var(--globalWhite)',
         height: 200,
         padding: 0,
         boxShadow: '0px 5px 5px rgba(0, 0, 0, 0.15)',
@@ -190,41 +194,39 @@ class CustomSelect extends Component {
 
         borderBottom: '1px dotted var(--secondary)',
         color: isSelected
-          ? 'var(--globalWhite)'
+          ? theme.colors.white
           : isFocused
-          ? 'var(--primary)'
-          : 'var(--lightText)',
+          ? theme.colors.primary
+          : theme.colors.lightText,
         backgroundColor: isSelected
-          ? 'var(--primary)'
+          ? theme.colors.primary
           : isFocused
-          ? 'var(--secondary)'
-          : 'var(--globalWhite)',
+          ? theme.colors.secondary
+          : theme.colors.white,
         fontWeight: isSelected ? 'bold' : 'normal',
       }),
     };
 
     return (
-      <StyleWrapper
-        mobileBreakpoint={mobileBreakpoint}
-        width={input.width}
-        ref={this.styleRef}
-      >
+      <StyledSelect width={width} ref={this.styleRef}>
         <Select
           instanceId="react-select-1"
           className="input"
           isSearchable={false}
-          placeholder={input.placeholder}
+          placeholder={placeholder}
           styles={customStyles}
-          options={input.options}
+          options={options}
           components={{
             SingleValue: customSingleValue,
             Menu: customMenu,
           }}
-          onChange={onInputChange}
+          onChange={
+            onInputChange ? onInputChange : this.handleSelectChange.bind(this)
+          }
           onBlur={onBlur}
           ref={useInnerRef}
         />
-      </StyleWrapper>
+      </StyledSelect>
     );
   }
 }
