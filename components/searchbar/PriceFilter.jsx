@@ -1,6 +1,6 @@
 import { useContext } from 'react';
 import { ThemeContext } from 'styled-components';
-import CustomSelect from '../CustomSelect';
+import CustomSelect from '../base/input/CustomSelect';
 import withFilterGroup from './WithFilterGroup';
 
 import { priceFilters as inputs } from '../../compConfig';

@@ -30,30 +30,9 @@ const StyledFilterGroup = styled.div`
 const FilterContainer = styled.div`
   display: flex;
   flex-direction: column;
-  margin-left: 3px;
-  & > * {
-    margin-top: ${getMarginTop('searchBar_container.filter', '0')};
-    margin-right: ${getMarginRight('searchBar_container.filter', '0')};
-    margin-bottom: ${getMarginBottom('searchBar_container.filter', '0')};
-    margin-left: ${getMarginLeft('searchBar_container.filter', '0')};
-    padding-top: ${getPaddingTop('searchBar_container.filter', '0')};
-    padding-right: ${getPaddingRight('searchBar_container.filter', '0')};
-    padding-bottom: ${getPaddingBottom('searchBar_container.filter', '1rem')};
-    padding-left: ${getPaddingLeft('searchBar_container.filter', '0')};
-  }
 
   ${breakpoint(1)`
     flex-direction: row;
-    & > * {
-      margin-top: ${getMarginTop('searchBar_container.filter', '0')};
-      margin-right: ${getMarginRight('searchBar_container.filter', '0')};
-      margin-bottom: ${getMarginBottom('searchBar_container.filter', '0')};
-      margin-left: ${getMarginLeft('searchBar_container.filter', '0')};
-      padding-top: ${getPaddingTop('searchBar_container.filter', '0')};
-      padding-right: ${getPaddingRight('searchBar_container.filter', '0')};
-      padding-bottom: ${getPaddingBottom('searchBar_container.filter', '0')};
-      padding-left: ${getPaddingLeft('searchBar_container.filter', '0')};
-    }
   `}
 `;
 

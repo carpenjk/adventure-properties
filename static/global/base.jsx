@@ -47,6 +47,8 @@ export const GlobalStyles = () => (
         --menuFont: 'Poppins', sans-serif;
       }
       html {
+        height: 100%;
+        width: 100%;
         box-sizing: border-box;
         margin: 0;
         font-family: 'Open Sans', sans-serif;
@@ -60,6 +62,9 @@ export const GlobalStyles = () => (
       }
 
       body {
+        height: 100%;
+        width: 100%;
+        position: relative;
         margin: 0;
       }
 

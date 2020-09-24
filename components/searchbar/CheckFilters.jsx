@@ -3,9 +3,10 @@ import styled from 'styled-components';
 import { ThemeContext } from 'styled-components';
 import { breakpoint } from 'themeweaver';
 import withFilterGroup from './WithFilterGroup';
-import Checkbox from '../Checkbox';
+import Checkbox from '../base/input/Checkbox';
 
 const StyledList = styled.ul`
+  margin-left: 10px;
   display: grid;
   grid-gap: 30px;
   grid-template-columns: repeat(auto-fit, 175px);

@@ -1,4 +1,4 @@
-const DropDownIncrArrow = props => {
+const DropDownIncrArrow = (props) => {
   return (
     <div className={`arrowContainer `}>
       <div className="downArrow">Increment Guests</div>
@@ -14,6 +14,8 @@ const DropDownIncrArrow = props => {
             width: 100%;
             background: rgba(255, 255, 255, 0.85);
             border-radius: 0 0 3px 3px;
+            outline: none;
+            outline-color: transparent;
           }
           .downArrow {
             height: 1px;

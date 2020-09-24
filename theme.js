@@ -1,4 +1,5 @@
 import { withThemeweaver, variant, value } from 'themeweaver';
+import { breakpoints } from './components/Media';
 
 export const theme = withThemeweaver(
   {
@@ -32,7 +33,12 @@ export const theme = withThemeweaver(
       colorBig: 'color 500ms ease',
       padding: 'padding 500ms ease',
     },
-    breakpoints: ['40em', '52em', '64em', '80em'],
+    breakpoints: [
+      breakpoints.md + 'px',
+      breakpoints.lg + 'px',
+      breakpoints.xl,
+      breakpoints.xxl,
+    ],
   },
   {
     // beginning of themeweaver asignments *****************
@@ -72,6 +78,10 @@ export const theme = withThemeweaver(
         color: 'lightText',
         fontFamily: 'poppins',
         fontSize: 2,
+        paddingTop: 2,
+        paddingRight: 2,
+        paddingBottom: 2,
+        paddingLeft: 2,
       }),
       ...variant('search', {
         backgroundColor: 'action[1]',
@@ -93,17 +103,28 @@ export const theme = withThemeweaver(
     },
     input: {
       ...variant('searchBar', {
-        marginRight: [0, 3],
-        marginBottom: [2, 0],
+        height: value('4rem'),
+        marginTop: 1,
+        marginRight: [1, 2],
+        marginBottom: [1, 1],
+        marginLeft: 1,
         color: 'primary',
         fontSize: 2,
         fontFamily: 'poppins',
       }),
     },
+    inputGroup: {
+      ...variant('searchBar', {
+        paddingTop: value('8px'),
+      }),
+    },
     select: {
       ...variant('searchBar', {
-        marginRight: [0, 3],
-        marginBottom: [2, 0],
+        height: value('4rem'),
+        marginTop: 1,
+        marginRight: [1, 2],
+        marginBottom: [1, 1],
+        marginLeft: 1,
         color: 'primary',
         fontSize: 2,
         fontFamily: 'poppins',
@@ -113,12 +134,16 @@ export const theme = withThemeweaver(
       ...variant('searchBar', {
         color: 'lightText',
         fontSize: 2,
+        fontFamily: 'poppins',
       }),
     },
     date: {
       ...variant('searchBar', {
-        marginRight: [0, 3],
-        marginBottom: [2, 0],
+        height: value('4rem'),
+        marginTop: 1,
+        marginRight: [1, 2],
+        marginBottom: [1, 1],
+        marginLeft: 1,
         color: 'primary',
         fontSize: 2,
         fontFamily: 'poppins',
@@ -152,10 +177,10 @@ export const theme = withThemeweaver(
       width: [value('95vw'), value('auto')],
       maxWidth: [value('500px'), value('none')],
       borderRadius: 2,
-      paddingTop: [2, 1],
-      paddingRight: 1,
-      paddingBottom: [2, 1],
-      paddingLeft: 1,
+      paddingTop: [2, 2],
+      paddingRight: [2, 2],
+      paddingBottom: [2, 2],
+      paddingLeft: [2, 2],
     },
     searchBar_container: {
       ...variant('buttons', {

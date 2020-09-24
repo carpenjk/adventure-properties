@@ -8,17 +8,29 @@ import {
   getFontSize,
   getFontWeight,
   getLetterSpacing,
+  getHeight,
   getMarginTop,
   getMarginRight,
   getMarginBottom,
   getMarginLeft,
+  getPaddingTop,
+  getPaddingRight,
+  getPaddingBottom,
+  getBoxShadow,
+  getBorderRadius,
 } from 'themeweaver';
-import { getProp } from '../utils/themeweaver-utils';
+import { getProp } from '../../../utils/themeweaver-utils';
 
 const StyledInput = styled.input`
   display: block;
   box-sizing: border-box;
-  width: 100%;
+  border-style: none;
+  box-shadow: ${getBoxShadow(
+    'input.searchBar',
+    '0px 0px 8px rgba(192, 192, 192, 0.52)'
+  )};
+  border-radius: ${getBorderRadius('input.searchBar', '5px')};
+  height: ${getHeight('input.searchBar', 'auto')};
   color: ${getColor('input.searchBar', 'inherit')};
   background-color: ${getBackgroundColor('input.searchBar', 'initial')};
   font-family: ${getFontFamily('input.searchBar', 'inherit')};
@@ -26,11 +38,14 @@ const StyledInput = styled.input`
   font-size: ${getFontSize('input.searchBar', '1.6rem')};
   letter-spacing: ${getLetterSpacing('input.searchBar', '0.025em')};
 
-  padding-left: ${getProp('textOffset')};
   background-image: url(${getProp('icon')});
   background-repeat: no-repeat;
   background-position: ${getProp('iconOffset')} 50%;
 
+  padding-top: ${getPaddingTop('input.searchBar', '0')};
+  padding-right: ${getPaddingRight('input.searchBar', '0')};
+  padding-bottom: ${getPaddingBottom('input.searchBar', '0')};
+  padding-left: ${getProp('textOffset')};
   margin-top: ${getMarginTop('input.searchBar', '0')};
   margin-right: ${getMarginRight('input.searchBar', '0')};
   margin-bottom: ${getMarginBottom('input.searchBar', '1rem')};
@@ -48,6 +63,19 @@ const StyledInput = styled.input`
   margin-right: ${getMarginRight('input.searchBar', '1.4rem')};
   margin-bottom: ${getMarginBottom('input.searchBar', '2rem')};
   margin-left: ${getMarginLeft('input.searchBar', '0')};
+
+  padding-top: ${getPaddingTop('input.searchBar', '0')};
+  padding-right: ${getPaddingRight('input.searchBar', '0')};
+  padding-bottom: ${getPaddingBottom('input.searchBar', '0')};
+  padding-left: ${getProp('textOffset')};
+
+  box-shadow: ${getBoxShadow(
+    'input.searchBar',
+    '0px 0px 8px rgba(192, 192, 192, 0.52)'
+  )};
+  border-radius: ${getBorderRadius('input.searchBar', '5px')};
+  
+
   `}
 `;
 

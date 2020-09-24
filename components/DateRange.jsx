@@ -1,5 +1,5 @@
 import { Component, createRef } from 'react';
-import DateHandler from './DateHandler';
+import DateHandler from './base/input/DateHandler';
 
 class DateRange extends Component {
   constructor(props) {
@@ -21,31 +21,44 @@ class DateRange extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
+    console.log('date component updated');
+    const endDateRef = this.state.endDate.ref;
     const { get } = this.props.valueFunctions;
     const { get: prevGet } = prevProps.valueFunctions;
-    const endDateRef = this.state.endDate.ref.current;
-    const startDateRef = this.state.startDate.ref.current;
-
-    //third party component was causing circular logic
+    // move focus to end date component
+    console.log(
+      'DateRange -> componentDidUpdate -> prevGet(prevState.startDate.id)',
+      prevGet(prevState.startDate.id)
+    );
+    console.log(
+      'DateRange -> componentDidUpdate -> get(this.state.startDate.id)',
+      get(this.state.startDate.id)
+    );
     if (prevGet(prevState.startDate.id) !== get(this.state.startDate.id)) {
-      // move focus to end date component
-      if (endDateRef) startDateRef.setOpen(false);
-      endDateRef.input.focus();
+      // if (endDateRef && endDateRef.current) endDateRef.current.input.focus();
     }
   }
 
   //* event handlers *********************************************************
   handleStartSelect = () => {
+    const endDateRef = this.state.endDate.ref;
     // move focus to end date component
-    // if (this.endDateRef.current) this.endDateRef.current.input.focus();
+    if (endDateRef && endDateRef.current) endDateRef.current.input.focus();
   };
 
   handleEndSelect = () => {
-    const { nextFocusRef } = this.props;
-    if (nextFocusRef) nextFocusRef.focus();
+    const { nextFocusRef, focusNext } = this.props;
+    // this.state.endDate.ref.current.input.focus();
+    // const { nextFocusRef } = this.props;
+    // if (nextFocusRef) nextFocusRef.focus();
+    const endDateRef = this.state.endDate.ref;
+    // if (endDateRef && endDateRef.current) endDateRef.current.input.focus();
+    console.log('date selected');
+    if (focusNext && nextFocusRef) nextFocusRef.focus();
   };
 
   handleChange = (date, id) => {
+    console.log('date changed');
     this.props.valueFunctions.set({ [id]: date });
   };
   handleStartChange = (date) => {
@@ -66,7 +79,16 @@ class DateRange extends Component {
   }
 
   render() {
-    const { startProps, endProps, valueFunctions, onFocus } = this.props;
+    const {
+      startProps,
+      endProps,
+      valueFunctions,
+      onFocus,
+      popperParent,
+      forceClose,
+      inputRef,
+      nextFocusRef,
+    } = this.props;
 
     //get values for each controlled component
 
@@ -74,12 +96,11 @@ class DateRange extends Component {
     const startDate = get(startProps.id);
     const endDate = get(endProps.id);
 
-    // this.setState().setDate(endMinDate.getDate() + 1);
-
     return (
       <React.Fragment>
         {/* Picker for start of range */}
         <DateHandler
+          key="startDate"
           id={startProps.id}
           placeholder={startProps.placeholder}
           icon={startProps.icon.url}
@@ -94,11 +115,15 @@ class DateRange extends Component {
           onChange={this.handleStartChange}
           onSelect={this.handleStartSelect}
           onFocus={onFocus}
-          inputRef={this.state.startDate.ref}
+          ref={inputRef}
           allowSameDay={true}
+          popperParent={popperParent}
+          forceClose={forceClose}
+          nextFocusRef={this.state.endDate.ref}
         />
         {/* Picker for end of range */}
         <DateHandler
+          key="endDate"
           id={endProps.id}
           placeholder={endProps.placeholder}
           icon={endProps.icon.url}
@@ -114,6 +139,9 @@ class DateRange extends Component {
           onChange={this.handleEndChange}
           onFocus={onFocus}
           inputRef={this.state.endDate.ref}
+          popperParent={popperParent}
+          forceClose={forceClose}
+          nextFocusRef={nextFocusRef}
         />
       </React.Fragment>
     );

@@ -1,4 +1,5 @@
 import React, { Component, createRef } from 'react';
+import { createPortal } from 'react-dom';
 import styled from 'styled-components';
 import {
   breakpoint,
@@ -7,16 +8,19 @@ import {
   getFontFamily,
   getFontSize,
   getFontWeight,
+  getHeight,
   getLetterSpacing,
   getMarginTop,
   getMarginRight,
   getMarginBottom,
   getMarginLeft,
+  getBoxShadow,
+  getBorderRadius,
 } from 'themeweaver';
-import { getProp } from '../utils/themeweaver-utils';
+import { getProp } from '../../../utils/themeweaver-utils';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import '../static/datepicker.css';
+import '../../../static/datepicker.css';
 
 const StyledDateHandler = styled.div`
 display: block;
@@ -26,6 +30,8 @@ margin-top: ${getMarginTop('date.searchBar', '0')};
 margin-right: ${getMarginRight('date.searchBar', '0')};
 margin-bottom: ${getMarginBottom('date.searchBar', '1rem')};
 margin-left: ${getMarginLeft('date.searchBar', '0')};
+
+
 
 .react-datepicker-popper {
   position: relative;
@@ -45,13 +51,20 @@ margin-left: ${getMarginLeft('date.searchBar', '0')};
   background-image: url(${getProp('icon')});
   background-repeat: no-repeat;
   background-position: ${getProp('iconOffset')} 50%;
-
+  box-shadow: ${getBoxShadow(
+    'date.searchBar',
+    '0px 0px 8px rgba(192, 192, 192, 0.52)'
+  )};
+  border-radius: ${getBorderRadius('date.searchBar', '5px')};
+  border-style: none;
   color: ${getColor('date.searchBar', 'inherit')};
   background-color: ${getBackgroundColor('date.searchBar', 'initial')};
   font-family: ${getFontFamily('date.searchBar', 'inherit')};
   font-weight: ${getFontWeight('date.searchBar', 'normal')};
   font-size: ${getFontSize('date.searchBar', '1.6rem')};
+  height: ${getHeight('date.searchBar', 'auto')};
   letter-spacing: ${getLetterSpacing('date.searchBar', '0.025em')};
+  
 }
 
 ${breakpoint(1)`
@@ -60,6 +73,8 @@ ${breakpoint(1)`
   margin-right: ${getMarginRight('date.searchBar', '1.4rem')};
   margin-bottom: ${getMarginBottom('date.searchBar', '2rem')};
   margin-left: ${getMarginLeft('date.searchBar', '0')};
+
+  
 
   .react-datepicker__input-container > input {
     width: ${getProp('width')};
@@ -70,6 +85,11 @@ ${breakpoint(1)`
     font-weight: ${getFontWeight('date.searchBar', 'normal')};
     font-size: ${getFontSize('date.searchBar', '1.6rem')};
     letter-spacing: ${getLetterSpacing('date.searchBar', '0.025em')};
+    box-shadow: ${getBoxShadow(
+      'date.searchBar',
+      '0px 0px 8px rgba(192, 192, 192, 0.52)'
+    )};
+    border-radius: ${getBorderRadius('date.searchBar', '5px')};
   }
 `}
 `;
@@ -96,6 +116,28 @@ class DateHandler extends Component {
       : desktopMargin || 'margin-right: 10px';
   };
 
+  PopperContainer = ({ children }) => {
+    const { popperParent, forceClose } = this.props;
+    if (popperParent && popperParent.current) {
+      return createPortal(children, popperParent.current);
+    } else {
+      return null;
+    }
+  };
+  componentDidUpdate() {
+    if (
+      this.props.forceClose &&
+      this.props.inputRef &&
+      this.props.inputRef.current
+    )
+      this.props.inputRef.current.setOpen(false);
+  }
+
+  handleFocus(e) {
+    e.target.readOnly = true;
+    this.props.onFocus();
+  }
+
   render() {
     const {
       placeholder,
@@ -116,6 +158,7 @@ class DateHandler extends Component {
       allowSameDay,
       openToDate,
     } = this.props;
+
     return (
       <StyledDateHandler
         icon={icon}
@@ -134,14 +177,23 @@ class DateHandler extends Component {
           openToDate={openToDate}
           allowSameDay={allowSameDay}
           onChange={onChange}
-          onFocus={onFocus}
+          onFocus={this.handleFocus.bind(this)}
           onSelect={onSelect}
           placeholderText={placeholder}
+          popperContainer={this.PopperContainer}
           popperPlacement="bottom"
           popperModifiers={{
             offset: {
               enabled: true,
-              offset: '-20px, 0',
+              offset: '0px, 0px',
+            },
+            flip: {
+              enabled: false,
+            },
+            preventOverflow: {
+              enabled: true,
+              escapeWithReference: false,
+              boundariesElement: 'viewport',
             },
           }}
           strictParsing

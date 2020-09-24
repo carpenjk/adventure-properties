@@ -1,17 +1,13 @@
 import { useState, useEffect, useLayoutEffect } from 'react';
-import usePopup from '../hooks/UsePopup';
 import { checkFilters } from '../../compConfig';
-import React, { Component } from 'react';
+import React from 'react';
 
 const SearchBarContext = React.createContext();
 
 const SearchBarProvider = (props) => {
-  const { popupMaxSceenWidth } = props;
   const [isStarted, setIsStarted] = useState(false);
-  const [isFocused, setIsFocused] = useState(false);
-  const [isSearchBarOpen, setIsSearchBarOpen] = useState(false);
+  const [isSearchBarFocused, setIsSearchBarFocused] = useState(false);
   const [isSearchFiltersOpen, setIsSearchFiltersOpen] = useState(false);
-  const isPopup = usePopup(popupMaxSceenWidth, isSearchFiltersOpen);
 
   //set up state for each search field using id of input in config file
   const [searchFields, setSearchFields] = useState({
@@ -119,10 +115,8 @@ const SearchBarProvider = (props) => {
         searchFields,
         searchFilters,
         isStarted,
-        isFocused,
-        isSearchBarOpen,
-        setIsSearchBarOpen,
-        isPopup,
+        isSearchBarFocused,
+        setIsSearchBarFocused,
         isSearchFiltersOpen,
         setIsSearchFiltersOpen,
         updateFilters,

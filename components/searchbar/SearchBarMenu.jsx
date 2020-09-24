@@ -3,9 +3,10 @@ import {
   breakpoint,
   getBackgroundColor,
   getBorderRadius,
-  getHeight,
   getWidth,
+  getMaxHeight,
   getMaxWidth,
+  getMinWidth,
   getMarginTop,
   getMarginRight,
   getMarginBottom,
@@ -16,14 +17,14 @@ import {
   getPaddingLeft,
 } from 'themeweaver';
 
-import { getProp } from '../../utils/themeweaver-utils';
+import { getProp, getConditionalProp } from '../../utils/themeweaver-utils';
 
 //hooks
 import { useContext, useRef } from 'react';
 import useIsoOnClickOutside from '../hooks/UseIsoOnClickOutside';
+import useWindowSize from '../hooks/UseWindowSize';
 import useIsoLayoutEffect from '../hooks/UseIsoLayoutEffect';
 import { SearchBarContext } from './searchBarContext';
-import useWindowSize from '../hooks/UseWindowSize';
 
 //components
 import SearchButton from '../SearchButton';
@@ -38,6 +39,7 @@ import SecondarySearchLayout from './SecondarySearchLayout';
 const DEFAULT_OFFSET_TOP_PX = 20;
 
 const StyledSearchBar = styled.div`
+  flex: none;
   position: absolute;
   top: ${getProp('offsetTop')}px;
   left: ${getProp('offsetLeft')};
@@ -47,57 +49,87 @@ const StyledSearchBar = styled.div`
   transform: translateX(-50%);
   box-sizing: content-box;
   background-color: ${getBackgroundColor('searchBar', 'none')};
-  margin-top: ${getMarginTop('searchBar', '0')};
-  margin-right: ${getMarginRight('searchBar', '0')};
-  margin-bottom: ${getMarginBottom('searchBar', '0')};
-  margin-left: ${getMarginLeft('searchBar', '0')};
 
   ${(props) =>
-    props.isSearchBarOpen &&
+    props.isSearchBarFocused &&
     `
-    padding-top: ${getPaddingTop('searchBar', '1rem')(props)};
-    padding-right: ${getPaddingRight('searchBar', '1rem')(props)};
-    padding-bottom: ${getPaddingBottom('searchBar', '1rem')(props)};
-    padding-left: ${getPaddingLeft('searchBar', '1rem')(props)};
+    margin-top: ${getMarginTop('searchBar', '0')(props)};
+    margin-right: ${getMarginRight('searchBar', '0')(props, 1)};
+    margin-bottom: ${getMarginBottom('searchBar', '0')(props)};
+    margin-left: ${getMarginLeft('searchBar', '0')(props)};
+    max-width: ${getProp('openMaxWidth', 0)};
   `}
 
-  ${(props) =>
-    props.isSearchFiltersOpen &&
-    `
-    height: ${getHeight('searchBar', '82vh')(props)}; 
-    `}
-
+  max-height: ${getMaxHeight('searchBar', 'none')};
   max-width: ${getMaxWidth('searchBar', 'none')};
   width: ${getWidth('searchBar', 'auto')};
   z-index: 999999;
   border-radius: ${getBorderRadius('searchBar', '8px')};
 
-  > * {
-    box-sizing: border-box;
-  }
-
   ${breakpoint(1)`
-  top: ${getProp('offsetTop', 1)}px;
-  background-color: ${getBackgroundColor('searchBar', 'none')};
-  margin-top: ${getMarginTop('searchBar', '0')};
-  margin-right: ${getMarginRight('searchBar', '0')};
-  margin-bottom: ${getMarginBottom('searchBar', '0')};
-  margin-left: ${getMarginLeft('searchBar', '0')};
-  padding-top: ${getPaddingTop('searchBar', '0')};
-  padding-right: ${getPaddingRight('searchBar', '0')};
-  padding-bottom: ${getPaddingBottom('searchBar', '0')};
-  padding-left: ${getPaddingLeft('searchBar', '0')};
-  width: ${getWidth('searchBar', 'auto')};
-  max-width: ${getMaxWidth('searchbar', 'none')};
-  border-radius: ${getBorderRadius('searchBar', '8px')};
-  
-  ${({ isSearchFiltersOpen }) =>
-    isSearchFiltersOpen &&
+    top: ${getProp('offsetTop', 1)}px;
+    background-color: ${getBackgroundColor('searchBar', 'none')};
+    margin-top: ${getMarginTop('searchBar', '0')};
+    margin-right: ${getMarginRight('searchBar', '0')};
+    margin-bottom: ${getMarginBottom('searchBar', '0')};
+    margin-left: ${getMarginLeft('searchBar', '0')};
+    padding: 0;
+
+    width: ${getWidth('searchBar', 'auto')};
+    max-width: ${getMaxWidth('searchBar', 'none')};
+    min-width: ${getMinWidth('searchBar', '0')};
+    border-radius: ${getBorderRadius('searchBar', '8px')};
+
+
+  ${(props) =>
+    props.isSearchFiltersOpen &&
     `
       width: 90vw;
-      max-width: 1000px;
-      padding: 2.5rem;
+      max-width: ${getProp('openMaxWidth', 1)(props)};
+      max-height: ${getMaxHeight('searchBar', '82vh')(props)};
     `}}
+`}
+`;
+
+const StyledBackground = styled.div`
+  background-color: transparent;
+  border-radius: ${getBorderRadius('searchBar', '8px')};
+  position: absolute;
+  top: -${getPaddingTop('searchBar', '1rem')};
+  right: -${getPaddingRight('searchBar', '1rem')};
+  bottom: -${getPaddingBottom('searchBar', '1rem')};
+  left: -${getPaddingLeft('searchBar', '1rem')};
+  z-index: -999999;
+
+  ${(props) =>
+    props.isSearchBarFocused &&
+    `
+      background-color: ${getBackgroundColor('searchBar', 'none')(props)};
+    `}
+
+  ${breakpoint(1)`
+    border-radius: ${getBorderRadius('searchBar', '8px')};
+    top: -${getPaddingTop('searchBar', '1rem')};
+    right: -${getPaddingRight('searchBar', '1rem')};
+    bottom: -${getPaddingBottom('searchBar', '1rem')};
+    left: -${getPaddingLeft('searchBar', '1rem')};
+    ${(props) =>
+      props.isSearchFiltersOpen &&
+      `
+        right: 0;
+      `}
+    `}
+`;
+
+const StyledScrollContainer = styled.div`
+  overflow-y: ${({ isSearchFiltersOpen }) =>
+    isSearchFiltersOpen ? 'auto' : 'initial'};
+
+  ${breakpoint(1)`
+    overflow-y: ${({ isSearchFiltersOpen }) =>
+      isSearchFiltersOpen ? 'hidden' : 'initial'};
+    display: flex;
+    flex-direction: column;
 `}
 `;
 
@@ -117,7 +149,9 @@ StyledSearchBar.defaultProps = {
 };
 
 const StyledButtonContainer = styled.div`
-  display: ${({ isSearchBarOpen }) => (isSearchBarOpen ? 'flex' : 'none')};
+  display: ${getConditionalProp('isDisplayed', ({ isDisplayed }) =>
+    isDisplayed ? 'flex' : 'none'
+  )};
   justify-content: space-between;
   padding-top: ${getPaddingTop('searchBar_container.buttons', '0')};
   padding-right: ${getPaddingRight('searchBar_container.buttons', '0')};
@@ -125,103 +159,119 @@ const StyledButtonContainer = styled.div`
   padding-left: ${getPaddingLeft('searchBar_container.buttons', '0')};
   border-top: ${({ isSearchFiltersOpen }) =>
     isSearchFiltersOpen ? '1px solid rgba(151, 151, 151, 0.35)' : 'none'};
+
+  ${breakpoint(1)`
+  display: ${getConditionalProp(
+    'isDisplayed',
+    ({ isDisplayed }) => (isDisplayed ? 'flex' : 'none'),
+    1
+  )};
+  `}
 `;
 
 //******************************************************************
 //* Beginning of Functional Component ******************************
 const SearchBarMenu = (props) => {
-  const { offsetTop } = props;
+  const { offsetTop, openMaxWidth } = props;
   //* context *********************************************************
   const {
     updateSearch,
     getSearchValue,
     isStarted,
-    isSearchBarOpen,
-    setIsSearchBarOpen,
+    isSearchBarFocused,
+    setIsSearchBarFocused,
     isSearchFiltersOpen,
     setIsSearchFiltersOpen,
-    isPopup,
   } = useContext(SearchBarContext);
 
   //* Dom References ***********************************************
   const searchBarRef = useRef(null);
+  const searchBarBgRef = useRef(null);
+  const scrollContainerRef = useRef(null);
   const visibleInputRefs = useRef([]);
   const hidableInputRefs = useRef([]);
 
   //* event handlers ***********************************************
   const handleFocus = (e) => {
-    setIsSearchBarOpen(true);
+    setIsSearchBarFocused(true);
   };
 
   const onClickOutsideEffect = () => {
-    if (!isStarted) {
-      setIsSearchBarOpen(false);
-      setIsSearchFiltersOpen(false);
-    }
+    setIsSearchBarFocused(false);
+    setIsSearchFiltersOpen(false);
   };
 
   //* hooks/lifecycle
-  useIsoLayoutEffect(() => {
-    !isStarted ? setIsSearchBarOpen(false) : setIsSearchBarOpen(true);
-  }, [isStarted]);
+  const windowSize = useWindowSize();
 
   useIsoOnClickOutside(searchBarRef, onClickOutsideEffect, [isStarted]);
 
   useIsoLayoutEffect(() => {
-    const top = offsetTop ? offsetTop : DEFAULT_OFFSET_TOP_PX;
-    if (!isSearchFiltersOpen) {
-      const searchBarPaddingTop = window
-        .getComputedStyle(searchBarRef.current)
-        .getPropertyValue('padding-top')
-        .split('px')[0];
-      searchBarRef.current.style.top = `${top - searchBarPaddingTop}px`;
-    }
-  }, [isSearchBarOpen, isSearchFiltersOpen]);
+    const outerElement = searchBarBgRef.current;
+    const searchBarOffsetTop = offsetTop ? offsetTop : DEFAULT_OFFSET_TOP_PX;
+    const parentOffsetTop = searchBarOffsetTop + outerElement.offsetTop;
+    const viewportOffsetTop = outerElement
+      ? outerElement.getBoundingClientRect().top
+      : 0;
+    searchBarRef.current.style.maxHeight = `${
+      window.innerHeight - viewportOffsetTop - parentOffsetTop * 2
+    }px`;
+  }, [windowSize.height]);
 
   //* component rendering ********************************************************
-
   return (
     <React.Fragment>
-      {!(isSearchBarOpen && isPopup) || (
-        <PopupModal
-          isOpen={[isSearchBarOpen, isSearchFiltersOpen]}
-          className={isSearchBarOpen && isPopup ? 'popupOpen' : ''}
-        />
+      {isSearchBarFocused && (
+        <PopupModal isOpen={[isSearchBarFocused, isSearchFiltersOpen]} />
       )}
+
       <StyledSearchBar
-        isSearchBarOpen={isSearchBarOpen}
+        key="searchBar"
         isSearchFiltersOpen={isSearchFiltersOpen}
+        isSearchBarFocused={isSearchBarFocused}
         offsetTop={offsetTop}
+        openMaxWidth={openMaxWidth}
         ref={searchBarRef}
       >
-        <StyledSearchFields isSearchFiltersOpen={isSearchFiltersOpen}>
-          <InputGroup
-            key="primarySearch"
-            isVisible={true}
-            isSearchBarOpen={isSearchBarOpen}
-            InputFields={PrimarySearchLayout}
-            inputRefs={visibleInputRefs}
-            valueFunctions={{ get: getSearchValue, set: updateSearch }}
-            onInputFocus={handleFocus}
-            lastBottomMargin={[true, true]}
-            lastRightMargin={[true, true]}
-          />
-          <InputGroup
-            key="secondarySearch"
-            isVisible={[isSearchBarOpen, true]}
-            isSearchBarOpen={isSearchBarOpen}
-            InputFields={SecondarySearchLayout}
-            inputRefs={hidableInputRefs}
-            valueFunctions={{ get: getSearchValue, set: updateSearch }}
-            onInputFocus={handleFocus}
-            lastBottomMargin={[false, true]}
-            lastRightMargin={[true, false]}
-          />
-        </StyledSearchFields>
+        <StyledBackground
+          isSearchBarFocused={isSearchBarFocused}
+          isSearchFiltersOpen={isSearchFiltersOpen}
+          ref={searchBarBgRef}
+        />
+        <StyledScrollContainer
+          isSearchFiltersOpen={isSearchFiltersOpen}
+          isSearchBarFocused={isSearchBarFocused}
+          ref={scrollContainerRef}
+        >
+          <StyledSearchFields isSearchFiltersOpen={isSearchFiltersOpen}>
+            <InputGroup
+              key="primarySearch"
+              groupkey="primaryGroup"
+              isVisible={true}
+              isSearchBarFocused={isSearchBarFocused}
+              InputFields={PrimarySearchLayout}
+              inputRefs={visibleInputRefs}
+              valueFunctions={{ get: getSearchValue, set: updateSearch }}
+              onInputFocus={handleFocus}
+            />
+            <InputGroup
+              key="secondarySearch"
+              groupKey="secondaryGroup"
+              isVisible={[isSearchBarFocused, true]}
+              isSearchBarFocused={isSearchBarFocused}
+              InputFields={SecondarySearchLayout}
+              inputRefs={hidableInputRefs}
+              valueFunctions={{ get: getSearchValue, set: updateSearch }}
+              onInputFocus={handleFocus}
+              lastItemMargin={[{ bottom: '4px' }, { right: '4px' }]}
+              searchBarRef={searchBarRef}
+            />
+          </StyledSearchFields>
 
-        <SearchFilters />
+          <SearchFilters isScrollable={[false, true]} />
+        </StyledScrollContainer>
         <StyledButtonContainer
-          isSearchBarOpen={isSearchBarOpen}
+          isDisplayed={[isSearchBarFocused, isSearchBarFocused || isStarted]}
           isSearchFiltersOpen={isSearchFiltersOpen}
         >
           <MoreButton

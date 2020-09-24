@@ -6,27 +6,39 @@ import {
   getMarginBottom,
   getMarginLeft,
 } from 'themeweaver';
-import { getProp } from '../../utils/themeweaver-utils';
+import { getProp, getConditionalProp } from '../../utils/themeweaver-utils';
 
 const StyledInputGroup = styled.div`
   display: ${(props) => (getProp('isVisible')(props) ? 'flex' : 'none')};
   flex-direction: column;
 
-  ${({ isSearchBarOpen }) => {
-    if (!isSearchBarOpen) {
+  ${getConditionalProp('showMargins', ({ showMargins }) => {
+    if (!showMargins) {
       return `
-        &.inputGroup > * {
-          margin: 0;
-        }
-      `;
-    }
-  }}
+      &.inputGroup > * {
+        margin: 0;
+      }`;
+    } else return '';
+  })}
 
   &.inputGroup > *:last-child {
-    ${(props) =>
-      !getProp('lastBottomMargin')(props) ? 'margin-bottom: 0;' : ''}
-    ${(props) => (!getProp('lastRightMargin')(props) ? 'margin-right: 0;' : '')}
+    ${getConditionalProp(
+      'lastItemMargin',
+      ({ lastItemMargin }) => {
+        let css = '';
+        if (lastItemMargin) {
+          const { top, right, bottom, left } = lastItemMargin;
+          if (top) css = css + '\n    margin-top: ' + top + ';';
+          if (right) css = css + '\n    margin-right: ' + right + ';';
+          if (bottom) css = css + '\n    margin-bottom: ' + bottom + ';';
+          if (left) css = css + '\n    margin-left: ' + left + ';';
+          return css;
+        }
+      },
+      0
+    )}
   }
+
   ${breakpoint(1)`
       display: flex;
       justify-content: center;
@@ -38,13 +50,39 @@ const StyledInputGroup = styled.div`
         margin-bottom: ${getMarginBottom('input.searchBar', '2rem')};
         margin-left: ${getMarginLeft('input.searchBar', '0')};
       }
-    
+
+      ${getConditionalProp(
+        'showMargins',
+        ({ showMargins }) => {
+          if (!showMargins) {
+            return `
+          &.inputGroup > * {
+            margin: 0;
+          }`;
+          } else return '';
+        },
+        1
+      )}
+
+
     &.inputGroup > *:last-child {
-    ${(props) =>
-      !getProp('lastBottomMargin', 1)(props) ? 'margin-bottom: 0;' : ''}
-    ${(props) =>
-      !getProp('lastRightMargin', 1)(props) ? 'margin-right: 0;' : ''}
+      ${getConditionalProp(
+        'lastItemMargin',
+        ({ lastItemMargin }) => {
+          let css = '';
+          if (lastItemMargin) {
+            const { top, right, bottom, left } = lastItemMargin;
+            if (top) css = css + '\n    margin-top: ' + top + ';';
+            if (right) css = css + '\n    margin-right: ' + right + ';';
+            if (bottom) css = css + '\n    margin-bottom: ' + bottom + ';';
+            if (left) css = css + '\n    margin-left: ' + left + ';';
+            return css;
+          }
+        },
+        1
+      )}
     }
+    
     `}
 `;
 
@@ -57,27 +95,20 @@ const InputGroup = (props) => {
   const {
     InputFields,
     isVisible,
-    onInputFocus,
-    valueFunctions,
-    inputRefs,
-    lastBottomMargin,
-    lastRightMargin,
-    isSearchBarOpen,
+    lastItemMargin,
+    isSearchBarFocused,
+    groupKey,
   } = props;
 
   return (
     <StyledInputGroup
+      key={groupKey}
       className="inputGroup"
       isVisible={isVisible}
-      isSearchBarOpen={isSearchBarOpen}
-      lastBottomMargin={lastBottomMargin}
-      lastRightMargin={lastRightMargin}
+      showMargins={[true, true]}
+      lastItemMargin={lastItemMargin}
     >
-      <InputFields
-        onInputFocus={onInputFocus}
-        valueFunctions={valueFunctions}
-        inputRefs={inputRefs}
-      />
+      <InputFields {...props} />
     </StyledInputGroup>
   );
 };

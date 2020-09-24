@@ -1,4 +1,4 @@
-import InputBase from '../InputBase';
+import InputBase from '../base/input/InputBase';
 
 const searchProps = {
   id: 'destination',

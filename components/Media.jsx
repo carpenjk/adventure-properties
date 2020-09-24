@@ -2,13 +2,17 @@
 
 import { createMedia } from '@artsy/fresnel';
 
+//export for theme
+export const breakpoints = {
+  sm: 0,
+  md: 880,
+  lg: 1000,
+  xl: 1200,
+  xxl: 1400,
+};
+
 const ExampleAppMedia = createMedia({
-  breakpoints: {
-    sm: 0,
-    md: 800,
-    lg: 850,
-    xl: 1192,
-  },
+  breakpoints: breakpoints,
 });
 
 // Generate CSS to be injected into the head

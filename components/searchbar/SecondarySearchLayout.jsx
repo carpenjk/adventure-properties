@@ -2,7 +2,7 @@ import { useContext } from 'react';
 import { ThemeContext } from 'styled-components';
 
 import DateRange from '../DateRange';
-import CustomSelect from '../CustomSelect';
+import CustomSelect from '../base/input/CustomSelect';
 
 const startDate = {
   id: 'arriveDate',
@@ -80,8 +80,18 @@ const guestOptions = [
 ];
 
 const SecondarySearchLayout = (props) => {
-  const { valueFunctions, onInputFocus, inputRefs } = props;
+  const {
+    valueFunctions,
+    onInputFocus,
+    inputRefs,
+    searchBarRef,
+    isSearchBarFocused,
+  } = props;
   const theme = useContext(ThemeContext);
+  const testRef = (el) => {
+    console.log('testRef');
+    inputRefs.current[0] = el;
+  };
   return (
     <React.Fragment>
       <DateRange
@@ -90,15 +100,19 @@ const SecondarySearchLayout = (props) => {
         endProps={endDate}
         valueFunctions={valueFunctions}
         onFocus={onInputFocus}
-        inputRef={(el) => (inputRefs.current[0] = el)}
-        nextFocusRef={false}
+        ref={(el) => (inputRefs.current[0] = el)}
+        focusNext={true}
+        nextFocusRef={inputRefs.current[1]}
+        popperParent={searchBarRef}
+        forceClose={!isSearchBarFocused}
       />
       <CustomSelect
         theme={theme}
         key="guests"
+        innerKey={'guestsSelect'}
         id="guests"
         placeholder="Guests"
-        focusNext={true}
+        focusNext={false}
         icon={'./static/assets/searchbar/icon/guest.svg'}
         iconOffset={'0.5rem'}
         iconWidth={'1.6rem'}
@@ -109,7 +123,7 @@ const SecondarySearchLayout = (props) => {
         options={guestOptions}
         valueFunctions={valueFunctions}
         onFocus={onInputFocus}
-        inputRef={(el) => (inputRefs.current[0] = el)}
+        ref={(el) => (inputRefs.current[1] = el)}
         nextFocusRef={false}
         height="4rem" //! refactor? Set height of React-Select objects to match input styling:
       />

@@ -6,20 +6,28 @@
   color: var(--lightText);
 }
 
-.react-datepicker__header {
-  background-color: var(--globalWhite);
+.react-datepicker-popper[data-placement^='bottom'] {
+  margin-top: 18px; /* triangle size + 2px */
+}
+
+.react-datepicker__triangle {
+  left: 50%;
 }
 
 .react-datepicker-popper[data-placement^='bottom'] .react-datepicker__triangle {
-  z-index: 1;
-  left: 50%;
-  top: 0;
-  margin-top: -2.5rem;
+  margin-top: -20px; /* triangle size */
+  border-bottom-color: #ccc;
+  /* set margin here to move arrow left or right or use position left in .react-datepicker__triangle */
 }
 
 .react-datepicker-popper[data-placement^='bottom']
   .react-datepicker__triangle::before {
-  border-width: 14px;
+  /* set color of arrow here with border-bottom-color */
+  border-bottom-color: #ccc;
+}
+
+.react-datepicker__header {
+  background-color: var(--globalWhite);
 }
 
 .react-datepicker__navigation {
