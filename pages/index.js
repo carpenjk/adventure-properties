@@ -7,7 +7,7 @@ import PropertyCardLayout from '../components/cards/PropertyCardLayout';
 import Head from 'next/head';
 import { mediaStyles } from '../components/Media';
 import Navbar from '../components/Navbar';
-import SearchBar from '../components/SearchBar/SearchBar';
+import SearchBar from '../components/searchbar/SearchBar';
 import HeroContainer from '../components/HeroContainer';
 
 import { breakpoints } from '../static/global/breakpoints';

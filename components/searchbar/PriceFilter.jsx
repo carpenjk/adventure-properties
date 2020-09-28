@@ -11,6 +11,7 @@ const PriceFilter = (props) => {
   return (
     <React.Fragment>
       <CustomSelect
+        innerKey={'minPriceSelect'}
         theme={theme}
         key="minPrice"
         name={inputs.minPrice.id}
@@ -22,6 +23,7 @@ const PriceFilter = (props) => {
         valueFunctions={valueFunctions}
       />
       <CustomSelect
+        innerKey={'maxPriceSelect'}
         theme={theme}
         key="maxPrice"
         name={inputs.maxPrice.id}

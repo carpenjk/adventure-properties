@@ -7,7 +7,7 @@ import PriceFilter from './PriceFilter';
 import RoomsFilter from './RoomsFilter';
 import CheckFilters from './CheckFilters';
 
-import { checkFilters as filters } from '../../compConfig';
+import { checkFiltersData as filters } from '../../compConfig';
 
 const StyledSearchFilter = styled.ul`
   display: none;

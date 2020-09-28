@@ -1,5 +1,5 @@
 import { useState, useEffect, useLayoutEffect } from 'react';
-import { checkFilters } from '../../compConfig';
+import { checkFiltersData } from '../../compConfig';
 import React from 'react';
 
 const SearchBarContext = React.createContext();
@@ -18,7 +18,7 @@ const SearchBarProvider = (props) => {
   });
 
   function createCheckFilterState() {
-    return checkFilters.reduce((acc, filterGroup) => {
+    return checkFiltersData.reduce((acc, filterGroup) => {
       return {
         ...acc,
         ...filterGroup.filters.reduce((acc, filter) => {

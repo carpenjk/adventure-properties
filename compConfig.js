@@ -127,7 +127,7 @@ export const SearchBar_config = {
   ],
 };
 
-export const checkFilters = [
+export const checkFiltersData = [
   {
     title: 'Experience',
     filters: [

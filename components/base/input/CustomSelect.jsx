@@ -152,7 +152,9 @@ class CustomSelect extends Component {
     display: 'flex',
     ':before': {
       content: '" "',
-      background: `url(${getProp('icon')(this.props)}) center no-repeat`,
+      background: getProp('icon')(this.props)
+        ? `url(${getProp('icon')(this.props)}) center no-repeat`
+        : 'none',
       overflow: 'hidden',
       display: 'flex',
       alignItems: 'center',
@@ -227,7 +229,7 @@ class CustomSelect extends Component {
         height: 0,
         width: 0,
       },
-      'ms-overflow-style': 'none',
+      msOverflowStyle: 'none',
       outline: 'none',
     }),
     option: (defaultStyles, { isSelected, isFocused }) => ({

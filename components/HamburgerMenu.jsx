@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { useState, useRef, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import useWindowSize from './hooks/UseWindowSize';
 import useIsoOnClickOutside from './hooks/UseIsoOnClickOutside';
 import useLockBodyScroll from './hooks/UseLockBodyScroll';

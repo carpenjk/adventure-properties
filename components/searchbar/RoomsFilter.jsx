@@ -12,6 +12,7 @@ const RoomsFilter = (props) => {
   return (
     <React.Fragment>
       <CustomSelect
+        innerKey={'bedSelect'}
         theme={theme}
         key="bedFilter"
         name={inputs.bedroom.id}
@@ -24,6 +25,7 @@ const RoomsFilter = (props) => {
         valueFunctions={valueFunctions}
       />
       <CustomSelect
+        innerKey={'bathSelect'}
         theme={theme}
         key="bathFilter"
         name={inputs.bathroom.id}
