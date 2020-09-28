@@ -1,6 +1,5 @@
-import Link from 'next/link';
-import { colors } from '../static/global/base';
 import styled from 'styled-components';
+import { getProp } from 'dataweaver';
 
 import NavLink from './NavLink';
 
@@ -10,17 +9,21 @@ const StyleWrapper = styled.nav`
   align-items: stretch;
 
   .navmenu__list {
-    max-width: ${(props) => props.maxWidth};
+    max-width: ${getProp('maxWidth')};
     width: 100%;
-
-    margin: ${({ displayVertical }) => (displayVertical ? '0' : '0 10px')};
+    margin: 0 10px;
+    ${condition('displayVertical')`
+      margin: 0;
+    `}
     margin-block-start: 0;
     margin-block-end: 0;
     padding-inline-start: 0;
 
     display: flex;
-    flex-direction: ${({ displayVertical }) =>
-      displayVertical ? 'column' : 'row'};
+    flex-direction: row;
+    ${condition('displayVertical')`
+      flex-direction: column;
+    `}
     justify-content: center;
     align-items: stretch;
 
@@ -36,7 +39,7 @@ const StyleWrapper = styled.nav`
     justify-content: center;
     align-items: stretch;
     flex: 1;
-    min-width: ${(props) => props.itemMinWidth};
+    min-width: ${getProp('itemMinWidth')};
     padding: '0 5px';
     font: inherit;
     cursor: pointer;
@@ -46,14 +49,11 @@ const StyleWrapper = styled.nav`
     flex: 1;
     font: inherit;
     text-decoration: none;
-    color: ${colors.menuColor.primary};
   }
 `;
 
 const NavMenu = (props) => {
   const {
-    position,
-    height,
     maxWidth,
     itemMinWidth,
     items,

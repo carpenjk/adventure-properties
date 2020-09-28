@@ -21,21 +21,10 @@ class DateRange extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    console.log('date component updated');
-    const endDateRef = this.state.endDate.ref;
     const { get } = this.props.valueFunctions;
     const { get: prevGet } = prevProps.valueFunctions;
     // move focus to end date component
-    console.log(
-      'DateRange -> componentDidUpdate -> prevGet(prevState.startDate.id)',
-      prevGet(prevState.startDate.id)
-    );
-    console.log(
-      'DateRange -> componentDidUpdate -> get(this.state.startDate.id)',
-      get(this.state.startDate.id)
-    );
     if (prevGet(prevState.startDate.id) !== get(this.state.startDate.id)) {
-      // if (endDateRef && endDateRef.current) endDateRef.current.input.focus();
     }
   }
 
@@ -48,17 +37,10 @@ class DateRange extends Component {
 
   handleEndSelect = () => {
     const { nextFocusRef, focusNext } = this.props;
-    // this.state.endDate.ref.current.input.focus();
-    // const { nextFocusRef } = this.props;
-    // if (nextFocusRef) nextFocusRef.focus();
-    const endDateRef = this.state.endDate.ref;
-    // if (endDateRef && endDateRef.current) endDateRef.current.input.focus();
-    console.log('date selected');
     if (focusNext && nextFocusRef) nextFocusRef.focus();
   };
 
   handleChange = (date, id) => {
-    console.log('date changed');
     this.props.valueFunctions.set({ [id]: date });
   };
   handleStartChange = (date) => {

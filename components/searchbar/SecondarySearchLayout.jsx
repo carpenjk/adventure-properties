@@ -88,10 +88,7 @@ const SecondarySearchLayout = (props) => {
     isSearchBarFocused,
   } = props;
   const theme = useContext(ThemeContext);
-  const testRef = (el) => {
-    console.log('testRef');
-    inputRefs.current[0] = el;
-  };
+
   return (
     <React.Fragment>
       <DateRange

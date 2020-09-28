@@ -1,8 +1,8 @@
 import styled from 'styled-components';
 import { breakpoint } from 'themeweaver';
-import { getConditionalProp } from '../utils/themeweaver-utils';
+import { condition } from 'dataweaver';
 
-import { useEffect, useRef } from 'react';
+import { useRef } from 'react';
 const StyledPopupModal = styled.div` 
   content: ' ';
   position: fixed;
@@ -15,18 +15,18 @@ const StyledPopupModal = styled.div`
   z-index: 999999;
 
   &.popup-isConditionallyOpen {
-    display: ${getConditionalProp('isOpen', ({ isOpen }) =>
-      isOpen ? 'block' : 'none'
-    )};
+    display: none;
+    ${condition('isOpen')`
+      display: block;
+    `}
   }
 
   ${breakpoint(1)`
     &.popup-isConditionallyOpen {
-      display: ${getConditionalProp(
-        'isOpen',
-        ({ isOpen }) => (isOpen ? 'block' : 'none'),
-        1
-      )};
+      display: none;
+      ${condition('isOpen')`
+        display: block;
+      `}
     }
   `}
 

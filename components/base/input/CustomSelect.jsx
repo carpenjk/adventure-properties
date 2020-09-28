@@ -22,7 +22,7 @@ import {
   getBoxShadow,
   getBorderRadius,
 } from 'themeweaver';
-import { getProp } from '../../../utils/themeweaver-utils';
+import { getProp } from 'dataweaver';
 
 //custom component for holding selected value
 const customSingleValue = ({ children, ...props }) => {

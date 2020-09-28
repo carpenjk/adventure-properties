@@ -1,6 +1,6 @@
 // import { colors } from '../static/global/base';
 import styled from 'styled-components';
-import { getProp } from '../utils/themeweaver-utils';
+import { condition } from 'dataweaver';
 import {
   getColor,
   getFontFamily,
@@ -77,24 +77,24 @@ const SelectIcon = styled.img`
   display: none;
 
   ${breakpoint(1)`
-  display: ${({ showIndicator }) =>
-    getProp(showIndicator, 1) ? 'block' : 'none'};
-  `}
-
-  &.selected {
-    position: absolute;
-    bottom: 5px;
-  }
-  &.notSelected {
     display: none;
-  }
+    ${condition('showIndicator')`
+      display: block;
+    `}
+    &.selected {
+      position: absolute;
+      bottom: 5px;
+    }
+    &.notSelected {
+      display: none;
+    }
+  `}
 `;
 
 const ToggleButton = (props) => {
   const { selected, onClick, showIndicator, text } = props;
 
   function handleClick(button) {
-    console.log('toggle click:', button);
     button.blur();
     onClick(text);
   }

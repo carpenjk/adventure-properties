@@ -17,7 +17,7 @@ import {
   getPaddingLeft,
 } from 'themeweaver';
 
-import { getProp, getConditionalProp } from '../../utils/themeweaver-utils';
+import { condition, getProp } from 'dataweaver';
 
 //hooks
 import { useContext, useRef } from 'react';
@@ -27,6 +27,7 @@ import useIsoLayoutEffect from '../hooks/UseIsoLayoutEffect';
 import { SearchBarContext } from './searchBarContext';
 
 //components
+import ExpandedBackground from './ExpandBackground';
 import SearchButton from '../SearchButton';
 import MoreButton from './MoreButton';
 import SearchFilters from './SearchFilters';
@@ -50,14 +51,12 @@ const StyledSearchBar = styled.div`
   box-sizing: content-box;
   background-color: ${getBackgroundColor('searchBar', 'none')};
 
-  ${(props) =>
-    props.isSearchBarFocused &&
-    `
-    margin-top: ${getMarginTop('searchBar', '0')(props)};
-    margin-right: ${getMarginRight('searchBar', '0')(props, 1)};
-    margin-bottom: ${getMarginBottom('searchBar', '0')(props)};
-    margin-left: ${getMarginLeft('searchBar', '0')(props)};
-    max-width: ${getProp('openMaxWidth', 0)};
+  ${condition('isSearchBarFocused')`
+    margin-top: ${getMarginTop('searchBar', '0')};
+    margin-right: ${getMarginRight('searchBar', '0')};
+    margin-bottom: ${getMarginBottom('searchBar', '0')};
+    margin-left: ${getMarginLeft('searchBar', '0')};
+    max-width: ${getProp('openMaxWidth')};
   `}
 
   max-height: ${getMaxHeight('searchBar', 'none')};
@@ -67,7 +66,7 @@ const StyledSearchBar = styled.div`
   border-radius: ${getBorderRadius('searchBar', '8px')};
 
   ${breakpoint(1)`
-    top: ${getProp('offsetTop', 1)}px;
+    top: ${getProp('offsetTop')}px;
     background-color: ${getBackgroundColor('searchBar', 'none')};
     margin-top: ${getMarginTop('searchBar', '0')};
     margin-right: ${getMarginRight('searchBar', '0')};
@@ -80,45 +79,12 @@ const StyledSearchBar = styled.div`
     min-width: ${getMinWidth('searchBar', '0')};
     border-radius: ${getBorderRadius('searchBar', '8px')};
 
-
-  ${(props) =>
-    props.isSearchFiltersOpen &&
-    `
-      width: 90vw;
-      max-width: ${getProp('openMaxWidth', 1)(props)};
-      max-height: ${getMaxHeight('searchBar', '82vh')(props)};
-    `}}
+  ${condition('isSearchFiltersOpen')`
+    width: 90vw;
+    max-width: ${getProp('openMaxWidth')};
+    max-height: ${getMaxHeight('searchBar', '82vh')};
+  `}  
 `}
-`;
-
-const StyledBackground = styled.div`
-  background-color: transparent;
-  border-radius: ${getBorderRadius('searchBar', '8px')};
-  position: absolute;
-  top: -${getPaddingTop('searchBar', '1rem')};
-  right: -${getPaddingRight('searchBar', '1rem')};
-  bottom: -${getPaddingBottom('searchBar', '1rem')};
-  left: -${getPaddingLeft('searchBar', '1rem')};
-  z-index: -999999;
-
-  ${(props) =>
-    props.isSearchBarFocused &&
-    `
-      background-color: ${getBackgroundColor('searchBar', 'none')(props)};
-    `}
-
-  ${breakpoint(1)`
-    border-radius: ${getBorderRadius('searchBar', '8px')};
-    top: -${getPaddingTop('searchBar', '1rem')};
-    right: -${getPaddingRight('searchBar', '1rem')};
-    bottom: -${getPaddingBottom('searchBar', '1rem')};
-    left: -${getPaddingLeft('searchBar', '1rem')};
-    ${(props) =>
-      props.isSearchFiltersOpen &&
-      `
-        right: 0;
-      `}
-    `}
 `;
 
 const StyledScrollContainer = styled.div`
@@ -136,7 +102,9 @@ const StyledScrollContainer = styled.div`
 const StyledSearchFields = styled.div`
   display: flex;
   flex-direction: column;
-  ${({ isSearchFiltersOpen }) => isSearchFiltersOpen && 'margin-bottom: 20px;'}
+  ${condition('isSearchFiltersOpen')`
+    margin-bottom: 20px;
+  `}
   ${breakpoint(1)`
     flex-direction: row;
   `}
@@ -149,23 +117,26 @@ StyledSearchBar.defaultProps = {
 };
 
 const StyledButtonContainer = styled.div`
-  display: ${getConditionalProp('isDisplayed', ({ isDisplayed }) =>
-    isDisplayed ? 'flex' : 'none'
-  )};
+  display: none;
+  ${condition('isDisplayed')`
+    display: flex;
+  `}
   justify-content: space-between;
   padding-top: ${getPaddingTop('searchBar_container.buttons', '0')};
   padding-right: ${getPaddingRight('searchBar_container.buttons', '0')};
   padding-bottom: ${getPaddingBottom('searchBar_container.buttons', '0')};
   padding-left: ${getPaddingLeft('searchBar_container.buttons', '0')};
-  border-top: ${({ isSearchFiltersOpen }) =>
-    isSearchFiltersOpen ? '1px solid rgba(151, 151, 151, 0.35)' : 'none'};
+  border-top: none;
+
+  ${condition('isSearchFiltersOpen')`
+    border-top: 1px solid rgba(151, 151, 151, 0.35);
+  `}
 
   ${breakpoint(1)`
-  display: ${getConditionalProp(
-    'isDisplayed',
-    ({ isDisplayed }) => (isDisplayed ? 'flex' : 'none'),
-    1
-  )};
+    display: none;
+    ${condition('isDisplayed')`
+      display: flex;
+    `}
   `}
 `;
 
@@ -233,10 +204,10 @@ const SearchBarMenu = (props) => {
         openMaxWidth={openMaxWidth}
         ref={searchBarRef}
       >
-        <StyledBackground
-          isSearchBarFocused={isSearchBarFocused}
-          isSearchFiltersOpen={isSearchFiltersOpen}
-          ref={searchBarBgRef}
+        <ExpandedBackground
+          isExpanded={isSearchBarFocused}
+          hideRight={[false, isSearchFiltersOpen]}
+          innerRef={searchBarBgRef}
         />
         <StyledScrollContainer
           isSearchFiltersOpen={isSearchFiltersOpen}

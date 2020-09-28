@@ -1,5 +1,5 @@
 import React from 'react';
-import { getComponentData } from '../../utils/themeweaver-utils';
+import { getComponentData } from 'dataweaver';
 
 const BoxWeaver = ({ data, semKey, ...directProps }) => {
   const compData = getComponentData(semKey, data);

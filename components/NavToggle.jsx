@@ -1,11 +1,7 @@
 import { useContext } from 'react';
 import { GlobalContext } from '../contexts/context';
 import { breakpoint, getMaxWidth } from 'themeweaver';
-import {
-  getProp,
-  getConditionalProp,
-  inverseProps,
-} from '../utils/themeweaver-utils';
+import { condition, getProp, inverseProps } from 'dataweaver';
 
 //components
 import styled from 'styled-components';
@@ -19,10 +15,11 @@ const StyledNav = styled.nav`
   .navtoggle__list {
     position: relative;
     display: flex;
-    flex-direction: ${getConditionalProp(
-      'displayVertical',
-      ({ displayVertical }) => (displayVertical ? 'column' : 'row')
-    )};
+    flex-direction: row;
+    ${condition('displayVertical')`
+      flex-direction: column;
+    `}
+
     justify-content: center;
     align-items: stretch;
     max-width: ${getProp('maxWidth')};
@@ -42,11 +39,10 @@ const StyledNav = styled.nav`
 
   ${breakpoint(1)`
       .navtoggle__list {
-        flex-direction: ${getConditionalProp(
-          'displayVertical',
-          ({ displayVertical }) => (displayVertical ? 'column' : 'row'),
-          1
-        )};
+        flex-direction: row;
+        ${condition('displayVertical')`
+          flex-direction: column;
+        `}
       }
       .navtoggle__list > li {
         max-width: ${getMaxWidth('button.nav', '116px')}

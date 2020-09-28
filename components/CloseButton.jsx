@@ -23,13 +23,10 @@ const CloseButton = (props) => {
     onClick,
     onKeyDown,
     isDisplayed,
-    icon,
     buttonIcon,
     buttonSize,
     iconSize,
     iconColor,
-    padding,
-    focusOnOpen,
     wrapperClass,
   } = props;
 

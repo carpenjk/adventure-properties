@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import { useRef } from 'react';
 import Link from 'next/link';
 import HamburgerMenu from './HamburgerMenu';
 import MobileMenuLayout from './MobileMenuLayout';
@@ -46,11 +45,11 @@ const MobileNavbar = (props) => {
           />
         )}
       />
-        <Link href="/">
-          <div className="logoContainer">
-            <img src={logo} alt="logo" />
-          </div>
-        </Link>
+      <Link href="/">
+        <div className="logoContainer">
+          <img src={logo} alt="logo" />
+        </div>
+      </Link>
     </StyledMobileNavbar>
   );
 };

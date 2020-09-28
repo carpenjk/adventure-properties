@@ -1,11 +1,7 @@
 import styled from 'styled-components';
 import { getHeight, getWidth, getBackgroundColor } from 'themeweaver';
-import { getProp } from '../utils/themeweaver-utils';
+import { getProp, getComponentData, getSubComponentProps } from 'dataweaver';
 import SubComponents from './SubComponents';
-import {
-  getComponentData,
-  getSubComponentProps,
-} from '../utils/themeweaver-utils';
 
 //! refactor to pass in header height offset ***********************************************
 const StyledHeroContainer = styled.div`

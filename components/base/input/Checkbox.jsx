@@ -9,7 +9,7 @@ import {
   getFontWeight,
   getLetterSpacing,
 } from 'themeweaver';
-import { getProp } from '../../../utils/themeweaver-utils';
+import { getProp } from 'dataweaver';
 
 const StyledLabel = styled.label`
   color: ${getColor('checkbox.searchBar', 'inherit')};

@@ -1,7 +1,7 @@
 import React from 'react';
 import BoxWeaver from './webweaver/BoxWeaver';
-import { getSubComponentData } from '../utils/themeweaver-utils';
-import { getComponentData } from '../utils/themeweaver-utils';
+import { getComponentData, getSubComponentData } from 'dataweaver';
+
 const SubComponents = ({ data, semKey, ...directProps }) => {
   // const test = getComponentData(semKey, data);
   const { props, items } = data[semKey];

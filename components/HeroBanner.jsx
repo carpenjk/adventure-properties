@@ -2,7 +2,7 @@ import useWindowSize from './hooks/UseWindowSize';
 import useIsoLayoutEffect from './hooks/UseIsoLayoutEffect';
 import { useRef } from 'react';
 import styled from 'styled-components';
-import { getProp } from '../utils/themeweaver-utils';
+import { getProp } from 'dataweaver';
 
 import {
   breakpoint,

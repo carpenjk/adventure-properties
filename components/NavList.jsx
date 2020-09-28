@@ -2,6 +2,7 @@ import styled from 'styled-components';
 import NavLink from './NavLink';
 
 import { getMaxWidth, breakpoint } from 'themeweaver';
+import { getProp } from 'dataweaver';
 
 const StyledNav = styled.nav`
   justify-self: flex-end;
@@ -9,7 +10,7 @@ const StyledNav = styled.nav`
   justify-content: center;
   align-items: stretch;
   width: 100%;
-  max-width: ${(props) => props.maxWidth};
+  max-width: ${getProp('maxWidth')};
 `;
 
 const StyledUl = styled.ul`

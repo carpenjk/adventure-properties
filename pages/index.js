@@ -73,8 +73,6 @@ const guestOptions = [
 const HERO_IMAGE = '../static/assets/lofoten-2220461.png';
 
 const Index = () => {
-  console.log('theme:', theme);
-
   return (
     <ThemeProvider theme={theme}>
       <React.Fragment>

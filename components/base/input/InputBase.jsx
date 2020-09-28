@@ -19,7 +19,7 @@ import {
   getBoxShadow,
   getBorderRadius,
 } from 'themeweaver';
-import { getProp } from '../../../utils/themeweaver-utils';
+import { getProp } from 'dataweaver';
 
 const StyledInput = styled.input`
   display: block;

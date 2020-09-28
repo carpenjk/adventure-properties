@@ -17,7 +17,7 @@ import {
   getBoxShadow,
   getBorderRadius,
 } from 'themeweaver';
-import { getProp } from '../../../utils/themeweaver-utils';
+import { getProp } from 'dataweaver';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import '../../../static/datepicker.css';

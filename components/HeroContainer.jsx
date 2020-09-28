@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { getHeight, getWidth, getBackgroundColor } from 'themeweaver';
-import { getProp } from '../utils/themeweaver-utils';
+import { getProp } from 'dataweaver';
 
 import HeroBanner from './HeroBanner';
 

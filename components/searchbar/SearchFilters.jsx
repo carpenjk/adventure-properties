@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { breakpoint } from 'themeweaver';
-import { getConditionalProp } from '../../utils/themeweaver-utils';
+import { condition } from 'dataweaver';
 import { useContext } from 'react';
 import { SearchBarContext } from './searchBarContext';
 import PriceFilter from './PriceFilter';
@@ -10,14 +10,18 @@ import CheckFilters from './CheckFilters';
 import { checkFilters as filters } from '../../compConfig';
 
 const StyledSearchFilter = styled.ul`
-  display: ${({ isSearchFiltersOpen }) =>
-    isSearchFiltersOpen ? 'flex' : 'none'};
+  display: none;
+  ${condition('isSearchFiltersOpen')`
+    display: flex;
+  `}
+
   flex-direction: column;
   flex: none;
   overflow-x: hidden;
-  overflow-y: ${getConditionalProp('isScrollable', ({ isScrollable }) =>
-    isScrollable ? 'scroll' : 'hidden'
-  )};
+  overflow-y: hidden;
+  ${condition('isScrollable')`
+    overflow-y: scroll;
+  `}
   list-style: none;
   margin-block-start: 0px;
   margin-block-end: 0px;
@@ -25,11 +29,10 @@ const StyledSearchFilter = styled.ul`
 
   ${breakpoint(1)`
     flex: 1;
-    overflow-y: ${getConditionalProp(
-      'isScrollable',
-      ({ isScrollable }) => (isScrollable ? 'scroll' : 'hidden'),
-      1
-    )};
+    overflow-y: hidden;
+    ${condition('isScrollable')`
+      overflow-y: scroll;
+    `}
   `}
 `;
 
