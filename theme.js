@@ -33,12 +33,7 @@ export const theme = withThemeweaver(
       colorBig: 'color 500ms ease',
       padding: 'padding 500ms ease',
     },
-    breakpoints: [
-      breakpoints.md + 'px',
-      breakpoints.lg + 'px',
-      breakpoints.xl,
-      breakpoints.xxl,
-    ],
+    breakpoints: ['880px', '1000px', '1200px', '1400px'],
   },
   {
     // beginning of themeweaver asignments *****************
@@ -151,7 +146,7 @@ export const theme = withThemeweaver(
     },
     nav: {
       ...variant('main', {
-        backgroundColor: 'secondary',
+        backgroundColor: 'white',
         fontFamily: 'poppins',
         fontSize: 3,
         fontWeight: 'bold',
@@ -171,6 +166,7 @@ export const theme = withThemeweaver(
     },
     hero: {
       height: value('81.5vh'),
+      borderRadius: 2,
     },
     searchBar: {
       backgroundColor: 'white',
@@ -196,6 +192,14 @@ export const theme = withThemeweaver(
       ...variant('filter', {
         marginBottom: 2,
         marginRight: [0, 3],
+      }),
+    },
+    features: {
+      ...variant('default', {
+        paddingTop: 3,
+        paddingRight: 0,
+        paddingBottom: 3,
+        paddingLeft: 0,
       }),
     },
   }
