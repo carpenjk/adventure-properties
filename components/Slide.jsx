@@ -111,7 +111,7 @@ const Slide = (props) => {
           />
         ))}
       </StyledCompartment>
-      <StyledCompartment
+      <SliderCompartment
         classname="sliderDrawer_comp3"
         numOfCompartments={numOfCompartments}
       >
@@ -126,7 +126,7 @@ const Slide = (props) => {
             )}
           />
         ))}
-      </StyledCompartment>
+      </SliderCompartment>
     </StyledSlide>
   );
 };
