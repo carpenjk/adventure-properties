@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import { Media } from './Media';
 import {
   getBackgroundColor,
   getHeight,
@@ -13,14 +12,15 @@ import {
   getPaddingBottom,
   getPaddingLeft,
 } from 'themeweaver';
-//components
-import WideNavbarLayout from './WideNavbarLayout';
 import { TwMobileMenu } from 'tw-mobile-menu';
+import { Media } from './Media';
+// components
+import WideNavbarLayout from './WideNavbarLayout';
 
-//data
+// data
 import { navData } from '../data/data';
 
-//assets
+// assets
 const LOGO = '../static/assets/LogoMain.svg';
 
 const StyledNavbar = styled.div`
@@ -43,21 +43,19 @@ const StyledNavbar = styled.div`
     width: 100%;
   }
 `;
-const Navbar = (props) => {
-  return (
-    <StyledNavbar>
-      <Media lessThan="md">
-        <TwMobileMenu
-          data={{ nav: navData.nav }}
-          focusOnOpen={true}
-          key="twMobileMenu"
-        />
-      </Media>
-      <Media greaterThanOrEqual="md">
-        <WideNavbarLayout data={navData} logo={LOGO} />
-      </Media>
-    </StyledNavbar>
-  );
-};
+const Navbar = (props) => (
+  <StyledNavbar>
+    <Media lessThan="md">
+      <TwMobileMenu
+        data={{ nav: navData.nav }}
+        focusOnOpen
+        key="twMobileMenu"
+      />
+    </Media>
+    <Media greaterThanOrEqual="md">
+      <WideNavbarLayout data={navData} logo={LOGO} />
+    </Media>
+  </StyledNavbar>
+);
 
 export default Navbar;

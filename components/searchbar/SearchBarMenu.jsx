@@ -29,7 +29,7 @@ import { SearchBarContext } from './searchBarContext';
 //components
 import ExpandedBackground from './ExpandBackground';
 import SearchButton from '../SearchButton';
-import MoreButton from './MoreButton';
+import MoreButton from '../MoreButton';
 import SearchFilters from './SearchFilters';
 import PopupModal from '../PopupModal';
 import InputGroup from './InputGroup';
@@ -246,6 +246,7 @@ const SearchBarMenu = (props) => {
           isSearchFiltersOpen={isSearchFiltersOpen}
         >
           <MoreButton
+            text="More Filters"
             onClick={() => setIsSearchFiltersOpen(() => !isSearchFiltersOpen)}
             expanded={isSearchFiltersOpen}
           />

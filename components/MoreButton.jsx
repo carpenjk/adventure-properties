@@ -38,8 +38,10 @@ const Button = styled.button`
   cursor: pointer;
 `;
 const MoreButton = (props) => {
-  const { expanded, onClick } = props;
-  return <Button onClick={onClick}>{expanded ? '-' : '+'} More Filters</Button>;
+  const { expanded, text, onClick } = props;
+  return (
+    <Button onClick={onClick}>{expanded ? '- ' + text : '+ ' + text}</Button>
+  );
 };
 
 export default MoreButton;

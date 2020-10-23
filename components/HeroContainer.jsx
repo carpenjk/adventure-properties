@@ -5,7 +5,7 @@ import { getProp } from 'dataweaver';
 import HeroBanner from './HeroBanner';
 
 const StyledHeroContainer = styled.div`
-  overflow-x: hidden;
+  overflow: hidden;
   position: ${getProp('position')};
   top: ${getProp('offsetTop', '0')};
   width: ${getWidth('hero', '100%')};

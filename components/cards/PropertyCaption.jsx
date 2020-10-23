@@ -1,33 +1,44 @@
 import styled from 'styled-components';
+import CaptionItem from './CaptionItem';
 
 const StyledAttributes = styled.div`
   display: flex;
-  align-items: center;
+  align-items: stretch;
   justify-content: space-between;
   margin: 10px 0 10px 0;
   p {
     margin: 0;
   }
 `;
-const CaptionItem = styled.span`
+const StyledCaptionItem = styled.span`
   display: flex;
   align-items: center;
   /* text/small2 */
+  padding-left: 0.4rem;
+  padding-right: 0.4rem;
   font-family: Poppins;
   font-style: normal;
   font-weight: 500;
-  font-size: 12px;
+  font-size: 11px;
   color: var(--lightText);
 `;
 
-const Price = styled.p`
-  display: inline-block;
+const Price = styled.span`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
   margin: 0;
+  max-width: 50px;
   font-family: Poppins;
   font-style: normal;
   font-weight: 600;
-  font-size: 1.8rem;
+  font-size: 1.6rem;
   color: var(--mainText);
+  letter-spacing: 0.2em;
+  > * {
+    letter-spacing: initial;
+  }
 `;
 
 const StyledTags = styled.ul`
@@ -61,24 +72,31 @@ const StyledLocation = styled.div`
 `;
 
 const PropertyCaption = (props) => {
+  const { beds, baths, maxGuests, price, location, propertyType, tags } = props;
   return (
-    <React.Fragment>
+    <>
       <StyledAttributes>
-        <CaptionItem>
-          <Price>$239</Price> / night
-        </CaptionItem>
-        <CaptionItem>2 Guests</CaptionItem>
-        <CaptionItem>1 Bed</CaptionItem>
-        <CaptionItem>1 Bath</CaptionItem>
-        <CaptionItem>Cabin</CaptionItem>
+        <Price>
+          {price}
+          <CaptionItem caption={` /night`} />
+        </Price>
+        <CaptionItem
+          caption={`${maxGuests} Guest${maxGuests > 1 ? 's' : ''}`}
+        />
+        <CaptionItem caption={`${beds} Bed${beds > 1 ? 's' : ''}`} />
+        <CaptionItem caption={`${baths} Bath${baths > 1 ? 's' : ''}`} />
+        <CaptionItem caption={propertyType} />
       </StyledAttributes>
       <StyledTags>
         <StyledTag>
-          Skiing, Snowshoeing, Birding, Snowmobiling, Hiking...
+          {tags.reduce((result, tag, index) => {
+            const suffix = index === tags.length - 1 ? '...' : ', ';
+            return result + tag + suffix;
+          })}
         </StyledTag>
       </StyledTags>
-      <StyledLocation>Sugarloaf, ME</StyledLocation>
-    </React.Fragment>
+      <StyledLocation>{location}</StyledLocation>
+    </>
   );
 };
 

@@ -1,53 +1,73 @@
 import styled from 'styled-components';
 import PropertyCaption from './PropertyCaption';
+
 const StyledLargeLayout = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: stretch;
   align-content: stretch;
-  max-width: 445px;
-  max-height: 420px;
+
   background: #ffffff;
   box-sizing: border-box;
+
   h1 {
     flex: none;
     margin: 0 0 1.5rem 0;
-    grid-column: 1 / 5;
-    grid-row: 1 / span 1;
+    font-family: Open Sans;
+
+    display: flex;
+    align-items: center;
+    color: #444649;
+    font-family: Open Sans;
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 150%;
+    letter-spacing: 0.025em;
+    text-align: left;
   }
   figure {
     margin: 0;
   }
   .image {
-    min-height: 275px;
-    min-width: 380px;
     grid-column: 1/5;
     grid-row: 2 / span 1;
-    background-color: lightBlue;
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
   }
   .footer {
     grid-column: 1/5;
     grid-row: 3 / span 1;
   }
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
 `;
-const LargeLayout = () => {
+const LargeLayout = ({ data }) => {
+  const { heading, ...remData } = data;
+
   return (
     <StyledLargeLayout>
-      <h1 className="cardHeader">3 Bdr With Amazing views</h1>
+      <h1 className="cardHeader">{heading}</h1>
       <figure>
-        <div className="image"></div>
+        <div className="image">
+          <img src="../../static/results/result001.png" alt={heading} />
+        </div>
         <figcaption>
-          <PropertyCaption />
+          <PropertyCaption {...remData} />
         </figcaption>
       </figure>
     </StyledLargeLayout>
   );
 };
 
-const PropertyCardLayout = ({ style }) => {
-  switch (style) {
+const PropertyCardLayout = ({ variant, data }) => {
+  switch (variant) {
     case 'large':
-      return <LargeLayout />;
+      return <LargeLayout data={data} />;
     default:
       return <div>Loading</div>;
   }

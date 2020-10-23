@@ -1,7 +1,5 @@
 import React, { Component, createRef } from 'react';
-import withUseRef from '../../WithUseRef';
 import Select, { components } from 'react-select';
-import DropDownIncrArrow from '../../DropDownIncrArrow';
 import styled from 'styled-components';
 import {
   breakpoint,
@@ -23,24 +21,22 @@ import {
   getBorderRadius,
 } from 'themeweaver';
 import { getProp } from 'dataweaver';
+import DropDownIncrArrow from '../../DropDownIncrArrow';
+import withUseRef from '../../WithUseRef';
 
-//custom component for holding selected value
-const customSingleValue = ({ children, ...props }) => {
-  return (
-    <components.SingleValue {...props}>
-      {props.data.selectedLabel}
-    </components.SingleValue>
-  );
-};
+// custom component for holding selected value
+const customSingleValue = ({ children, ...props }) => (
+  <components.SingleValue {...props}>
+    {props.data.selectedLabel}
+  </components.SingleValue>
+);
 
-const customMenu = (props) => {
-  return (
-    <React.Fragment>
-      <components.Menu {...props}>{props.children}</components.Menu>
-      <DropDownIncrArrow />
-    </React.Fragment>
-  );
-};
+const customMenu = (props) => (
+  <>
+    <components.Menu {...props}>{props.children}</components.Menu>
+    <DropDownIncrArrow />
+  </>
+);
 
 const StyledSelect = styled.div`
   display: block;
@@ -183,7 +179,7 @@ class CustomSelect extends Component {
       ...defaultStyles,
       border: 'none',
       boxShadow: 'none',
-      maxHeight: this.props.height, //max height must be set to match input styling
+      maxHeight: this.props.height, // max height must be set to match input styling
     }),
     input: (defaultStyles) => ({
       ...defaultStyles,
@@ -223,7 +219,7 @@ class CustomSelect extends Component {
       height: 200,
       padding: 0,
       boxShadow: '0px 5px 5px rgba(0, 0, 0, 0.15)',
-      //hide scroll bars for multiple browsers
+      // hide scroll bars for multiple browsers
       scrollbarWidth: 'none',
       '::-webkit-scrollbar': {
         height: 0,
@@ -278,9 +274,7 @@ class CustomSelect extends Component {
             SingleValue: customSingleValue,
             Menu: customMenu,
           }}
-          onChange={
-            onInputChange ? onInputChange : this.handleSelectChange.bind(this)
-          }
+          onChange={onInputChange || this.handleSelectChange.bind(this)}
           onBlur={this.handleBlur.bind(this)}
           onFocus={this.handleFocus.bind(this)}
           ref={useInnerRef}

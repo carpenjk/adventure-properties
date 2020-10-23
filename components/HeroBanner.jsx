@@ -6,6 +6,7 @@ import { getProp } from 'dataweaver';
 
 import {
   breakpoint,
+  getBorderRadius,
   getPaddingTop,
   getPaddingBottom,
   getPaddingRight,
@@ -63,6 +64,7 @@ const StyledBackground = styled.div`
   content: '';
   background: #ffffff;
   opacity: 0.85;
+  border-radius: ${getBorderRadius('banner', '3px')};
 
   position: absolute;
   top: 0;
