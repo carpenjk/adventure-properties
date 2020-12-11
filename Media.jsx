@@ -4,11 +4,11 @@ import { createMedia } from '@artsy/fresnel';
 
 // export for theme
 export const breakpoints = {
-  sm: 0,
-  md: 880,
-  lg: 1000,
-  xl: 1200,
-  xxl: 1400,
+  0: 0,
+  1: 880,
+  2: 1050,
+  3: 1200,
+  4: 1400,
 };
 
 const ExampleAppMedia = createMedia({

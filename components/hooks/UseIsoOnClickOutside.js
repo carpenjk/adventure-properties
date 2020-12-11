@@ -22,7 +22,6 @@ const useIsoOnClickOutside = (ref, handler, deps) => {
         document.removeEventListener('touchstart', listener);
       };
     }
-    return;
   }, [ref, handler, ...deps]);
 };
 

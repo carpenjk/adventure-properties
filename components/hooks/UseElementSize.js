@@ -1,14 +1,17 @@
 import { useRef, useState } from 'react';
 import useIsoLayoutEffect from './UseIsoLayoutEffect';
+
 const useElementSize = () => {
   const [size, setSize] = useState({ height: 0, width: 0 });
   const elementRef = useRef(null);
 
   useIsoLayoutEffect(() => {
-    setSize({
-      height: elementRef.current.clientHeight,
-      width: elementRef.current.clientWidth,
-    });
+    if (elementRef.current) {
+      setSize({
+        height: elementRef.current.clientHeight,
+        width: elementRef.current.clientWidth,
+      });
+    }
   }, []);
   return { elementRef, size };
 };

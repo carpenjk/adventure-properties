@@ -3,13 +3,11 @@ import { useState, useEffect, useCallback } from 'react';
 function useParentSize(element) {
   const parentElement = element ? element.parentElement : undefined;
 
-  const getSize = () => {
-    return {
-      width: parentElement ? parentElement.offsetWidth : undefined,
-      height: parentElement ? parentElement.offsetHeight : undefined,
-      forceUpdate: getSize,
-    };
-  };
+  const getSize = () => ({
+    width: parentElement ? parentElement.offsetWidth : undefined,
+    height: parentElement ? parentElement.offsetHeight : undefined,
+    forceUpdate: getSize,
+  });
 
   const [parentSize, setParentSize] = useState(getSize);
   useEffect(() => {
@@ -18,8 +16,8 @@ function useParentSize(element) {
     }
     if (parentElement) {
       handleResize();
-      parentElement.addEventListener('resize', handleResize);
-      return () => parentElement.removeEventListener('resize', handleResize);
+      window.addEventListener('resize', handleResize);
+      return () => window.removeEventListener('resize', handleResize);
     }
   }, [element]);
 

@@ -1,8 +1,8 @@
 import styled from 'styled-components';
 import { useRef } from 'react';
-import useIsoLayoutEffect from '../../hooks/UseIsoLayoutEffect';
 import { getProp } from 'dataweaver';
 import { getMaxHeight, getMinHeight } from 'themeweaver';
+import useIsoLayoutEffect from '../../hooks/UseIsoLayoutEffect';
 
 const StyledHeader = styled.header`
   position: ${getProp('position')};
@@ -31,14 +31,14 @@ const Header = (props) => {
   }, []);
 
   return (
-    <React.Fragment>
+    <>
       <StyledHeader position={position} ref={headerRef}>
         {children}
       </StyledHeader>
       {(position === 'fixed' || position === 'absolute') && (
         <StyledFiller ref={fillerRef} />
       )}
-    </React.Fragment>
+    </>
   );
 };
 

@@ -15,8 +15,9 @@ import {
   getPaddingBottom,
   getPaddingLeft,
 } from 'themeweaver';
+import { condition } from 'dataweaver';
 
-const Button = styled.button`
+const StyledButton = styled.button`
   flex: none;
   padding-top: ${getPaddingTop('button.expander', '0')};
   padding-right: ${getPaddingRight('button.expander', '0')};
@@ -36,11 +37,17 @@ const Button = styled.button`
   background: none;
   border: none;
   cursor: pointer;
+
+  ${condition(({ tw }) => tw && tw.state === 'strong')`
+    font-weight: ${getFontWeight('button.expander_strong', 'bold')};
+  `}
 `;
 const MoreButton = (props) => {
-  const { expanded, text, onClick } = props;
+  const { isExpanded, text, onClick, innerRef, tw } = props;
   return (
-    <Button onClick={onClick}>{expanded ? '- ' + text : '+ ' + text}</Button>
+    <StyledButton tw={tw} onClick={onClick} ref={innerRef} tabIndex="0">
+      {isExpanded ? `- ${text}` : `+ ${text}`}
+    </StyledButton>
   );
 };
 

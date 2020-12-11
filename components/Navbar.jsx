@@ -13,7 +13,7 @@ import {
   getPaddingLeft,
 } from 'themeweaver';
 import { TwMobileMenu } from 'tw-mobile-menu';
-import { Media } from './Media';
+import { Media } from '../Media';
 // components
 import WideNavbarLayout from './WideNavbarLayout';
 

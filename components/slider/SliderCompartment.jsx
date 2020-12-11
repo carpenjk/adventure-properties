@@ -16,8 +16,8 @@ const StyledCompartment = styled.div`
     align-items: initial;
     width: calc(100% / ${getProp('numOfCompartments')});  
     > div {
-      margin-left: 1.5%;
-      margin-right:1.5%;
+      margin-left: 2%;
+      margin-right: 2%;
     }
     
   `}

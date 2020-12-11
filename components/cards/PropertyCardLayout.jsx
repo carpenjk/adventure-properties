@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import PropertyCaption from './PropertyCaption';
+import PropertyDescription from './PropertyDescription';
 
 const StyledLargeLayout = styled.div`
   display: flex;

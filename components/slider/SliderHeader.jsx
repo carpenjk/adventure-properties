@@ -1,10 +1,14 @@
 import styled from 'styled-components';
+
 const StyledHeader = styled.div`
   align-self: flex-start;
   display: flex;
   justify-content: flex-start;
   h2 {
     color: blue;
+    padding-top: 16px;
+    padding-bottom: 16px;
+    margin: 0;
   }
 `;
 const StyledTopic = styled.span`

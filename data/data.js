@@ -82,7 +82,8 @@ export const slider1Data = {
     {
       key: 'skiing1',
       heading: '1 Bdr With Amazing Views',
-      description: 'this is a description of the property',
+      description:
+        'Lorem ipsum dolor, sit amet consectetur adipisicing elit. Facere dolorem voluptatem iure. Corrupti architecto distinctio autem. Dicta consequuntur natus possimus quia libero, recusandae laborum blanditiis, quaerat ipsa quisquam deleniti dolorem? Laudantium inventore accusamus natus enim dignissimos vero est atque libero!',
       location: 'Sugarloaf, ME',
       price: '$239',
       maxGuests: 2,
@@ -94,7 +95,8 @@ export const slider1Data = {
     {
       key: 'skiing2',
       heading: '2 Bdr With Amazing Views',
-      description: 'this is a description of the property',
+      description:
+        'Lorem ipsum dolor sit amet consectetur adipisicing elit. Omnis ipsa, inventore iure tempora vero fugit enim cumque quae quos cupiditate id et placeat ipsam veritatis voluptate qui adipisci architecto molestiae facere veniam. A voluptates esse repellendus optio molestiae autem accusamus, saepe beatae, ducimus voluptatem impedit nisi provident enim corporis facere. Harum tenetur sequi ut nesciunt dolor, veritatis enim numquam corporis.',
       location: 'Sugarloaf, ME',
       price: '$239',
       maxGuests: 2,

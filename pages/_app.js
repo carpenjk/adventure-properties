@@ -1,7 +1,7 @@
 import React from 'react';
 import App from 'next/app';
 import { ConfigProvider } from '../contexts/context';
-import { MediaContextProvider } from '../components/Media';
+import { MediaContextProvider } from '../Media';
 
 class MyApp extends App {
   render() {

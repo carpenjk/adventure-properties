@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import styled from 'styled-components';
 import {
   getMaxHeight,
@@ -15,27 +14,14 @@ import {
   breakpoint,
   getMaxWidth,
 } from 'themeweaver';
-import { condition, getProp } from 'dataweaver';
-import useIsoLayoutEffect from '../hooks/UseIsoLayoutEffect';
+import CardContainer from './CardContainer';
 import PropertyDescription from './PropertyDescription';
+import PropertyCardLayout from './PropertyCardLayout';
 
-const Box = styled.div`
-  display: inline-block;
-  position: relative;
-  background: #ffffff;
-  border: 1px solid #cdf7f6;
-  box-sizing: border-box;
-  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.15);
-  padding: 15px;
-  cursor: pointer;
-`;
-const StyledCard = styled.div`
-  flex: 1 1 auto;
-  position: relative;
-  background: #ffffff;
-  border: 1px solid #cdf7f6;
-  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.15);
-  cursor: pointer;
+const StyledProperty = styled.div`
+  display: flex;
+  max-width: 450px;
+  flex-direction: column;
 
   padding-top: ${getPaddingTop('card.container', '8px')};
   padding-right: ${getPaddingRight('card.container', '8px')};
@@ -50,11 +36,8 @@ const StyledCard = styled.div`
   max-height: ${getMaxHeight('card.container', 'none')};
   max-width: ${getMaxWidth('card.container', '450px')};
 
-  ${condition(({ tw }) => tw && tw.state === 'inactive')`
-    opacity: 0.4;
-  `}
-
   ${breakpoint(1)`
+    flex-direction: row;
     flex: 1 1 285px;
     padding-top: ${getPaddingTop('card.container', '8px')};
     padding-right: ${getPaddingRight('card.container', '8px')};
@@ -68,51 +51,38 @@ const StyledCard = styled.div`
     min-width: ${getMinWidth('card.container', '0')};
     max-height: ${getMaxHeight('card.container', 'none')};
     max-width: ${getMaxWidth('card.container', 'none')};
-    ${condition(({ currScale }) => currScale && currScale !== 1)`
-      transform: scale(${getProp('currScale')})
-    `}
   `}
 `;
 
-const CardContainer = ({
-  tw,
-  renderLayout,
-  innerRef,
-  scale,
-  scaleOnHover,
-  scaleUp,
-}) => {
-  const [currScale, setCurrScale] = useState(1);
-  const handleMouseEnter = (e) => {
-    if (scaleOnHover) setCurrScale(1 + scale);
-  };
-  const handleMouseLeave = (e) => {
-    if (!scaleUp && scaleOnHover) setCurrScale(1);
-  };
+const Property = (props) => {
+  const {
+    property,
+    tw,
+    inactive,
+    showDescription,
+    scaleUp,
+    scaleOnHover,
+    scale,
+    innerRef,
+    renderLayout,
+  } = props;
+  const getCardState = (c) => (inactive ? 'inactive' : '');
 
-  useIsoLayoutEffect(() => {
-    if (scaleUp) {
-      setCurrScale(1 + scale);
-    } else {
-      setCurrScale(1);
-    }
-  }, [scaleUp]);
-
-  if (scaleUp === undefined) debugger;
   return (
-    <StyledCard
-      tw={tw}
-      currScale={currScale}
-      ref={innerRef}
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
-    >
-      {renderLayout()}
-    </StyledCard>
+    <StyledProperty>
+      <CardContainer
+        tw={tw}
+        scale={scale}
+        scaleOnHover
+        scaleUp={scaleUp}
+        innerRef={innerRef}
+        renderLayout={renderLayout}
+      />
+      {showDescription && (
+        <PropertyDescription description={property.description} />
+      )}
+    </StyledProperty>
   );
 };
-CardContainer.defaultProps = {
-  scale: 0.25,
-};
 
-export default CardContainer;
+export default Property;

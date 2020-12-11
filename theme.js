@@ -1,5 +1,5 @@
 import { withThemeweaver, variant, value } from 'themeweaver';
-import { breakpoints } from './components/Media';
+import { breakpoints } from './Media';
 
 export const theme = withThemeweaver(
   {
@@ -33,7 +33,7 @@ export const theme = withThemeweaver(
       colorBig: 'color 500ms ease',
       padding: 'padding 500ms ease',
     },
-    breakpoints: ['880px', '1000px', '1200px', '1400px'],
+    breakpoints,
   },
   {
     // beginning of themeweaver asignments *****************
@@ -197,9 +197,9 @@ export const theme = withThemeweaver(
     features: {
       ...variant('default', {
         paddingTop: 3,
-        paddingRight: 0,
+        paddingRight: 5,
         paddingBottom: 3,
-        paddingLeft: 0,
+        paddingLeft: 5,
       }),
     },
   }

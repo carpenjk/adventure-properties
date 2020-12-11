@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "dependencies": {
-    "@artsy/fresnel": "^1.1.0",
+    "@artsy/fresnel": "^1.3.0",
     "@zeit/next-css": "^1.0.1",
     "body-scroll-lock": "^3.0.2",
     "dataweaver": "github:carpenjk/dataweaver",
