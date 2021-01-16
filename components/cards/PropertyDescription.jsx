@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { condition } from 'dataweaver';
 
 const StyledDescription = styled.div`
   width: 100%;
@@ -6,10 +7,14 @@ const StyledDescription = styled.div`
   display: flex;
   justify-content: flex-start;
   align-items: center;
+  ${condition('hide')`
+    display: none;
+  `}
 `;
 
-const PropertyDescription = ({ description }) => (
-  <StyledDescription>{description}</StyledDescription>
-);
+const PropertyDescription = ({ description, hide }) => {
+  console.log('🚀 ~ file: PropertyDescription.jsx ~ line 1 ~ hide', hide);
+  return <StyledDescription hide={hide}>{description}</StyledDescription>;
+};
 
 export default PropertyDescription;

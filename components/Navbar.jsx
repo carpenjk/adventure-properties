@@ -45,14 +45,14 @@ const StyledNavbar = styled.div`
 `;
 const Navbar = (props) => (
   <StyledNavbar>
-    <Media lessThan="md">
+    <Media lessThan="1">
       <TwMobileMenu
         data={{ nav: navData.nav }}
         focusOnOpen
         key="twMobileMenu"
       />
     </Media>
-    <Media greaterThanOrEqual="md">
+    <Media greaterThanOrEqual="1">
       <WideNavbarLayout data={navData} logo={LOGO} />
     </Media>
   </StyledNavbar>

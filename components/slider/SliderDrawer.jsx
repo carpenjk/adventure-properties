@@ -15,8 +15,9 @@ import {
   getMaxWidth,
   useBreakpoints,
 } from 'themeweaver';
-import { useContext, useEffect, useState } from 'react';
+import { useCallback, useContext, useEffect, useState } from 'react';
 import { getProp } from 'dataweaver';
+import client from '../../Contentful';
 import useParentSize from '../hooks/UseParentSize';
 import Property from '../cards/Property';
 import CardContainer from '../cards/CardContainer';
@@ -26,6 +27,7 @@ import ViewMoreCardLayout from '../cards/ViewMoreCardLayout';
 const StyledSliderDrawer = styled.div`
   display: flex;
   flex-direction: column;
+  align-items: center;
   position: relative;
   width: 100%;
 
@@ -35,6 +37,7 @@ const StyledSliderDrawer = styled.div`
     flex: none;
     flex-wrap: nowrap;
     width: ${getProp('drawerWidth')}px;
+    
     > * {
       margin-left: 0.60%;
       margin-right: 0.60%;
@@ -85,9 +88,46 @@ const SliderDrawer = (props) => {
     return result;
   };
 
+  const [showDescription, setShowDescription] = useState(false);
+  useEffect(
+    () =>
+      br.current.width < br.br[2]
+        ? setShowDescription(true)
+        : setShowDescription(false),
+    [br]
+  );
   // const [drawerWidth, setDrawerWidth] = useState(getDrawerWidth);
 
   // useEffect(() => setDrawerWidth(getDrawerWidth()), [drawerWidth]);
+
+  async function fetchProperties() {
+    const results = await client.getAsset('6VW7ZyCNS3kTPZJFqhLCSf');
+    return results;
+    // if (results.items) return results.items;
+    // console.log(`Error getting Entries for ${contentType.name}.`);
+  }
+
+  const [properties, setProperties] = useState([]);
+
+  useEffect(() => {
+    async function getProperties() {
+      const allProperties = await fetchProperties();
+      // setProperties([...allProperties]);
+      setProperties(allProperties);
+    }
+    getProperties();
+  }, []);
+
+  const buildPicUrl = useCallback(() => {
+    console.log(
+      '🚀 ~ file: SliderDrawer.jsx ~ line 138 ~ SliderDrawer ~ properties',
+      properties
+    );
+    if (properties && properties.fields) {
+      return `http:${properties.fields.file.url}`;
+    }
+    return undefined;
+  }, [properties]);
   const scaleUp = keyboardNavOn && activeItem === 5;
   return (
     <StyledSliderDrawer
@@ -103,10 +143,14 @@ const SliderDrawer = (props) => {
           scale={0.125}
           scaleOnHover
           scaleUp={keyboardNavOn && activeItem === index}
-          showDescription={br.current.width < br.br[1]}
+          showDescription={br.current.width < br.br[2]}
           innerRef={drawer.addItemRef}
           renderLayout={() => (
-            <PropertyCardLayout variant="large" data={item} />
+            <PropertyCardLayout
+              variant="large"
+              data={item}
+              picUrl={buildPicUrl}
+            />
           )}
         />
       ))}

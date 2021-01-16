@@ -3,6 +3,7 @@ import styled, { ThemeContext } from 'styled-components';
 import { useState, useRef, useContext, useEffect, useCallback } from 'react';
 import { useBreakpoints } from 'themeweaver';
 import { condition } from 'dataweaver';
+import { Media } from '../../Media';
 import useIsoLayoutEffect from '../hooks/UseIsoLayoutEffect';
 
 import useSlide from '../hooks/UseSlide';
@@ -64,11 +65,10 @@ const StyledContent = styled.div`
   `}
 `;
 
-const StyledContentInner = styled.div``;
-
 const Slider = (props) => {
   // const NUM_COMPARTMENTS = 3;
   const {
+    properties,
     items,
     itemsToDisplay,
     itemsToScroll,
@@ -77,6 +77,10 @@ const Slider = (props) => {
     keyboardSelectSlot,
     hideOverflow,
   } = props;
+  console.log(
+    '🚀 ~ file: Slider.jsx ~ line 80 ~ Slider ~ properties',
+    properties
+  );
 
   const theme = useContext(ThemeContext);
   const br = useBreakpoints(theme);
@@ -190,8 +194,7 @@ const Slider = (props) => {
   );
 
   useEffect(() => {
-    console.log('changed br');
-    setShowNavContainer(br.current.width > br.br[1]);
+    setShowNavContainer(br.current.width > br.br[2]);
   }, [br.current.width, br.br]);
 
   // const showNavContainer = false;
@@ -207,14 +210,16 @@ const Slider = (props) => {
     >
       <SliderHeader prefix="Because you like" topic={topic} />
       <StyledMain key="main">
-        <SliderNavContainer
-          tw={{ state: showNavContainer ? 'hide' : '' }}
-          key="left"
-          direction="left"
-          hide={hasLeftScroll}
-          innerRef={leftButtonRef}
-          onClick={handleScrollLeft}
-        />
+        <Media greaterThanOrEqual="2">
+          <SliderNavContainer
+            tw={{ state: showNavContainer ? 'hide' : '' }}
+            key="left"
+            direction="left"
+            hide={hasLeftScroll}
+            innerRef={leftButtonRef}
+            onClick={handleScrollLeft}
+          />
+        </Media>
         <StyledContent
           key="sliderContent"
           hideOverflow={hideOverflow}
@@ -222,6 +227,7 @@ const Slider = (props) => {
         >
           <SliderDrawer
             key="sliderDrawer"
+            properties={properties}
             items={items}
             drawer={drawer}
             itemsToDisplay={itemsToDisplay}
@@ -231,14 +237,16 @@ const Slider = (props) => {
             slideRef={slideRef}
           />
         </StyledContent>
-        <SliderNavContainer
-          tw={{ state: showNavContainer ? 'hide' : '' }}
-          key="right"
-          direction="right"
-          hide={hasRightScroll}
-          innerRef={rightButtonRef}
-          onClick={handleScrollRight}
-        />
+        <Media greaterThanOrEqual="2">
+          <SliderNavContainer
+            tw={{ state: showNavContainer ? 'hide' : '' }}
+            key="right"
+            direction="right"
+            hide={hasRightScroll}
+            innerRef={rightButtonRef}
+            onClick={handleScrollRight}
+          />
+        </Media>
       </StyledMain>
       <SliderFooter topic={topic} moreRef={moreRef} />
     </StyledSlider>

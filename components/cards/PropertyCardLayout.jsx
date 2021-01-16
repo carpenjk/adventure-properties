@@ -47,7 +47,7 @@ const StyledLargeLayout = styled.div`
     object-fit: cover;
   }
 `;
-const LargeLayout = ({ data }) => {
+const LargeLayout = ({ url, data }) => {
   const { heading, ...remData } = data;
 
   return (
@@ -55,7 +55,7 @@ const LargeLayout = ({ data }) => {
       <h1 className="cardHeader">{heading}</h1>
       <figure>
         <div className="image">
-          <img src="../../static/results/result001.png" alt={heading} />
+          <img src={url} alt={heading} />
         </div>
         <figcaption>
           <PropertyCaption {...remData} />
@@ -65,10 +65,10 @@ const LargeLayout = ({ data }) => {
   );
 };
 
-const PropertyCardLayout = ({ variant, data }) => {
+const PropertyCardLayout = ({ picUrl, variant, data }) => {
   switch (variant) {
     case 'large':
-      return <LargeLayout data={data} />;
+      return <LargeLayout url={picUrl()} data={data} />;
     default:
       return <div>Loading</div>;
   }

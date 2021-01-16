@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import styled from 'styled-components';
 import {
+  getHeight,
   getMaxHeight,
   getMinHeight,
   getMinWidth,
@@ -45,6 +46,7 @@ const StyledCard = styled.div`
   margin-right: ${getMarginRight('card.container', '8px')};
   margin-bottom: ${getMarginBottom('card.container', '8px')};
   margin-left: ${getMarginLeft('card.container', '8px')};
+  height: ${getHeight('card.container', '390px')};
   min-height: ${getMinHeight('card.container', '0')};
   min-width: ${getMinWidth('card.container', '0')};
   max-height: ${getMaxHeight('card.container', 'none')};
@@ -64,6 +66,7 @@ const StyledCard = styled.div`
     margin-right: ${getMarginRight('card.container', '0px')};
     margin-bottom: ${getMarginBottom('card.container', '8px')};
     margin-left: ${getMarginLeft('card.container', '0')};
+    height: ${getHeight('card.container', '390px')};
     min-height: ${getMinHeight('card.container', '0')};
     min-width: ${getMinWidth('card.container', '0')};
     max-height: ${getMaxHeight('card.container', 'none')};
