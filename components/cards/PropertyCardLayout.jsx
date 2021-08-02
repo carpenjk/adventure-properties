@@ -1,15 +1,18 @@
 import styled from 'styled-components';
 import PropertyCaption from './PropertyCaption';
-import PropertyDescription from './PropertyDescription';
 
 const StyledLargeLayout = styled.div`
   display: flex;
+  flex: none;
   flex-direction: column;
-  justify-content: stretch;
+  justify-content: space-around;
   align-content: stretch;
+  width: 100%;
 
   background: #ffffff;
   box-sizing: border-box;
+
+  padding: 8px;
 
   h1 {
     flex: none;

@@ -18,6 +18,7 @@ export const theme = withThemeweaver(
       poppins: "'Poppins', sans-serif",
       roboto: "'Roboto', sans-serif",
       openSans: "'Open Sans', sans-serif",
+      raleway: "'Raleway', sans-serif",
     },
     fontSizes: [10, 12, 14, 18, 24, 32],
     fontWeights: {
@@ -43,6 +44,7 @@ export const theme = withThemeweaver(
     },
     content: {
       paddingLeft: 2,
+      maxWidth: value('1350px'),
     },
     button: {
       ...variant('nav', {
@@ -83,6 +85,9 @@ export const theme = withThemeweaver(
         color: 'lightBackground',
         fontFamily: 'roboto',
         fontSize: 2,
+      }),
+      ...variant('signUp', {
+        backgroundColor: ['primary', 'secondary'],
       }),
     },
     h1: {
@@ -201,6 +206,41 @@ export const theme = withThemeweaver(
         paddingBottom: 3,
         paddingLeft: 5,
       }),
+    },
+    results: {
+      ...variant('default', {
+        paddingTop: 5,
+        paddingBottom: 5,
+      }),
+    },
+    results_footer: {
+      color: 'primary',
+      fontFamily: 'raleway',
+      fontSize: 3,
+      fontWeight: 'bold',
+    },
+    results_header: {
+      color: 'action[1]',
+      fontFamily: 'poppins',
+      fontSize: 4,
+      fontWeight: 'bold',
+      letterSpacing: value('0.05em'),
+      paddingTop: 3,
+      paddingBottom: 3,
+    },
+    results_topic: {
+      color: 'primary',
+    },
+    property_description: {
+      color: 'mainText',
+      fontFamily: 'openSans',
+      fontSize: value('16px'),
+      lineHeight: value('150%'),
+      letterSpacing: value('0.025em'),
+      paddingTop: 5,
+      paddingRight: 5,
+      paddingBottom: 5,
+      paddingLeft: 5,
     },
   }
 );

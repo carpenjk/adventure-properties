@@ -117,77 +117,92 @@ export const slider1Data = {
       propertyType: 'Cabin',
       tags: ['Skiing', 'Snowshoeing', 'Birding', 'Snowmobiling', 'Hiking'],
     },
-    {
-      key: 'skiing4',
-      heading: '4 Bdr With Amazing Views',
-      description: 'this is a description of the property',
-      location: 'Sugarloaf, ME',
-      price: '$239',
-      maxGuests: 2,
-      beds: 4,
-      baths: 1,
-      propertyType: 'Cabin',
-      tags: ['Skiing', 'Snowshoeing', 'Birding', 'Snowmobiling', 'Hiking'],
-    },
-    {
-      key: 'skiing5',
-      heading: '5 Bdr With Amazing Views',
-      description: 'this is a description of the property',
-      location: 'Sugarloaf, ME',
-      price: '$239',
-      maxGuests: 2,
-      beds: 5,
-      baths: 1,
-      propertyType: 'Cabin',
-      tags: ['Skiing', 'Snowshoeing', 'Birding', 'Snowmobiling', 'Hiking'],
-    },
-    {
-      key: 'skiing6',
-      heading: '6 Bdr With Amazing Views',
-      description: 'this is a description of the property',
-      location: 'Sugarloaf, ME',
-      price: '$239',
-      maxGuests: 2,
-      beds: 6,
-      baths: 1,
-      propertyType: 'Cabin',
-      tags: ['Skiing', 'Snowshoeing', 'Birding', 'Snowmobiling', 'Hiking'],
-    },
-    {
-      key: 'skiing7',
-      heading: '7 Bdr With Amazing Views',
-      description: 'this is a description of the property',
-      location: 'Sugarloaf, ME',
-      price: '$239',
-      maxGuests: 2,
-      beds: 7,
-      baths: 1,
-      propertyType: 'Cabin',
-      tags: ['Skiing', 'Snowshoeing', 'Birding', 'Snowmobiling', 'Hiking'],
-    },
-    {
-      key: 'skiing8',
-      heading: '8 Bdr With Amazing Views',
-      description: 'this is a description of the property',
-      location: 'Sugarloaf, ME',
-      price: '$239',
-      maxGuests: 2,
-      beds: 8,
-      baths: 1,
-      propertyType: 'Cabin',
-      tags: ['Skiing', 'Snowshoeing', 'Birding', 'Snowmobiling', 'Hiking'],
-    },
-    {
-      key: 'skiing9',
-      heading: '9 Bdr With Amazing Views',
-      description: 'this is a description of the property',
-      location: 'Sugarloaf, ME',
-      price: '$239',
-      maxGuests: 2,
-      beds: 9,
-      baths: 1,
-      propertyType: 'Cabin',
-      tags: ['Skiing', 'Snowshoeing', 'Birding', 'Snowmobiling', 'Hiking'],
-    },
   ],
 };
+
+export const footerNavData = [
+  {
+    name: 'Buyers',
+    items: [
+      {
+        text: 'Top Available Properties',
+        link: '/about',
+      },
+      {
+        text: 'Most Affordable Properties',
+        link: '/about',
+      },
+      {
+        text: 'Mountain Properties',
+        link: '/about',
+      },
+      {
+        text: 'Ocean Properties',
+        link: '/about',
+      },
+      {
+        text: 'Primitive Properties',
+        link: '/about',
+      },
+      {
+        text: 'Top Investment Properties',
+        link: '/about',
+      },
+    ],
+  },
+  {
+    name: 'Renters',
+    items: [
+      {
+        text: 'Top Available Getaways',
+        link: '/about',
+      },
+      {
+        text: 'Long Term and Seasonal Rentals',
+        link: '/about',
+      },
+      {
+        text: 'Mountain Rentals',
+        link: '/about',
+      },
+      {
+        text: 'Ocean Rentals',
+        link: '/about',
+      },
+      {
+        text: 'Primitive Rentals',
+        link: '/about',
+      },
+      {
+        text: 'Properties by Nearby Activities',
+        link: '/about',
+      },
+    ],
+  },
+  {
+    name: 'Owners',
+    items: [
+      {
+        text: 'View/Set My Property Availability',
+        link: '/about',
+      },
+      {
+        text: 'Manage My Property',
+        link: '/about',
+      },
+    ],
+  },
+  {
+    name: 'Company',
+    items: [
+      {
+        text: 'About',
+        link: '/about',
+      },
+      {
+        text: 'Contact Us',
+        link: '/about',
+      },
+    ],
+  },
+];

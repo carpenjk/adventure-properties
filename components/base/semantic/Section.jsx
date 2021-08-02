@@ -17,6 +17,12 @@ import {
 const StyledSection = styled.section`
   position: ${getProp('position')};
   top: ${getProp('offsetTop')}px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  align-content: center;
+
   width: 100%;
   padding-top: ${(props) => getPaddingTop(props.semKey, '0')(props)};
   padding-right: ${(props) => getPaddingRight(props.semKey, '0')(props)};

@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import styled from 'styled-components';
 import {
   getHeight,
@@ -17,20 +16,9 @@ import {
   getMaxWidth,
 } from 'themeweaver';
 import { condition, getProp } from 'dataweaver';
-import useIsoLayoutEffect from '../hooks/UseIsoLayoutEffect';
-import PropertyDescription from './PropertyDescription';
 
-const Box = styled.div`
-  display: inline-block;
-  position: relative;
-  background: #ffffff;
-  border: 1px solid #cdf7f6;
-  box-sizing: border-box;
-  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.15);
-  padding: 15px;
-  cursor: pointer;
-`;
 const StyledCard = styled.div`
+  display: flex;
   flex: 1 1 auto;
   position: relative;
   background: #ffffff;
@@ -46,76 +34,110 @@ const StyledCard = styled.div`
   margin-right: ${getMarginRight('card.container', '8px')};
   margin-bottom: ${getMarginBottom('card.container', '8px')};
   margin-left: ${getMarginLeft('card.container', '8px')};
-  height: ${getHeight('card.container', '390px')};
+  height: ${getHeight('card.container', 'auto')};
   min-height: ${getMinHeight('card.container', '0')};
   min-width: ${getMinWidth('card.container', '0')};
   max-height: ${getMaxHeight('card.container', 'none')};
   max-width: ${getMaxWidth('card.container', '450px')};
 
-  ${condition(({ tw }) => tw && tw.state === 'inactive')`
+  ${condition('inactive')`
     opacity: 0.4;
   `}
 
+  &:focus {
+    ${condition('scaleOnFocus')`
+      transform: scale(${getProp('scale')});
+    `}
+  }
+
+  &:hover {
+    ${condition('scaleOnHover')`
+      transform: scale(${getProp('scale')});
+    `}
+  }
+
   ${breakpoint(1)`
-    flex: 1 1 285px;
-    padding-top: ${getPaddingTop('card.container', '8px')};
-    padding-right: ${getPaddingRight('card.container', '8px')};
-    padding-bottom: ${getPaddingBottom('card.container', '8px')};
-    padding-left: ${getPaddingLeft('card.container', '8px')};
+    flex: 1 1 auto;
+    padding-top: ${getPaddingTop('card.container', '0')};
+    padding-right: ${getPaddingRight('card.container', '0')};
+    padding-bottom: ${getPaddingBottom('card.container', '0')};
+    padding-left: ${getPaddingLeft('card.container', '0')};
     margin-top: ${getMarginTop('card.container', '8px')};
-    margin-right: ${getMarginRight('card.container', '0px')};
+    margin-right: ${getMarginRight('card.container', '8px')};
     margin-bottom: ${getMarginBottom('card.container', '8px')};
-    margin-left: ${getMarginLeft('card.container', '0')};
-    height: ${getHeight('card.container', '390px')};
+    margin-left: ${getMarginLeft('card.container', '8px')};
+    height: ${getHeight('card.container', 'auto')};
     min-height: ${getMinHeight('card.container', '0')};
     min-width: ${getMinWidth('card.container', '0')};
     max-height: ${getMaxHeight('card.container', 'none')};
-    max-width: ${getMaxWidth('card.container', 'none')};
-    ${condition(({ currScale }) => currScale && currScale !== 1)`
-      transform: scale(${getProp('currScale')})
-    `}
+    max-width: ${getMaxWidth('card.container', '450px')};
+
+    &:focus {
+      ${condition('scaleOnFocus')`
+        transform: scale(${getProp('scale')});
+      `}
+    }
+  
+    &:hover {
+      ${condition('scaleOnHover')`
+        transform: scale(${getProp('scale')});
+      `}
+    }
+  `}
+
+  ${breakpoint(2)`
+    flex: 1 1 auto;
+
+    padding-top: ${getPaddingTop('card.container', '0')};
+    padding-right: ${getPaddingRight('card.container', '0')};
+    padding-bottom: ${getPaddingBottom('card.container', '0')};
+    padding-left: ${getPaddingLeft('card.container', '0')};
+    margin-top: ${getMarginTop('card.container', '8px')};
+    margin-right: ${getMarginRight('card.container', '8px')};
+    margin-bottom: ${getMarginBottom('card.container', '8px')};
+    margin-left: ${getMarginLeft('card.container', '8px')};
+    height: ${getHeight('card.container', 'auto')};
+    min-height: ${getMinHeight('card.container', '0')};
+    min-width: ${getMinWidth('card.container', '0')};
+    max-height: ${getMaxHeight('card.container', 'none')};
+    max-width: ${getMaxWidth('card.container', '450px')};
+
+    &:focus {
+      ${condition('scaleOnFocus')`
+        transform: scale(${getProp('scale')});
+      `}
+    }
+  
+    &:hover {
+      ${condition('scaleOnHover')`
+        transform: scale(${getProp('scale')});
+      `}
+    }
   `}
 `;
 
 const CardContainer = ({
-  tw,
   renderLayout,
   innerRef,
   scale,
   scaleOnHover,
+  scaleOnFocus,
+  inactive,
   scaleUp,
-}) => {
-  const [currScale, setCurrScale] = useState(1);
-  const handleMouseEnter = (e) => {
-    if (scaleOnHover) setCurrScale(1 + scale);
-  };
-  const handleMouseLeave = (e) => {
-    if (!scaleUp && scaleOnHover) setCurrScale(1);
-  };
-
-  useIsoLayoutEffect(() => {
-    if (scaleUp) {
-      setCurrScale(1 + scale);
-    } else {
-      setCurrScale(1);
-    }
-  }, [scaleUp]);
-
-  if (scaleUp === undefined) debugger;
-  return (
-    <StyledCard
-      tw={tw}
-      currScale={currScale}
-      ref={innerRef}
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
-    >
-      {renderLayout()}
-    </StyledCard>
-  );
-};
+}) => (
+  <StyledCard
+    inactive={inactive}
+    scaleUp={scaleUp}
+    scaleOnHover={scaleOnHover}
+    scaleOnFocus={scaleOnFocus}
+    currScale={scale}
+    ref={innerRef}
+  >
+    {renderLayout()}
+  </StyledCard>
+);
 CardContainer.defaultProps = {
-  scale: 0.25,
+  scale: 1.25,
 };
 
 export default CardContainer;

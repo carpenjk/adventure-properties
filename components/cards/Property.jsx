@@ -1,4 +1,6 @@
+import Link from 'next/link';
 import styled from 'styled-components';
+import React from 'react';
 import {
   getMaxHeight,
   getMinHeight,
@@ -11,120 +13,180 @@ import {
   getMarginRight,
   getMarginBottom,
   getMarginLeft,
-  breakpoint,
   getMaxWidth,
+  breakpoint,
 } from 'themeweaver';
+import { condition, getProp } from 'dataweaver';
 import useHasMounted from '../hooks/UseHasMounted';
 import CardContainer from './CardContainer';
 import PropertyDescription from './PropertyDescription';
-import PropertyCardLayout from './PropertyCardLayout';
 
 const StyledProperty = styled.div`
   display: flex;
+
   flex-direction: column;
-  align-items: center;
+  align-items: stretch;
   width: 100%;
-  max-width: 450px;
+  height: 80em;
 
   flex: none;
 
-  padding-top: ${getPaddingTop('card.container', '8px')};
-  padding-right: ${getPaddingRight('card.container', '8px')};
-  padding-bottom: ${getPaddingBottom('card.container', '8px')};
-  padding-left: ${getPaddingLeft('card.container', '8px')};
-  margin-top: ${getMarginTop('card.container', '8px')};
-  margin-right: ${getMarginRight('card.container', '8px')};
-  margin-bottom: ${getMarginBottom('card.container', '8px')};
-  margin-left: ${getMarginLeft('card.container', '8px')};
-  min-height: ${getMinHeight('card.container', '0')};
-  min-width: ${getMinWidth('card.container', '0')};
-  max-height: ${getMaxHeight('card.container', 'none')};
-  max-width: ${getMaxWidth('card.container', '450px')};
+  padding-top: ${getPaddingTop('property', '8px')};
+  padding-right: ${getPaddingRight('property', '8px')};
+  padding-bottom: ${getPaddingBottom('property', '8px')};
+  padding-left: ${getPaddingLeft('property', '8px')};
+  margin-top: ${getMarginTop('property', '8px')};
+  margin-right: ${getMarginRight('property', '8px')};
+  margin-bottom: ${getMarginBottom('property', '8px')};
+  margin-left: ${getMarginLeft('property', '8px')};
+  min-height: ${getMinHeight('property', '0')};
+  min-width: ${getMinWidth('property', '0')};
+  max-height: ${getMaxHeight('property', 'none')};
+  max-width: ${getMaxWidth('property', '450px')};
+
+  border-radius: 5px;
+  cursor: pointer;
+
+  &:focus {
+    background-color: #cdf7f6;
+    ${condition('scaleOnFocus')`
+    transform: scale(${getProp('scale')});
+    `}
+  }
+
+  &:hover {
+    background-color: #cdf7f6;
+  }
+
+  ${condition('scaleOnFocus')`
+    &:focus{
+      transform: scale(${getProp('scale')});
+    }
+  `}
+  ${condition('scaleOnHover')`  
+    &:hover {
+      transform: scale(${getProp('scale')});
+    }
+  `}  
+
+  & > *:nth-child(1) {
+    flex: 1 1 auto;
+  }
+  & > *:nth-child(2) {
+    flex: 1 1 auto;
+  }
 
   ${breakpoint(1)`
-  
-    flex: none;
-    display: grid;
-    grid-template-columns: 380px auto;
-    grid-template-rows: auto;
-    padding-top: ${getPaddingTop('card.container', '8px')};
-    padding-right: ${getPaddingRight('card.container', '8px')};
-    padding-bottom: ${getPaddingBottom('card.container', '8px')};
-    padding-left: ${getPaddingLeft('card.container', '8px')};
-    margin-top: ${getMarginTop('card.container', '8px')};
-    margin-right: ${getMarginRight('card.container', '0px')};
-    margin-bottom: ${getMarginBottom('card.container', '8px')};
-    margin-left: ${getMarginLeft('card.container', '0')};
-    min-height: ${getMinHeight('card.container', '0')};
-    min-width: ${getMinWidth('card.container', '0')};
-    max-height: ${getMaxHeight('card.container', 'none')};
-    max-width: ${getMaxWidth('card.container', 'none')};
-  `}
-  ${breakpoint(2)`
-    display: flex;
     flex-direction: row;
-    flex: 1 1 285px;
-    height: 100%;
-  `}
-`;
-const StyledCardLayout = styled.div`
-  grid-row: 1 / 2;
-  grid-col: 1 / 2;
-  display: flex;
-  width: 375px;
-  width: 100%;
+    align-items: center;
+    height: auto;
+    padding-top: ${getPaddingTop('property', '8px')};
+    padding-right: ${getPaddingRight('property', '8px')};
+    padding-bottom: ${getPaddingBottom('property', '8px')};
+    padding-left: ${getPaddingLeft('property', '8px')};
+    margin-top: ${getMarginTop('property', '8px')};
+    margin-right: ${getMarginRight('property', '0px')};
+    margin-bottom: ${getMarginBottom('property', '8px')};
+    margin-left: ${getMarginLeft('property', '0')};
+    min-height: ${getMinHeight('property', '0')};
+    min-width: ${getMinWidth('property', '0')};
+    max-height: ${getMaxHeight('property', 'none')};
+    max-width: ${getMaxWidth('property', 'none')};
 
-  ${breakpoint(2)`
-    height: 100%;
+    & > *:nth-child(1) {
+      flex: 1 1 45%;
+    }
+    & > *:nth-child(2) {
+      flex: 1 1 55%;
+    }
+
+    &:focus{
+      ${condition('scaleOnFocus')`
+        transform: scale(${getProp('scale')});
+      `}
+    }
+    
+    &:hover{
+      ${condition('scaleOnHover')`
+        transform: scale(${getProp('scale')});
+      `}
+    }
   `}
-`;
-const StyledDescLayout = styled.div`
-  grid-row: 1 / 2;
-  grid-col: 1 / 2;
-  display: flex;
-  height: 225px;
-  ${breakpoint(1)`
-    height:100%:
+  ${breakpoint(2)`
+    flex-direction: row;
+    flex: 1 1 100%; 
+
+    padding-top: ${getPaddingTop('property', '8px')};
+    padding-right: ${getPaddingRight('property', '16px')};
+    padding-bottom: ${getPaddingBottom('property', '8px')};
+    padding-left: ${getPaddingLeft('property', '16px')};
+    margin-top: ${getMarginTop('property', '8px')};
+    margin-right: ${getMarginRight('property', '0px')};
+    margin-bottom: ${getMarginBottom('property', '8px')};
+    margin-left: ${getMarginLeft('property', '0')};
+    min-height: ${getMinHeight('property', '0')};
+    min-width: ${getMinWidth('property', '0')};
+    max-height: ${getMaxHeight('property', 'none')};
+    max-width: ${getMaxWidth('property', 'none')};
+
+
+    & > *:nth-child(1) {
+      flex: 1 1 auto;
+    }
+    & > *:nth-child(2) {
+      flex: 1 1 auto;
+    }
+
+    &:focus{
+      ${condition('scaleOnFocus')`
+        transform: scale(${getProp('scale')});
+      `}
+    }
+    
+    &:hover{
+      ${condition('scaleOnHover')`
+        transform: scale(${getProp('scale')});
+      `}
+    }
   `}
 `;
 
 const Property = (props) => {
   const {
     property,
-    tw,
-    inactive,
     showDescription,
-    scaleUp,
     scaleOnHover,
+    scaleOnFocus,
     scale,
     innerRef,
-    renderLayout,
+    cardRef,
+    cardLayout,
   } = props;
-  const getCardState = (c) => (inactive ? 'inactive' : '');
+
   const hasMounted = useHasMounted();
+
   return (
-    <StyledProperty>
-      <StyledCardLayout>
-        <CardContainer
-          tw={tw}
+    <Link href="/property">
+      <a tabIndex={-1}>
+        <StyledProperty
+          tabIndex={0}
+          ref={innerRef}
           scale={scale}
-          scaleOnHover
-          scaleUp={scaleUp}
-          innerRef={innerRef}
-          renderLayout={renderLayout}
-        />
-      </StyledCardLayout>
-      <StyledDescLayout>
-        {hasMounted && (
-          <PropertyDescription
-            description={
-              property && property.description ? property.description : ''
-            }
-            hide={!showDescription}
-          />
-        )}
-      </StyledDescLayout>
-    </StyledProperty>
+          scaleOnHover={scaleOnHover}
+          scaleOnFocus={scaleOnFocus}
+        >
+          <CardContainer innerRef={cardRef} renderLayout={cardLayout} />
+          {hasMounted && (
+            <PropertyDescription
+              description={
+                property && property.description ? property.description : ''
+              }
+              hide={!showDescription}
+            />
+          )}
+        </StyledProperty>
+      </a>
+    </Link>
   );
 };
 

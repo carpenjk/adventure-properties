@@ -1,7 +1,7 @@
 import styled, { ThemeContext } from 'styled-components';
 
 import { useState, useRef, useContext, useEffect, useCallback } from 'react';
-import { useBreakpoints } from 'themeweaver';
+import { useBreakpoints, breakpoint } from 'themeweaver';
 import { condition } from 'dataweaver';
 import { Media } from '../../Media';
 import useIsoLayoutEffect from '../hooks/UseIsoLayoutEffect';
@@ -25,20 +25,6 @@ const StyledSlider = styled.div`
   overflow-x: hidden;
 `;
 
-const StyledNavContainer = styled.div`
-  z-index: 999999;
-  position: relative;
-  left: 0;
-  top: 50%;
-  display: flex;
-  justify-content: center;
-  align-content: center;
-  height: 100%;
-  width: 10%;
-  min-width: 85px;
-  max-width: 100px;
-`;
-
 const StyledMain = styled.div`
   position: relative;
   display: flex;
@@ -50,7 +36,7 @@ const StyledMain = styled.div`
 `;
 
 const StyledContent = styled.div`
-  flex: 1 1;
+  flex: 1 1 auto;
   min-width: 1px;
   position: relative;
   display: flex;
@@ -62,6 +48,9 @@ const StyledContent = styled.div`
   overflow-x: visible;
   ${condition('hideOverflow')`
   overflow-x: hidden;
+  `}
+  ${breakpoint(2)`
+    width: 100%;
   `}
 `;
 
@@ -77,10 +66,6 @@ const Slider = (props) => {
     keyboardSelectSlot,
     hideOverflow,
   } = props;
-  console.log(
-    '🚀 ~ file: Slider.jsx ~ line 80 ~ Slider ~ properties',
-    properties
-  );
 
   const theme = useContext(ThemeContext);
   const br = useBreakpoints(theme);
@@ -109,13 +94,20 @@ const Slider = (props) => {
   const getIncrementalData = () => {};
 
   const getScrollSize = useCallback(
-    () => slideRef.current.offsetWidth / drawer.itemCount,
+    () => slideRef.current.getBoundingClientRect().width / drawer.itemCount,
     [slideRef, drawer.itemCount, drawer.viewWidth]
   );
+  // const calcScrollPos = useCallback(
+  //   () => getScrollSize() * drawer.currentPos * -1,
+  //   [getScrollSize, drawer.currentPos]
+  // );
+
   const calcScrollPos = useCallback(
-    () => getScrollSize() * drawer.currentPos * -1,
+    () => -(drawer.currentPos / drawer.itemCount) * 100,
     [getScrollSize, drawer.currentPos]
   );
+
+  const calcScrollPos2 = useCallback(() => -325 * drawer.currentPos);
 
   // event handlers ***************************************************************
 
@@ -150,10 +142,15 @@ const Slider = (props) => {
   // lifecycle functions *******************************************************
   // translate slide
   useIsoLayoutEffect(() => {
+    console.log(
+      'slideRef width: ',
+      slideRef.current.getBoundingClientRect().width
+    );
     if (br.current.width < br.br[0]) {
       slideRef.current.style.transform = 'none';
     } else {
-      slideRef.current.style.transform = `translate3D(${calcScrollPos()}px,0,0)`;
+      // slideRef.current.style.transform = `translate3D(${calcScrollPos()}%,0,0)`;
+      slideRef.current.style.transform = `translate3D(${calcScrollPos()}%,0,0)`;
     }
   }, [calcScrollPos, br]);
 
@@ -222,7 +219,7 @@ const Slider = (props) => {
         </Media>
         <StyledContent
           key="sliderContent"
-          hideOverflow={hideOverflow}
+          // hideOverflow={hideOverflow}
           ref={contentRef}
         >
           <SliderDrawer
@@ -235,6 +232,7 @@ const Slider = (props) => {
             activeItem={drawer.keyboardItem}
             keyboardNavOn={isKeyboardNavOn}
             slideRef={slideRef}
+            parentRef={contentRef}
           />
         </StyledContent>
         <Media greaterThanOrEqual="2">

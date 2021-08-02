@@ -18,9 +18,7 @@ import {
 import { useCallback, useContext, useEffect, useState } from 'react';
 import { getProp } from 'dataweaver';
 import client from '../../Contentful';
-import useParentSize from '../hooks/UseParentSize';
 import Property from '../cards/Property';
-import CardContainer from '../cards/CardContainer';
 import PropertyCardLayout from '../cards/PropertyCardLayout';
 import ViewMoreCardLayout from '../cards/ViewMoreCardLayout';
 
@@ -33,16 +31,30 @@ const StyledSliderDrawer = styled.div`
 
   ${breakpoint(2)`
     flex-direction: row;
-    justify-content: space-between;
     flex: none;
+    justify-content: space-between;
+    justify-content: flex-start;
+    justify-items: flex-start;
     flex-wrap: nowrap;
-    width: ${getProp('drawerWidth')}px;
-    
+    width auto;
+
     > * {
-      margin-left: 0.60%;
-      margin-right: 0.60%;
+      margin-left: 0;
+      margin-right: 0;
+      margin-top: 0;
+      margin-bottom: 0;
     }
-  `}
+  `}7
+`;
+
+const StyledSlot = styled.div`
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  align-content: center;
+  flex: none;
+  width: ${({ slotWidth }) => `${slotWidth}px`};
 `;
 
 const SliderDrawer = (props) => {
@@ -53,58 +65,18 @@ const SliderDrawer = (props) => {
     keyboardNavOn,
     itemsToDisplay,
     slideRef,
-    parentRef,
     drawer,
-    cardRefs,
   } = props;
 
   const theme = useContext(ThemeContext);
   const br = useBreakpoints(theme);
-  // const parentSize = useParentSize(slideRef.current);
+  const slotSize = drawer.viewWidth / itemsToDisplay;
 
   const getCardState = (c) => (!drawer.isCurrentView(c) ? 'inactive' : '');
-
-  const getDrawerWidth = () => {
-    const contentElement = drawer.parentRef
-      ? drawer.parentRef.current
-      : undefined;
-
-    const paddingLeft = contentElement
-      ? window.getComputedStyle(contentElement).paddingLeft
-      : '0';
-    const paddingRight = contentElement
-      ? window.getComputedStyle(contentElement).paddingRight
-      : '0';
-
-    const regex = /[\d]+/;
-    const pxPaddingLeft = paddingLeft.match(regex)[0];
-    const pxPaddingRight = paddingRight.match(regex)[0];
-
-    // const contentWidth = parentSize.width - pxPaddingLeft - pxPaddingRight;
-
-    const widthFactor =
-      drawer.filledPages + drawer.itemsInLastPage / itemsToDisplay;
-    const result = widthFactor * drawer.viewWidth;
-    return result;
-  };
-
-  const [showDescription, setShowDescription] = useState(false);
-  useEffect(
-    () =>
-      br.current.width < br.br[2]
-        ? setShowDescription(true)
-        : setShowDescription(false),
-    [br]
-  );
-  // const [drawerWidth, setDrawerWidth] = useState(getDrawerWidth);
-
-  // useEffect(() => setDrawerWidth(getDrawerWidth()), [drawerWidth]);
 
   async function fetchProperties() {
     const results = await client.getAsset('6VW7ZyCNS3kTPZJFqhLCSf');
     return results;
-    // if (results.items) return results.items;
-    // console.log(`Error getting Entries for ${contentType.name}.`);
   }
 
   const [properties, setProperties] = useState([]);
@@ -112,57 +84,50 @@ const SliderDrawer = (props) => {
   useEffect(() => {
     async function getProperties() {
       const allProperties = await fetchProperties();
-      // setProperties([...allProperties]);
       setProperties(allProperties);
     }
     getProperties();
   }, []);
 
   const buildPicUrl = useCallback(() => {
-    console.log(
-      '🚀 ~ file: SliderDrawer.jsx ~ line 138 ~ SliderDrawer ~ properties',
-      properties
-    );
     if (properties && properties.fields) {
-      return `http:${properties.fields.file.url}`;
+      return `http:${properties.fields.file.url}?w=325`;
     }
     return undefined;
   }, [properties]);
-  const scaleUp = keyboardNavOn && activeItem === 5;
+
   return (
-    <StyledSliderDrawer
-      ref={slideRef}
-      drawerWidth={getDrawerWidth()}
-      widthFactor={drawer.filledPages + drawer.itemsInLastPage / itemsToDisplay}
-    >
+    <StyledSliderDrawer ref={slideRef}>
       {items.map((item, index) => (
-        <Property
-          property={item}
-          key={item.key}
-          tw={{ state: getCardState(index) }}
-          scale={0.125}
-          scaleOnHover
-          scaleUp={keyboardNavOn && activeItem === index}
-          showDescription={br.current.width < br.br[2]}
-          innerRef={drawer.addItemRef}
-          renderLayout={() => (
-            <PropertyCardLayout
-              variant="large"
-              data={item}
-              picUrl={buildPicUrl}
-            />
-          )}
-        />
+        <StyledSlot key={item.key} slotWidth={slotSize}>
+          <Property
+            property={item}
+            tw={{ state: getCardState(index) }}
+            scale={1.125}
+            scaleOnHover
+            scaleUp={keyboardNavOn && activeItem === index}
+            showDescription={br.current.width < br.br[2]}
+            innerRef={drawer.addItemRef}
+            cardLayout={() => (
+              <PropertyCardLayout
+                variant="large"
+                data={item}
+                picUrl={buildPicUrl}
+              />
+            )}
+          />
+        </StyledSlot>
       ))}
       {showMoreItem && (
-        <Property
-          key="viewMore"
-          tw={{ state: getCardState(drawer.itemCount - 1) }}
-          scale={0.125}
-          scaleOnHover
-          scaleUp={keyboardNavOn && activeItem === items.length}
-          renderLayout={() => <ViewMoreCardLayout />}
-        />
+        <StyledSlot key="more" slotWidth={slotSize}>
+          <Property
+            tw={{ state: getCardState(drawer.itemCount - 1) }}
+            scale={1.125}
+            scaleOnHover
+            scaleUp={keyboardNavOn && activeItem === items.length}
+            cardLayout={() => <ViewMoreCardLayout />}
+          />
+        </StyledSlot>
       )}
     </StyledSliderDrawer>
   );

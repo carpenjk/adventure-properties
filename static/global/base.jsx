@@ -25,7 +25,7 @@ export const GlobalStyles = () => (
       @import url('https://fonts.googleapis.com/css?family=Roboto:400,700&display=swap');
       @import url('https://fonts.googleapis.com/css?family=Poppins:400,700&display=swap');
       @import url('https://fonts.googleapis.com/css2?family=Walter+Turncoat&display=swap');
-
+      @import url('https://fonts.googleapis.com/css2?family=Raleway:wght@700&display=swap');
       :root {
         --menu-color__main: #e5707a;
         --header-height: 3rem;
