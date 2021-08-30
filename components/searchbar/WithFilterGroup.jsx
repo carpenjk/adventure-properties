@@ -10,7 +10,7 @@ import {
   getPaddingBottom,
   getPaddingLeft,
 } from 'themeweaver';
-import FilterHeader from '../FilterHeader';
+import FilterHeader from './FilterHeader';
 
 const StyledFilterGroup = styled.div`
   display: flex;
@@ -37,16 +37,14 @@ const FilterContainer = styled.div`
 `;
 
 const withFilterGroup = (Filter) => {
-  const WithFilterGroup = (props) => {
-    return (
-      <StyledFilterGroup key="wrapper">
-        <FilterHeader headerText={props.title} key="title" />
-        <FilterContainer>
-          <Filter {...props} />
-        </FilterContainer>
-      </StyledFilterGroup>
-    );
-  };
+  const WithFilterGroup = (props) => (
+    <StyledFilterGroup key="wrapper">
+      <FilterHeader headerText={props.title} key="title" />
+      <FilterContainer>
+        <Filter {...props} />
+      </FilterContainer>
+    </StyledFilterGroup>
+  );
   return WithFilterGroup;
 };
 

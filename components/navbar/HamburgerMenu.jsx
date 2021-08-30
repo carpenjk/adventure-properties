@@ -1,10 +1,10 @@
 import styled from 'styled-components';
 import { useState, useEffect, useCallback } from 'react';
-import useWindowSize from './hooks/UseWindowSize';
-import useIsoOnClickOutside from './hooks/UseIsoOnClickOutside';
-import useLockBodyScroll from './hooks/UseLockBodyScroll';
+import useWindowSize from '../hooks/UseWindowSize';
+import useIsoOnClickOutside from '../hooks/UseIsoOnClickOutside';
+import useLockBodyScroll from '../hooks/UseLockBodyScroll';
 import Hamburger from './Hamburger';
-import CloseButton from './CloseButton';
+import CloseButton from '../CloseButton';
 
 const StyledHamburgerMenu = styled.div`
   display: ${(props) => (props.isOpen ? 'flex' : 'none')};
@@ -29,13 +29,13 @@ const StyledHamburgerMenu = styled.div`
 `;
 
 const HamburgerMenu = (props) => {
-  //props
+  // props
   const { topHeight, buttonClass, renderMenu } = props;
-  //state
+  // state
   const [isOpen, setIsOpen] = useState(false);
   const [menuItems, setMenuItems] = useState([]);
   const [selectedIndex, setSelectedIndex] = useState(-1);
-  //hooks
+  // hooks
   const windowSize = useWindowSize();
   useLockBodyScroll();
 
@@ -44,7 +44,7 @@ const HamburgerMenu = (props) => {
     setMenuElement(node);
   });
 
-  //handlers and helpers
+  // handlers and helpers
 
   const moveSelectionUp = () => {
     setSelectedIndex((prevIndex) =>
@@ -77,8 +77,8 @@ const HamburgerMenu = (props) => {
       case 'Escape':
         closeMenu();
       case 'Enter':
-      case ' ': //space
-        //navigation on link and buttons occurs and menu state closes
+      case ' ': // space
+        // navigation on link and buttons occurs and menu state closes
         closeMenu();
         break;
     }
@@ -88,7 +88,7 @@ const HamburgerMenu = (props) => {
     closeMenu();
   };
 
-  //lifecycle functions
+  // lifecycle functions
   useEffect(() => {
     if (menuElement)
       setMenuItems(menuElement.querySelectorAll('[tabindex = "0"]'));
@@ -100,9 +100,9 @@ const HamburgerMenu = (props) => {
 
   useIsoOnClickOutside(menuElement, closeMenu, []);
 
-  //render
+  // render
   return (
-    <React.Fragment>
+    <>
       <Hamburger
         onClick={openMenu}
         wrapperClass={buttonClass}
@@ -110,7 +110,7 @@ const HamburgerMenu = (props) => {
         alt="menu"
         iconSize={{ height: '55px', width: '55px' }}
         buttonSize={{ height: topHeight, width: topHeight }}
-        height={'55px'}
+        height="55px"
         width="55px"
         color="var(--action)"
       />
@@ -118,7 +118,7 @@ const HamburgerMenu = (props) => {
         onKeyDown={handleKeydown}
         onClick={closeMenu}
         isDisplayed={isOpen}
-        focusOnOpen={true}
+        focusOnOpen
         wrapperClass={buttonClass}
         iconColor="var(--action)"
         iconSize="45px"
@@ -135,7 +135,7 @@ const HamburgerMenu = (props) => {
       >
         {renderMenu()}
       </StyledHamburgerMenu>
-    </React.Fragment>
+    </>
   );
 };
 

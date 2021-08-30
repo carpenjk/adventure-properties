@@ -17,7 +17,7 @@ const searchProps = {
 const PrimarySearchLayout = (props) => {
   const { valueFunctions, onInputFocus, inputRefs } = props;
   return (
-    <React.Fragment>
+    <>
       <InputBase
         key="destination"
         id="destination"
@@ -36,7 +36,7 @@ const PrimarySearchLayout = (props) => {
         }
         height="4rem" //! refactor? Set height of React-Select objects to match input styling:
       />
-    </React.Fragment>
+    </>
   );
 };
 

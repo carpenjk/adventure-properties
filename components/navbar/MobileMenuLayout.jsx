@@ -1,10 +1,10 @@
 import styled from 'styled-components';
-import { NavMenu_config } from '../compConfig';
-import { NavToggle_config } from '../compConfig';
+import { NavMenu_config } from '../../compConfig';
+import { NavToggle_config } from '../../compConfig';
 
 //components
-import NavToggle from './NavToggle';
-import NavMenu from './NavMenu';
+import NavToggle from '../NavToggle';
+import NavMenu from '../NavMenu';
 
 const StyledScrollContainer = styled.div`
   max-height: 100%;

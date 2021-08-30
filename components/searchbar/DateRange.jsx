@@ -1,5 +1,5 @@
 import { Component, createRef } from 'react';
-import DateHandler from './base/input/DateHandler';
+import DateHandler from '../base/input/DateHandler';
 
 class DateRange extends Component {
   constructor(props) {
@@ -43,14 +43,16 @@ class DateRange extends Component {
   handleChange = (date, id) => {
     this.props.valueFunctions.set({ [id]: date });
   };
+
   handleStartChange = (date) => {
     const { onInputChange } = this.props;
-    const change = onInputChange ? onInputChange : this.handleChange;
+    const change = onInputChange || this.handleChange;
     change(date, this.state.startDate.id);
   };
+
   handleEndChange = (date) => {
     const { onInputChange } = this.props;
-    const change = onInputChange ? onInputChange : this.handleChange;
+    const change = onInputChange || this.handleChange;
     change(date, this.state.endDate.id);
   };
 
@@ -72,14 +74,14 @@ class DateRange extends Component {
       nextFocusRef,
     } = this.props;
 
-    //get values for each controlled component
+    // get values for each controlled component
 
     const { get } = valueFunctions;
     const startDate = get(startProps.id);
     const endDate = get(endProps.id);
 
     return (
-      <React.Fragment>
+      <>
         {/* Picker for start of range */}
         <DateHandler
           key="startDate"
@@ -97,11 +99,10 @@ class DateRange extends Component {
           onChange={this.handleStartChange}
           onSelect={this.handleStartSelect}
           onFocus={onFocus}
-          ref={inputRef}
-          allowSameDay={true}
+          inputRef={this.state.startDate.ref}
+          allowSameDay
           popperParent={popperParent}
           forceClose={forceClose}
-          nextFocusRef={this.state.endDate.ref}
         />
         {/* Picker for end of range */}
         <DateHandler
@@ -123,9 +124,8 @@ class DateRange extends Component {
           inputRef={this.state.endDate.ref}
           popperParent={popperParent}
           forceClose={forceClose}
-          nextFocusRef={nextFocusRef}
         />
-      </React.Fragment>
+      </>
     );
   }
 }

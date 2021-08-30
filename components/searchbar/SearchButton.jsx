@@ -7,6 +7,7 @@ import {
   getFontFamily,
   getLetterSpacing,
 } from 'themeweaver';
+
 const Button = styled.button`
   flex: none;
   background-color: ${getBackgroundColor('button.search', 'red')};
@@ -16,8 +17,8 @@ const Button = styled.button`
   font-size: ${getFontSize('button.search', '1.6rem')};
   letter-spacing: ${getLetterSpacing('button.search', '0.025em')};
 `;
-const SearchButton = () => {
-  return <Button className="search actionButton">Search</Button>;
-};
+const SearchButton = () => (
+  <Button className="search actionButton">Search</Button>
+);
 
 export default SearchButton;

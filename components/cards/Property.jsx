@@ -27,7 +27,6 @@ const StyledProperty = styled.div`
   flex-direction: column;
   align-items: stretch;
   width: 100%;
-  height: 80em;
 
   flex: none;
 
@@ -77,6 +76,7 @@ const StyledProperty = styled.div`
   }
 
   ${breakpoint(1)`
+    height: 80em;
     flex-direction: row;
     align-items: center;
     height: auto;

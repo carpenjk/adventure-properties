@@ -1,4 +1,4 @@
-import { withThemeweaver, variant, value } from 'themeweaver';
+import { withThemeweaver, variant, value, getBorderColor } from 'themeweaver';
 import { breakpoints } from './Media';
 
 export const theme = withThemeweaver(
@@ -6,6 +6,7 @@ export const theme = withThemeweaver(
     colors: {
       primary: '#7789C8',
       secondary: '#C6D8FF',
+      tertiary: '#CDF7f6',
       action: ['#F6E8E8', '#E5707A'],
       lightText: '#979797',
       mainText: '#444649',
@@ -44,6 +45,7 @@ export const theme = withThemeweaver(
     },
     content: {
       paddingLeft: 2,
+      minWidth: ['', value('800px')],
       maxWidth: value('1350px'),
     },
     button: {
@@ -87,7 +89,11 @@ export const theme = withThemeweaver(
         fontSize: 2,
       }),
       ...variant('signUp', {
-        backgroundColor: ['primary', 'secondary'],
+        backgroundColor: 'tertiary',
+        color: 'primary',
+        fontFamily: 'roboto',
+        fontSize: 3,
+        lineHeight: value('21px'),
       }),
     },
     h1: {
@@ -175,7 +181,7 @@ export const theme = withThemeweaver(
     },
     searchBar: {
       backgroundColor: 'white',
-      width: [value('95vw'), value('auto')],
+      width: [value('90vw'), value('auto')],
       maxWidth: [value('500px'), value('none')],
       borderRadius: 2,
       paddingTop: [2, 2],
@@ -213,6 +219,9 @@ export const theme = withThemeweaver(
         paddingBottom: 5,
       }),
     },
+    results_item: {
+      maxWidth: value('466px'),
+    },
     results_footer: {
       color: 'primary',
       fontFamily: 'raleway',
@@ -234,13 +243,70 @@ export const theme = withThemeweaver(
     property_description: {
       color: 'mainText',
       fontFamily: 'openSans',
-      fontSize: value('16px'),
+      fontSize: 2,
       lineHeight: value('150%'),
       letterSpacing: value('0.025em'),
       paddingTop: 5,
       paddingRight: 5,
       paddingBottom: 5,
       paddingLeft: 5,
+    },
+    footer: {
+      backgroundColor: 'primary',
+    },
+    CTA: {
+      ...variant('signUp', {
+        paddingTop: 4,
+        paddingRight: 4,
+        paddingBottom: 4,
+        paddingLeft: 4,
+        border: value('1px solid'),
+        borderColor: 'tertiary',
+        color: 'tertiary',
+        fontFamily: 'poppins',
+        lineHeight: value('30px'),
+        letterSpacing: value('0.05em'),
+      }),
+    },
+    copyright: {
+      fontFamily: 'poppins',
+      fontSize: 2,
+      lineHeight: value('24px'),
+      letterSpacing: value('0.025em'),
+      color: 'secondary',
+      border: value('1px solid'),
+      borderColor: 'secondary',
+    },
+    footerNav: {
+      fontFamily: 'poppins',
+
+      width: ['', value('80%')],
+      minWidth: ['', value('800px')],
+      maxWidth: ['', value('1200px')],
+    },
+    footerNav_group: {
+      paddingTop: 3,
+      paddingRight: 3,
+      paddingBottom: 3,
+      paddingLeft: 3,
+    },
+    footerNav_header: {
+      fontSize: 4,
+      lineHeight: value('32px'),
+      letterSpacing: value('0.025em'),
+      color: 'tertiary',
+    },
+    footerNav_item: {
+      ...variant('default', {
+        fontSize: 2,
+        lineHeight: value('40px'),
+        letterSpacing: value('0.025em'),
+        color: 'tertiary',
+      }),
+      ...variant('hover', {
+        backgroundColor: 'tertiary',
+        color: 'primary',
+      }),
     },
   }
 );

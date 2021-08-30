@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { getMaxHeight } from 'themeweaver';
-//components
+// components
 import Link from 'next/link';
 import NavToggle from './NavToggle';
 import NavList from './NavList';
@@ -43,7 +43,7 @@ const WideNavbarLayout = (props) => {
   const { logo } = props;
   return (
     <StyledWideNavbar>
-      <Link href="/index">
+      <Link href="/">
         <StyledLogo>
           <img src={logo} alt="logo" />
         </StyledLogo>

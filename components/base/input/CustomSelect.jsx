@@ -21,7 +21,7 @@ import {
   getBorderRadius,
 } from 'themeweaver';
 import { getProp } from 'dataweaver';
-import DropDownIncrArrow from '../../DropDownIncrArrow';
+import DropDownIncrArrow from '../DropDownIncrArrow';
 import withUseRef from '../../WithUseRef';
 
 // custom component for holding selected value

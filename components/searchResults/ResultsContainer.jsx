@@ -29,11 +29,11 @@ import {
   getLetterSpacing,
   getColor,
 } from 'themeweaver';
-import client from '../Contentful';
+import client from '../../Contentful';
 
 import ResultHeader from './ResultHeader';
-import Property from './cards/Property';
-import PropertyCardLayout from './cards/PropertyCardLayout';
+import Property from '../cards/Property';
+import PropertyCardLayout from '../cards/PropertyCardLayout';
 
 const StyledContainer = styled.div`
   display: flex;
@@ -82,10 +82,13 @@ const StyledListItem = styled.li`
   flex-direction: column;
   justify-content: center;
   align-items: stretch;
+  width: 100%;
+  max-width: ${getMaxWidth('results_item', '450px')};
 
   ${breakpoint(1)`
     flex: none;
     width: 100%;
+    max-width: none;
   `}
 
   ${breakpoint(2)`
@@ -178,7 +181,7 @@ const ResultsContainer = ({ items }) => {
 
       <StyledFooter>
         <Link href="/property">
-          <a>More Properties based on ${topic}</a>
+          <a>More Properties based on {topic}</a>
         </Link>
       </StyledFooter>
     </StyledContainer>

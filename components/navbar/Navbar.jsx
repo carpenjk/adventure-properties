@@ -13,12 +13,12 @@ import {
   getPaddingLeft,
 } from 'themeweaver';
 import { TwMobileMenu } from 'tw-mobile-menu';
-import { Media } from '../Media';
+import { Media } from '../../Media';
 // components
 import WideNavbarLayout from './WideNavbarLayout';
 
 // data
-import { navData } from '../data/data';
+import { navData } from '../../data/data';
 
 // assets
 const LOGO = '../static/assets/LogoMain.svg';

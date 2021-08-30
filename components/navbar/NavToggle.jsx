@@ -1,10 +1,10 @@
 import { useContext } from 'react';
-import { GlobalContext } from '../contexts/context';
 import { breakpoint, getMaxWidth } from 'themeweaver';
 import { condition, getProp, inverseProps } from 'dataweaver';
 
-//components
 import styled from 'styled-components';
+import { GlobalContext } from '../../contexts/context';
+// components
 import ToggleButton from './ToggleButton';
 
 const StyledNav = styled.nav`
@@ -69,22 +69,22 @@ const NavToggle = (props) => {
       <ul className="navtoggle__list">
         <ToggleButton
           key="buy"
-          selected={'buy' === appMode}
-          text={'Buy'}
+          selected={appMode === 'buy'}
+          text="Buy"
           onClick={handleAppModeToggle}
           showIndicator={inverseProps(displayVertical)}
         />
         <ToggleButton
           key="rent"
-          selected={'rent' === appMode}
-          text={'Rent'}
+          selected={appMode === 'rent'}
+          text="Rent"
           onClick={handleAppModeToggle}
           showIndicator={inverseProps(displayVertical)}
         />
         <ToggleButton
           key="longTerm"
-          selected={'long term' === appMode}
-          text={'Long Term'}
+          selected={appMode === 'long term'}
+          text="Long Term"
           onClick={handleAppModeToggle}
           showIndicator={inverseProps(displayVertical)}
         />

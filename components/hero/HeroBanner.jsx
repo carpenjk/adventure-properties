@@ -1,5 +1,3 @@
-import useWindowSize from './hooks/UseWindowSize';
-import useIsoLayoutEffect from './hooks/UseIsoLayoutEffect';
 import { useRef } from 'react';
 import styled from 'styled-components';
 import { getProp } from 'dataweaver';
@@ -15,6 +13,8 @@ import {
   getMaxWidth,
   getZIndex,
 } from 'themeweaver';
+import useIsoLayoutEffect from '../hooks/UseIsoLayoutEffect';
+import useWindowSize from '../hooks/UseWindowSize';
 
 const StyledBanner = styled.div`
   position: relative;

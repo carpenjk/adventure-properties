@@ -71,7 +71,7 @@ const StyledLink = styled.a`
 
 const NavLink = (props) => {
   const {
-    href, //start of next/link props
+    href, // start of next/link props
     as,
     passHref,
     prefetch,
@@ -80,16 +80,16 @@ const NavLink = (props) => {
     shallow,
     getStaticProps,
     getServerSideProps,
-    getInitialProps, //end next/link props
+    getInitialProps, // end next/link props
     text,
-    ...restProps //inner coponent props
+    ...restProps // inner coponent props
   } = props;
 
   return (
     <Link
       href={href}
       as={as}
-      passHref={true}
+      passHref
       prefetch={prefetch}
       replace={replace}
       scroll={scroll}

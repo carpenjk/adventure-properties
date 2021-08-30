@@ -88,9 +88,6 @@ export const GlobalStyles = () => (
       }
 
       p {
-        font-size: 1.6rem;
-        letter-spacing: 0.25em;
-        line-height: 150%;
         color: ${theme.colors.mainText};
       }
       .input,

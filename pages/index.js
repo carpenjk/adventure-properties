@@ -5,11 +5,11 @@ import { theme } from '../theme';
 import { mediaStyles } from '../Media';
 import Header from '../components/base/semantic/Header';
 import Section from '../components/base/semantic/Section';
-import Navbar from '../components/Navbar';
+import Navbar from '../components/navbar/Navbar';
 import SearchBar from '../components/searchbar/SearchBar';
-import HeroContainer from '../components/HeroContainer';
-import ResultsContainer from '../components/ResultsContainer';
-import PageFooter from '../components/PageFooter';
+import HeroContainer from '../components/hero/HeroContainer';
+import ResultsContainer from '../components/searchResults/ResultsContainer';
+import PageFooter from '../components/footer/PageFooter';
 
 //* configs
 import { GlobalStyles } from '../static/global/base';
@@ -39,13 +39,6 @@ const Index = () => (
       <Section semKey="features" className="features">
         <ResultsContainer items={slider1Data.items} />
         <ResultsContainer items={slider1Data.items} />
-        {/* <Slider
-          items={slider1Data.items}
-          showMoreItem={[false, true]}
-          itemsToDisplay={3}
-          keyboardSelectSlot={2}
-          hideOverflow
-        /> */}
       </Section>
       <Section semKey="footer" position="relative">
         <PageFooter navData={footerNavData} />

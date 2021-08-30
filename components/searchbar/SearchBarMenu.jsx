@@ -19,24 +19,24 @@ import {
 
 import { condition, getProp } from 'dataweaver';
 
-//hooks
+// hooks
 import { useContext, useRef } from 'react';
 import useIsoOnClickOutside from '../hooks/UseIsoOnClickOutside';
 import useWindowSize from '../hooks/UseWindowSize';
 import useIsoLayoutEffect from '../hooks/UseIsoLayoutEffect';
 import { SearchBarContext } from './searchBarContext';
 
-//components
+// components
 import ExpandedBackground from './ExpandBackground';
-import SearchButton from '../SearchButton';
-import MoreButton from '../MoreButton';
+import SearchButton from './SearchButton';
+import MoreButton from '../base/MoreButton';
 import SearchFilters from './SearchFilters';
-import PopupModal from '../PopupModal';
+import PopupModal from '../base/PopupModal';
 import InputGroup from './InputGroup';
 import PrimarySearchLayout from './PrimarySearchLayout';
 import SecondarySearchLayout from './SecondarySearchLayout';
 
-//global var
+// global var
 const DEFAULT_OFFSET_TOP_PX = 20;
 
 const StyledSearchBar = styled.div`
@@ -51,6 +51,12 @@ const StyledSearchBar = styled.div`
   box-sizing: content-box;
   background-color: ${getBackgroundColor('searchBar', 'none')};
 
+  max-height: ${getMaxHeight('searchBar', 'none')};
+  max-width: ${getMaxWidth('searchBar', 'none')};
+  width: ${getWidth('searchBar', 'auto')};
+  z-index: 999999;
+  border-radius: ${getBorderRadius('searchBar', '8px')};
+
   ${condition('isSearchBarFocused')`
     margin-top: ${getMarginTop('searchBar', '0')};
     margin-right: ${getMarginRight('searchBar', '0')};
@@ -58,12 +64,6 @@ const StyledSearchBar = styled.div`
     margin-left: ${getMarginLeft('searchBar', '0')};
     max-width: ${getProp('openMaxWidth')};
   `}
-
-  max-height: ${getMaxHeight('searchBar', 'none')};
-  max-width: ${getMaxWidth('searchBar', 'none')};
-  width: ${getWidth('searchBar', 'auto')};
-  z-index: 999999;
-  border-radius: ${getBorderRadius('searchBar', '8px')};
 
   ${breakpoint(1)`
     top: ${getProp('offsetTop')}px;
@@ -140,7 +140,7 @@ const StyledButtonContainer = styled.div`
   `}
 `;
 
-//******************************************************************
+//* *****************************************************************
 //* Beginning of Functional Component ******************************
 const SearchBarMenu = (props) => {
   const { offsetTop, openMaxWidth } = props;
@@ -179,7 +179,7 @@ const SearchBarMenu = (props) => {
 
   useIsoLayoutEffect(() => {
     const outerElement = searchBarBgRef.current;
-    const searchBarOffsetTop = offsetTop ? offsetTop : DEFAULT_OFFSET_TOP_PX;
+    const searchBarOffsetTop = offsetTop || DEFAULT_OFFSET_TOP_PX;
     const parentOffsetTop = searchBarOffsetTop + outerElement.offsetTop;
     const viewportOffsetTop = outerElement
       ? outerElement.getBoundingClientRect().top
@@ -191,7 +191,7 @@ const SearchBarMenu = (props) => {
 
   //* component rendering ********************************************************
   return (
-    <React.Fragment>
+    <>
       {isSearchBarFocused && (
         <PopupModal isOpen={[isSearchBarFocused, isSearchFiltersOpen]} />
       )}
@@ -218,7 +218,7 @@ const SearchBarMenu = (props) => {
             <InputGroup
               key="primarySearch"
               groupkey="primaryGroup"
-              isVisible={true}
+              isVisible
               isSearchBarFocused={isSearchBarFocused}
               InputFields={PrimarySearchLayout}
               inputRefs={visibleInputRefs}
@@ -253,7 +253,7 @@ const SearchBarMenu = (props) => {
           <SearchButton />
         </StyledButtonContainer>
       </StyledSearchBar>
-    </React.Fragment>
+    </>
   );
 };
 

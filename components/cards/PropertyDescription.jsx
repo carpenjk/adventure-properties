@@ -1,6 +1,6 @@
 import styled from 'styled-components';
-import { condition } from 'dataweaver';
 import {
+  breakpoint,
   getColor,
   getFontFamily,
   getFontSize,
@@ -11,9 +11,11 @@ import {
   getPaddingRight,
   getPaddingTop,
 } from 'themeweaver';
+import { condition } from 'dataweaver';
 
 const StyledDescription = styled.div`
   width: 100%;
+  height: 20em;
   display: flex;
   justify-content: flex-start;
   align-items: center;
@@ -30,6 +32,10 @@ const StyledDescription = styled.div`
 
   ${condition('hide')`
     display: none;
+  `}
+
+  ${breakpoint(1)`
+    width: unset;
   `}
 `;
 

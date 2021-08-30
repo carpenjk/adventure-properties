@@ -92,7 +92,7 @@ const PropertyCaption = (props) => {
           {tags.reduce((result, tag, index) => {
             const suffix = index === tags.length - 1 ? '...' : ', ';
             return result + tag + suffix;
-          })}
+          }, [])}
         </StyledTag>
       </StyledTags>
       <StyledLocation>{location}</StyledLocation>

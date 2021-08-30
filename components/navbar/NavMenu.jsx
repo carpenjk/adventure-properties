@@ -71,18 +71,16 @@ const NavMenu = (props) => {
       displayVertical={displayVertical}
     >
       <ul className="navmenu__list">
-        {items.map((item) => {
-          return (
-            <li key={item.text}>
-              <NavLink
-                href={item.ref}
-                tabIndex="0"
-                text={item.text}
-                color="var(--primary)"
-              />
-            </li>
-          );
-        })}
+        {items.map((item) => (
+          <li key={item.text}>
+            <NavLink
+              href={item.ref}
+              tabIndex="0"
+              text={item.text}
+              color="var(--primary)"
+            />
+          </li>
+        ))}
       </ul>
     </StyleWrapper>
   );

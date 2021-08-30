@@ -116,14 +116,16 @@ class DateHandler extends Component {
       : desktopMargin || 'margin-right: 10px';
   };
 
-  PopperContainer = ({ children }) => {
+  _PopperContainer = ({ children }) => {
     const { popperParent, forceClose } = this.props;
     if (popperParent && popperParent.current) {
       return createPortal(children, popperParent.current);
-    } else {
-      return null;
     }
+    return null;
   };
+
+  PopperContainer = this._PopperContainer.bind(this);
+
   componentDidUpdate() {
     if (
       this.props.forceClose &&
@@ -137,6 +139,16 @@ class DateHandler extends Component {
     e.target.readOnly = true;
     this.props.onFocus();
   }
+
+  handleKeyDown = (e) => {
+    const { inputRef } = this.props;
+    if (inputRef && inputRef.current) {
+      if (e.key === 'Tab') {
+        console.log('close');
+        inputRef.current.setOpen(false);
+      }
+    }
+  };
 
   render() {
     const {
@@ -179,6 +191,7 @@ class DateHandler extends Component {
           onChange={onChange}
           onFocus={this.handleFocus.bind(this)}
           onSelect={onSelect}
+          onKeyDown={this.handleKeyDown}
           placeholderText={placeholder}
           popperContainer={this.PopperContainer}
           popperPlacement="bottom"
@@ -197,7 +210,6 @@ class DateHandler extends Component {
             },
           }}
           strictParsing
-          tabIndex="0"
           ref={inputRef}
         />
       </StyledDateHandler>
