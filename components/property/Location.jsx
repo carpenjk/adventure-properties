@@ -1,5 +1,5 @@
-import { useEffect } from 'react';
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+import { useEffect, useState } from 'react';
+// import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import styled from 'styled-components';
 
 const StyledLocation = styled.div`
@@ -32,7 +32,7 @@ const Location = ({ location }) => {
   return (
     <StyledLocation>
       <StyledHeader>{location}</StyledHeader>
-      <MapContainer center={position} zoom={13} scrollWheelZoom={false}>
+      {/* <MapContainer center={position} zoom={13} scrollWheelZoom={false}>
         <TileLayer
           attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -42,7 +42,7 @@ const Location = ({ location }) => {
             A pretty CSS3 popup. <br /> Easily customizable.
           </Popup>
         </Marker>
-      </MapContainer>
+      </MapContainer> */}
       ,
     </StyledLocation>
   );

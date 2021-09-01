@@ -6,7 +6,7 @@ import { breakpoint } from 'themeweaver';
 import { getProp } from 'dataweaver';
 import { Media, mediaStyles } from '../Media';
 import client from '../Contentful';
-import { GlobalStyles } from '../static/global/base';
+import { GlobalStyles } from '../styles/global/base';
 import { theme } from '../theme';
 
 import Header from '../components/base/semantic/Header';

@@ -12,11 +12,11 @@ import ResultsContainer from '../components/searchResults/ResultsContainer';
 import PageFooter from '../components/footer/PageFooter';
 
 //* configs
-import { GlobalStyles } from '../static/global/base';
+import { GlobalStyles } from '../styles/global/base';
 import { slider1Data, footerNavData } from '../data/data';
 
 // static variables
-const HERO_IMAGE = '../static/assets/lofoten-2220461.png';
+const HERO_IMAGE = '/static/assets/lofoten-2220461.png';
 
 const Index = () => (
   <ThemeProvider theme={theme}>

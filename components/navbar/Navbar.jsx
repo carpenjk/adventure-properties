@@ -21,7 +21,7 @@ import WideNavbarLayout from './WideNavbarLayout';
 import { navData } from '../../data/data';
 
 // assets
-const LOGO = '../static/assets/LogoMain.svg';
+const LOGO = '/static/assets/LogoMain.svg';
 
 const StyledNavbar = styled.div`
   height: ${getHeight('nav.main', 'auto')};

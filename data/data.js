@@ -7,7 +7,7 @@ import HeroContainer from '../components/hero/HeroContainer';
 export const navData = {
   nav: {
     props: {
-      logo: '../static/assets/LogoMain.svg',
+      logo: '/static/assets/LogoMain.svg',
     },
     items: [
       {
@@ -58,7 +58,7 @@ export const heroData = {
     Component: HeroContainer,
     props: {
       offsetTop: '80px',
-      backgroundImage: '../static/assets/lofoten-2220461.png',
+      backgroundImage: '/static/assets/lofoten-2220461.png',
     },
     items: [
       {
