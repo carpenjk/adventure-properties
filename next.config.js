@@ -1,6 +1,7 @@
-const withCSS = require('@zeit/next-css');
+// const withCSS = require('@zeit/next-css');
+const withImages = require('next-images');
 
-module.exports = withCSS({
+module.exports = withImages({
   /* config options here */
   env: {
     PROPERTIES_API_SPACE: process.env.PROPERTIES_API_SPACE,

@@ -1,6 +1,10 @@
 import { useEffect, useState } from 'react';
-// import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+// import L from 'leaflet';
+import { Map, TileLayer, Marker, Popup } from 'react-leaflet';
 import styled from 'styled-components';
+import 'leaflet/dist/leaflet.css';
+import iconShadow from 'leaflet/dist/images/marker-shadow.png';
+import icon from 'leaflet/dist/images/marker-icon.png';
 
 const StyledLocation = styled.div`
   > div {
@@ -15,24 +19,36 @@ const StyledHeader = styled.h3`
   color: red;
 `;
 
-const position = [51.505, -0.09];
-const Location = ({ location }) => {
+// const position = [51.505, -0.09];
+const Location = ({ location, locationName }) => {
   const [isMounted, setIsMounted] = useState(false);
+  useEffect(() => {
+    const L = require('leaflet');
+
+    delete L.Icon.Default.prototype._getIconUrl;
+
+    L.Icon.Default.mergeOptions({
+      iconRetinaUrl: require('leaflet/dist/images/marker-icon-2x.png'),
+      iconUrl: require('leaflet/dist/images/marker-icon.png'),
+      shadowUrl: require('leaflet/dist/images/marker-shadow.png'),
+    });
+  }, []);
 
   useEffect(() => setIsMounted(true), []);
+  const position = [location.lat, location.lon];
 
   if (!isMounted) {
     return (
       <StyledLocation>
-        <StyledHeader>{location}</StyledHeader>
+        <StyledHeader>{locationName}</StyledHeader>
         <div />
       </StyledLocation>
     );
   }
   return (
     <StyledLocation>
-      <StyledHeader>{location}</StyledHeader>
-      {/* <MapContainer center={position} zoom={13} scrollWheelZoom={false}>
+      <StyledHeader>{locationName}</StyledHeader>
+      <Map center={position} zoom={13} scrollWheelZoom={false}>
         <TileLayer
           attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -42,7 +58,7 @@ const Location = ({ location }) => {
             A pretty CSS3 popup. <br /> Easily customizable.
           </Popup>
         </Marker>
-      </MapContainer> */}
+      </Map>
       ,
     </StyledLocation>
   );

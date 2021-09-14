@@ -9,7 +9,7 @@ const StyledReserveForm = styled.div`
   border: 5px solid ${({ theme }) => theme.colors.secondaryText};
   border-radius: 5px;
   background-color: ${({ theme }) => theme.colors.white};
-  z-index: 999999;
+  z-index: 999;
 
   ${breakpoint(1)`
   position: relative;

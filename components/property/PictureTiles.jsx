@@ -14,6 +14,7 @@ const StyledPictures = styled.div`
     flex: none;
     object-fit: cover;
     width: 100%;
+    cursor: pointer;
   }
   ${breakpoint(1)`
     display: grid;
@@ -36,11 +37,11 @@ const StyledButtonWrapper = styled.div`
   bottom: 20px;
   right: 20px;
 `;
-const PictureTiles = ({ children }) => (
+const PictureTiles = ({ children, onOverlayClick }) => (
   <StyledPictures>
     {children}
     <StyledButtonWrapper>
-      <OverlayNavButton path="/">More Photos</OverlayNavButton>
+      <OverlayNavButton onClick={onOverlayClick}>More Photos</OverlayNavButton>
     </StyledButtonWrapper>
   </StyledPictures>
 );

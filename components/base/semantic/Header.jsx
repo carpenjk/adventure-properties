@@ -9,7 +9,7 @@ const StyledHeader = styled.header`
   width: 100%;
   min-height: ${getMinHeight('header', '0')};
   max-height: ${getMaxHeight('header', 'none')};
-  z-index: 9999999;
+  z-index: 999;
 `;
 const StyledFiller = styled.div`
   background: transparent;

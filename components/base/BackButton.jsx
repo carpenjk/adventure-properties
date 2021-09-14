@@ -6,7 +6,7 @@ const StyledContainer = styled.div`
   position: fixed;
   top: 95px;
   left: 10px;
-  z-index: 999999;
+  z-index: 999;
 
   img {
     padding-right: 5px;

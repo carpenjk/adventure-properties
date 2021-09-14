@@ -20,7 +20,7 @@ import {
 import { getProp } from 'dataweaver';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import '../../../styles/global/datepicker.css';
+import '../../../styles/global/datepicker.module.css';
 
 const StyledDateHandler = styled.div`
 display: block;
