@@ -1,6 +1,7 @@
 import styled from 'styled-components';
+import Link from 'next/link';
 
-const StyledButton = styled.button`
+const StyledA = styled.a`
   z-index: 999999;
 
   display: flex;
@@ -18,8 +19,10 @@ const StyledButton = styled.button`
   box-shadow: 0px 1px 2px rgba(116, 108, 108, 0.25);
   border-radius: 5px;
 `;
-const OverlayNavButton = ({ children, onClick }) => (
-  <StyledButton onClick={onClick}>{children}</StyledButton>
+const OverlayNavButton = ({ children, href }) => (
+  <Link href={href} passHref>
+    <StyledA>{children}</StyledA>
+  </Link>
 );
 
 export default OverlayNavButton;

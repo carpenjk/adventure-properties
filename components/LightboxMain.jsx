@@ -1,19 +1,23 @@
+import { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import { condition } from 'dataweaver';
 import { breakpoint } from 'themeweaver';
 
 import LightboxArrow from './LightboxArrow';
 import LightboxHeader from './LightboxHeader';
+import LightboxCounter from './LightboxCounter';
 
 const StyledLightboxMain = styled.div`
   width: 100%;
-  height: 400px;
+  height: 35vh;
+  max-height: 450px;
 
   overflow: hidden;
-  z-index: 1000;
+  z-index: 10003;
 
   ${condition('isOpen')`
     height: 100%;
+    max-height: none;
     background-color: black;
     
     -ms-content-zooming: none;
@@ -35,57 +39,72 @@ const StyledOuterContainer = styled.div`
 `;
 
 const StyledInnerContainer = styled.div`
-  > div > picture > img {
-    position: absolute;
-    object-fit: contain;
-    width: 100%;
-    height: 100%;
-  }
+  width: 100%;
+  height: 100%;
+  max-width: 100%;
+  overflow: hidden;
+  cursor: pointer;
+
+  ${condition('isOpen')`
+    position: relative;
+    top: 50px !important;
+    margin: 0 auto;
+    height: calc(100% - 100px) !important;
+    cursor: revert;
+  `}
+
   > div {
     z-index: 1;
   }
 
-  > div.prev-img {
-    left: -100%;
-  }
-
-  > div.next-img {
-    left: 100%;
-  }
-
   ${breakpoint(1)`
-    overflow: hidden;
     position: relative;
     top: 112px !important;
     margin: 0 auto;
     height: calc(100% - 224px) !important;
     width: calc(100% - 192px) !important;
-    > div {
-      position: absolute;
-      left: 0;
-      width: 100%;
-      height: 100%;
-    }
 
-    > div > picture {
-      width: 100%;
-      height: 100%;
-    }
-    > div > picture > img {
-      position: absolute;
-      object-fit: contain;
-      width: 100%;
-      height: 100%;
-    }
-    > div.prev-img {
-      left: -100%;
-    }
-
-    > div.next-img {
-      left: 100%;
-      z-index: 1;
-    }
 `}
+`;
+
+const StyledTrack = styled.div`
+  display: inline-block;
+  height: 100%;
+  width: ${({ count }) => count * 100}%;
+  position: relative;
+  top: 0;
+  left: 0;
+
+  transform: translate(
+    ${({ count, slideIndex }) => slideIndex * (1 / count) * -100}%
+  );
+  transition: transform 0.5s ease 0s;
+
+  > div {
+    display: inline-block;
+    position: relative;
+    height: 100%;
+    width: ${({ count }) => (1 / count) * 100}%;
+  }
+  > div > picture {
+    width: 100%;
+  }
+  > div > picture > img {
+    touch-action: pinch-zoom;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    ${condition('isOpen')`
+      object-fit: contain;
+    `}
+  }
+  ${breakpoint(1)`
+    > div > picture > img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }   
+  `}
 `;
 
 const StyledArrowWrapper = styled.div`
@@ -116,6 +135,7 @@ const LightBoxMain = (props) => {
     currSrcSet,
     nextSrc,
     nextSrcSet,
+    preloadCount,
     onClose,
     onMovePrev,
     onMoveNext,
@@ -124,12 +144,12 @@ const LightBoxMain = (props) => {
     openInPlace,
     PictureTile,
     showNavArrows,
+    loadedImages,
   } = props;
 
   if (!isOpen && PictureTile) {
     return <PictureTile />;
   }
-
   return (
     <StyledLightboxMain
       isOpen={isOpen}
@@ -148,32 +168,27 @@ const LightBoxMain = (props) => {
             onClose={onClose}
           />
         )}
-        <StyledInnerContainer>
-          <div className="prev-img">
-            <picture>
-              <source srcSet={prevSrcSet} />
-              <img
-                src={prevSrc}
-                alt="description"
-                className="curr-img"
-                loading="lazy"
-              />
-            </picture>
-          </div>
-          <div className="curr-img">
-            <picture>
-              <source srcSet={currSrcSet} />
-              <img src={currSrc} alt="description" loading="lazy" />
-            </picture>
-          </div>
-          <div className="next-img">
-            <picture>
-              <source srcSet={nextSrcSet} />
-              <img src={nextSrc} alt="description" loading="lazy" />
-            </picture>
-          </div>
+        {!isOpen && (
+          <LightboxCounter currIndex={currIndex} imgCount={imgCount} />
+        )}
+        <StyledInnerContainer isOpen={isOpen}>
+          <StyledTrack
+            slideIndex={currIndex}
+            count={loadedImages.length}
+            isOpen={isOpen}
+          >
+            {loadedImages &&
+              loadedImages.map((img) => (
+                <div key={img.src}>
+                  <picture>
+                    <source srcSet={img.srcSet} />
+                    <img src={img.src} alt="description" loading="lazy" />
+                  </picture>
+                </div>
+              ))}
+          </StyledTrack>
         </StyledInnerContainer>
-        {showNavArrows && (
+        {isOpen && showNavArrows && (
           <>
             <StyledArrowWrapper left="calc(0.5% + 10px)">
               <LightboxArrow direction="left" onClick={onMovePrev} />

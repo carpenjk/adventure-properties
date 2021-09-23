@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { breakpoint } from 'themeweaver';
 
 const StyledArrowContainer = styled.button`
   display: flex;
@@ -12,8 +13,16 @@ const StyledArrowContainer = styled.button`
   color: inherit;
 
   &:hover {
-    background: rgb(74, 74, 74);
+    background: rgba(74, 74, 74, 0.4);
   }
+
+  ${breakpoint(1)`
+    &:hover {
+      background: rgb(74, 74, 74);
+    }
+  `}
+
+  
 
 `;
 const LightboxArrow = ({ direction, onClick }) => {

@@ -1,12 +1,11 @@
 import styled from 'styled-components';
-import Link from 'next/link';
-import OverlayNavButton from './OverlayNavButton';
+import OverlayNavLink from './OverlayNavLink';
 
 const StyledContainer = styled.div`
   position: fixed;
   top: 95px;
   left: 10px;
-  z-index: 999;
+  z-index: 10001;
 
   img {
     padding-right: 5px;
@@ -15,10 +14,10 @@ const StyledContainer = styled.div`
 
 const BackButton = ({ path }) => (
   <StyledContainer>
-    <OverlayNavButton path={path}>
+    <OverlayNavLink href={path}>
       <img src="../static/assets/misc/back arrow.svg" alt="back arrow" />
       back
-    </OverlayNavButton>
+    </OverlayNavLink>
   </StyledContainer>
 );
 

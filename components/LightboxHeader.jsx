@@ -1,8 +1,9 @@
 import styled from 'styled-components';
+import { breakpoint } from 'themeweaver';
 
 const StyledHeader = styled.div`
   position: absolute;
-  top: calc(112px - 64px);
+  top: calc(32px);
   left: 32px;
   right: 32px;
   margin: 0 auto;
@@ -13,6 +14,13 @@ const StyledHeader = styled.div`
   font-family: 'Open Sans', sans-serif;
   font-size: 16px;
   font-weight: bold;
+
+  ${breakpoint(1)`
+    top: calc(112px - 64px);
+    left: 32px;
+    right: 32px;
+  `}
+
   > span {
     position: relative;
     margin: 0 auto;
@@ -37,9 +45,7 @@ const StyledCloseBtn = styled.button`
 
 const LightboxHeader = ({ currIndex, imgCount, onClose }) => (
   <StyledHeader>
-    <StyledCloseBtn onClick={onClose}>
-      <span>X Close</span>
-    </StyledCloseBtn>
+    <StyledCloseBtn onClick={onClose}>X Close</StyledCloseBtn>
     <span>{`${currIndex + 1}/${imgCount}`}</span>
   </StyledHeader>
 );

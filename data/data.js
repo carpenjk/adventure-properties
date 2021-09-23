@@ -8,6 +8,7 @@ export const navData = {
   nav: {
     props: {
       logo: '/static/assets/LogoMain.svg',
+      logoUrl: '/',
     },
     items: [
       {

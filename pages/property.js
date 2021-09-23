@@ -33,6 +33,7 @@ const StyledContent = styled.div`
   display: flex;
   align-items: flex-start;
   padding: ${({ theme }) => theme.space[3]}px;
+  width: 100%;
   max-width: 1200px;
 `;
 
@@ -41,13 +42,19 @@ const StyledDetails = styled.div`
   flex-direction: column;
   align-items: flex-start;
   flex 0 1 770px;
+  width: 100%;
   
   
   > h1 {
     margin: 0;
+    font-family: Poppins;
+    font-weight: bold;
+    font-size: ${({ theme }) => theme.fontSizes[4]}px;
+    color: ${({ theme }) => theme.colors.mainText};
+
   }
   > * {
-    padding-bottom: ${({ theme }) => theme.space[6]}px;
+    padding-bottom: ${({ theme }) => theme.space[5]}px;
   }
 
   ${breakpoint(1)`
@@ -80,6 +87,8 @@ const Property = (props) => {
   const [images, setImages] = useState([]);
   const [photoIndex, setPhotoIndex] = useState(0);
   const [openLightbox, setOpenLightbox] = useState(false);
+
+  const LIGHTBOX_PRELOAD_COUNT = 3;
 
   // ! Remove and add to props
   const propID = '3RcXEiv8ook0DOHBrNniCA';
@@ -129,17 +138,36 @@ const Property = (props) => {
   }
 
   // event handlers
+  function handleMoveNext() {
+    setPhotoIndex((prevIndex) => {
+      if (prevIndex < images.length - 1) {
+        return prevIndex + 1;
+      }
+      return prevIndex;
+    });
+  }
+
+  function handleMovePrev() {
+    setPhotoIndex((prevIndex) => {
+      if (prevIndex !== 0) {
+        return prevIndex - 1;
+      }
+      return prevIndex;
+    });
+  }
+
   function handlePhotoClick(i) {
     setPhotoIndex(i);
     setOpenLightbox(true);
   }
 
-  function handleLightboxClose() {
+  function handleLightboxClose(e) {
     setOpenLightbox(false);
     setPhotoIndex(0);
+    e.stopPropagation();
   }
 
-  function handleOverlayClick() {
+  function handleLightboxOpen() {
     setOpenLightbox(true);
   }
 
@@ -159,22 +187,27 @@ const Property = (props) => {
     [propertyData.fields]
   );
 
+  const tileImageUrls = getUrls();
   const LightboxTiles = useCallback(() => {
     const tileImageUrls = getUrls();
     return (
-      <PictureTiles onOverlayClick={handleOverlayClick}>
+      <PictureTiles onOverlayClick={handleLightboxOpen}>
         {tileImageUrls.map((img, i) => (
           <img
             loading="lazy"
             key={i}
             src={img}
             alt="property"
-            onClick={() => handlePhotoClick(i).bind(this)}
+            onClick={() => handlePhotoClick(i)}
           />
         ))}
       </PictureTiles>
     );
   }, [images]);
+  console.log(
+    '🚀 ~ file: property.js ~ line 205 ~ LightboxTiles ~ LightboxTiles',
+    LightboxTiles
+  );
 
   // property data
   const { beds, baths, description, guests, location, propertyType } =
@@ -202,6 +235,15 @@ const Property = (props) => {
   ${images[nextPhotoIndex]}${mediumModifiers} 1000w,
   ${images[nextPhotoIndex]}${largeModifiers} 2000w
   `;
+
+  const testSrcSets = images.map((url) => ({
+    srcSet: `
+      ${url}${smallModifiers} 640w,
+      ${url}${mediumModifiers} 1000w,
+      ${url}${largeModifiers} 2000w
+        `,
+    src: url,
+  }));
 
   if (!propertyData.fields) {
     return <div>loading</div>;
@@ -242,21 +284,21 @@ const Property = (props) => {
               currSrcSet={currSrcSet}
               nextSrc={images[nextPhotoIndex]}
               nextSrcSet={nextSrcSet}
+              preloadCount={LIGHTBOX_PRELOAD_COUNT}
               onClose={handleLightboxClose}
-              onMovePrev={() =>
-                setPhotoIndex((photoIndex + images.length - 1) % images.length)
-              }
-              onMoveNext={() =>
-                setPhotoIndex((photoIndex + images.length + 1) % images.length)
-              }
+              onOpen={handleLightboxOpen}
+              onMovePrev={handleMovePrev}
+              onMoveNext={handleMoveNext}
               currIndex={photoIndex}
               imgCount={images.length}
+              images={testSrcSets}
+              tileImageUrls={tileImageUrls}
             />
           </Media>
           <Media greaterThanOrEqual="1">
             <Lightbox
               PictureTile={LightboxTiles}
-              images={images}
+              images={testSrcSets}
               isOpen={openLightbox}
               prevSrc={images[prevPhotoIndex]}
               prevSrcSet={prevSrcSet}
@@ -264,15 +306,13 @@ const Property = (props) => {
               currSrcSet={currSrcSet}
               nextSrc={images[nextPhotoIndex]}
               nextSrcSet={nextSrcSet}
+              preloadCount={LIGHTBOX_PRELOAD_COUNT}
               onClose={handleLightboxClose}
-              onMovePrev={() =>
-                setPhotoIndex((photoIndex + images.length - 1) % images.length)
-              }
-              onMoveNext={() =>
-                setPhotoIndex((photoIndex + images.length + 1) % images.length)
-              }
+              onMovePrev={handleMovePrev}
+              onMoveNext={handleMoveNext}
               currIndex={photoIndex}
               imgCount={images.length}
+              tileImageUrls={tileImageUrls}
             />
           </Media>
         </Section>

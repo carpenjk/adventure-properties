@@ -7,19 +7,21 @@ import iconShadow from 'leaflet/dist/images/marker-shadow.png';
 import icon from 'leaflet/dist/images/marker-icon.png';
 
 const StyledLocation = styled.div`
+  max-width: 350px;
+  width: 100%;
+
   > div {
-    width: 350px;
-    max-width: 350px;
     height: 250px;
-    background-color: gray;
+    width: 100%;
   }
 `;
 
 const StyledHeader = styled.h3`
   color: red;
+  line-height: 200%;
+  margin: 0;
 `;
 
-// const position = [51.505, -0.09];
 const Location = ({ location, locationName }) => {
   const [isMounted, setIsMounted] = useState(false);
   useEffect(() => {
@@ -48,7 +50,7 @@ const Location = ({ location, locationName }) => {
   return (
     <StyledLocation>
       <StyledHeader>{locationName}</StyledHeader>
-      <Map center={position} zoom={13} scrollWheelZoom={false}>
+      <Map center={position} zoom={13} scrollWheelZoom={false} dragging={false}>
         <TileLayer
           attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -59,7 +61,6 @@ const Location = ({ location, locationName }) => {
           </Popup>
         </Marker>
       </Map>
-      ,
     </StyledLocation>
   );
 };

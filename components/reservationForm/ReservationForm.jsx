@@ -4,9 +4,9 @@ import { breakpoint } from 'themeweaver';
 const StyledReserveForm = styled.div`
   position: fixed;
   bottom: 0;
-  height: 100px;
+  height: 90px;
   width: 100%;
-  border: 5px solid ${({ theme }) => theme.colors.secondaryText};
+  border: 3px solid ${({ theme }) => theme.colors.secondaryText};
   border-radius: 5px;
   background-color: ${({ theme }) => theme.colors.white};
   z-index: 999;

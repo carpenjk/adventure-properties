@@ -44,9 +44,11 @@ const WideNavbarLayout = (props) => {
   return (
     <StyledWideNavbar>
       <Link href="/">
-        <StyledLogo>
-          <img src={logo} alt="logo" />
-        </StyledLogo>
+        <a>
+          <StyledLogo>
+            <img src={logo} alt="logo" />
+          </StyledLogo>
+        </a>
       </Link>
       <NavToggle key="navToggle" displayVertical={false} />
       <NavList />

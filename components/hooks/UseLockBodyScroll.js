@@ -10,9 +10,11 @@ const useLockBodyScroll = (hideScrollbar, isLocked) => {
 
   function lockBody() {
     if (!hideScrollbar) {
-      document.body.style.position = 'fixed';
-      document.body.style.overflowY = 'scroll';
-    } else {
+      if (isBodyLocked) {
+        document.body.style.position = 'fixed';
+        document.body.style.overflowY = 'scroll';
+      }
+    } else if (isBodyLocked) {
       document.body.style.overflow = 'hidden';
     }
   }

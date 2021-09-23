@@ -31,7 +31,7 @@ const StyledBanner = styled.div`
   margin: auto;
   width: ${getWidth('banner', '90%')};
   max-width: ${getMaxWidth('banner', '50.1rem')};
-  z-index: ${getZIndex('banner', '999998')};
+  z-index: ${getZIndex('banner', '999')};
 
   &.banner H1 {
     margin: 0 0 10px 0;
