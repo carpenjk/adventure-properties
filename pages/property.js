@@ -5,7 +5,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { breakpoint } from 'themeweaver';
 import { getProp } from 'dataweaver';
 import dynamic from 'next/dynamic';
-import Lightbox from '../components/Lightbox';
+import Lightbox from '../components/Lightbox/Lightbox';
 import { Media, mediaStyles } from '../Media';
 import client from '../Contentful';
 import { GlobalStyles } from '../styles/global/base';
@@ -187,7 +187,6 @@ const Property = (props) => {
     [propertyData.fields]
   );
 
-  const tileImageUrls = getUrls();
   const LightboxTiles = useCallback(() => {
     const tileImageUrls = getUrls();
     return (
@@ -204,37 +203,14 @@ const Property = (props) => {
       </PictureTiles>
     );
   }, [images]);
-  console.log(
-    '🚀 ~ file: property.js ~ line 205 ~ LightboxTiles ~ LightboxTiles',
-    LightboxTiles
-  );
 
   // property data
   const { beds, baths, description, guests, location, propertyType } =
     propertyData.fields || {};
 
-  const prevPhotoIndex = (photoIndex + images.length - 1) % images.length;
-  const nextPhotoIndex = (photoIndex + images.length + 1) % images.length;
   const largeModifiers = '?fit=fill&w=2000&q=80';
   const mediumModifiers = '?fit=fill&w=1000&q=80';
   const smallModifiers = '?fit=fill&w=640&q=80';
-
-  // lightbox image urls
-  const currSrcSet = `
-  ${images[photoIndex]}${smallModifiers} 640w,
-  ${images[photoIndex]}${mediumModifiers} 1000w,
-  ${images[photoIndex]}${largeModifiers} 2000w
-  `;
-  const prevSrcSet = `
-  ${images[prevPhotoIndex]}${smallModifiers} 640w,
-  ${images[prevPhotoIndex]}${mediumModifiers} 1000w,
-  ${images[prevPhotoIndex]}${largeModifiers} 2000w
-  `;
-  const nextSrcSet = `
-  ${images[nextPhotoIndex]}${smallModifiers} 640w,
-  ${images[nextPhotoIndex]}${mediumModifiers} 1000w,
-  ${images[nextPhotoIndex]}${largeModifiers} 2000w
-  `;
 
   const testSrcSets = images.map((url) => ({
     srcSet: `
@@ -275,44 +251,29 @@ const Property = (props) => {
         >
           <Media lessThan="1">
             <Lightbox
-              openInPlace
-              showNavArrows={false}
-              isOpen={openLightbox}
-              prevSrc={images[prevPhotoIndex]}
-              prevSrcSet={prevSrcSet}
-              currSrc={images[photoIndex]}
-              currSrcSet={currSrcSet}
-              nextSrc={images[nextPhotoIndex]}
-              nextSrcSet={nextSrcSet}
-              preloadCount={LIGHTBOX_PRELOAD_COUNT}
-              onClose={handleLightboxClose}
-              onOpen={handleLightboxOpen}
-              onMovePrev={handleMovePrev}
-              onMoveNext={handleMoveNext}
               currIndex={photoIndex}
-              imgCount={images.length}
+              isOpen={openLightbox}
               images={testSrcSets}
-              tileImageUrls={tileImageUrls}
+              imgCount={images.length}
+              preloadCount={LIGHTBOX_PRELOAD_COUNT}
+              showNavArrows={false}
+              onOpen={handleLightboxOpen}
+              onClose={handleLightboxClose}
+              onMoveNext={handleMoveNext}
+              onMovePrev={handleMovePrev}
             />
           </Media>
           <Media greaterThanOrEqual="1">
             <Lightbox
-              PictureTile={LightboxTiles}
-              images={testSrcSets}
+              currIndex={photoIndex}
               isOpen={openLightbox}
-              prevSrc={images[prevPhotoIndex]}
-              prevSrcSet={prevSrcSet}
-              currSrc={images[photoIndex]}
-              currSrcSet={currSrcSet}
-              nextSrc={images[nextPhotoIndex]}
-              nextSrcSet={nextSrcSet}
+              images={testSrcSets}
+              imgCount={images.length}
               preloadCount={LIGHTBOX_PRELOAD_COUNT}
+              PictureTile={LightboxTiles}
               onClose={handleLightboxClose}
               onMovePrev={handleMovePrev}
               onMoveNext={handleMoveNext}
-              currIndex={photoIndex}
-              imgCount={images.length}
-              tileImageUrls={tileImageUrls}
             />
           </Media>
         </Section>

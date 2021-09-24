@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { breakpoint } from 'themeweaver';
+import { condition } from 'dataweaver';
 
 const StyledArrowContainer = styled.button`
   display: flex;
@@ -13,25 +13,24 @@ const StyledArrowContainer = styled.button`
   color: inherit;
 
   &:hover {
-    background: rgba(74, 74, 74, 0.4);
+    background: rgb(74, 74, 74);
   }
 
-  ${breakpoint(1)`
+  ${condition('disabled')`
+    color: rgb(74,74,74);
+    border-color: rgb(74,74,74);
     &:hover {
-      background: rgb(74, 74, 74);
+      background: transparent;  
     }
   `}
-
-  
-
 `;
-const LightboxArrow = ({ direction, onClick }) => {
+const LightboxArrow = ({ direction, onClick, disabled }) => {
   function handleClick(e) {
     onClick(e);
     e.stopPropagation();
   }
   return (
-    <StyledArrowContainer onClick={handleClick}>
+    <StyledArrowContainer onClick={handleClick} disabled={disabled}>
       {direction === 'left' && '<'}
       {direction === 'right' && '>'}
     </StyledArrowContainer>

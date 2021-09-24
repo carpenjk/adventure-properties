@@ -1,13 +1,9 @@
-import styled from 'styled-components';
 import { useState, useEffect, useRef, useLayoutEffect } from 'react';
-import { getProp, condition } from 'dataweaver';
-import { breakpoint } from 'themeweaver';
 import { Portal } from 'react-portal';
+import isDeepEqual from 'fast-deep-equal/react';
 
-import useLockBodyScroll from './hooks/UseLockBodyScroll';
-import useTouch from './hooks/UseTouch';
-import LightboxArrow from './LightboxArrow';
-import LightboxHeader from './LightboxHeader';
+import useLockBodyScroll from '../hooks/UseLockBodyScroll';
+import useTouch from '../hooks/UseTouch';
 import LightBoxMain from './LightboxMain';
 
 const Lightbox = (props) => {
@@ -15,12 +11,6 @@ const Lightbox = (props) => {
     PictureTile,
     images,
     isOpen,
-    prevSrc,
-    prevSrcSet,
-    currSrc,
-    currSrcSet,
-    nextSrc,
-    nextSrcSet,
     onClose,
     onMovePrev,
     onMoveNext,
@@ -30,21 +20,36 @@ const Lightbox = (props) => {
     imgCount,
     openInPlace,
     showNavArrows,
-    tileImageUrls,
   } = props;
 
   const lightboxRef = useRef(null);
   const touch = useTouch({ onTouchLeft: onMoveNext, onTouchRight: onMovePrev });
-
   const bodyLock = useLockBodyScroll(true, isOpen);
-
   const [loadedImages, setLoadedImages] = useState(
     images ? images.slice(0, currIndex + preloadCount) : null
   );
+  const prevIsOpen = useRef(false);
+  const prevCurrIndex = useRef(currIndex);
+  const [isOpening, setIsOpening] = useState(isOpen);
 
+  //* **************effects************** */
+  // preLoad Images
   useEffect(() => {
     setLoadedImages(images.slice(0, currIndex + preloadCount));
-  }, [currIndex, images, preloadCount]);
+  }, [currIndex, images, preloadCount, isOpen]);
+
+  useLayoutEffect(() => {
+    const indexChanged = currIndex !== prevCurrIndex.current;
+    const isOpenChanged = isOpen !== prevIsOpen.current;
+
+    if (isOpenChanged && isOpen) {
+      setIsOpening(true);
+    } else if (indexChanged && !isOpenChanged) {
+      setIsOpening(false);
+    }
+    prevCurrIndex.current = currIndex;
+    prevIsOpen.current = isOpen;
+  }, [currIndex, isOpen]);
 
   const handleKeyDown = (e) => {
     switch (e.key) {
@@ -62,6 +67,7 @@ const Lightbox = (props) => {
     }
   };
 
+  // Lock and unlock scrolling
   useEffect(() => {
     if (isOpen) {
       bodyLock.lock();
@@ -76,6 +82,7 @@ const Lightbox = (props) => {
     }
   }, [lightboxRef]);
 
+  // focus on open
   useEffect(() => {
     if (isOpen && lightboxRef.current) {
       lightboxRef.current.focus();
@@ -86,26 +93,21 @@ const Lightbox = (props) => {
     return (
       <Portal isOpen={isOpen}>
         <LightBoxMain
-          loadedImages={loadedImages}
-          isOpen={isOpen}
           currIndex={currIndex}
+          isOpen={isOpen}
+          isOpening={isOpening}
           imgCount={imgCount}
-          showNavArrows={showNavArrows}
+          loadedImages={loadedImages}
           preloadCount={preloadCount}
-          prevSrc={prevSrc}
-          prevSrcSet={prevSrcSet}
-          currSrc={currSrc}
-          currSrcSet={currSrcSet}
-          nextSrc={nextSrc}
-          nextSrcSet={nextSrcSet}
+          showNavArrows={showNavArrows}
           lightboxRef={lightboxRef}
           onClick={onOpen}
+          onClose={onClose}
           onMoveNext={onMoveNext}
           onMovePrev={onMovePrev}
-          onClose={onClose}
           onKeyDown={isOpen ? handleKeyDown : undefined}
-          onTouchStart={isOpen || openInPlace ? touch.onTouchStart : undefined}
           onTouchEnd={isOpen || openInPlace ? touch.onTouchEnd : undefined}
+          onTouchStart={isOpen || openInPlace ? touch.onTouchStart : undefined}
           tabIndex="0"
         />
       </Portal>
@@ -114,27 +116,22 @@ const Lightbox = (props) => {
 
   return (
     <LightBoxMain
-      loadedImages={loadedImages}
-      isOpen={isOpen}
-      PictureTile={PictureTile}
       currIndex={currIndex}
+      isOpen={isOpen}
+      isOpening={isOpening}
       imgCount={imgCount}
-      showNavArrows={showNavArrows}
+      loadedImages={loadedImages}
       preloadCount={preloadCount}
-      prevSrc={prevSrc}
-      prevSrcSet={prevSrcSet}
-      currSrc={currSrc}
-      currSrcSet={currSrcSet}
-      nextSrc={nextSrc}
-      nextSrcSet={nextSrcSet}
+      showNavArrows={showNavArrows}
+      PictureTile={PictureTile}
       lightboxRef={lightboxRef}
       onClick={onOpen}
-      onMoveNext={onMoveNext}
-      onMovePrev={onMovePrev}
       onClose={onClose}
       onKeyDown={isOpen ? handleKeyDown : undefined}
-      onTouchStart={isOpen || openInPlace ? touch.onTouchStart : undefined}
+      onMoveNext={onMoveNext}
+      onMovePrev={onMovePrev}
       onTouchEnd={isOpen || openInPlace ? touch.onTouchEnd : undefined}
+      onTouchStart={isOpen || openInPlace ? touch.onTouchStart : undefined}
       tabIndex="0"
     />
   );

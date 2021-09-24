@@ -1,4 +1,3 @@
-import { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import { condition } from 'dataweaver';
 import { breakpoint } from 'themeweaver';
@@ -47,9 +46,9 @@ const StyledInnerContainer = styled.div`
 
   ${condition('isOpen')`
     position: relative;
-    top: 50px !important;
+    top: 50px;
     margin: 0 auto;
-    height: calc(100% - 100px) !important;
+    height: calc(100% - 100px);
     cursor: revert;
   `}
 
@@ -78,7 +77,11 @@ const StyledTrack = styled.div`
   transform: translate(
     ${({ count, slideIndex }) => slideIndex * (1 / count) * -100}%
   );
-  transition: transform 0.5s ease 0s;
+  transition: transform 1s;
+
+  ${condition('isOpening')`
+    transition: none;
+  `}
 
   > div {
     display: inline-block;
@@ -123,28 +126,21 @@ const StyledArrowWrapper = styled.div`
 
 const LightBoxMain = (props) => {
   const {
-    lightboxRef,
-    onClick,
-    onKeyDown,
-    onTouchStart,
-    onTouchEnd,
-    isOpen,
-    prevSrc,
-    prevSrcSet,
-    currSrc,
-    currSrcSet,
-    nextSrc,
-    nextSrcSet,
-    preloadCount,
-    onClose,
-    onMovePrev,
-    onMoveNext,
     currIndex,
+    isOpen,
+    isOpening,
     imgCount,
-    openInPlace,
-    PictureTile,
-    showNavArrows,
     loadedImages,
+    showNavArrows,
+    lightboxRef,
+    PictureTile,
+    onClick,
+    onClose,
+    onKeyDown,
+    onMoveNext,
+    onMovePrev,
+    onTouchEnd,
+    onTouchStart,
   } = props;
 
   if (!isOpen && PictureTile) {
@@ -174,8 +170,9 @@ const LightBoxMain = (props) => {
         <StyledInnerContainer isOpen={isOpen}>
           <StyledTrack
             slideIndex={currIndex}
-            count={loadedImages.length}
+            count={imgCount}
             isOpen={isOpen}
+            isOpening={isOpening}
           >
             {loadedImages &&
               loadedImages.map((img) => (
@@ -191,10 +188,18 @@ const LightBoxMain = (props) => {
         {isOpen && showNavArrows && (
           <>
             <StyledArrowWrapper left="calc(0.5% + 10px)">
-              <LightboxArrow direction="left" onClick={onMovePrev} />
+              <LightboxArrow
+                direction="left"
+                onClick={onMovePrev}
+                disabled={currIndex === 0}
+              />
             </StyledArrowWrapper>
             <StyledArrowWrapper right="calc(0.5% + 10px)">
-              <LightboxArrow direction="right" onClick={onMoveNext} />
+              <LightboxArrow
+                direction="right"
+                onClick={onMoveNext}
+                disabled={currIndex === imgCount - 1}
+              />
             </StyledArrowWrapper>
           </>
         )}
