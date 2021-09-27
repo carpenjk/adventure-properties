@@ -3,8 +3,6 @@ import { useEffect, useState } from 'react';
 import { Map, TileLayer, Marker, Popup } from 'react-leaflet';
 import styled from 'styled-components';
 import 'leaflet/dist/leaflet.css';
-import iconShadow from 'leaflet/dist/images/marker-shadow.png';
-import icon from 'leaflet/dist/images/marker-icon.png';
 
 const StyledLocation = styled.div`
   max-width: 350px;
@@ -17,7 +15,7 @@ const StyledLocation = styled.div`
 `;
 
 const StyledHeader = styled.h3`
-  color: red;
+  color: ${({ theme }) => theme.colors.action[1]};
   line-height: 200%;
   margin: 0;
 `;

@@ -1,6 +1,5 @@
 import { useState, useEffect, useRef, useLayoutEffect } from 'react';
 import { Portal } from 'react-portal';
-import isDeepEqual from 'fast-deep-equal/react';
 
 import useLockBodyScroll from '../hooks/UseLockBodyScroll';
 import useTouch from '../hooks/UseTouch';
