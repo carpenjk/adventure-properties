@@ -1,0 +1,16 @@
+
+> prisma@3.1.1 preinstall C:\websites\adventure-properties\node_modules\prisma
+> node scripts/preinstall-entry.js
+
+
+> prisma@3.1.1 install C:\websites\adventure-properties\node_modules\prisma
+> node scripts/install-entry.js
+
++ prisma@3.1.1
+updated 1 package and audited 1128 packages in 4.803s
+
+90 packages are looking for funding
+  run `npm fund` for details
+
+found 28 vulnerabilities (2 low, 26 moderate)
+  run `npm audit fix` to fix them, or `npm audit` for details

@@ -148,7 +148,7 @@ const Property = () => {
     setOpenLightbox(true);
   }
 
-  // helpers
+  //* ******* helpers ****************
   const getAttributeList = useCallback(
     (attribute) => {
       if (
