@@ -37,6 +37,7 @@ const Lightbox = (props) => {
     setLoadedImages(images.slice(0, currIndex + preloadCount));
   }, [currIndex, images, preloadCount, isOpen]);
 
+  // turns transition off on slide for better opening effect
   useLayoutEffect(() => {
     const indexChanged = currIndex !== prevCurrIndex.current;
     const isOpenChanged = isOpen !== prevIsOpen.current;

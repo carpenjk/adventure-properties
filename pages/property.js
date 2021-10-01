@@ -6,9 +6,10 @@ import { useState, useEffect, useCallback } from 'react';
 import { breakpoint } from 'themeweaver';
 import { getProp } from 'dataweaver';
 import dynamic from 'next/dynamic';
+import clientPromise from '../utils/mongodb';
 import Lightbox from '../components/Lightbox/Lightbox';
 import { Media, mediaStyles } from '../Media';
-import client from '../Contentful';
+import cmsClient from '../Contentful';
 
 import Section from '../components/base/semantic/Section';
 import PictureTiles from '../components/property/PictureTiles';
@@ -17,6 +18,9 @@ import AttributeList from '../components/property/AttributeList';
 import AttributesSummary from '../components/property/AttributesSummary';
 import ReservationForm from '../components/reservationForm/ReservationForm';
 import BackButton from '../components/base/BackButton';
+import ClientOnly from '../components/ClientOnly';
+
+const PROP_ID = '3RcXEiv8ook0DOHBrNniCA';
 
 const Location = dynamic(() => import('../components/property/Location'), {
   ssr: false,
@@ -75,8 +79,16 @@ const StyledSpacer = styled.div`
   width: 100%;
 `;
 
-const Property = () => {
-  const [propertyData, setPropertyData] = useState({});
+const Property = ({ propertyData }) => {
+  console.log(
+    '🚀 ~ file: property.js ~ line 82 ~ Property ~ propertyData',
+    propertyData
+  );
+  // const [propertyData, setPropertyData] = useState({
+  //   ...cmsProperties,
+  //   dbProperties,
+  // });
+
   const [images, setImages] = useState([]);
   const [photoIndex, setPhotoIndex] = useState(0);
   const [openLightbox, setOpenLightbox] = useState(false);
@@ -84,23 +96,22 @@ const Property = () => {
   const LIGHTBOX_PRELOAD_COUNT = 3;
 
   // ! Remove and add to props
-  const propID = '3RcXEiv8ook0DOHBrNniCA';
 
   const positionOffset = 0;
 
   // retrieve data
-  async function fetchProperty() {
-    const property = await client.getEntry(propID);
-    return property;
-  }
+  // async function fetchProperty() {
+  //   const property = await cmsClient.getEntry(propID);
+  //   return property;
+  // }
 
-  useEffect(() => {
-    async function getProperty() {
-      const property = await fetchProperty();
-      setPropertyData(property);
-    }
-    getProperty();
-  }, []);
+  // useEffect(() => {
+  //   async function getProperty() {
+  //     const property = await fetchProperty();
+  //     setPropertyData(property);
+  //   }
+  //   getProperty();
+  // }, []);
 
   // Build list of image urls for Lightbox
   useEffect(() => {
@@ -236,31 +247,35 @@ const Property = () => {
             offsetTop={positionOffset}
           >
             <Media lessThan="1">
-              <Lightbox
-                currIndex={photoIndex}
-                isOpen={openLightbox}
-                images={imgObj || []}
-                imgCount={images.length}
-                preloadCount={LIGHTBOX_PRELOAD_COUNT}
-                showNavArrows={false}
-                onOpen={handleLightboxOpen}
-                onClose={handleLightboxClose}
-                onMoveNext={handleMoveNext}
-                onMovePrev={handleMovePrev}
-              />
+              <ClientOnly>
+                <Lightbox
+                  currIndex={photoIndex}
+                  isOpen={openLightbox}
+                  images={imgObj || []}
+                  imgCount={images.length}
+                  preloadCount={LIGHTBOX_PRELOAD_COUNT}
+                  showNavArrows={false}
+                  onOpen={handleLightboxOpen}
+                  onClose={handleLightboxClose}
+                  onMoveNext={handleMoveNext}
+                  onMovePrev={handleMovePrev}
+                />
+              </ClientOnly>
             </Media>
             <Media greaterThanOrEqual="1">
-              <Lightbox
-                currIndex={photoIndex}
-                isOpen={openLightbox}
-                images={imgObj || []}
-                imgCount={images.length}
-                preloadCount={LIGHTBOX_PRELOAD_COUNT}
-                PictureTile={LightboxTiles}
-                onClose={handleLightboxClose}
-                onMovePrev={handleMovePrev}
-                onMoveNext={handleMoveNext}
-              />
+              <ClientOnly>
+                <Lightbox
+                  currIndex={photoIndex}
+                  isOpen={openLightbox}
+                  images={imgObj || []}
+                  imgCount={images.length}
+                  preloadCount={LIGHTBOX_PRELOAD_COUNT}
+                  PictureTile={LightboxTiles}
+                  onClose={handleLightboxClose}
+                  onMovePrev={handleMovePrev}
+                  onMoveNext={handleMoveNext}
+                />
+              </ClientOnly>
             </Media>
           </Section>
           <Section
@@ -320,3 +335,36 @@ const Property = () => {
 };
 
 export default Property;
+
+async function fetchProperty() {
+  const property = await cmsClient.getEntry(PROP_ID);
+  return property;
+}
+
+export async function getServerSideProps(context) {
+  // const session = await getSession({ req: context.req });
+
+  const client = await clientPromise;
+  const cmsProperties = await fetchProperty();
+
+  const dbProperties = await client
+    .db()
+    .collection('properties')
+    .find({})
+    .limit(20)
+    .toArray();
+
+  console.log('mongodb properties', dbProperties);
+
+  if (!dbProperties) {
+    return { props: { isNoData: true } };
+  }
+  return {
+    props: {
+      propertyData: {
+        ...cmsProperties,
+        dbProperties: JSON.parse(JSON.stringify(dbProperties)),
+      },
+    },
+  };
+}
