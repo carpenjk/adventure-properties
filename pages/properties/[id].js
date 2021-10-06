@@ -1,28 +1,30 @@
+import { useRouter } from 'next/router';
 import styled from 'styled-components';
 import Head from 'next/head';
+import useSWR from 'swr';
 import { Portal } from 'react-portal';
 
 import { useState, useEffect, useCallback } from 'react';
 import { breakpoint } from 'themeweaver';
 import { getProp } from 'dataweaver';
 import dynamic from 'next/dynamic';
-import clientPromise from '../utils/mongodb';
-import Lightbox from '../components/Lightbox/Lightbox';
-import { Media, mediaStyles } from '../Media';
-import cmsClient from '../Contentful';
+import clientPromise from '../../utils/mongodb';
+import Lightbox from '../../components/Lightbox/Lightbox';
+import { Media, mediaStyles } from '../../Media';
+import cmsClient from '../../Contentful';
 
-import Section from '../components/base/semantic/Section';
-import PictureTiles from '../components/property/PictureTiles';
-import PropertyDetailCategory from '../components/property/PropertyDetailCategory';
-import AttributeList from '../components/property/AttributeList';
-import AttributesSummary from '../components/property/AttributesSummary';
-import ReservationForm from '../components/reservationForm/ReservationForm';
-import BackButton from '../components/base/BackButton';
-import ClientOnly from '../components/ClientOnly';
+import Section from '../../components/base/semantic/Section';
+import PictureTiles from '../../components/property/PictureTiles';
+import PropertyDetailCategory from '../../components/property/PropertyDetailCategory';
+import AttributeList from '../../components/property/AttributeList';
+import AttributesSummary from '../../components/property/AttributesSummary';
+import ReservationForm from '../../components/reservationForm/ReservationForm';
+import BackButton from '../../components/base/BackButton';
+import ClientOnly from '../../components/ClientOnly';
 
 const PROP_ID = '3RcXEiv8ook0DOHBrNniCA';
 
-const Location = dynamic(() => import('../components/property/Location'), {
+const Location = dynamic(() => import('../../components/property/Location'), {
   ssr: false,
 });
 
@@ -79,15 +81,44 @@ const StyledSpacer = styled.div`
   width: 100%;
 `;
 
+const getAvailability = async () => {
+  const response = await fetch('/properties/availability');
+  return response.json();
+};
+
 const Property = ({ propertyData }) => {
-  console.log(
-    '🚀 ~ file: property.js ~ line 82 ~ Property ~ propertyData',
-    propertyData
-  );
   // const [propertyData, setPropertyData] = useState({
-  //   ...cmsProperties,
-  //   dbProperties,
+  //   ...cmsData,
+  //   dbData,
   // });
+
+  const [data, setData] = useState();
+
+  // async function fetchAvailability() {
+  //   const client = await clientPromise;
+  //   const dbProperties = await client
+  //     .db()
+  //     .collection('properties')
+  //     .find({})
+  //     .limit(3)
+  //     .toArray();
+  //   return dbProperties;
+  // }
+
+  useEffect(() => {
+    async function fetchAvailability() {
+      const avail = await getAvailability();
+      setData(avail);
+    }
+    fetchAvailability();
+  }, []);
+
+  // const [availability, availError] = useSWR('api_avail', getAvailability);
+
+  // useEffect(() => {
+  //   console.log('availability', availability);
+  //   console.log('availError', availError);
+  // }, [availability, availError]);
 
   const [images, setImages] = useState([]);
   const [photoIndex, setPhotoIndex] = useState(0);
@@ -336,25 +367,38 @@ const Property = ({ propertyData }) => {
 
 export default Property;
 
-async function fetchProperty() {
-  const property = await cmsClient.getEntry(PROP_ID);
+async function fetchProperty(id) {
+  const property = await cmsClient.getEntry(id);
   return property;
 }
 
-export async function getServerSideProps(context) {
+export async function getStaticPaths() {
+  const properties = await cmsClient.getEntries({
+    content_type: 'property',
+  });
+
+  const paths = properties.items.map((p) => ({
+    params: { id: p.sys.id },
+  }));
+  return {
+    paths,
+    fallback: false,
+  };
+}
+
+export async function getStaticProps(context) {
+  const cmsProperties = await fetchProperty(context.params.id);
   // const session = await getSession({ req: context.req });
+  // console.log(context);
 
-  const client = await clientPromise;
-  const cmsProperties = await fetchProperty();
+  const dbClient = await clientPromise;
 
-  const dbProperties = await client
+  const dbProperties = await dbClient
     .db()
     .collection('properties')
     .find({})
-    .limit(20)
+    .limit(3)
     .toArray();
-
-  console.log('mongodb properties', dbProperties);
 
   if (!dbProperties) {
     return { props: { isNoData: true } };
@@ -363,8 +407,47 @@ export async function getServerSideProps(context) {
     props: {
       propertyData: {
         ...cmsProperties,
-        dbProperties: JSON.parse(JSON.stringify(dbProperties)),
+        id: context.params.id,
+        dbData: JSON.parse(JSON.stringify(dbProperties)),
       },
     },
   };
+
+  // return {
+  //   props: {
+  //     cmsData: cmsProperties,
+  //   },
+  // };
 }
+
+// export async function getServerSideProps(context) {
+//   // const session = await getSession({ req: context.req });
+//   // console.log(context);
+
+//   const client = await clientPromise;
+//   // const cmsProperties = await fetchProperty();
+
+//   const dbProperties = await client
+//     .db()
+//     .collection('properties')
+//     .find({})
+//     .limit(3)
+//     .toArray();
+
+//   if (!dbProperties) {
+//     return { props: { isNoData: true } };
+//   }
+//   return {
+//     props: {
+//       dbData: JSON.parse(JSON.stringify(dbProperties)),
+//     },
+//   };
+//   // return {
+//   //   props: {
+//   //     propertyData: {
+//   //       ...cmsProperties,
+//   //       dbProperties: JSON.parse(JSON.stringify(dbProperties)),
+//   //     },
+//   //   },
+//   // };
+// }

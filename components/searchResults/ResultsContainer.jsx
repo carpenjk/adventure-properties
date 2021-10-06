@@ -118,7 +118,7 @@ const StyledFooter = styled.div`
   }
 `;
 
-const ResultsContainer = ({ items }) => {
+const ResultsContainer = ({ items, features }) => {
   const topic = 'skiing';
   // const picUrl = '/static/assets/lofoten-2220461.png';
   const theme = useContext(ThemeContext);
@@ -158,10 +158,11 @@ const ResultsContainer = ({ items }) => {
     <StyledContainer>
       <ResultHeader prefix="Because you like" topic={topic} />
       <StyledContent ref={contentRef}>
-        {items.map((item) => (
+        {items.map((item, i) => (
           <StyledListItem key={item.key}>
             <Property
               property={item}
+              cmsId={features[i].sys.id}
               scale={1.11}
               scaleOnHover={[false, false, true]}
               scaleOnFocus={[false, false, true]}

@@ -154,6 +154,7 @@ const StyledProperty = styled.div`
 const Property = (props) => {
   const {
     property,
+    cmsId,
     showDescription,
     scaleOnHover,
     scaleOnFocus,
@@ -166,7 +167,7 @@ const Property = (props) => {
   const hasMounted = useHasMounted();
 
   return (
-    <Link href="/property">
+    <Link href={`/properties/${cmsId}`}>
       <a tabIndex={-1}>
         <StyledProperty
           tabIndex={0}

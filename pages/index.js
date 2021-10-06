@@ -1,4 +1,5 @@
 import Head from 'next/head';
+import cmsClient from '../Contentful';
 import { mediaStyles } from '../Media';
 import Section from '../components/base/semantic/Section';
 import SearchBar from '../components/searchbar/SearchBar';
@@ -11,7 +12,7 @@ import { slider1Data } from '../data/data';
 // static variables
 const HERO_IMAGE = '/static/assets/lofoten-2220461.png';
 
-const Index = () => (
+const Index = ({ features }) => (
   <>
     <Head>
       <title>Adventure Properties</title>
@@ -26,9 +27,30 @@ const Index = () => (
       <SearchBar key="searchbar" openMaxWidth={['none', '1000px']} />
     </Section>
     <Section semKey="features" className="features">
-      <ResultsContainer items={slider1Data.items} />
-      <ResultsContainer items={slider1Data.items} />
+      <ResultsContainer items={slider1Data.items} features={features.items} />
+      <ResultsContainer items={slider1Data.items} features={features.items} />
     </Section>
   </>
 );
 export default Index;
+
+export async function getStaticProps(context) {
+  // const session = await getSession({ req: context.req });
+  // console.log(context);
+
+  const featureProps = await cmsClient.getEntries({
+    content_type: 'property',
+  });
+  console.log(
+    '🚀 ~ file: index.js ~ line 44 ~ getServerSideProps ~ featureProps',
+    featureProps.items
+  );
+
+  return {
+    props: {
+      features: {
+        ...featureProps,
+      },
+    },
+  };
+}
