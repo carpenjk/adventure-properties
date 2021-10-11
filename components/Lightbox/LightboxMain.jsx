@@ -179,7 +179,7 @@ const LightBoxMain = (props) => {
                 <div key={img.src}>
                   <picture>
                     <source srcSet={img.srcSet} />
-                    <img src={img.src} alt="description" loading="lazy" />
+                    <img src={img.src} alt="description" />
                   </picture>
                 </div>
               ))}
