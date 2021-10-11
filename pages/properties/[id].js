@@ -1,4 +1,3 @@
-import { useRouter } from 'next/router';
 import styled from 'styled-components';
 import Head from 'next/head';
 import useSWR from 'swr';
@@ -8,6 +7,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { breakpoint } from 'themeweaver';
 import { getProp } from 'dataweaver';
 import dynamic from 'next/dynamic';
+import useLightbox from '../../components/hooks/UseLightbox';
 import clientPromise from '../../utils/mongodb';
 import Lightbox from '../../components/Lightbox/Lightbox';
 import { Media, mediaStyles } from '../../Media';
@@ -81,68 +81,75 @@ const StyledSpacer = styled.div`
   width: 100%;
 `;
 
-const getAvailability = async () => {
-  const response = await fetch('/properties/availability');
-  return response.json();
-};
+async function fetchProperty(id) {
+  const property = await cmsClient.getEntry(id);
+  return property;
+}
 
+export async function getStaticPaths() {
+  const properties = await cmsClient.getEntries({
+    content_type: 'property',
+  });
+
+  const paths = properties.items.map((p) => ({
+    params: { id: p.sys.id },
+  }));
+  return {
+    paths,
+    fallback: false,
+  };
+}
+
+//* *********** data fetchers ****************************/
+export async function getStaticProps(context) {
+  const cmsProperties = await fetchProperty(context.params.id);
+  // const session = await getSession({ req: context.req });
+  // console.log(context);
+
+  const dbClient = await clientPromise;
+
+  const dbProperties = await dbClient
+    .db()
+    .collection('properties')
+    .findOne({ cmsID: context.params.id });
+
+  return {
+    props: {
+      propertyData: {
+        ...cmsProperties,
+        id: context.params.id,
+        dbData: JSON.parse(JSON.stringify(dbProperties)),
+      },
+    },
+  };
+}
+
+const fetchClientSideData = (url) => fetch(url).then((r) => r.json());
+
+//* ********* Component *********************************/
 const Property = ({ propertyData }) => {
-  // const [propertyData, setPropertyData] = useState({
-  //   ...cmsData,
-  //   dbData,
-  // });
-
-  const [data, setData] = useState();
-
-  // async function fetchAvailability() {
-  //   const client = await clientPromise;
-  //   const dbProperties = await client
-  //     .db()
-  //     .collection('properties')
-  //     .find({})
-  //     .limit(3)
-  //     .toArray();
-  //   return dbProperties;
-  // }
-
+  const { data: availability, error } = useSWR(
+    `/api/properties/${propertyData.id}/availability`,
+    fetchClientSideData
+  );
   useEffect(() => {
-    async function fetchAvailability() {
-      const avail = await getAvailability();
-      setData(avail);
-    }
-    fetchAvailability();
-  }, []);
-
-  // const [availability, availError] = useSWR('api_avail', getAvailability);
-
-  // useEffect(() => {
-  //   console.log('availability', availability);
-  //   console.log('availError', availError);
-  // }, [availability, availError]);
-
+    console.log('availability:', availability);
+  }, [availability]);
   const [images, setImages] = useState([]);
   const [photoIndex, setPhotoIndex] = useState(0);
   const [openLightbox, setOpenLightbox] = useState(false);
+
+  const lightbox = useLightbox({ images: [], photoIndex: 0, isOpen: false });
+
+  useEffect(() => {
+    console.log('lightbox state', lightbox);
+  }, [lightbox]);
 
   const LIGHTBOX_PRELOAD_COUNT = 3;
 
   // ! Remove and add to props
 
   const positionOffset = 0;
-
-  // retrieve data
-  // async function fetchProperty() {
-  //   const property = await cmsClient.getEntry(propID);
-  //   return property;
-  // }
-
-  // useEffect(() => {
-  //   async function getProperty() {
-  //     const property = await fetchProperty();
-  //     setPropertyData(property);
-  //   }
-  //   getProperty();
-  // }, []);
 
   // Build list of image urls for Lightbox
   useEffect(() => {
@@ -153,6 +160,7 @@ const Property = ({ propertyData }) => {
         (photo) => `http:${photo.fields.file.url}`
       );
       setImages([mainUrl, ...addUrls]);
+      lightbox.setImages([mainUrl, ...addUrls]);
     }
   }, [propertyData]);
 
@@ -204,8 +212,21 @@ const Property = ({ propertyData }) => {
         <li key={item}>{item}</li>
       ));
     },
-    [propertyData.fields]
+    [propertyData]
   );
+
+  const getNearbyActivities = useCallback(() => {
+    if (
+      !propertyData.dbData ||
+      !propertyData.dbData.nearbyActivities ||
+      propertyData.dbData.nearbyActivities.length === 0
+    ) {
+      return [];
+    }
+    return propertyData.dbData.nearbyActivities.map((item) => (
+      <li key={item}>{item}</li>
+    ));
+  }, [propertyData.dbData]);
 
   const LightboxTiles = useCallback(() => {
     function getUrls() {
@@ -336,11 +357,7 @@ const Property = ({ propertyData }) => {
                   </AttributeList>
                 </PropertyDetailCategory>
                 <PropertyDetailCategory title="Nearby Activities">
-                  <AttributeList>
-                    <li>Hiking</li>
-                    <li>Ski/Snowboard</li>
-                    <li>Snowshoeing</li>
-                  </AttributeList>
+                  <AttributeList>{getNearbyActivities()}</AttributeList>
                 </PropertyDetailCategory>
                 <PropertyDetailCategory title="Availability">
                   <AttributeList>
@@ -366,88 +383,3 @@ const Property = ({ propertyData }) => {
 };
 
 export default Property;
-
-async function fetchProperty(id) {
-  const property = await cmsClient.getEntry(id);
-  return property;
-}
-
-export async function getStaticPaths() {
-  const properties = await cmsClient.getEntries({
-    content_type: 'property',
-  });
-
-  const paths = properties.items.map((p) => ({
-    params: { id: p.sys.id },
-  }));
-  return {
-    paths,
-    fallback: false,
-  };
-}
-
-export async function getStaticProps(context) {
-  const cmsProperties = await fetchProperty(context.params.id);
-  // const session = await getSession({ req: context.req });
-  // console.log(context);
-
-  const dbClient = await clientPromise;
-
-  const dbProperties = await dbClient
-    .db()
-    .collection('properties')
-    .find({})
-    .limit(3)
-    .toArray();
-
-  if (!dbProperties) {
-    return { props: { isNoData: true } };
-  }
-  return {
-    props: {
-      propertyData: {
-        ...cmsProperties,
-        id: context.params.id,
-        dbData: JSON.parse(JSON.stringify(dbProperties)),
-      },
-    },
-  };
-
-  // return {
-  //   props: {
-  //     cmsData: cmsProperties,
-  //   },
-  // };
-}
-
-// export async function getServerSideProps(context) {
-//   // const session = await getSession({ req: context.req });
-//   // console.log(context);
-
-//   const client = await clientPromise;
-//   // const cmsProperties = await fetchProperty();
-
-//   const dbProperties = await client
-//     .db()
-//     .collection('properties')
-//     .find({})
-//     .limit(3)
-//     .toArray();
-
-//   if (!dbProperties) {
-//     return { props: { isNoData: true } };
-//   }
-//   return {
-//     props: {
-//       dbData: JSON.parse(JSON.stringify(dbProperties)),
-//     },
-//   };
-//   // return {
-//   //   props: {
-//   //     propertyData: {
-//   //       ...cmsProperties,
-//   //       dbProperties: JSON.parse(JSON.stringify(dbProperties)),
-//   //     },
-//   //   },
-//   // };
-// }
