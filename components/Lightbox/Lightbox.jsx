@@ -98,7 +98,6 @@ const Lightbox = (props) => {
           isOpening={isOpening}
           imgCount={imgCount}
           loadedImages={loadedImages}
-          preloadCount={preloadCount}
           showNavArrows={showNavArrows}
           lightboxRef={lightboxRef}
           onClick={onOpen}
@@ -121,7 +120,6 @@ const Lightbox = (props) => {
       isOpening={isOpening}
       imgCount={imgCount}
       loadedImages={loadedImages}
-      preloadCount={preloadCount}
       showNavArrows={showNavArrows}
       PictureTile={PictureTile}
       lightboxRef={lightboxRef}
