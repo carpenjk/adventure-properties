@@ -1,10 +1,6 @@
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 
 const useLightbox = ({ images, photoIndex, isOpen }) => {
-  // const [images, setImages] = useState([]);
-  // const [photoIndex, setPhotoIndex] = useState(0);
-  // const [openLightbox, setOpenLightbox] = useState(false);
-
   const [lightbox, setLightbox] = useState({
     images,
     photoIndex,
@@ -18,8 +14,8 @@ const useLightbox = ({ images, photoIndex, isOpen }) => {
   //* ******** event handlers **************
   function handleMoveNext() {
     // calculate new index
-    function updateIndexNext(prevIndex) {
-      if (prevIndex < images.length - 1) {
+    function updateIndexNext(prevIndex, imgs) {
+      if (prevIndex < imgs.length - 1) {
         return prevIndex + 1;
       }
       return prevIndex;
@@ -27,7 +23,7 @@ const useLightbox = ({ images, photoIndex, isOpen }) => {
     // udate index state
     setLightbox((prev) => ({
       ...prev,
-      photoIndex: updateIndexNext(prev.photoIndex),
+      photoIndex: updateIndexNext(prev.photoIndex, prev.images),
     }));
   }
 
@@ -48,22 +44,33 @@ const useLightbox = ({ images, photoIndex, isOpen }) => {
 
   function handlePhotoClick(i) {
     setLightbox((prev) => ({ ...prev, photoIndex: i, isOpen: true }));
-    // setPhotoIndex(i);
-    // setOpenLightbox(true);
   }
 
   function handleLightboxClose(e) {
     setLightbox((prev) => ({ ...prev, photoIndex: 0, isOpen: false }));
-    // setOpenLightbox(false);
-    // setPhotoIndex(0);
     e.stopPropagation();
   }
 
   function handleLightboxOpen() {
     setLightbox((prev) => ({ ...prev, isOpen: true }));
-    // setOpenLightbox(true);
   }
-  return { ...lightbox, setImages };
+
+  const _handleLightboxClose = useCallback(handleLightboxClose, []);
+  const _handleLightboxOpen = useCallback(handleLightboxOpen, []);
+  const _handleMoveNext = useCallback(handleMoveNext, []);
+  const _handleMovePrev = useCallback(handleMovePrev, []);
+  const _handlePhotoClick = useCallback(handlePhotoClick, []);
+  const _setImages = useCallback(setImages, []);
+
+  return {
+    ...lightbox,
+    handleLightboxClose: _handleLightboxClose,
+    handleLightboxOpen: _handleLightboxOpen,
+    handleMoveNext: _handleMoveNext,
+    handleMovePrev: _handleMovePrev,
+    handlePhotoClick: _handlePhotoClick,
+    setImages: _setImages,
+  };
 };
 
 export default useLightbox;

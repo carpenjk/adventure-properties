@@ -2,9 +2,9 @@ import useSWR from 'swr';
 
 const fetchClientSideData = (url) => fetch(url).then((r) => r.json());
 
-const useAvailability = () => {
+const useAvailability = (propID) => {
   const { data: availability, error } = useSWR(
-    `/api/properties/${propertyData.id}/clientSideData`,
+    `/api/properties/${propID}/clientSideData`,
     fetchClientSideData
   );
 

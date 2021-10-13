@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import { condition } from 'dataweaver';
+import { useEffect } from 'react';
 
 const StyledArrowContainer = styled.button`
   display: flex;
@@ -24,13 +25,18 @@ const StyledArrowContainer = styled.button`
     }
   `}
 `;
-const LightboxArrow = ({ direction, onClick, disabled }) => {
+const LightboxArrow = ({ direction, onClick, disabled, buttonRef }) => {
   function handleClick(e) {
     onClick(e);
     e.stopPropagation();
   }
+
   return (
-    <StyledArrowContainer onClick={handleClick} disabled={disabled}>
+    <StyledArrowContainer
+      onClick={handleClick}
+      disabled={disabled}
+      ref={buttonRef}
+    >
       {direction === 'left' && '<'}
       {direction === 'right' && '>'}
     </StyledArrowContainer>

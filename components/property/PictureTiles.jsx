@@ -2,9 +2,6 @@ import styled from 'styled-components';
 import { breakpoint } from 'themeweaver';
 import OverlayNavButton from '../base/OverlayNavButton';
 
-const StyledPicturesWrapper = styled.div`
-  width: 100%;
-`;
 const StyledPictures = styled.div`
   display: flex;
   width: 100%;
@@ -18,17 +15,18 @@ const StyledPictures = styled.div`
   }
   ${breakpoint(1)`
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
     grid-template-rows: 1fr 1fr;
-    grid-template-areas:
-      'main main pic1 pic2'
-      'main main pic3 pic4';
+    grid-template-columns: repeat(${({ colCount }) => colCount}, 1fr);
     justify-items: stretch;
     align-items: stretch;
     width: 100%;
 
   > *:first-child {
-    grid-area: main;
+    grid-row: 1 / span 2;
+    grid-column: 1 / span 2;
+  }
+  > *:not(:first-child){
+    
   }
   `}
 `;
@@ -37,13 +35,23 @@ const StyledButtonWrapper = styled.div`
   bottom: 20px;
   right: 20px;
 `;
-const PictureTiles = ({ children, onOverlayClick }) => (
-  <StyledPictures>
-    {children}
-    <StyledButtonWrapper>
-      <OverlayNavButton onClick={onOverlayClick}>More Photos</OverlayNavButton>
-    </StyledButtonWrapper>
-  </StyledPictures>
-);
+const PictureTiles = ({ children, onOverlayClick }) => {
+  const imgCount = children.length ? children.length : 0;
+  const smallSquares = imgCount - 1;
+  // Hard coded to 2 rows with first image taking up the first 2 rows and cols
+  // remaining images fill the grid across rows
+  const colCount = imgCount !== 1 ? smallSquares / 2 + 2 : 2;
+
+  return (
+    <StyledPictures colCount={colCount}>
+      {children}
+      <StyledButtonWrapper>
+        <OverlayNavButton onClick={onOverlayClick}>
+          More Photos
+        </OverlayNavButton>
+      </StyledButtonWrapper>
+    </StyledPictures>
+  );
+};
 
 export default PictureTiles;

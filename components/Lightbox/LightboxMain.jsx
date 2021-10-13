@@ -2,6 +2,7 @@ import styled from 'styled-components';
 import { condition } from 'dataweaver';
 import { breakpoint } from 'themeweaver';
 
+import { useEffect, useRef } from 'react';
 import LightboxArrow from './LightboxArrow';
 import LightboxHeader from './LightboxHeader';
 import LightboxCounter from './LightboxCounter';
@@ -142,6 +143,21 @@ const LightBoxMain = (props) => {
     onTouchEnd,
     onTouchStart,
   } = props;
+  const leftButtonRef = useRef(null);
+  const rightButtonRef = useRef(null);
+
+  const isLeftButtonDisabled = currIndex === 0;
+  const isRightButtonDisabled = currIndex === imgCount - 1;
+
+  useEffect(() => {
+    if (isLeftButtonDisabled && rightButtonRef.current) {
+      rightButtonRef.current.focus();
+      return undefined;
+    }
+    if (isRightButtonDisabled && leftButtonRef.current) {
+      leftButtonRef.current.focus();
+    }
+  }, [isLeftButtonDisabled, isRightButtonDisabled]);
 
   if (!isOpen && PictureTile) {
     return <PictureTile />;
@@ -191,14 +207,16 @@ const LightBoxMain = (props) => {
               <LightboxArrow
                 direction="left"
                 onClick={onMovePrev}
-                disabled={currIndex === 0}
+                disabled={isLeftButtonDisabled}
+                buttonRef={leftButtonRef}
               />
             </StyledArrowWrapper>
             <StyledArrowWrapper right="calc(0.5% + 10px)">
               <LightboxArrow
                 direction="right"
                 onClick={onMoveNext}
-                disabled={currIndex === imgCount - 1}
+                disabled={isRightButtonDisabled}
+                buttonRef={rightButtonRef}
               />
             </StyledArrowWrapper>
           </>

@@ -27,8 +27,6 @@ const Lightbox = (props) => {
   const [loadedImages, setLoadedImages] = useState(
     images ? images.slice(0, currIndex + preloadCount) : null
   );
-  const prevIsOpen = useRef(false);
-  const prevCurrIndex = useRef(currIndex);
   const [isOpening, setIsOpening] = useState(isOpen);
 
   //* **************effects************** */
@@ -39,17 +37,17 @@ const Lightbox = (props) => {
 
   // turns transition off on slide for better opening effect
   useLayoutEffect(() => {
-    const indexChanged = currIndex !== prevCurrIndex.current;
-    const isOpenChanged = isOpen !== prevIsOpen.current;
-
-    if (isOpenChanged && isOpen) {
+    if (isOpen) {
       setIsOpening(true);
-    } else if (indexChanged && !isOpenChanged) {
+    }
+  }, [isOpen]);
+
+  // turns transition back on once open
+  useEffect(() => {
+    if (isOpening) {
       setIsOpening(false);
     }
-    prevCurrIndex.current = currIndex;
-    prevIsOpen.current = isOpen;
-  }, [currIndex, isOpen]);
+  }, [isOpening]);
 
   const handleKeyDown = (e) => {
     switch (e.key) {

@@ -3,7 +3,7 @@ import Head from 'next/head';
 import useSWR from 'swr';
 import { Portal } from 'react-portal';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { breakpoint } from 'themeweaver';
 import { getProp } from 'dataweaver';
 import dynamic from 'next/dynamic';
@@ -128,24 +128,13 @@ const fetchClientSideData = (url) => fetch(url).then((r) => r.json());
 
 //* ********* Component *********************************/
 const Property = ({ propertyData }) => {
-  const { data: availability, error } = useSWR(
-    `/api/properties/${propertyData.id}/availability`,
-    fetchClientSideData
-  );
-  useEffect(() => {
-    console.log('availability:', availability);
-  }, [availability]);
-  const [images, setImages] = useState([]);
-  const [photoIndex, setPhotoIndex] = useState(0);
-  const [openLightbox, setOpenLightbox] = useState(false);
-
-  const lightbox = useLightbox({ images: [], photoIndex: 0, isOpen: false });
-
-  useEffect(() => {
-    console.log('lightbox state', lightbox);
-  }, [lightbox]);
-
   const LIGHTBOX_PRELOAD_COUNT = 3;
+
+  // const { data: availability, error } = useSWR(
+  //   `/api/properties/${propertyData.id}/availability`,
+  //   fetchClientSideData
+  // );
+  const lightbox = useLightbox({ images: [], photoIndex: 0, isOpen: false });
 
   // ! Remove and add to props
 
@@ -154,49 +143,25 @@ const Property = ({ propertyData }) => {
   // Build list of image urls for Lightbox
   useEffect(() => {
     if (propertyData && propertyData.fields) {
-      console.log('propertyData:', propertyData);
       const mainUrl = `http:${propertyData.fields.mainPhoto.fields.file.url}`;
       const addUrls = propertyData.fields.additionalPhotos.map(
         (photo) => `http:${photo.fields.file.url}`
       );
-      setImages([mainUrl, ...addUrls]);
+      // setImages([mainUrl, ...addUrls]);
       lightbox.setImages([mainUrl, ...addUrls]);
     }
-  }, [propertyData]);
+  }, [propertyData, lightbox.setImages]);
 
-  //* ******** event handlers **************
-  function handleMoveNext() {
-    setPhotoIndex((prevIndex) => {
-      if (prevIndex < images.length - 1) {
-        return prevIndex + 1;
-      }
-      return prevIndex;
-    });
-  }
-
-  function handleMovePrev() {
-    setPhotoIndex((prevIndex) => {
-      if (prevIndex !== 0) {
-        return prevIndex - 1;
-      }
-      return prevIndex;
-    });
-  }
-
-  function handlePhotoClick(i) {
-    setPhotoIndex(i);
-    setOpenLightbox(true);
-  }
-
-  function handleLightboxClose(e) {
-    setOpenLightbox(false);
-    setPhotoIndex(0);
-    e.stopPropagation();
-  }
-
-  function handleLightboxOpen() {
-    setOpenLightbox(true);
-  }
+  const {
+    images,
+    photoIndex,
+    isOpen: isLightboxOpen,
+    handleLightboxClose,
+    handleLightboxOpen,
+    handleMoveNext,
+    handleMovePrev,
+    handlePhotoClick,
+  } = lightbox;
 
   //* ******* helpers ****************
   const getAttributeList = useCallback(
@@ -229,8 +194,20 @@ const Property = ({ propertyData }) => {
   }, [propertyData.dbData]);
 
   const LightboxTiles = useCallback(() => {
+    const displayCount = {
+      1: 1,
+      2: 1,
+      3: 3,
+      4: 3,
+      5: 5,
+    };
     function getUrls() {
-      const firstFive = images.slice(0, 5);
+      const pCountLookup =
+        images.length > displayCount.length
+          ? displayCount.length
+          : images.length;
+      const pCount = displayCount[pCountLookup];
+      const displayImgs = images.slice(0, pCount);
       const mainModifiers = '?fit=fill&w=800&h=533';
       const modifiers = '?fit=fill&w=500&h=333';
 
@@ -240,7 +217,7 @@ const Property = ({ propertyData }) => {
         }
         return `${photo}${modifiers}`;
       }
-      return firstFive.map((photo, i) => buildModifiedUrls(photo, i));
+      return displayImgs.map((photo, i) => buildModifiedUrls(photo, i));
     }
     const tileImageUrls = getUrls();
     return (
@@ -259,21 +236,34 @@ const Property = ({ propertyData }) => {
   }, [images]);
 
   // property data
-  const { beds, baths, title, description, guests, location, propertyType } =
-    propertyData.fields || {};
+  const {
+    beds,
+    baths,
+    title,
+    description,
+    guests,
+    location,
+    city,
+    state,
+    propertyType,
+  } = propertyData.fields || {};
 
   const largeModifiers = '?fit=fill&w=2000&q=80';
   const mediumModifiers = '?fit=fill&w=1000&q=80';
   const smallModifiers = '?fit=fill&w=640&q=80';
 
-  const imgObj = images.map((url) => ({
-    srcSet: `
-      ${url}${smallModifiers} 640w,
-      ${url}${mediumModifiers} 1000w,
-      ${url}${largeModifiers} 2000w
-        `,
-    src: url,
-  }));
+  const imgObj = useMemo(
+    () =>
+      images.map((url) => ({
+        srcSet: `
+          ${url}${smallModifiers} 640w,
+          ${url}${mediumModifiers} 1000w,
+          ${url}${largeModifiers} 2000w
+            `,
+        src: url,
+      })),
+    [images]
+  );
 
   return (
     <>
@@ -302,7 +292,7 @@ const Property = ({ propertyData }) => {
               <ClientOnly>
                 <Lightbox
                   currIndex={photoIndex}
-                  isOpen={openLightbox}
+                  isOpen={isLightboxOpen}
                   images={imgObj || []}
                   imgCount={images.length}
                   preloadCount={LIGHTBOX_PRELOAD_COUNT}
@@ -318,7 +308,7 @@ const Property = ({ propertyData }) => {
               <ClientOnly>
                 <Lightbox
                   currIndex={photoIndex}
-                  isOpen={openLightbox}
+                  isOpen={isLightboxOpen}
                   images={imgObj || []}
                   imgCount={images.length}
                   preloadCount={LIGHTBOX_PRELOAD_COUNT}
@@ -346,7 +336,10 @@ const Property = ({ propertyData }) => {
                 />
                 <StyledDescription>{description}</StyledDescription>
                 <PropertyDetailCategory title="Location">
-                  <Location location={location} locationName="Stowe, VT" />
+                  <Location
+                    location={location}
+                    locationName={`${city}, ${state}`}
+                  />
                 </PropertyDetailCategory>
                 <PropertyDetailCategory title="Amenities">
                   <AttributeList>{getAttributeList('amenities')}</AttributeList>
