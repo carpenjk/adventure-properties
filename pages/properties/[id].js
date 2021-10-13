@@ -14,15 +14,13 @@ import { Media, mediaStyles } from '../../Media';
 import cmsClient from '../../Contentful';
 
 import Section from '../../components/base/semantic/Section';
-import PictureTiles from '../../components/property/PictureTiles';
 import PropertyDetailCategory from '../../components/property/PropertyDetailCategory';
 import AttributeList from '../../components/property/AttributeList';
 import AttributesSummary from '../../components/property/AttributesSummary';
 import ReservationForm from '../../components/reservationForm/ReservationForm';
 import BackButton from '../../components/base/BackButton';
 import ClientOnly from '../../components/ClientOnly';
-
-const PROP_ID = '3RcXEiv8ook0DOHBrNniCA';
+import usePictureTiles from '../../components/hooks/UsePictureTiles';
 
 const Location = dynamic(() => import('../../components/property/Location'), {
   ssr: false,
@@ -103,8 +101,6 @@ export async function getStaticPaths() {
 //* *********** data fetchers ****************************/
 export async function getStaticProps(context) {
   const cmsProperties = await fetchProperty(context.params.id);
-  // const session = await getSession({ req: context.req });
-  // console.log(context);
 
   const dbClient = await clientPromise;
 
@@ -147,7 +143,6 @@ const Property = ({ propertyData }) => {
       const addUrls = propertyData.fields.additionalPhotos.map(
         (photo) => `http:${photo.fields.file.url}`
       );
-      // setImages([mainUrl, ...addUrls]);
       lightbox.setImages([mainUrl, ...addUrls]);
     }
   }, [propertyData, lightbox.setImages]);
@@ -193,47 +188,11 @@ const Property = ({ propertyData }) => {
     ));
   }, [propertyData.dbData]);
 
-  const LightboxTiles = useCallback(() => {
-    const displayCount = {
-      1: 1,
-      2: 1,
-      3: 3,
-      4: 3,
-      5: 5,
-    };
-    function getUrls() {
-      const pCountLookup =
-        images.length > displayCount.length
-          ? displayCount.length
-          : images.length;
-      const pCount = displayCount[pCountLookup];
-      const displayImgs = images.slice(0, pCount);
-      const mainModifiers = '?fit=fill&w=800&h=533';
-      const modifiers = '?fit=fill&w=500&h=333';
-
-      function buildModifiedUrls(photo, i) {
-        if (i === 1) {
-          return `${photo}${mainModifiers}`;
-        }
-        return `${photo}${modifiers}`;
-      }
-      return displayImgs.map((photo, i) => buildModifiedUrls(photo, i));
-    }
-    const tileImageUrls = getUrls();
-    return (
-      <PictureTiles onOverlayClick={handleLightboxOpen}>
-        {tileImageUrls.map((img, i) => (
-          <img
-            loading="lazy"
-            key={i}
-            src={img}
-            alt="property"
-            onClick={() => handlePhotoClick(i)}
-          />
-        ))}
-      </PictureTiles>
-    );
-  }, [images]);
+  const PictureTiles = usePictureTiles({
+    images,
+    onOverlayClick: handleLightboxOpen,
+    onPhotoClick: handlePhotoClick,
+  });
 
   // property data
   const {
@@ -312,7 +271,7 @@ const Property = ({ propertyData }) => {
                   images={imgObj || []}
                   imgCount={images.length}
                   preloadCount={LIGHTBOX_PRELOAD_COUNT}
-                  PictureTile={LightboxTiles}
+                  PictureTile={PictureTiles}
                   onClose={handleLightboxClose}
                   onMovePrev={handleMovePrev}
                   onMoveNext={handleMoveNext}
