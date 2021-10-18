@@ -82,6 +82,7 @@ const NavLink = (props) => {
     getServerSideProps,
     getInitialProps, // end next/link props
     text,
+    children,
     ...restProps // inner coponent props
   } = props;
 
@@ -96,7 +97,7 @@ const NavLink = (props) => {
       shallow={shallow}
     >
       <StyledLink tabIndex="0" {...restProps}>
-        {text}
+        {children}
       </StyledLink>
     </Link>
   );

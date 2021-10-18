@@ -78,7 +78,9 @@ const NavMenu = (props) => {
               tabIndex="0"
               text={item.text}
               color="var(--primary)"
-            />
+            >
+              {item.text}
+            </NavLink>
           </li>
         ))}
       </ul>
