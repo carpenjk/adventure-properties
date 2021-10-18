@@ -3,7 +3,6 @@ import { signIn, signOut, useSession } from 'next-auth/client';
 import { useEffect } from 'react';
 import { getMaxWidth, breakpoint } from 'themeweaver';
 import { getProp } from 'dataweaver';
-import Link from 'next/link';
 import NavLink from './NavLink';
 
 const StyledNav = styled.nav`
@@ -66,9 +65,9 @@ const NavList = () => {
             </NavLink>
           )}
           {session && (
-            <button type="button" onClick={signOut}>
+            <NavLink href="/" onClick={signOut}>
               Log Out
-            </button>
+            </NavLink>
           )}
         </li>
         <li>
