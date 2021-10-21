@@ -4,6 +4,8 @@ import { useEffect } from 'react';
 import { getMaxWidth, breakpoint } from 'themeweaver';
 import { getProp } from 'dataweaver';
 import NavLink from './NavLink';
+import IconDropDown from './IconDropDown';
+import AccountIcon from './AccountIcon';
 
 const StyledNav = styled.nav`
   justify-self: flex-end;
@@ -18,7 +20,7 @@ const StyledUl = styled.ul`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: stretch;
+  align-items: flex-end;
   width: 100%;
   margin-block-start: 0;
   margin-block-end: 0;
@@ -37,16 +39,15 @@ const StyledUl = styled.ul`
     justify-content: flex-end;
     flex-direction: row;
     li {
-      max-width: ${getMaxWidth('button.nav', '116px')};
+      flex: none;
+      max-width: ${getMaxWidth('button.nav', 'none')};
     }
   `}
 `;
 
+const ACCOUNT_IMG = '/static/assets/navbar/account_circle.svg';
 const NavList = () => {
   const [session, loading] = useSession();
-  useEffect(() => {
-    console.log('session', session);
-  }, [session]);
 
   return (
     <StyledNav className="navlist">
@@ -54,25 +55,29 @@ const NavList = () => {
         <li>
           <NavLink href="/about">About</NavLink>
         </li>
-        <li>
-          <NavLink href="/owner">Owner</NavLink>
-        </li>
-        <li>
-          {/* <NavLink href="/logIn" text="Log In" /> */}
-          {!session && (
-            <NavLink href="/" onClick={signIn}>
-              Log In
-            </NavLink>
-          )}
-          {session && (
-            <NavLink href="/" onClick={signOut}>
-              Log Out
-            </NavLink>
-          )}
-        </li>
-        <li>
-          <NavLink href="/signUp">Sign Up</NavLink>
-        </li>
+        {!session && (
+          <>
+            <li>
+              <NavLink href="/" onClick={signIn} externalLink>
+                Log In
+              </NavLink>
+            </li>
+            <li>
+              <NavLink href="/signUp">Sign Up</NavLink>
+            </li>
+          </>
+        )}
+        {session && (
+          <li>
+            <IconDropDown icon={AccountIcon}>
+              <NavLink href="/">My Adventures</NavLink>
+              <NavLink href="/">Favorites</NavLink>
+              <NavLink href="/" onClick={signOut} externalLink>
+                Log Out
+              </NavLink>
+            </IconDropDown>
+          </li>
+        )}
       </StyledUl>
     </StyledNav>
   );

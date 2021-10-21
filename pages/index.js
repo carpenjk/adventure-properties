@@ -41,10 +41,6 @@ export async function getStaticProps(context) {
   const featureProps = await cmsClient.getEntries({
     content_type: 'property',
   });
-  console.log(
-    '🚀 ~ file: index.js ~ line 44 ~ getServerSideProps ~ featureProps',
-    featureProps.items
-  );
 
   return {
     props: {

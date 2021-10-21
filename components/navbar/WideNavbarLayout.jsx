@@ -50,7 +50,8 @@ const WideNavbarLayout = (props) => {
           </StyledLogo>
         </a>
       </Link>
-      <NavToggle key="navToggle" displayVertical={false} />
+      <div />
+      {/* <NavToggle key="navToggle" displayVertical={false} /> */}
       <NavList />
     </StyledWideNavbar>
   );

@@ -22,6 +22,7 @@ import {
 import styled from 'styled-components';
 
 const StyledLink = styled.a`
+  cursor: pointer;
   flex: 1;
   display: flex;
   justify-content: center;
@@ -83,14 +84,23 @@ const NavLink = (props) => {
     getInitialProps, // end next/link props
     text,
     children,
+    externalLink,
     ...restProps // inner coponent props
   } = props;
+
+  if (externalLink) {
+    return (
+      <StyledLink tabIndex="0" {...restProps}>
+        {children}
+      </StyledLink>
+    );
+  }
 
   return (
     <Link
       href={href}
       as={as}
-      passHref
+      passHref={passHref}
       prefetch={prefetch}
       replace={replace}
       scroll={scroll}

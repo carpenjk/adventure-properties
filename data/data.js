@@ -1,5 +1,6 @@
 import NavToggle from '../components/navbar/NavToggle';
 import NavList from '../components/navbar/NavList';
+import MobileNavList from '../components/navbar/MobileNavList';
 import HeroBanner from '../components/hero/HeroBanner';
 import SearchBar from '../components/searchbar/SearchBar';
 import HeroContainer from '../components/hero/HeroContainer';
@@ -12,20 +13,8 @@ export const navData = {
     },
     items: [
       {
-        Component: NavToggle,
-        key: 'navToggle',
-        props: {
-          displayVertical: [true, false],
-        },
-        items: [
-          { key: 'buyToggle', text: 'Buy' },
-          { key: 'rentToggle', text: 'Rent' },
-          { key: 'longTermToggle', text: 'Long Term' },
-        ],
-      },
-      {
-        Component: NavList,
-        key: 'navList',
+        Component: MobileNavList,
+        key: 'mobileNavList',
         props: {},
         items: [
           {
