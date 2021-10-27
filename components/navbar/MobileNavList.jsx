@@ -18,10 +18,6 @@ const StyledNav = styled.nav`
 
 const MobileNavList = ({ data }) => {
   const [session, loading] = useSession();
-  console.log(
-    '🚀 ~ file: MobileNavList.jsx ~ line 3 ~ MobileNavList ~ data',
-    data
-  );
   const { items } = data.nav;
 
   return (

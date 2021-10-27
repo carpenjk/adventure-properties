@@ -1,5 +1,5 @@
 import Head from 'next/head';
-import { mediaStyles } from '../Media';
+import { mediaStyles } from '../../Media';
 
 const About = () => (
   <>

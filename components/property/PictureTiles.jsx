@@ -3,6 +3,7 @@ import { breakpoint } from 'themeweaver';
 import OverlayNavButton from '../base/OverlayNavButton';
 
 const StyledPictures = styled.div`
+  position: relative;
   display: flex;
   width: 100%;
   overflow: hidden;
@@ -10,6 +11,7 @@ const StyledPictures = styled.div`
   > img {
     flex: none;
     object-fit: cover;
+    height: 100%;
     width: 100%;
     cursor: pointer;
   }
@@ -20,6 +22,9 @@ const StyledPictures = styled.div`
     justify-items: stretch;
     align-items: stretch;
     width: 100%;
+    height: 500px;
+    max-width: 1300px;
+
 
   > *:first-child {
     grid-row: 1 / span 2;

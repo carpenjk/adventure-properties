@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+
 import Head from 'next/head';
 import useSWR from 'swr';
 import { Portal } from 'react-portal';
@@ -21,6 +22,7 @@ import ReservationForm from '../../components/reservationForm/ReservationForm';
 import BackButton from '../../components/base/BackButton';
 import ClientOnly from '../../components/ClientOnly';
 import usePictureTiles from '../../components/hooks/UsePictureTiles';
+import Spacer from '../../components/base/Spacer';
 
 const Location = dynamic(() => import('../../components/property/Location'), {
   ssr: false,
@@ -74,11 +76,6 @@ const StyledDescription = styled.p`
   color: ${({ theme }) => theme.colors.mainText};
 `;
 
-const StyledSpacer = styled.div`
-  height: ${getProp('space')};
-  width: 100%;
-`;
-
 async function fetchProperty(id) {
   const property = await cmsClient.getEntry(id);
   return property;
@@ -101,7 +98,6 @@ export async function getStaticPaths() {
 //* *********** data fetchers ****************************/
 export async function getStaticProps(context) {
   const cmsProperties = await fetchProperty(context.params.id);
-
   const dbClient = await clientPromise;
 
   const dbProperties = await dbClient
@@ -124,13 +120,37 @@ const fetchClientSideData = (url) => fetch(url).then((r) => r.json());
 
 //* ********* Component *********************************/
 const Property = ({ propertyData }) => {
+  // property data
+  const {
+    beds,
+    baths,
+    title,
+    description,
+    guests,
+    location,
+    city,
+    state,
+    propertyType,
+  } = propertyData.fields || {};
+
   const LIGHTBOX_PRELOAD_COUNT = 3;
+
+  const lightbox = useLightbox({ images: [], photoIndex: 0, isOpen: false });
+  const {
+    images,
+    photoIndex,
+    isOpen: isLightboxOpen,
+    handleLightboxClose,
+    handleLightboxOpen,
+    handleMoveNext,
+    handleMovePrev,
+    handlePhotoClick,
+  } = lightbox;
 
   // const { data: availability, error } = useSWR(
   //   `/api/properties/${propertyData.id}/availability`,
   //   fetchClientSideData
   // );
-  const lightbox = useLightbox({ images: [], photoIndex: 0, isOpen: false });
 
   // ! Remove and add to props
 
@@ -146,17 +166,6 @@ const Property = ({ propertyData }) => {
       lightbox.setImages([mainUrl, ...addUrls]);
     }
   }, [propertyData, lightbox.setImages]);
-
-  const {
-    images,
-    photoIndex,
-    isOpen: isLightboxOpen,
-    handleLightboxClose,
-    handleLightboxOpen,
-    handleMoveNext,
-    handleMovePrev,
-    handlePhotoClick,
-  } = lightbox;
 
   //* ******* helpers ****************
   const getAttributeList = useCallback(
@@ -194,19 +203,6 @@ const Property = ({ propertyData }) => {
     onPhotoClick: handlePhotoClick,
   });
 
-  // property data
-  const {
-    beds,
-    baths,
-    title,
-    description,
-    guests,
-    location,
-    city,
-    state,
-    propertyType,
-  } = propertyData.fields || {};
-
   const largeModifiers = '?fit=fill&w=2000&q=80';
   const mediumModifiers = '?fit=fill&w=1000&q=80';
   const smallModifiers = '?fit=fill&w=640&q=80';
@@ -241,7 +237,7 @@ const Property = ({ propertyData }) => {
       {propertyData.fields && (
         <>
           <BackButton path="/" />
-          <StyledSpacer space="70px" />
+          <Spacer vertical space="70px" />
           <Section
             semKey="property_images"
             position="relative"
@@ -324,7 +320,7 @@ const Property = ({ propertyData }) => {
           </Section>
           <Media lessThan="1">
             <Portal isOpen>
-              <StyledSpacer space="90px" />
+              <Spacer vertical space="90px" />
               <ReservationForm />
             </Portal>
           </Media>

@@ -82,6 +82,12 @@ export const theme = withThemeweaver(
         paddingBottom: 2,
         paddingLeft: 2,
       }),
+      ...variant('reserve', {
+        backgroundColor: 'action[1]',
+        color: 'lightBackground',
+        fontFamily: 'roboto',
+        fontSize: 2,
+      }),
       ...variant('search', {
         backgroundColor: 'action[1]',
         color: 'lightBackground',

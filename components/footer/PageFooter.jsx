@@ -21,6 +21,7 @@ import {
 import { getProp, condition } from 'dataweaver';
 import ActionButton from '../base/ActionButton';
 import FooterNav from './FooterNav';
+import Spacer from '../base/Spacer';
 
 const StyledFooter = styled.div`
   display: flex;
@@ -67,10 +68,6 @@ const StyledSignUp = styled.div`
     color: ${getColor('CTA.signUp', 'white')};
   }
 `;
-const StyledSpacer = styled.div`
-  flex: 1 1 ${getProp('space')};
-`;
-
 const StyledCopyright = styled.div`
   display: flex;
   justify-content: center;
@@ -103,9 +100,11 @@ const PageFooter = (props) => {
         </h2>
         <ActionButton variant="signUp">Sign Up</ActionButton>
       </StyledSignUp>
-      <StyledSpacer space="64px" />
+      {/* <StyledSpacer space="64px" /> */}
+      <Spacer vertical space="64px" />
       <FooterNav navData={navData} />
-      <StyledSpacer space="32px" />
+      {/* <StyledSpacer space="32px" /> */}
+      <Spacer vertical space="32px" />
       <StyledCopyright>
         <p>Copyright 2021 Jeremy Carpenter</p>
       </StyledCopyright>

@@ -20,7 +20,6 @@ import {
 import { getProp } from 'dataweaver';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import '../../../styles/global/datepicker.module.css';
 
 const StyledDateHandler = styled.div`
 display: block;
@@ -137,7 +136,9 @@ class DateHandler extends Component {
 
   handleFocus(e) {
     e.target.readOnly = true;
-    this.props.onFocus();
+    if (this.props.onFocus) {
+      this.props.onFocus();
+    }
   }
 
   handleKeyDown = (e) => {

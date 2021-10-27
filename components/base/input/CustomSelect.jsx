@@ -91,6 +91,7 @@ const StyledSelect = styled.div`
       font-weight: ${getFontWeight('input.searchBar', 'normal')};
       font-size: ${getFontSize('input.searchBar', '1.6rem')};
       letter-spacing: ${getLetterSpacing('input.searchBar', '0.025em')};
+      width: 100%;
     }
 
   `}
@@ -252,19 +253,23 @@ class CustomSelect extends Component {
 
   render() {
     const {
+      name,
       placeholder,
       width,
       options,
       onInputChange,
       useInnerRef,
+      value,
     } = this.props;
 
     return (
       <StyledSelect width={width} ref={this.styleRef}>
         <Select
+          name={name}
           instanceId={this.props.innerKey}
           className="customSelect"
           classNamePrefix="customSelect"
+          value={value}
           blurInputOnSelect={false}
           isSearchable={false}
           placeholder={placeholder}
