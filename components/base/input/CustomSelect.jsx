@@ -41,57 +41,79 @@ const customMenu = (props) => (
 const StyledSelect = styled.div`
   display: block;
   width: ${getProp('wrapperWidth', 1)};
-  margin-top: ${getMarginTop('input.searchBar', '0')};
-  margin-right: ${getMarginRight('input.searchBar', '0')};
-  margin-bottom: ${getMarginBottom('input.searchBar', '0')};
-  margin-left: ${getMarginLeft('input.searchBar', '0')};
+  margin-top: ${(props) => getMarginTop(`input.${props.variant}`, '0')(props)};
+  margin-right: ${(props) =>
+    getMarginRight(`input.${props.variant}`, '0')(props)};
+  margin-bottom: ${(props) =>
+    getMarginBottom(`input.${props.variant}`, '0')(props)};
+  margin-left: ${(props) =>
+    getMarginLeft(`input.${props.variant}`, '0')(props)};
 
   & .customSelect__control--is-focused {
     outline: 5px auto -webkit-focus-ring-color;
   }
 
   & > .customSelect {
-    color: ${getColor('input.searchBar', 'inherit')};
+    color: ${(props) => getColor(`input.${props.variant}`, 'inherit')(props)};
 
-    height: ${getHeight('input.searchBar', '0')};
-    box-shadow: ${getBoxShadow(
-      'input.searchBar',
-      '0px 0px 8px rgba(192, 192, 192, 0.52)'
-    )};
-    border-radius: ${getBorderRadius('input.searchBar', '5px')};
-    padding-top: ${getPaddingTop('input.searchBar', '0')};
-    padding-right: ${getPaddingRight('input.searchBar', '0')};
-    padding-bottom: ${getPaddingBottom('input.searchBar', '0')};
+    height: ${(props) => getHeight(`input.${props.variant}`, '0')(props)};
+    box-shadow: ${(props) =>
+      getBoxShadow(
+        `input.${props.variant}`,
+        '0px 0px 8px rgba(192, 192, 192, 0.52)'
+      )(props)};
+    border-radius: ${(props) =>
+      getBorderRadius(`input.${props.variant}`, '5px')(props)};
+    padding-top: ${(props) =>
+      getPaddingTop(`input.${props.variant}`, '0')(props)};
+    padding-right: ${(props) =>
+      getPaddingRight(`input.${props.variant}`, '0')(props)};
+    padding-bottom: ${(props) =>
+      getPaddingBottom(`input.${props.variant}`, '0')(props)};
     border-style: none;
   }
 
   & input {
-    height: ${getHeight('input.searchBar', '0')};
+    height: ${(props) => getHeight(`input.${props.variant}`, '0')(props)};
   }
 
   & > * {
     width: 100%;
-    background-color: ${getBackgroundColor('input.searchBar', 'initial')};
+    background-color: ${(props) =>
+      getBackgroundColor(`input.${props.variant}`, 'initial')(props)};
 
-    font-family: ${getFontFamily('input.searchBar', 'inherit')};
-    font-weight: ${getFontWeight('input.searchBar', 'normal')};
-    font-size: ${getFontSize('input.searchBar', '1.6rem')};
-    letter-spacing: ${getLetterSpacing('input.searchBar', '0.025em')};
+    font-family: ${(props) =>
+      getFontFamily(`input.${props.variant}`, 'inherit')(props)};
+    font-weight: ${(props) =>
+      getFontWeight(`input.${props.variant}`, 'normal')(props)};
+    font-size: ${(props) =>
+      getFontSize(`input.${props.variant}`, '1.6rem')(props)};
+    letter-spacing: ${(props) =>
+      getLetterSpacing(`input.${props.variant}`, '0.025em')(props)};
   }
 
   ${breakpoint(1)`
     width: ${getProp('wrapperWidth', 1)};
-    margin-top: ${getMarginTop('input.searchBar', '0')};
-    margin-right: ${getMarginRight('input.searchBar', '1.4rem')};
-    margin-bottom: ${getMarginBottom('input.searchBar', '2rem')};
-    margin-left: ${getMarginLeft('input.searchBar', '0')};
+    margin-top: ${(props) =>
+      getMarginTop(`input.${props.variant}`, '0')(props)};
+    margin-right: ${(props) =>
+      getMarginRight(`input.${props.variant}`, '1.4rem')(props)};
+    margin-bottom: ${(props) =>
+      getMarginBottom(`input.${props.variant}`, '2rem')(props)};
+    margin-left: ${(props) =>
+      getMarginLeft(`input.${props.variant}`, '0')(props)};
 
     & > * {
-      background-color: ${getBackgroundColor('input.searchBar', 'initial')};
-      font-family: ${getFontFamily('input.searchBar', 'inherit')};
-      font-weight: ${getFontWeight('input.searchBar', 'normal')};
-      font-size: ${getFontSize('input.searchBar', '1.6rem')};
-      letter-spacing: ${getLetterSpacing('input.searchBar', '0.025em')};
+      background-color: ${(props) =>
+        getBackgroundColor(`input.${props.variant}`, 'initial')(props)};
+      font-family: ${(props) =>
+        getFontFamily(`input.${props.variant}`, 'inherit')(props)};
+      font-weight: ${(props) =>
+        getFontWeight(`input.${props.variant}`, 'normal')(props)};
+      font-size: ${(props) =>
+        getFontSize(`input.${props.variant}`, '1.6rem')(props)};
+      letter-spacing: ${(props) =>
+        getLetterSpacing(`input.${props.variant}`, '0.025em')(props)};
     }
 
   `}
@@ -260,11 +282,16 @@ class CustomSelect extends Component {
       options,
       onInputChange,
       useInnerRef,
+      variant,
       value,
     } = this.props;
+    console.log(
+      '🚀 ~ file: CustomSelect.jsx ~ line 288 ~ CustomSelect ~ render ~ variant',
+      variant
+    );
 
     return (
-      <StyledSelect wrapperWidth={width} ref={this.styleRef}>
+      <StyledSelect variant={variant} wrapperWidth={width} ref={this.styleRef}>
         <Select
           id={innerKey}
           name={name}

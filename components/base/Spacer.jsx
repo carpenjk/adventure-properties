@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { getProp, condition } from 'dataweaver';
-import { NonceProvider } from 'react-select';
+import { breakpoint } from 'themeweaver';
 
 const StyledSpacer = styled.div`
   display: flex;
@@ -8,10 +8,17 @@ const StyledSpacer = styled.div`
   width: ${getProp('space')};
 
   ${condition('vertical')`
-  flex: none;  
-  height: ${getProp('space')};
-  width: 100%;
-`}
+    flex: none;  
+    height: ${getProp('space')};
+    width: 100%;
+  `}
+
+  ${breakpoint(1)`
+    width: ${getProp('space')};
+    ${condition('vertical')`
+    height: ${getProp('space')};
+    `}
+  `}
 `;
 const Spacer = ({ space, vertical }) => (
   <StyledSpacer space={space} vertical={vertical} />

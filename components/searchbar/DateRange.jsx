@@ -70,6 +70,8 @@ class DateRange extends Component {
       onFocus,
       popperParent,
       forceClose,
+      showLabel,
+      variant,
       inputRef,
       nextFocusRef,
     } = this.props;
@@ -84,8 +86,11 @@ class DateRange extends Component {
       <>
         {/* Picker for start of range */}
         <DateHandler
+          variant={variant}
           key="startDate"
           id={startProps.id}
+          label="Arrive"
+          showLabel={showLabel}
           placeholder={startProps.placeholder}
           icon={startProps.icon.url}
           iconOffset={startProps.icon.iconOffset}
@@ -106,8 +111,11 @@ class DateRange extends Component {
         />
         {/* Picker for end of range */}
         <DateHandler
+          variant={variant}
           key="endDate"
           id={endProps.id}
+          label="Depart"
+          showLabel={showLabel}
           placeholder={endProps.placeholder}
           icon={endProps.icon.url}
           iconOffset={endProps.icon.iconOffset}

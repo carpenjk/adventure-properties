@@ -2,12 +2,11 @@ import styled from 'styled-components';
 
 import Head from 'next/head';
 import useSWR from 'swr';
-import { Portal } from 'react-portal';
 
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import { breakpoint } from 'themeweaver';
-import { getProp } from 'dataweaver';
 import dynamic from 'next/dynamic';
+import { Portal } from 'react-portal';
 import useLightbox from '../../components/hooks/UseLightbox';
 import clientPromise from '../../utils/mongodb';
 import Lightbox from '../../components/Lightbox/Lightbox';
@@ -23,6 +22,8 @@ import BackButton from '../../components/base/BackButton';
 import ClientOnly from '../../components/ClientOnly';
 import usePictureTiles from '../../components/hooks/UsePictureTiles';
 import Spacer from '../../components/base/Spacer';
+import ReserveCTA from '../../components/reservationForm/ReserveCTA';
+import Fixed from '../../components/base/layout/Fixed';
 
 const Location = dynamic(() => import('../../components/property/Location'), {
   ssr: false,
@@ -120,6 +121,13 @@ const fetchClientSideData = (url) => fetch(url).then((r) => r.json());
 
 //* ********* Component *********************************/
 const Property = ({ propertyData }) => {
+  const reservationData = {
+    price: 104,
+    unit: 'night',
+    unitAmount: 8,
+    availability: undefined,
+  };
+  const { price, unit, unitAmount, availability } = reservationData;
   // property data
   const {
     beds,
@@ -153,7 +161,6 @@ const Property = ({ propertyData }) => {
   // );
 
   // ! Remove and add to props
-
   const positionOffset = 0;
 
   // Build list of image urls for Lightbox
@@ -314,15 +321,31 @@ const Property = ({ propertyData }) => {
                 </PropertyDetailCategory>
               </StyledDetails>
               <Media greaterThanOrEqual="1">
-                <ReservationForm />
+                <ReservationForm
+                  price={price}
+                  unit={unit}
+                  unitAmount={unitAmount}
+                  title={title}
+                  availability={availability}
+                />
               </Media>
             </StyledContent>
           </Section>
           <Media lessThan="1">
-            <Portal isOpen>
-              <Spacer vertical space="90px" />
-              <ReservationForm />
-            </Portal>
+            <Fixed bottom width="100%">
+              <ReserveCTA
+                price={price}
+                unit={unit}
+                unitAmount={unitAmount}
+                title={title}
+                availability={availability}
+              />
+            </Fixed>
+            <ClientOnly>
+              <Portal>
+                <Spacer vertical space="107px" />
+              </Portal>
+            </ClientOnly>
           </Media>
         </>
       )}

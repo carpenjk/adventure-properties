@@ -66,8 +66,8 @@
 }
 
 .react-datepicker__day {
-  width: 5rem;
-  height: 5rem;
+  width: 4rem;
+  height: 4rem;
   margin: 0;
 
   display: flex;
@@ -75,7 +75,7 @@
   align-items: center;
 
   font-family: 'Poppins', sans-serif;
-  font-size: 1.6rem;
+  font-size: 1.4rem;
   letter-spacing: 0.025em;
   /* color: var(--lightText); */
   border: 0.15rem solid #f0ffff;

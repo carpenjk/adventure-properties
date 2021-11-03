@@ -19,7 +19,7 @@ import {
   getWidth,
 } from 'themeweaver';
 import { getProp, condition } from 'dataweaver';
-import ActionButton from '../base/ActionButton';
+import ActionLink from '../base/ActionLink';
 import FooterNav from './FooterNav';
 import Spacer from '../base/Spacer';
 
@@ -98,7 +98,9 @@ const PageFooter = (props) => {
         <h2>
           Alert me when properties I might be interested in become available
         </h2>
-        <ActionButton variant="signUp">Sign Up</ActionButton>
+        <ActionLink href="/signUp" variant="signUp">
+          Sign Up
+        </ActionLink>
       </StyledSignUp>
       {/* <StyledSpacer space="64px" /> */}
       <Spacer vertical space="64px" />

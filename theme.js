@@ -7,7 +7,7 @@ export const theme = withThemeweaver(
       primary: '#7789C8',
       secondary: '#C6D8FF',
       tertiary: '#CDF7f6',
-      action: ['#F6E8E8', '#E5707A'],
+      action: ['#FCEEEF', '#E5707A'],
       lightText: '#979797',
       mainText: '#444649',
       secondaryText: '#E5707A',
@@ -86,7 +86,13 @@ export const theme = withThemeweaver(
         backgroundColor: 'action[1]',
         color: 'lightBackground',
         fontFamily: 'roboto',
-        fontSize: 2,
+        fontSize: [3, 3],
+        paddingLeft: [value('1.5em', value('2em'))],
+        paddingRight: [value('1.5em', value('2em'))],
+      }),
+      ...variant('reserve_hover', {
+        backgroundColor: 'action[0]',
+        color: 'action[1]',
       }),
       ...variant('search', {
         backgroundColor: 'action[1]',
@@ -133,10 +139,6 @@ export const theme = withThemeweaver(
     select: {
       ...variant('searchBar', {
         height: value('4rem'),
-        marginTop: 1,
-        marginRight: [1, 2],
-        marginBottom: [1, 1],
-        marginLeft: 1,
         color: 'primary',
         fontSize: 2,
         fontFamily: 'poppins',
@@ -152,10 +154,13 @@ export const theme = withThemeweaver(
     date: {
       ...variant('searchBar', {
         height: value('4rem'),
-        marginTop: 1,
-        marginRight: [1, 2],
-        marginBottom: [1, 1],
-        marginLeft: 1,
+        color: 'primary',
+        fontSize: 2,
+        fontFamily: 'poppins',
+      }),
+      ...variant('reservation', {
+        height: value('4rem'),
+        minWidth: [value('0'), value('108px')],
         color: 'primary',
         fontSize: 2,
         fontFamily: 'poppins',

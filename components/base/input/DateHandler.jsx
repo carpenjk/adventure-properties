@@ -16,19 +16,23 @@ import {
   getMarginLeft,
   getBoxShadow,
   getBorderRadius,
+  getMinWidth,
 } from 'themeweaver';
 import { getProp } from 'dataweaver';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
+import InputLabel from './InputLabel';
 
 const StyledDateHandler = styled.div`
 display: block;
 position: relative;
 
-margin-top: ${getMarginTop('date.searchBar', '0')};
-margin-right: ${getMarginRight('date.searchBar', '0')};
-margin-bottom: ${getMarginBottom('date.searchBar', '1rem')};
-margin-left: ${getMarginLeft('date.searchBar', '0')};
+min-width: ${(props) => getMinWidth(`date.${props.variant}`, '0')(props)};
+margin-top: ${(props) => getMarginTop(`date.${props.variant}`, '0')(props)};
+margin-right: ${(props) => getMarginRight(`date.${props.variant}`, '0')(props)};
+margin-bottom: ${(props) =>
+  getMarginBottom(`date.${props.variant}`, '0')(props)};
+margin-left: ${(props) => getMarginLeft(`date.${props.variant}`, '0')(props)};
 
 
 
@@ -50,45 +54,62 @@ margin-left: ${getMarginLeft('date.searchBar', '0')};
   background-image: url(${getProp('icon')});
   background-repeat: no-repeat;
   background-position: ${getProp('iconOffset')} 50%;
-  box-shadow: ${getBoxShadow(
-    'date.searchBar',
-    '0px 0px 8px rgba(192, 192, 192, 0.52)'
-  )};
-  border-radius: ${getBorderRadius('date.searchBar', '5px')};
+  box-shadow: ${(props) =>
+    getBoxShadow(
+      `date.${props.variant}`,
+      '0px 0px 8px rgba(192, 192, 192, 0.52)'
+    )(props)};
+  border-radius: ${(props) =>
+    getBorderRadius(`date.${props.variant}`, '5px')(props)};
   border-style: none;
-  color: ${getColor('date.searchBar', 'inherit')};
-  background-color: ${getBackgroundColor('date.searchBar', 'initial')};
-  font-family: ${getFontFamily('date.searchBar', 'inherit')};
-  font-weight: ${getFontWeight('date.searchBar', 'normal')};
-  font-size: ${getFontSize('date.searchBar', '1.6rem')};
-  height: ${getHeight('date.searchBar', 'auto')};
-  letter-spacing: ${getLetterSpacing('date.searchBar', '0.025em')};
+  color: ${(props) => getColor(`date.${props.variant}`, 'inherit')(props)};
+  background-color: ${(props) =>
+    getBackgroundColor(`date.${props.variant}`, 'initial')(props)};
+  font-family: ${(props) =>
+    getFontFamily(`date.${props.variant}`, 'inherit')(props)};
+  font-weight: ${(props) =>
+    getFontWeight(`date.${props.variant}`, 'normal')(props)};
+  font-size: ${(props) =>
+    getFontSize(`date.${props.variant}`, '1.6rem')(props)};
+  height: ${(props) => getHeight(`date.${props.variant}`, 'auto')(props)};
+  letter-spacing: ${(props) =>
+    getLetterSpacing(`date.${props.variant}`, '0.025em')(props)};
   
 }
 
 ${breakpoint(1)`
   width: ${getProp('width')};
-  margin-top: ${getMarginTop('date.searchBar', '0')};
-  margin-right: ${getMarginRight('date.searchBar', '1.4rem')};
-  margin-bottom: ${getMarginBottom('date.searchBar', '2rem')};
-  margin-left: ${getMarginLeft('date.searchBar', '0')};
+  min-width: ${(props) => getMinWidth(`date.${props.variant}`, '0')(props)};
+  margin-top: ${(props) => getMarginTop(`date.${props.variant}`, '0')(props)};
+  margin-right: ${(props) =>
+    getMarginRight(`date.${props.variant}`, '0')(props)};
+  margin-bottom: ${(props) =>
+    getMarginBottom(`date.${props.variant}`, '0')(props)};
+  margin-left: ${(props) => getMarginLeft(`date.${props.variant}`, '0')(props)};
 
   
 
   .react-datepicker__input-container > input {
     width: ${getProp('width')};
 
-    color: ${getColor('date.searchBar', 'inherit')};
-    background-color: ${getBackgroundColor('date.searchBar', 'initial')};
-    font-family: ${getFontFamily('date.searchBar', 'inherit')};
-    font-weight: ${getFontWeight('date.searchBar', 'normal')};
-    font-size: ${getFontSize('date.searchBar', '1.6rem')};
-    letter-spacing: ${getLetterSpacing('date.searchBar', '0.025em')};
-    box-shadow: ${getBoxShadow(
-      'date.searchBar',
-      '0px 0px 8px rgba(192, 192, 192, 0.52)'
-    )};
-    border-radius: ${getBorderRadius('date.searchBar', '5px')};
+    color: ${(props) => getColor(`date.${props.variant}`, 'inherit')(props)};
+    background-color: ${(props) =>
+      getBackgroundColor(`date.${props.variant}`, 'initial')(props)};
+    font-family: ${(props) =>
+      getFontFamily(`date.${props.variant}`, 'inherit')(props)};
+    font-weight: ${(props) =>
+      getFontWeight(`date.${props.variant}`, 'normal')(props)};
+    font-size: ${(props) =>
+      getFontSize(`date.${props.variant}`, '1.6rem')(props)};
+    letter-spacing: ${(props) =>
+      getLetterSpacing(`date.${props.variant}`, '0.025em')(props)};
+    box-shadow: ${(props) =>
+      getBoxShadow(
+        `date.${props.variant}`,
+        '0px 0px 8px rgba(192, 192, 192, 0.52)'
+      )(props)};
+    border-radius: ${(props) =>
+      getBorderRadius(`date.${props.variant}`, '5px')(props)};
   }
 `}
 `;
@@ -145,7 +166,6 @@ class DateHandler extends Component {
     const { inputRef } = this.props;
     if (inputRef && inputRef.current) {
       if (e.key === 'Tab') {
-        console.log('close');
         inputRef.current.setOpen(false);
       }
     }
@@ -153,9 +173,11 @@ class DateHandler extends Component {
 
   render() {
     const {
+      id,
       placeholder,
       icon,
       iconOffset,
+      label,
       textOffset,
       width,
       startDate,
@@ -163,6 +185,7 @@ class DateHandler extends Component {
       selected,
       selectsStart,
       selectsEnd,
+      showLabel,
       minDate,
       onChange,
       onSelect,
@@ -170,17 +193,21 @@ class DateHandler extends Component {
       inputRef,
       allowSameDay,
       openToDate,
+      variant,
     } = this.props;
 
     return (
       <StyledDateHandler
+        variant={variant}
         icon={icon}
         iconOffset={iconOffset}
         textOffset={textOffset}
         width={width}
         ref={this.styleRef}
       >
+        {showLabel && <InputLabel htmlFor={id}>{label}</InputLabel>}
         <DatePicker
+          id={id}
           selected={selected}
           startDate={startDate}
           endDate={endDate}

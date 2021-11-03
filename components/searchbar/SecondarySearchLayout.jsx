@@ -92,6 +92,7 @@ const SecondarySearchLayout = (props) => {
   return (
     <>
       <DateRange
+        variant="searchBar"
         key="dateRange"
         startProps={startDate}
         endProps={endDate}
@@ -104,6 +105,7 @@ const SecondarySearchLayout = (props) => {
         forceClose={!isSearchBarFocused}
       />
       <CustomSelect
+        variant="searchBar"
         theme={theme}
         key="guests"
         innerKey="guestsSelect"
