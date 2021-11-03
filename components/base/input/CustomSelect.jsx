@@ -40,10 +40,10 @@ const customMenu = (props) => (
 
 const StyledSelect = styled.div`
   display: block;
-
+  width: ${getProp('wrapperWidth', 1)};
   margin-top: ${getMarginTop('input.searchBar', '0')};
   margin-right: ${getMarginRight('input.searchBar', '0')};
-  margin-bottom: ${getMarginBottom('input.searchBar', '1rem')};
+  margin-bottom: ${getMarginBottom('input.searchBar', '0')};
   margin-left: ${getMarginLeft('input.searchBar', '0')};
 
   & .customSelect__control--is-focused {
@@ -70,6 +70,7 @@ const StyledSelect = styled.div`
   }
 
   & > * {
+    width: 100%;
     background-color: ${getBackgroundColor('input.searchBar', 'initial')};
 
     font-family: ${getFontFamily('input.searchBar', 'inherit')};
@@ -79,7 +80,7 @@ const StyledSelect = styled.div`
   }
 
   ${breakpoint(1)`
-    width: ${getProp('width', 1)};
+    width: ${getProp('wrapperWidth', 1)};
     margin-top: ${getMarginTop('input.searchBar', '0')};
     margin-right: ${getMarginRight('input.searchBar', '1.4rem')};
     margin-bottom: ${getMarginBottom('input.searchBar', '2rem')};
@@ -91,7 +92,6 @@ const StyledSelect = styled.div`
       font-weight: ${getFontWeight('input.searchBar', 'normal')};
       font-size: ${getFontSize('input.searchBar', '1.6rem')};
       letter-spacing: ${getLetterSpacing('input.searchBar', '0.025em')};
-      width: 100%;
     }
 
   `}
@@ -253,6 +253,7 @@ class CustomSelect extends Component {
 
   render() {
     const {
+      innerKey,
       name,
       placeholder,
       width,
@@ -263,10 +264,11 @@ class CustomSelect extends Component {
     } = this.props;
 
     return (
-      <StyledSelect width={width} ref={this.styleRef}>
+      <StyledSelect wrapperWidth={width} ref={this.styleRef}>
         <Select
+          id={innerKey}
           name={name}
-          instanceId={this.props.innerKey}
+          instanceId={innerKey}
           className="customSelect"
           classNamePrefix="customSelect"
           value={value}
