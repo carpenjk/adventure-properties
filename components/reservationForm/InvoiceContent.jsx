@@ -4,19 +4,17 @@ import Spacer from '../base/Spacer';
 import LineItem from './LineItem';
 import InvoiceTotal from './InvoiceTotal';
 
-const Invoice = ({ price, unit, unitAmount }) => (
+const InvoiceContent = ({ price, unit, unitAmount, total }) => (
   <>
     <LineItem
-      description={`$${price} x ${unitAmount} ${unit}${
-        unitAmount > 1 ? 's' : ''
-      }`}
-      amount={105 * 9}
+      description={`$${price} x ${unitAmount} ${unit}`}
+      amount={total}
     />
     <Spacer vertical space={['16px', '32px']} />
     <LineItem description="Occupancy taxes and fees" amount={0} />
     <Spacer vertical space={['16px', '32px']} />
-    <InvoiceTotal total={105 * 9} />
+    <InvoiceTotal total={total} />
   </>
 );
 
-export default Invoice;
+export default InvoiceContent;

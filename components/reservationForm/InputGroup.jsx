@@ -8,10 +8,6 @@ const StyledInputGroup = styled.div`
 
   box-shadow: 0px 0px 8px rgba(192, 192, 192, 0.52);
   border-radius: 5px;
-  
-
-  
-  
 `;
 
 const StyledInputGroupHeading = styled.div`

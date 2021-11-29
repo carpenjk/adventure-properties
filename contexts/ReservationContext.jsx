@@ -12,9 +12,9 @@ const ReservationContext = React.createContext();
 
 const ReservationProvider = ({ children }) => {
   const [cookie, setCookie] = useCookies(['reservation']);
-  const [resStartDate, setResStartDate] = useState();
-  const [resEndDate, setResEndDate] = useState();
-  const [numGuests, setNumGuests] = useState();
+  const [resStartDate, setResStartDate] = useState('');
+  const [resEndDate, setResEndDate] = useState('');
+  const [numGuests, setNumGuests] = useState('');
 
   const numGuestID = numGuests ? Object.keys(numGuests)[0] : undefined;
 
@@ -29,25 +29,7 @@ const ReservationProvider = ({ children }) => {
 
   const selectedGuestOption = getNumGuestOption(getNumGuests(numGuestID));
 
-  // const setDate = (obj) => {
-  //   const id = Object.keys(obj)[0];
-  //   if (id === startDateProps.id) {
-  //     setResStartDate(obj);
-  //   } else if (id === endDateProps.id) {
-  //     setResEndDate(obj);
-  //   }
-  // };
-
-  // values stored as obj with id as key, but returned as date value only
-  // const getDate = (id) => {
-  //   if (id === startDateProps.id) {
-  //     return resStartDate ? resStartDate[id] : undefined;
-  //   }
-  //   if (id === endDateProps.id) {
-  //     return resEndDate ? resEndDate[id] : undefined;
-  //   }
-  // };
-
+  // obj returned from input component
   const setDate = (obj) => {
     const id = Object.keys(obj)[0];
     const val = obj[id];
@@ -72,8 +54,10 @@ const ReservationProvider = ({ children }) => {
     setNumGuests(obj[id]);
   };
 
+  const arriveDateVal = getDate(startDateProps.id);
+  const departDateVal = getDate(endDateProps.id);
+
   const setSessionData = () => {
-    console.log('setting cookie');
     setCookie(
       'reservation',
       JSON.stringify({
@@ -105,23 +89,6 @@ const ReservationProvider = ({ children }) => {
     console.log('rsvCookie', rsvCookie);
 
     if (rsvCookie) {
-      const numGuestOptionIndex = getNumGuestOptionIndex(
-        getNumGuests(numGuestID)
-      );
-
-      // const resStartDateID = Object.keys(rsvCookie.resStartDate)[0];
-      // const resEndDateID = Object.keys(rsvCookie.resEndDate)[0];
-
-      // const reservationCopy = {
-      //   resStartDate: {
-      //     [resStartDateID]: new Date(rsvCookie.resStartDate[resStartDateID]),
-      //   },
-      //   resEndDate: {
-      //     [resEndDateID]: new Date(rsvCookie.resEndDate[resEndDateID]),
-      //   },
-      //   numGuests: { ...rsvCookie.numGuests },
-      // };
-
       const reservationCopy = {
         numGuests: rsvCookie.numGuests,
         resStartDate: new Date(rsvCookie.resStartDate),
@@ -135,6 +102,9 @@ const ReservationProvider = ({ children }) => {
   return (
     <ReservationContext.Provider
       value={{
+        arriveDateVal,
+        departDateVal,
+        numGuests,
         getDate,
         setDate,
         getNumGuests,

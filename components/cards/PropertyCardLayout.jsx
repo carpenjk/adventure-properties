@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import PropertyTitle from '../property/PropertyTitle';
 import PropertyCaption from './PropertyCaption';
 
 const StyledLargeLayout = styled.div`
@@ -14,21 +15,11 @@ const StyledLargeLayout = styled.div`
 
   padding: 8px;
 
-  h1 {
+  .headingWrapper {
     flex: none;
     margin: 0 0 1.5rem 0;
-    font-family: Open Sans;
-
     display: flex;
     align-items: center;
-    color: #444649;
-    font-family: Open Sans;
-    font-size: 18px;
-    font-style: normal;
-    font-weight: 700;
-    line-height: 150%;
-    letter-spacing: 0.025em;
-    text-align: left;
   }
   figure {
     margin: 0;
@@ -55,7 +46,9 @@ const LargeLayout = ({ url, data }) => {
 
   return (
     <StyledLargeLayout>
-      <h1 className="cardHeader">{heading}</h1>
+      <div className="headingWrapper">
+        <PropertyTitle variant="card" title={heading} />
+      </div>
       <figure>
         <div className="image">
           <img src={url} alt={heading} />

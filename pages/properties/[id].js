@@ -1,18 +1,15 @@
 import styled from 'styled-components';
-
 import Head from 'next/head';
-import useSWR from 'swr';
 
-import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useEffect, useCallback, useMemo } from 'react';
 import { breakpoint } from 'themeweaver';
 import dynamic from 'next/dynamic';
-import { Portal } from 'react-portal';
+import { fetchProperty } from '../../components/adapters/property/property';
 import useLightbox from '../../components/hooks/UseLightbox';
-import clientPromise from '../../utils/mongodb';
-import Lightbox from '../../components/Lightbox/Lightbox';
 import { Media, mediaStyles } from '../../Media';
 import cmsClient from '../../Contentful';
 
+import Lightbox from '../../components/Lightbox/Lightbox';
 import Section from '../../components/base/semantic/Section';
 import PropertyDetailCategory from '../../components/property/PropertyDetailCategory';
 import AttributeList from '../../components/property/AttributeList';
@@ -24,6 +21,7 @@ import usePictureTiles from '../../components/hooks/UsePictureTiles';
 import Spacer from '../../components/base/Spacer';
 import ReserveCTA from '../../components/reservationForm/ReserveCTA';
 import Fixed from '../../components/base/layout/Fixed';
+import PropertyTitle from '../../components/property/PropertyTitle';
 
 const Location = dynamic(() => import('../../components/property/Location'), {
   ssr: false,
@@ -77,11 +75,6 @@ const StyledDescription = styled.p`
   color: ${({ theme }) => theme.colors.mainText};
 `;
 
-async function fetchProperty(id) {
-  const property = await cmsClient.getEntry(id);
-  return property;
-}
-
 export async function getStaticPaths() {
   const properties = await cmsClient.getEntries({
     content_type: 'property',
@@ -98,37 +91,26 @@ export async function getStaticPaths() {
 
 //* *********** data fetchers ****************************/
 export async function getStaticProps(context) {
-  const cmsProperties = await fetchProperty(context.params.id);
-  const dbClient = await clientPromise;
-
-  const dbProperties = await dbClient
-    .db()
-    .collection('properties')
-    .findOne({ cmsID: context.params.id });
-
-  return {
-    props: {
-      propertyData: {
-        ...cmsProperties,
-        id: context.params.id,
-        dbData: JSON.parse(JSON.stringify(dbProperties)),
-      },
-    },
-  };
+  const staticProps = await fetchProperty(context.params.id);
+  return staticProps;
 }
-
-const fetchClientSideData = (url) => fetch(url).then((r) => r.json());
 
 //* ********* Component *********************************/
 const Property = ({ propertyData }) => {
+  console.log(
+    '🚀 ~ file: [id].js ~ line 105 ~ Property ~ propertyData',
+    propertyData
+  );
   const reservationData = {
     price: 104,
     unit: 'night',
     unitAmount: 8,
     availability: undefined,
   };
+
   const { price, unit, unitAmount, availability } = reservationData;
   // property data
+  const { id } = propertyData;
   const {
     beds,
     baths,
@@ -289,7 +271,7 @@ const Property = ({ propertyData }) => {
           >
             <StyledContent>
               <StyledDetails>
-                <h1>{title}</h1>
+                <PropertyTitle title={title} />
                 <AttributesSummary
                   guests={guests}
                   beds={beds}
@@ -321,13 +303,7 @@ const Property = ({ propertyData }) => {
                 </PropertyDetailCategory>
               </StyledDetails>
               <Media greaterThanOrEqual="1">
-                <ReservationForm
-                  price={price}
-                  unit={unit}
-                  unitAmount={unitAmount}
-                  title={title}
-                  availability={availability}
-                />
+                <ReservationForm title={title} />
               </Media>
             </StyledContent>
           </Section>
@@ -341,11 +317,6 @@ const Property = ({ propertyData }) => {
                 availability={availability}
               />
             </Fixed>
-            <ClientOnly>
-              <Portal>
-                <Spacer vertical space="107px" />
-              </Portal>
-            </ClientOnly>
           </Media>
         </>
       )}

@@ -4,7 +4,7 @@ const fetchClientSideData = (url) => fetch(url).then((r) => r.json());
 
 const useAvailability = (propID) => {
   const { data: availability, error } = useSWR(
-    `/api/properties/${propID}/clientSideData`,
+    `/api/properties/${propID}/availability`,
     fetchClientSideData
   );
 

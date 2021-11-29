@@ -14,7 +14,7 @@ export default async function handler(req, res) {
     dbProperty
   );
 
-  const { bookedDates } = dbProperty;
+  const { availability } = dbProperty;
 
-  res.json({ bookedDates });
+  res.json(availability);
 }

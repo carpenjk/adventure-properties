@@ -26,7 +26,7 @@ import InputLabel from './InputLabel';
 const StyledDateHandler = styled.div`
 display: block;
 position: relative;
-
+width: ${getProp('width')};
 min-width: ${(props) => getMinWidth(`date.${props.variant}`, '0')(props)};
 margin-top: ${(props) => getMarginTop(`date.${props.variant}`, '0')(props)};
 margin-right: ${(props) => getMarginRight(`date.${props.variant}`, '0')(props)};

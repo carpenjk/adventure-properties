@@ -3,19 +3,12 @@ import { useState, useEffect } from 'react';
 import { breakpoint } from 'themeweaver';
 import { condition } from 'dataweaver';
 
-import { Portal } from 'react-portal';
 import useLockBodyScroll from '../hooks/UseLockBodyScroll';
 import ReservationPrice from './ReservationPrice';
 import ActionButton from '../base/ActionButton';
 import useReservation from './UseReservation';
-import ReservationForm from './ReservationForm';
-import FullScreenOverlay from '../FullScreenOverlay';
-import ClientOnly from '../ClientOnly';
-import InvoiceHeader from './InvoiceHeader';
+import FullScreenReservation from './FullScreenReservation';
 
-const StyledTest = styled.div`
-  display: flex;
-`;
 const StyledWrapper = styled.div`
   display: flex;
   justify-content: center;
@@ -59,14 +52,6 @@ const StyledInnerWrapper = styled.div`
   `}
 `;
 
-const StyledResSummary = styled.div`
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  height: 100%;
-  padding-right: 8px;
-`;
-
 const StyledTotal = styled.div`
   font-weight: bold;
   font-family: Poppins;
@@ -86,60 +71,33 @@ const StyledChar = styled.span`
   padding-right: 1em;
 `;
 
-const StyledReservationWrapper = styled.div`
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  display: none;
-  justify-content: center;
-  align-items: center;
-  z-index: 99999;
-  background-color: white;
-
-  ${condition('isOpen')`
-    display: flex;
-  `}
-`;
-
 const ReserveCTA = (props) => {
-  const {
-    getDate,
-    setDate,
-    getNumGuests,
-    setNumGuests,
-    startDateProps,
-    endDateProps,
-    guestOptions,
-    setSessionData,
-    selectedGuestOptionIndex,
-  } = useReservation();
-  const [isReserveFormOpen, setIsReserveFormOpen] = useState(false);
-  const bodyLock = useLockBodyScroll(true, isReserveFormOpen);
+  const { reservation, reserve, isResReady } = useReservation();
 
-  const { price, title, unit, unitAmount, availability } = props;
+  // reservation properties
+  const { price, total, unit, unitAmount } = reservation;
+
+  // passed in props
+  const { title } = props;
+  const [isInputOpen, setIsInputOpen] = useState(false);
   const isAmount = unitAmount > 0;
-  // const isAmount = false;
-  const total = price * unitAmount;
-  const unitDesc = unitAmount > 1 ? `${unit}s` : unit;
-  const unitDescription = `${unitAmount} ${unitDesc}`;
 
-  function openReservationForm() {
-    setIsReserveFormOpen(true);
-  }
+  const bodyLock = useLockBodyScroll(true, setIsInputOpen);
 
   // Lock and unlock scrolling
   useEffect(() => {
-    if (isReserveFormOpen) {
+    if (isInputOpen) {
       bodyLock.lock();
     } else {
       bodyLock.unlock();
     }
-  }, [isReserveFormOpen, bodyLock]);
+  }, [isInputOpen, bodyLock]);
 
-  function handleClose() {
-    setIsReserveFormOpen(false);
+  function handleInputOpen() {
+    setIsInputOpen(true);
+  }
+  function handlePortalClose() {
+    setIsInputOpen(false);
   }
 
   return (
@@ -147,33 +105,40 @@ const ReserveCTA = (props) => {
       <StyledWrapper>
         <StyledInnerWrapper isAmount={isAmount}>
           <div>
-            <ReservationPrice price={price} unit={unit} variant="small" />
+            <ReservationPrice price={price.avg} unit={unit} variant="small" />
             {isAmount && (
               <>
                 <StyledChar>x</StyledChar>
-                <StyledUnits>{unitDescription}</StyledUnits>
+                <StyledUnits>{`${unitAmount} ${unit}`}</StyledUnits>
                 <StyledChar>|</StyledChar>
                 <StyledTotal>${total} Total</StyledTotal>
               </>
             )}
           </div>
-          <ActionButton variant="reserve" onClick={openReservationForm}>
-            Reserve
-          </ActionButton>
+          {!isResReady && (
+            <ActionButton variant="reserve" onClick={handleInputOpen}>
+              Check Availability
+            </ActionButton>
+          )}
+          {isResReady && (
+            <ActionButton variant="reserve" onClick={reserve}>
+              Reserve
+            </ActionButton>
+          )}
         </StyledInnerWrapper>
       </StyledWrapper>
-      <ClientOnly>
-        <Portal>
-          <FullScreenOverlay isOpen={isReserveFormOpen} onClose={handleClose}>
-            <ReservationForm
-              price={price}
-              unit={unitDesc}
-              title={title}
-              showTitle
-            />
-          </FullScreenOverlay>
-        </Portal>
-      </ClientOnly>
+      {isInputOpen && (
+        <FullScreenReservation
+          isOpen={isInputOpen}
+          onClose={handlePortalClose}
+          price={price.avg}
+          showTitle
+          unit={unit}
+          unitAmount={unitAmount}
+          title={title}
+          total={total}
+        />
+      )}
     </>
   );
 };
