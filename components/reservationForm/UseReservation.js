@@ -1,14 +1,18 @@
 import { useRouter } from 'next/router';
 import { signIn, useSession } from 'next-auth/client';
-import { useState, useContext } from 'react';
+import { useState, useContext, useEffect, useCallback } from 'react';
 
 import { ReservationContext } from '../../contexts/ReservationContext';
 import useAvailability from '../adapters/property/UseAvailability';
+import { validateReservation } from '../../utils/dateValidation';
 
 const useReservation = () => {
   const {
     arriveDateVal,
+    arriveDateString,
+    dateRangeString,
     departDateVal,
+    departDateString,
     numGuests,
     getDate,
     setDate,
@@ -19,30 +23,30 @@ const useReservation = () => {
     guestOptions,
     setSessionData,
     selectedGuestOptionIndex,
+    isCompleted,
+    setIsCompleted,
   } = useContext(ReservationContext);
   const [session, loading] = useSession();
-  console.log(
-    '🚀 ~ file: UseReservation.js ~ line 24 ~ useReservation ~ session',
-    session
-  );
-  const [isResReady, setIsResReady] = useState(false);
 
   const router = useRouter();
+  const [isResReady, setIsResReady] = useState(false);
+  const [error, setError] = useState('');
+  const [isResAttempted, setIsResAttempted] = useState(false);
+  const [response, setResponse] = useState();
 
-  async function handleReservation() {
-    // persist reservation parameters in a cookie
-    // setSessionData();
-    if (!session) {
-      signIn();
-    }
-  }
+  const { id } = router.query;
+  const user = session && session.user ? session.user : '';
 
   function reservePreview() {
+    if (!isResReady) {
+      setIsResAttempted(true);
+      return;
+    }
     setSessionData();
 
     router.push({
       pathname: '/properties/[id]/reserve',
-      query: { id: router.query.id },
+      query: { id },
     });
   }
 
@@ -53,11 +57,10 @@ const useReservation = () => {
     if (!availability || !arriveDateVal || !departDateVal) {
       return undefined;
     }
-    return availability.filter(
-      (date) =>
-        new Date(date.date) >= arriveDateVal &&
-        new Date(date.date) <= departDateVal
+    const dates = availability.avail.filter(
+      (dt) => dt.date >= arriveDateVal && dt.date < departDateVal
     );
+    return dates;
   };
 
   const calcTotalPrice = () => {
@@ -66,10 +69,14 @@ const useReservation = () => {
     if (!dailyPrices || dailyPrices.length === 0) {
       return undefined;
     }
+    console.log(
+      'calc total price: ',
+      dailyPrices.reduce((sum, currDate) => currDate.price + sum, 0)
+    );
     return dailyPrices.reduce((sum, currDate) => currDate.price + sum, 0);
   };
 
-  const getAvgDailyPrices = () => {
+  const getAvgDailyPrice = () => {
     const dailyPrices = getDailyPrices();
     if (!dailyPrices || dailyPrices.length === 0) {
       return 0;
@@ -90,29 +97,160 @@ const useReservation = () => {
     return 'nights';
   };
 
+  const getDateRangeString = (start, end) => {
+    const arriveYear = start.getFullYear();
+    const departYear = end.getFullYear();
+    const arriveMonth = start.getMonth();
+    const departMonth = end.getMonth();
+    const arriveDay = start.getDate();
+    const departDay = end.getDate();
+    return arriveYear === departYear
+      ? `${arriveMonth} ${arriveDay} - ${departMonth} ${departDay} ${departYear}`
+      : `${arriveMonth} ${arriveDay} ${arriveYear} - ${departMonth} ${departDay} ${departYear}`;
+  };
+
+  const isSelected = useCallback(
+    (field) => {
+      switch (field) {
+        case 'arriveDate':
+          return arriveDateVal && true;
+        case 'departDate':
+          return departDateVal && true;
+        case 'guests':
+          return numGuests > 0;
+        default:
+      }
+    },
+    [arriveDateVal, departDateVal, numGuests]
+  );
+
+  const _isResReady = useCallback(
+    () =>
+      isSelected('arriveDate') &&
+      isSelected('departDate') &&
+      isSelected('guests'),
+    [isSelected]
+  );
+
+  useEffect(() => {
+    setIsResReady(_isResReady);
+  }, [arriveDateVal, departDateVal, numGuests, _isResReady]);
+
+  useEffect(() => {
+    // clear error if all selected
+    if (isResReady) {
+      setError('');
+      return;
+    }
+
+    // if not all selected and reserve attempted, set error
+    if (isResAttempted) {
+      if (!isSelected('arriveDate')) {
+        setError('Please select an arrival date');
+      } else if (!isSelected('departDate')) {
+        setError('Please select a departure date');
+      } else if (!isSelected('guests')) {
+        setError('Please select number of guests');
+      }
+    }
+  }, [isSelected, isResAttempted, isResReady]);
+
   const reservation = {
-    userName: session ? session.userName : undefined,
+    user,
     arriveDate: arriveDateVal,
     departDate: departDateVal,
+    dateRangeString,
+    error,
     price: {
       prices: getDailyPrices(),
-      avg: getAvgDailyPrices(),
+      avg: getAvgDailyPrice(),
+      total: calcTotalPrice(),
     },
     guests: numGuests,
-    total: calcTotalPrice(),
     unit: getUnit(),
     unitAmount: calcUnitAmount(),
     currSymbol: '$',
+    isSelected,
+    isResAttempted,
+    isResReady,
+    isCompleted,
+    response,
+    object: {
+      user: 'test',
+      cmsID: id,
+      start_date: arriveDateVal,
+      end_date: departDateVal,
+      guests: numGuests,
+      price: calcTotalPrice(),
+    },
     display: {
-      description: `${getAvgDailyPrices()} x ${calcUnitAmount()}${getUnit()}`,
+      description: `${getAvgDailyPrice()} x ${calcUnitAmount()}${getUnit()}`,
     },
   };
 
+  //* **handlers****************************************** */
+  async function handleReservation(maxGuests) {
+    async function sendRes() {
+      fetch(`/api/properties/${router.query.id}/reserve`, {
+        method: 'POST', // or 'PUT'
+        body: JSON.stringify(reservation.object),
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          const { message, error } = data;
+          console.log('setting response', data);
+          setResponse({
+            ...data,
+          });
+          if (data.message) {
+            setIsCompleted(true);
+          }
+        });
+    }
+
+    // persist reservation parameters in a cookie
+    // setSessionData();
+    if (!session) {
+      console.log('You must sign in');
+      // signIn();
+    }
+
+    try {
+      const validated = await validateReservation(
+        reservation.object,
+        maxGuests
+      );
+      await sendRes();
+    } catch (e) {
+      console.log(
+        '🚀 ~ file: UseReservation.js ~ line 225 ~ handleReservation ~ e',
+        e
+      );
+      setError(e);
+    }
+  }
+
+  useEffect(() => {
+    console.log('response changed:', response);
+    if (response) {
+      if (response.message) {
+        console.log('isCompleted');
+        setIsCompleted(true);
+      } else {
+        setIsCompleted(false);
+      }
+    }
+  }, [response]);
+
   return {
+    availability,
     reservation,
-    arriveDateVal,
-    departDateVal,
-    numGuests,
+    // arriveDateVal,
+    // arriveDateString,
+    getDateRangeString,
+    // departDateVal,
+    // departDateString,
+    // numGuests,
     getDate,
     setDate,
     getNumGuests,
@@ -124,7 +262,7 @@ const useReservation = () => {
     selectedGuestOptionIndex,
     reserve: handleReservation,
     reservePreview,
-    isResReady,
+    // isResReady,
   };
 };
 

@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { signIn, useSession } from 'next-auth/client';
 import Head from 'next/head';
 import { fetchProperty } from '../../../components/adapters/property/property';
 import cmsClient from '../../../Contentful';
@@ -11,6 +12,7 @@ import ParamDisplay from '../../../components/reservationForm/ParamDisplay';
 import PropertyTitle from '../../../components/property/PropertyTitle';
 import Spacer from '../../../components/base/Spacer';
 import { theme } from '../../../theme';
+import ActionButton from '../../../components/base/ActionButton';
 
 const StyledContent = styled.div`
   margin: auto;
@@ -50,6 +52,23 @@ const StyledInvoiceWrapper = styled.div`
   }
 `;
 
+const StyledResponse = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  height: 100px;
+  background-color: ${({ theme }) => theme.colors.tertiary};
+  border: 2px solid ${({ theme }) => theme.colors.action[0]};
+  border-radius: 5px;
+  padding: 16px;
+
+  font-family: ${({ theme }) => theme.fonts.openSans};
+  color: ${({ theme, isError }) =>
+    !isError ? theme.colors.primary : theme.colors.action[1]};
+  font-size: 18px;
+  font-weight: bold;
+`;
+
 //* *********** static data ****************************/
 export async function getStaticPaths() {
   const properties = await cmsClient.getEntries({
@@ -71,6 +90,7 @@ export async function getStaticProps(context) {
 }
 
 const Reserve = ({ propertyData }) => {
+  const [session, loading] = useSession();
   const { id } = propertyData;
   const {
     beds,
@@ -83,25 +103,34 @@ const Reserve = ({ propertyData }) => {
     state,
     propertyType,
   } = propertyData.fields || {};
-  const { reservation } = useReservation();
-  console.log(
-    '🚀 ~ file: reserve.js ~ line 87 ~ Reserve ~ reservation',
-    reservation
-  );
+  const { reservation, reserve } = useReservation();
+  // console.log(
+  //   '🚀 ~ file: reserve.js ~ line 87 ~ Reserve ~ reservation',
+  //   reservation
+  // );
   const {
     arriveDate,
     departDate,
+    dateRangeString,
     guests,
     price,
     currSymbol,
-    total,
+    isCompleted,
     unit,
     unitAmount,
+    response,
   } = reservation;
 
-  function handleSubmit(event) {
-    event.preventDefault();
-    console.log('submit reservation');
+  const isReservationError = response && response.error;
+
+  function handleReserve(event) {
+    // event.preventDefault();
+    console.log('session making reservatin:', session);
+    reserve(maxGuests);
+  }
+
+  function handleGoBack(event) {
+    // event.preventDefault();
   }
 
   const mediumModifiers = '?fit=fill&w=500&q=80';
@@ -139,10 +168,7 @@ const Reserve = ({ propertyData }) => {
             <Spacer vertical space="8px" />
             <Spacer vertical space="4px" background={theme.colors.tertiary} />
             <Spacer vertical space="8px" />
-            <ParamDisplay
-              title="Dates"
-              displayString={`${arriveDate} - ${departDate}`}
-            />
+            <ParamDisplay title="Dates" displayString={dateRangeString} />
             <Spacer vertical space="8px" />
             <Spacer vertical space="4px" background={theme.colors.tertiary} />
             <Spacer vertical space="8px" />
@@ -154,12 +180,28 @@ const Reserve = ({ propertyData }) => {
               price={price.avg}
               unit={unit}
               unitAmount={unitAmount}
-              total={total}
+              total={price.total}
             />
             <Spacer vertical space="16px" />
-            <div className="inputData">
-              <HiddenReservationForm onSubmit={handleSubmit} propID={id} />
-            </div>
+            {response && (
+              <>
+                <StyledResponse isError={response && response.error}>
+                  {response.message ? response.message : response.error}
+                </StyledResponse>
+                <Spacer vertical space="8px" />
+              </>
+            )}
+            {!isCompleted && (
+              <div className="inputData">
+                <ActionButton
+                  type="submit"
+                  variant="reserve"
+                  onClick={!isReservationError ? handleReserve : handleGoBack}
+                >
+                  {!isReservationError ? 'Reserve' : 'Go Back'}
+                </ActionButton>
+              </div>
+            )}
           </StyledInvoiceWrapper>
         </StyledContent>
       </main>

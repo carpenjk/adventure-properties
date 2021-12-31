@@ -36,16 +36,7 @@ const FullScreenReservation = (props) => {
   const GUEST_INPUT_ID = 'guests';
   const NUM_SLIDES = 3;
   const theme = useContext(ThemeContext);
-  const {
-    isOpen,
-    onClose,
-    availability,
-    unit,
-    unitAmount,
-    price,
-    total,
-    title,
-  } = props;
+  const { isOpen, onClose, unit, unitAmount, price, total, title } = props;
 
   const {
     getDate,

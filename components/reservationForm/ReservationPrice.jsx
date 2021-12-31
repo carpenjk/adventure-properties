@@ -5,11 +5,12 @@ import { breakpoint } from 'themeweaver';
 const StyledPrice = styled.div`
   display: block;
   position: relative;
-  font-size: 14px;
+  font-size: ${({ theme }) => theme.fontSizes[2]}px;
+
   line-height: 3em;
 
   ${condition(({ variant }) => variant === 'small')`
-    font-size: 12px;
+    font-size: ${({ theme }) => theme.fontSizes[1]}px;
     line-height: 1.5em;
   `}
 `;

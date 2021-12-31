@@ -1,20 +1,16 @@
 import clientPromise from '../../../../utils/mongodb';
+import fetchAvailability from '../../../../utils/availability';
 
 export default async function handler(req, res) {
   const { id } = req.query;
-  console.log('🚀 ~ file: availability.js ~ line 5 ~ handler ~ id', id);
+  const availability = await fetchAvailability(id);
+  // const client = await clientPromise;
+  // const dbProperty = await client
+  //   .db()
+  //   .collection('properties')
+  //   .findOne({ cmsID: id });
 
-  const client = await clientPromise;
-  const dbProperty = await client
-    .db()
-    .collection('properties')
-    .findOne({ cmsID: id });
-  console.log(
-    '🚀 ~ file: availability.js ~ line 11 ~ handler ~ dbProperties',
-    dbProperty
-  );
-
-  const { availability } = dbProperty;
+  // const { availability } = dbProperty;
 
   res.json(availability);
 }

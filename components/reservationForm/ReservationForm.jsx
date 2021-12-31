@@ -1,8 +1,8 @@
 import styled, { ThemeContext } from 'styled-components';
-
-import { useRef, useContext } from 'react';
+import { Field, Form, Formik, FormikProps } from 'formik';
+import { useRef, useContext, useEffect } from 'react';
 import { breakpoint } from 'themeweaver';
-import { signIn, useSession } from 'next-auth/client';
+import { isAvail, isValidDeparture } from '../../utils/dateValidation';
 import DateRange from '../searchbar/DateRange';
 import CustomSelect from '../base/input/CustomSelect';
 import Spacer from '../base/Spacer';
@@ -15,7 +15,7 @@ import InvoiceHeader from './InvoiceHeader';
 const StyledReserveWrapper = styled.div`
   position: relative;
   width: 350px;
-  padding: 16px;
+  padding: ${({ theme }) => theme.space[3]}px;
   border: 3px solid ${({ theme }) => theme.colors.secondaryText};
   border-radius: 5px;
   background-color: ${({ theme }) => theme.colors.white};
@@ -31,7 +31,7 @@ const StyledReserveWrapper = styled.div`
   height: unset;
   width: auto;
   min-width: 363px;
-  padding: 32px;
+  padding: ${({ theme }) => theme.space[5]}px;
   `}
 `;
 
@@ -54,15 +54,26 @@ const StyledButtonWrapper = styled.div`
   justify-content: center;
   width: 100%;
 `;
+const StyledErrorWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  font-family: Open Sans;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 14px;
+  color: ${({ theme }) => theme.colors.action[1]};
+`;
 
 const GUEST_ICON = '/static/assets/searchbar/icon/guest.svg';
 const GUEST_INPUT_ID = 'guests';
 
+//*  Component Function ********************************************
 const ReservationForm = (props) => {
   const theme = useContext(ThemeContext);
-
   const {
+    availability,
     reservation,
+    arriveDateVal,
     getDate,
     setDate,
     getNumGuests,
@@ -70,23 +81,75 @@ const ReservationForm = (props) => {
     startDateProps,
     endDateProps,
     guestOptions,
-    setSessionData,
     selectedGuestOptionIndex,
-    reserve,
     reservePreview,
-    isResReady,
   } = useReservation();
 
-  const { price, unit, unitAmount, total } = reservation;
+  useEffect(() => {
+    console.log('ReservationForm => availability changed: ', availability);
+  }, [availability]);
 
-  const { title, showTitle } = props;
-  const [session, loading] = useSession();
-
+  const { price, unit, unitAmount, total, error, arriveDate } = reservation;
+  const { title, showTitle, maxGuests } = props;
+  const filteredGuestOptions = guestOptions.filter(
+    (guest) => guest.value <= maxGuests
+  );
   const FORM_SPACING = ['16px', '32px'];
 
+  // * refs ****************************************************
   const formContainerRef = useRef();
   const guestRef = useRef();
 
+  // *  effects  ***********************************************
+
+  // * date and date availability helpers *********************
+  // const findDate = (date) => {
+  //   if (!availability) {
+  //     return false;
+  //   }
+  //   return availability.avail.find(
+  //     (dt) => dt.date.getTime() === date.getTime()
+  //   );
+  // };
+
+  // logic to determine available dates for property
+  // const isAvail = (date) => {
+  //   // find date within initial availability
+  //   const dateObj = findDate(date);
+  //   // true if initially available and not booked
+  //   return dateObj ? !dateObj.booked : false;
+  // };
+
+  // logic to determin valid departure date
+  // valid if after start dt and <= next booked date
+  // const isValidDeparture = (date, arDate) => {
+  //   if (!availability || !arDate) {
+  //     return false;
+  //   }
+
+  //   const dateTime = date.getTime();
+  //   const arDateTime = arDate.getTime();
+
+  //   // index of booked date
+  //   const i = !availability
+  //     ? 0
+  //     : availability.avail.findIndex((dt) => dt.date.getTime() === arDateTime);
+
+  //   // first booked date after res start date
+  //   const nextBookedDateObj = availability.avail
+  //     .slice(i)
+  //     .find((dt) => dt.booked);
+  //   const nextBookedDate = nextBookedDateObj ? nextBookedDateObj.date : false;
+
+  //   // all dates available
+  //   if (!nextBookedDate) {
+  //     return dateTime > arDateTime;
+  //   }
+  //   // dates after res start up to next booked date are available for departure
+  //   return dateTime > arDateTime && dateTime <= nextBookedDate.getTime();
+  // };
+
+  // *** Component return value ***********************
   return (
     <StyledReserveWrapper ref={formContainerRef}>
       <InvoiceHeader
@@ -95,13 +158,16 @@ const ReservationForm = (props) => {
         title={title}
         showTitle={showTitle}
       />
-
       <InputGroup heading="Dates">
         <StyledDateRangeWrapper>
           <DateRange
             variant="reservation"
             endProps={endDateProps}
             startProps={startDateProps}
+            filterStartDate={(dt) => isAvail(dt, availability)}
+            filterEndDate={(dt) =>
+              isValidDeparture(dt, arriveDate, availability)
+            }
             displayVertical={false}
             forceClose={false}
             popperParent={formContainerRef}
@@ -130,7 +196,7 @@ const ReservationForm = (props) => {
           textOffset="1.8rem"
           width="100%"
           placeholderColor={theme.colors.lightText}
-          options={guestOptions}
+          options={filteredGuestOptions}
           valueFunctions={{ get: getNumGuests, set: setNumGuests }}
           ref={guestRef}
           height="4rem" //! refactor? Set height of React-Select objects to match input styling:
@@ -141,8 +207,10 @@ const ReservationForm = (props) => {
         price={price.avg}
         unit={unit}
         unitAmount={unitAmount}
-        total={total}
+        total={price.total}
       />
+      <Spacer vertical space={FORM_SPACING} />
+      <StyledErrorWrapper>{error}</StyledErrorWrapper>
       <Spacer vertical space={FORM_SPACING} />
       <StyledButtonWrapper>
         <ActionButton variant="reserve" onClick={reservePreview}>

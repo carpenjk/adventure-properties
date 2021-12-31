@@ -12,7 +12,7 @@ const StyledInvoiceTitle = styled.div`
   justify-content: flex-start;
   align-items: center;
   font-family: Open Sans;
-  font-size: 18px;
+  font-size: ${({ theme }) => theme.fontSizes[3]}px;
   font-weight: bold;
 
   ${breakpoint(1)`

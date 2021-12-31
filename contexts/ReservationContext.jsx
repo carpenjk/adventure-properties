@@ -15,6 +15,7 @@ const ReservationProvider = ({ children }) => {
   const [resStartDate, setResStartDate] = useState('');
   const [resEndDate, setResEndDate] = useState('');
   const [numGuests, setNumGuests] = useState('');
+  const [isCompleted, setIsCompleted] = useState(false);
 
   const numGuestID = numGuests ? Object.keys(numGuests)[0] : undefined;
 
@@ -28,6 +29,7 @@ const ReservationProvider = ({ children }) => {
     guestOptions.findIndex((option) => option.value == val);
 
   const selectedGuestOption = getNumGuestOption(getNumGuests(numGuestID));
+  const getGuestOption = (val) => getNumGuestOption(val);
 
   // obj returned from input component
   const setDate = (obj) => {
@@ -56,38 +58,84 @@ const ReservationProvider = ({ children }) => {
 
   const arriveDateVal = getDate(startDateProps.id);
   const departDateVal = getDate(endDateProps.id);
+  const arriveMonth = arriveDateVal
+    ? new Intl.DateTimeFormat('en', { month: 'short' }).format(arriveDateVal)
+    : '';
+  const arriveDay = arriveDateVal
+    ? new Intl.DateTimeFormat('en', { day: '2-digit' }).format(arriveDateVal)
+    : '';
+  const arriveYear = arriveDateVal
+    ? new Intl.DateTimeFormat('en', { year: 'numeric' }).format(arriveDateVal)
+    : '';
+  const departMonth = departDateVal
+    ? new Intl.DateTimeFormat('en', { month: 'short' }).format(departDateVal)
+    : '';
+  const departDay = departDateVal
+    ? new Intl.DateTimeFormat('en', { day: '2-digit' }).format(departDateVal)
+    : '';
+  const departYear = departDateVal
+    ? new Intl.DateTimeFormat('en', { year: 'numeric' }).format(departDateVal)
+    : '';
 
-  const setSessionData = () => {
-    setCookie(
-      'reservation',
-      JSON.stringify({
-        numGuests,
-        resStartDate,
-        resEndDate,
-      }),
-      {
-        path: '/',
-        maxAge: 3600, // Expires after 1hr
-        sameSite: true,
-      }
-    );
+  const dateRangeString =
+    arriveYear === departYear
+      ? `${arriveMonth} ${arriveDay} - ${departMonth} ${departDay} ${departYear}`
+      : `${arriveMonth} ${arriveDay} ${arriveYear} - ${departMonth} ${departDay} ${departYear}`;
+  const arriveDateString = arriveDateVal ? arriveDateVal.toDateString() : '';
+  const departDateString = departDateVal ? departDateVal.toDateString() : '';
+
+  const setSessionData = (values) => {
+    const PATH = '/';
+    const MAX_AGE = 3600;
+    const SAME_SITE = true;
+
+    if (!values) {
+      setCookie(
+        'reservation',
+        JSON.stringify({
+          numGuests,
+          resStartDate,
+          resEndDate,
+        }),
+        {
+          path: PATH,
+          maxAge: MAX_AGE, // Expires after 1hr
+          sameSite: SAME_SITE,
+        }
+      );
+    } else {
+      setCookie(
+        'reservation',
+        JSON.stringify({
+          numGuests: '',
+          resStartDate: '',
+          resEndDate: '',
+        }),
+        {
+          path: PATH,
+          maxAge: MAX_AGE, // Expires after 1hr
+          sameSite: SAME_SITE,
+        }
+      );
+    }
   };
 
   const fetchClientSideData = (url) => fetch(url).then((r) => r.json());
   const hydrateWithSession = (sessionData) => {
-    console.log(
-      '🚀 ~ file: ReservationContext.jsx ~ line 133 ~ hydrateWithSession ~ sessionData',
-      sessionData
-    );
-
     setNumGuests(sessionData.numGuests);
     setResStartDate(sessionData.resStartDate);
     setResEndDate(sessionData.resEndDate);
   };
 
-  useEffect(() => {
-    console.log('rsvCookie', rsvCookie);
+  const clearSessionData = () => {};
+  const clearResSession = () => {
+    setNumGuests('');
+    setResStartDate('');
+    setResEndDate('');
+    clearSessionData();
+  };
 
+  useEffect(() => {
     if (rsvCookie) {
       const reservationCopy = {
         numGuests: rsvCookie.numGuests,
@@ -103,7 +151,10 @@ const ReservationProvider = ({ children }) => {
     <ReservationContext.Provider
       value={{
         arriveDateVal,
+        arriveDateString,
+        dateRangeString,
         departDateVal,
+        departDateString,
         numGuests,
         getDate,
         setDate,
@@ -118,6 +169,8 @@ const ReservationProvider = ({ children }) => {
         selectedGuestOptionIndex: getNumGuestOptionIndex(
           getNumGuests(numGuestID)
         ),
+        isCompleted,
+        setIsCompleted,
       }}
     >
       {children}

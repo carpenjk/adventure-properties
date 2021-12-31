@@ -16,8 +16,8 @@ const StyledTitle = styled.h1`
   ${condition(({ variant }) => variant === 'card')`
     display: flex;
     align-items: center;
-    color: #444649;
-    font-size: 18px;
+    color: ${({ theme }) => theme.colors.mainText};
+    font-size: ${({ theme }) => theme.fontSizes[3]}px;
     font-weight: 700;
     line-height: 150%;
     letter-spacing: 0.025em;

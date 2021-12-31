@@ -135,6 +135,7 @@ class CustomSelect extends Component {
   };
 
   handleSelectChange(option) {
+    console.log('handleSelectChange');
     const {
       onInputChange,
       valueFunctions,
@@ -285,10 +286,6 @@ class CustomSelect extends Component {
       variant,
       value,
     } = this.props;
-    console.log(
-      '🚀 ~ file: CustomSelect.jsx ~ line 288 ~ CustomSelect ~ render ~ variant',
-      variant
-    );
 
     return (
       <StyledSelect variant={variant} wrapperWidth={width} ref={this.styleRef}>

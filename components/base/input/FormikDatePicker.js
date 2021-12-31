@@ -1,4 +1,4 @@
-import React, { Component, createRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import styled from 'styled-components';
 import {
@@ -121,49 +121,44 @@ StyledDateHandler.defaultProps = {
   width: '12.5rem',
 };
 
-class DateHandler extends Component {
-  constructor(props) {
-    super(props);
-    this.styleRef = createRef();
-    this.prevWrapperClass = '';
-  }
+const FormikDatePicker = (props) => {
+  const styleRef = useRef();
 
-  getMargin = (mode) => {
-    const { portal: portalMargin } = inputMargin || '';
-    const { desktop: desktopMargin } = inputMargin || '';
-    return mode === 'portal'
-      ? portalMargin || 'margin-bottom: 10px'
-      : desktopMargin || 'margin-right: 10px';
-  };
+  const {
+    forceClose,
+    id,
+    icon,
+    iconOffset,
+    label,
+    textOffset,
+    width,
+    showLabel,
+    onFocus,
+    inputRef,
+    popperParent,
+    variant,
+    ...restProps
+  } = props;
+  console.log(
+    '🚀 ~ file: FormikDatePicker.js ~ line 144 ~ FormikDatePicker ~ restProps',
+    restProps
+  );
 
-  _PopperContainer = ({ children }) => {
-    const { popperParent, forceClose } = this.props;
+  const PopperContainer = ({ children }) => {
     if (popperParent && popperParent.current) {
       return createPortal(children, popperParent.current);
     }
     return null;
   };
 
-  PopperContainer = this._PopperContainer.bind(this);
-
-  componentDidUpdate() {
-    if (
-      this.props.forceClose &&
-      this.props.inputRef &&
-      this.props.inputRef.current
-    )
-      this.props.inputRef.current.setOpen(false);
-  }
-
-  handleFocus(e) {
+  const handleFocus = (e) => {
     e.target.readOnly = true;
-    if (this.props.onFocus) {
-      this.props.onFocus();
+    if (onFocus) {
+      onFocus();
     }
-  }
+  };
 
-  handleKeyDown = (e) => {
-    const { inputRef } = this.props;
+  const handleKeyDown = (e) => {
     if (inputRef && inputRef.current) {
       if (e.key === 'Tab') {
         inputRef.current.setOpen(false);
@@ -171,81 +166,47 @@ class DateHandler extends Component {
     }
   };
 
-  render() {
-    const {
-      filterDate,
-      id,
-      placeholder,
-      icon,
-      iconOffset,
-      label,
-      textOffset,
-      width,
-      startDate,
-      endDate,
-      includeDates,
-      selected,
-      selectsStart,
-      selectsEnd,
-      showLabel,
-      minDate,
-      onChange,
-      onSelect,
-      onFocus,
-      inputRef,
-      allowSameDay,
-      openToDate,
-      variant,
-    } = this.props;
+  useEffect(() => {
+    if (forceClose && inputRef && inputRef.current) {
+      inputRef.current.setOpen(false);
+    }
+  }, [forceClose, inputRef, inputRef.current]);
+  return (
+    <StyledDateHandler
+      variant={variant}
+      icon={icon}
+      iconOffset={iconOffset}
+      textOffset={textOffset}
+      width={width}
+      ref={styleRef}
+    >
+      {showLabel && <InputLabel htmlFor={id}>{label}</InputLabel>}
+      <DatePicker
+        {...restProps}
+        id={id}
+        onFocus={handleFocus}
+        onKeyDown={handleKeyDown}
+        popperContainer={PopperContainer}
+        popperPlacement="bottom"
+        popperModifiers={{
+          offset: {
+            enabled: true,
+            offset: '0px, 0px',
+          },
+          flip: {
+            enabled: false,
+          },
+          preventOverflow: {
+            enabled: true,
+            escapeWithReference: false,
+            boundariesElement: 'viewport',
+          },
+        }}
+        strictParsing
+        ref={inputRef}
+      />
+    </StyledDateHandler>
+  );
+};
 
-    return (
-      <StyledDateHandler
-        variant={variant}
-        icon={icon}
-        iconOffset={iconOffset}
-        textOffset={textOffset}
-        width={width}
-        ref={this.styleRef}
-      >
-        {showLabel && <InputLabel htmlFor={id}>{label}</InputLabel>}
-        <DatePicker
-          id={id}
-          selected={selected}
-          startDate={startDate}
-          endDate={endDate}
-          selectsStart={selectsStart}
-          filterDate={filterDate}
-          selectsEnd={selectsEnd}
-          minDate={minDate}
-          openToDate={openToDate}
-          allowSameDay={allowSameDay}
-          onChange={onChange}
-          onFocus={this.handleFocus.bind(this)}
-          onSelect={onSelect}
-          onKeyDown={this.handleKeyDown}
-          placeholderText={placeholder}
-          popperContainer={this.PopperContainer}
-          popperPlacement="bottom"
-          popperModifiers={{
-            offset: {
-              enabled: true,
-              offset: '0px, 0px',
-            },
-            flip: {
-              enabled: false,
-            },
-            preventOverflow: {
-              enabled: true,
-              escapeWithReference: false,
-              boundariesElement: 'viewport',
-            },
-          }}
-          strictParsing
-          ref={inputRef}
-        />
-      </StyledDateHandler>
-    );
-  }
-}
-
-export default DateHandler;
+export default FormikDatePicker;

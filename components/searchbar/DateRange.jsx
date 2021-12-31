@@ -21,16 +21,25 @@ class DateRange extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    const { get } = this.props.valueFunctions;
+    const { startDate, endDate } = this.state;
+    const { valueFunctions } = this.props;
+    const { get, set } = valueFunctions;
     const { get: prevGet } = prevProps.valueFunctions;
-    // move focus to end date component
-    if (prevGet(prevState.startDate.id) !== get(this.state.startDate.id)) {
+    // if start date changes, clear endDate to force valid range selection
+    const prevDate = prevGet(prevState.startDate.id);
+    const newDate = get(startDate.id);
+
+    if (prevDate && newDate && prevDate.getTime() !== newDate.getTime()) {
+      set({ [endDate.id]: null });
     }
   }
 
   //* event handlers *********************************************************
   handleStartSelect = () => {
-    const endDateRef = this.state.endDate.ref;
+    const {
+      endDate: { ref: endDateRef },
+    } = this.state;
+
     // move focus to end date component
     if (endDateRef && endDateRef.current) endDateRef.current.input.focus();
   };
@@ -41,51 +50,56 @@ class DateRange extends Component {
   };
 
   handleChange = (date, id) => {
-    this.props.valueFunctions.set({ [id]: date });
+    const { valueFunctions } = this.props;
+    valueFunctions.set({ [id]: date });
   };
 
   handleStartChange = (date) => {
     const { onInputChange } = this.props;
+    const { startDate } = this.state;
     const change = onInputChange || this.handleChange;
-    change(date, this.state.startDate.id);
+    change(date, startDate.id);
   };
 
   handleEndChange = (date) => {
     const { onInputChange } = this.props;
+    const { endDate } = this.state;
     const change = onInputChange || this.handleChange;
-    change(date, this.state.endDate.id);
+    change(date, endDate.id);
   };
 
   //* external methods*******************************************************
   focus() {
-    if (this.state.startDate.ref.current)
-      this.state.startDate.ref.current.input.focus();
+    const { startDate } = this.state;
+    if (startDate.ref.current) startDate.ref.current.input.focus();
   }
 
   render() {
     const {
       startProps,
       endProps,
+      filterStartDate,
+      filterEndDate,
       valueFunctions,
       onFocus,
       popperParent,
       forceClose,
       showLabel,
       variant,
-      inputRef,
-      nextFocusRef,
     } = this.props;
 
     // get values for each controlled component
 
-    const { get } = valueFunctions;
-    const startDate = get(startProps.id);
-    const endDate = get(endProps.id);
+    const { startDate, endDate } = this.state;
+    const { get, set } = valueFunctions;
+    const startDateVal = get(startProps.id);
+    const endDateVal = get(endProps.id);
 
     return (
       <>
         {/* Picker for start of range */}
         <DateHandler
+          filterDate={filterStartDate}
           variant={variant}
           key="startDate"
           id={startProps.id}
@@ -96,21 +110,22 @@ class DateRange extends Component {
           iconOffset={startProps.icon.iconOffset}
           textOffset={startProps.textOffset}
           width={startProps.width}
-          selected={startDate}
-          startDate={startDate}
-          endDate={endDate}
+          selected={startDateVal}
+          startDate={startDateVal}
+          endDate={endDateVal}
           selectsStart
           minDate={new Date()}
           onChange={this.handleStartChange}
           onSelect={this.handleStartSelect}
           onFocus={onFocus}
-          inputRef={this.state.startDate.ref}
+          inputRef={startDate.ref}
           allowSameDay
           popperParent={popperParent}
           forceClose={forceClose}
         />
         {/* Picker for end of range */}
         <DateHandler
+          filterDate={filterEndDate}
           variant={variant}
           key="endDate"
           id={endProps.id}
@@ -121,15 +136,15 @@ class DateRange extends Component {
           iconOffset={endProps.icon.iconOffset}
           textOffset={endProps.textOffset}
           width={endProps.width}
-          selected={endDate}
-          startDate={startDate}
-          endDate={endDate}
-          minDate={startDate}
+          selected={endDateVal}
+          startDate={startDateVal}
+          endDate={endDateVal}
+          minDate={startDateVal}
           selectsEnd
           onSelect={this.handleEndSelect}
           onChange={this.handleEndChange}
           onFocus={onFocus}
-          inputRef={this.state.endDate.ref}
+          inputRef={endDate.ref}
           popperParent={popperParent}
           forceClose={forceClose}
         />

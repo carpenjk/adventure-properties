@@ -97,20 +97,7 @@ export async function getStaticProps(context) {
 
 //* ********* Component *********************************/
 const Property = ({ propertyData }) => {
-  console.log(
-    '🚀 ~ file: [id].js ~ line 105 ~ Property ~ propertyData',
-    propertyData
-  );
-  const reservationData = {
-    price: 104,
-    unit: 'night',
-    unitAmount: 8,
-    availability: undefined,
-  };
-
-  const { price, unit, unitAmount, availability } = reservationData;
   // property data
-  const { id } = propertyData;
   const {
     beds,
     baths,
@@ -136,11 +123,6 @@ const Property = ({ propertyData }) => {
     handleMovePrev,
     handlePhotoClick,
   } = lightbox;
-
-  // const { data: availability, error } = useSWR(
-  //   `/api/properties/${propertyData.id}/availability`,
-  //   fetchClientSideData
-  // );
 
   // ! Remove and add to props
   const positionOffset = 0;
@@ -303,19 +285,13 @@ const Property = ({ propertyData }) => {
                 </PropertyDetailCategory>
               </StyledDetails>
               <Media greaterThanOrEqual="1">
-                <ReservationForm title={title} />
+                <ReservationForm title={title} maxGuests={guests} />
               </Media>
             </StyledContent>
           </Section>
           <Media lessThan="1">
             <Fixed bottom width="100%">
-              <ReserveCTA
-                price={price}
-                unit={unit}
-                unitAmount={unitAmount}
-                title={title}
-                availability={availability}
-              />
+              <ReserveCTA title={title} />
             </Fixed>
           </Media>
         </>
