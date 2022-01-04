@@ -4,6 +4,9 @@ const useFullScreenInputSlide = ({ enabled, onNext }) => {
   const [currSlide, setCurrSlide] = useState(0);
   const [isEnabled, setIsEnabled] = useState(enabled);
 
+  function setCurrent(i) {
+    setCurrSlide(i);
+  }
   function next() {
     if (onNext) {
       onNext();
@@ -26,6 +29,7 @@ const useFullScreenInputSlide = ({ enabled, onNext }) => {
     enable,
     next,
     prev,
+    setCurrent,
     currSlide,
   };
 

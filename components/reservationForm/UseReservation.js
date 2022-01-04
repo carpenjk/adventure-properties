@@ -22,9 +22,12 @@ const useReservation = () => {
     endDateProps,
     guestOptions,
     setSessionData,
+    clearSessionData,
     selectedGuestOptionIndex,
     isCompleted,
     setIsCompleted,
+    isInEditMode,
+    setIsInEditMode,
   } = useContext(ReservationContext);
   const [session, loading] = useSession();
 
@@ -43,11 +46,11 @@ const useReservation = () => {
       return;
     }
     setSessionData();
-
     router.push({
       pathname: '/properties/[id]/reserve',
       query: { id },
     });
+    setIsInEditMode(false);
   }
 
   const availability = useAvailability(router.query.id);
@@ -97,17 +100,17 @@ const useReservation = () => {
     return 'nights';
   };
 
-  const getDateRangeString = (start, end) => {
-    const arriveYear = start.getFullYear();
-    const departYear = end.getFullYear();
-    const arriveMonth = start.getMonth();
-    const departMonth = end.getMonth();
-    const arriveDay = start.getDate();
-    const departDay = end.getDate();
-    return arriveYear === departYear
-      ? `${arriveMonth} ${arriveDay} - ${departMonth} ${departDay} ${departYear}`
-      : `${arriveMonth} ${arriveDay} ${arriveYear} - ${departMonth} ${departDay} ${departYear}`;
-  };
+  // const getDateRangeString = (start, end) => {
+  //   const arriveYear = start.getFullYear();
+  //   const departYear = end.getFullYear();
+  //   const arriveMonth = start.getMonth();
+  //   const departMonth = end.getMonth();
+  //   const arriveDay = start.getDate();
+  //   const departDay = end.getDate();
+  //   return arriveYear === departYear
+  //     ? `${arriveMonth} ${arriveDay} - ${departMonth} ${departDay} ${departYear}`
+  //     : `${arriveMonth} ${arriveDay} ${arriveYear} - ${departMonth} ${departDay} ${departYear}`;
+  // };
 
   const isSelected = useCallback(
     (field) => {
@@ -167,7 +170,8 @@ const useReservation = () => {
       total: calcTotalPrice(),
     },
     guests: numGuests,
-    unit: getUnit(),
+    unit: 'night',
+    unitLabel: getUnit(),
     unitAmount: calcUnitAmount(),
     currSymbol: '$',
     isSelected,
@@ -198,12 +202,12 @@ const useReservation = () => {
         .then((res) => res.json())
         .then((data) => {
           const { message, error } = data;
-          console.log('setting response', data);
           setResponse({
             ...data,
           });
           if (data.message) {
             setIsCompleted(true);
+            clearSessionData();
           }
         });
     }
@@ -222,10 +226,6 @@ const useReservation = () => {
       );
       await sendRes();
     } catch (e) {
-      console.log(
-        '🚀 ~ file: UseReservation.js ~ line 225 ~ handleReservation ~ e',
-        e
-      );
       setError(e);
     }
   }
@@ -242,19 +242,14 @@ const useReservation = () => {
     }
   }, [response]);
 
-  return {
-    availability,
-    reservation,
-    // arriveDateVal,
-    // arriveDateString,
-    getDateRangeString,
-    // departDateVal,
-    // departDateString,
-    // numGuests,
+  const reservationControl = {
     getDate,
     setDate,
+    // getDateRangeString,
     getNumGuests,
     setNumGuests,
+    isInEditMode,
+    setIsInEditMode,
     startDateProps,
     endDateProps,
     guestOptions,
@@ -262,6 +257,29 @@ const useReservation = () => {
     selectedGuestOptionIndex,
     reserve: handleReservation,
     reservePreview,
+  };
+
+  return {
+    availability,
+    reservation,
+    reservationControl,
+    // arriveDateVal,
+    // arriveDateString,
+    // getDateRangeString,
+    // departDateVal,
+    // departDateString,
+    // numGuests,
+    // getDate,
+    // setDate,
+    // getNumGuests,
+    // setNumGuests,
+    // startDateProps,
+    // endDateProps,
+    // guestOptions,
+    // setSessionData,
+    // selectedGuestOptionIndex,
+    // reserve: handleReservation,
+    // reservePreview,
     // isResReady,
   };
 };

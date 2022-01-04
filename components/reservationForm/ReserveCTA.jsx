@@ -6,6 +6,7 @@ import { condition } from 'dataweaver';
 import useLockBodyScroll from '../hooks/UseLockBodyScroll';
 import ReservationPrice from './ReservationPrice';
 import ActionButton from '../base/ActionButton';
+import LinkButton from '../base/LinkButton';
 import useReservation from './UseReservation';
 import FullScreenReservation from './FullScreenReservation';
 
@@ -34,6 +35,13 @@ const StyledInnerWrapper = styled.div`
 
   width: 100%;
   max-width: 300px;
+
+  > button.link {
+    color: ${({ theme }) => theme.colors.link[0]};
+  }
+  > button.link:hover {
+    color: ${({ theme }) => theme.colors.link[1]};
+  }
 
   ${condition('isAmount')`
     max-width: 575px;
@@ -64,22 +72,38 @@ const StyledTotal = styled.div`
   color: #000000;
 `;
 
-const StyledUnits = styled.div``;
-
-const StyledChar = styled.span`
-  padding-left: 1em;
-  padding-right: 1em;
+const StyledUnits = styled.div`
+  font-family: ${({ theme }) => theme.fonts.openSans};
+  color: inherit;
+  text-decoration: underline;
 `;
 
-const ReserveCTA = (props) => {
-  const { reservation, reserve, isResReady } = useReservation();
+const StyledChar = styled.span`
+  font-family: ${({ theme }) => theme.fonts.openSans};
+  font-weight: normal;
+  color: ${({ theme }) => theme.colors.link[0]};
+  padding-left: 1em;
+  padding-right: 1em;
+  &:hover {
+    color: ${({ theme }) => theme.colors.link[1]};
+  }
+`;
+
+const StyledButtonLayout = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`;
+
+const ReserveCTA = ({ title, openInitialRender }) => {
+  const { availability, reservation, reservationControl } = useReservation();
 
   // reservation properties
-  const { price, total, unit, unitAmount } = reservation;
+  const { price, unit, unitLabel, unitAmount, isResReady } = reservation;
+  const { reservePreview } = reservationControl;
 
   // passed in props
-  const { title } = props;
-  const [isInputOpen, setIsInputOpen] = useState(false);
+  const [isInputOpen, setIsInputOpen] = useState(openInitialRender);
   const isAmount = unitAmount > 0;
 
   const bodyLock = useLockBodyScroll(true, setIsInputOpen);
@@ -104,24 +128,26 @@ const ReserveCTA = (props) => {
     <>
       <StyledWrapper>
         <StyledInnerWrapper isAmount={isAmount}>
-          <div>
-            <ReservationPrice price={price.avg} unit={unit} variant="small" />
-            {isAmount && (
-              <>
-                <StyledChar>x</StyledChar>
-                <StyledUnits>{`${unitAmount} ${unit}`}</StyledUnits>
-                <StyledChar>|</StyledChar>
-                <StyledTotal>${total} Total</StyledTotal>
-              </>
-            )}
-          </div>
+          <LinkButton className="link" onClick={handleInputOpen}>
+            <StyledButtonLayout>
+              <ReservationPrice price={price.avg} unit={unit} variant="link" />
+              {isAmount && (
+                <>
+                  <StyledChar>x</StyledChar>
+                  <StyledUnits>{`${unitAmount} ${unitLabel}`}</StyledUnits>
+                  <StyledChar>|</StyledChar>
+                </>
+              )}
+            </StyledButtonLayout>
+            {isAmount && <StyledTotal>${price.total} Total</StyledTotal>}
+          </LinkButton>
           {!isResReady && (
             <ActionButton variant="reserve" onClick={handleInputOpen}>
               Check Availability
             </ActionButton>
           )}
           {isResReady && (
-            <ActionButton variant="reserve" onClick={reserve}>
+            <ActionButton variant="reserve" onClick={reservePreview}>
               Reserve
             </ActionButton>
           )}
@@ -129,14 +155,13 @@ const ReserveCTA = (props) => {
       </StyledWrapper>
       {isInputOpen && (
         <FullScreenReservation
+          availability={availability}
+          reservation={reservation}
+          control={reservationControl}
+          title={title}
+          showTitle
           isOpen={isInputOpen}
           onClose={handlePortalClose}
-          price={price.avg}
-          showTitle
-          unit={unit}
-          unitAmount={unitAmount}
-          title={title}
-          total={total}
         />
       )}
     </>

@@ -2,17 +2,14 @@ import clientPromise from '../mongodb';
 
 export default async function saveReservation(reservation) {
   const client = await clientPromise;
-  console.log(`reservation.cmsID: ${reservation.cmsID}`);
+  // create reservation document
   try {
     await client.db().collection('reservations').insertOne(reservation);
   } catch (error) {
-    // error
-    console.log(
-      '🚀 ~ file: reserve.js ~ line 9 ~ saveReservation ~ error',
-      error
-    );
+    throw new Error('Error making reservation', { cause: error });
   }
 
+  // mark make availability date as booked
   try {
     await client
       .db()
@@ -31,12 +28,7 @@ export default async function saveReservation(reservation) {
           ],
         }
       );
-    console.log(`saved reservation: ${reservation.cmsID}`);
   } catch (error) {
-    // error
-    console.log(
-      '🚀 ~ file: reserve.js ~ line 33 ~ saveReservation ~ error',
-      error
-    );
+    throw new Error('Error booking availability', { cause: error });
   }
 }

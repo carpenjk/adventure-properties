@@ -70,10 +70,9 @@ const GUEST_INPUT_ID = 'guests';
 //*  Component Function ********************************************
 const ReservationForm = (props) => {
   const theme = useContext(ThemeContext);
+
+  const { availability, reservation, control } = props;
   const {
-    availability,
-    reservation,
-    arriveDateVal,
     getDate,
     setDate,
     getNumGuests,
@@ -83,13 +82,9 @@ const ReservationForm = (props) => {
     guestOptions,
     selectedGuestOptionIndex,
     reservePreview,
-  } = useReservation();
+  } = control;
 
-  useEffect(() => {
-    console.log('ReservationForm => availability changed: ', availability);
-  }, [availability]);
-
-  const { price, unit, unitAmount, total, error, arriveDate } = reservation;
+  const { error, price, unit, unitAmount, arriveDate } = reservation;
   const { title, showTitle, maxGuests } = props;
   const filteredGuestOptions = guestOptions.filter(
     (guest) => guest.value <= maxGuests
@@ -99,55 +94,6 @@ const ReservationForm = (props) => {
   // * refs ****************************************************
   const formContainerRef = useRef();
   const guestRef = useRef();
-
-  // *  effects  ***********************************************
-
-  // * date and date availability helpers *********************
-  // const findDate = (date) => {
-  //   if (!availability) {
-  //     return false;
-  //   }
-  //   return availability.avail.find(
-  //     (dt) => dt.date.getTime() === date.getTime()
-  //   );
-  // };
-
-  // logic to determine available dates for property
-  // const isAvail = (date) => {
-  //   // find date within initial availability
-  //   const dateObj = findDate(date);
-  //   // true if initially available and not booked
-  //   return dateObj ? !dateObj.booked : false;
-  // };
-
-  // logic to determin valid departure date
-  // valid if after start dt and <= next booked date
-  // const isValidDeparture = (date, arDate) => {
-  //   if (!availability || !arDate) {
-  //     return false;
-  //   }
-
-  //   const dateTime = date.getTime();
-  //   const arDateTime = arDate.getTime();
-
-  //   // index of booked date
-  //   const i = !availability
-  //     ? 0
-  //     : availability.avail.findIndex((dt) => dt.date.getTime() === arDateTime);
-
-  //   // first booked date after res start date
-  //   const nextBookedDateObj = availability.avail
-  //     .slice(i)
-  //     .find((dt) => dt.booked);
-  //   const nextBookedDate = nextBookedDateObj ? nextBookedDateObj.date : false;
-
-  //   // all dates available
-  //   if (!nextBookedDate) {
-  //     return dateTime > arDateTime;
-  //   }
-  //   // dates after res start up to next booked date are available for departure
-  //   return dateTime > arDateTime && dateTime <= nextBookedDate.getTime();
-  // };
 
   // *** Component return value ***********************
   return (

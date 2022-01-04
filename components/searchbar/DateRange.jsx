@@ -94,6 +94,17 @@ class DateRange extends Component {
     const { get, set } = valueFunctions;
     const startDateVal = get(startProps.id);
     const endDateVal = get(endProps.id);
+    const minDate = undefined;
+
+    function getMinDate() {
+      const dt = new Date();
+      if (startDateVal) {
+        dt.setUTCDate(startDateVal.getUTCDate() + 1);
+        return dt;
+      }
+    }
+
+    console.log(getMinDate());
 
     return (
       <>
@@ -125,6 +136,7 @@ class DateRange extends Component {
         />
         {/* Picker for end of range */}
         <DateHandler
+          allowSameDay={false}
           filterDate={filterEndDate}
           variant={variant}
           key="endDate"
@@ -139,8 +151,11 @@ class DateRange extends Component {
           selected={endDateVal}
           startDate={startDateVal}
           endDate={endDateVal}
-          minDate={startDateVal}
+          minDate={getMinDate()}
+          highlightDates={[startDateVal || undefined]}
           selectsEnd
+          selectsRange
+          openToDate={startDateVal}
           onSelect={this.handleEndSelect}
           onChange={this.handleEndChange}
           onFocus={onFocus}

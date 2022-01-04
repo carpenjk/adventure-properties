@@ -172,8 +172,33 @@ class DateHandler extends Component {
   };
 
   render() {
+    // const {
+    //   filterDate,
+    //   id,
+    //   placeholder,
+    //   icon,
+    //   iconOffset,
+    //   label,
+    //   textOffset,
+    //   width,
+    //   startDate,
+    //   endDate,
+    //   includeDates,
+    //   selected,
+    //   selectsStart,
+    //   selectsEnd,
+    //   showLabel,
+    //   minDate,
+    //   onChange,
+    //   onSelect,
+    //   onFocus,
+    //   inputRef,
+    //   allowSameDay,
+    //   openToDate,
+    //   variant,
+    // } = this.props;
+
     const {
-      filterDate,
       id,
       placeholder,
       icon,
@@ -181,21 +206,10 @@ class DateHandler extends Component {
       label,
       textOffset,
       width,
-      startDate,
-      endDate,
-      includeDates,
-      selected,
-      selectsStart,
-      selectsEnd,
       showLabel,
-      minDate,
-      onChange,
-      onSelect,
-      onFocus,
       inputRef,
-      allowSameDay,
-      openToDate,
       variant,
+      ...remProps
     } = this.props;
 
     return (
@@ -209,19 +223,9 @@ class DateHandler extends Component {
       >
         {showLabel && <InputLabel htmlFor={id}>{label}</InputLabel>}
         <DatePicker
+          {...remProps}
           id={id}
-          selected={selected}
-          startDate={startDate}
-          endDate={endDate}
-          selectsStart={selectsStart}
-          filterDate={filterDate}
-          selectsEnd={selectsEnd}
-          minDate={minDate}
-          openToDate={openToDate}
-          allowSameDay={allowSameDay}
-          onChange={onChange}
           onFocus={this.handleFocus.bind(this)}
-          onSelect={onSelect}
           onKeyDown={this.handleKeyDown}
           placeholderText={placeholder}
           popperContainer={this.PopperContainer}

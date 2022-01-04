@@ -1,7 +1,9 @@
 import styled from 'styled-components';
 import { breakpoint } from 'themeweaver';
+import LinkButton from '../base/LinkButton';
 import InvoiceContent from './InvoiceContent';
 import InvoiceHeader from './InvoiceHeader';
+import { theme } from '../../theme';
 
 const StyledPreview = styled.div`
   display: flex;
@@ -14,8 +16,21 @@ const StyledPreview = styled.div`
   `}
 `;
 
+const StyledEditWrapper = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  text-decoration: underline;
+  padding-top: 16px;
+
+  > button {
+    font-family: ${({ theme }) => theme.fonts.openSans};
+    font-size: ${({ theme }) => theme.fontSizes[2]}
+    font-weight: normal;
+  }
+`;
+
 const ReservePreview = (props) => {
-  const { unit, price, showTitle, title, total, unitAmount } = props;
+  const { onEdit, unit, price, showTitle, title, total, unitAmount } = props;
 
   return (
     <StyledPreview>
@@ -28,6 +43,11 @@ const ReservePreview = (props) => {
         unitAmount={unitAmount}
         total={total}
       />
+      <StyledEditWrapper>
+        <LinkButton onClick={onEdit} color={theme.colors.primary}>
+          edit reservation
+        </LinkButton>
+      </StyledEditWrapper>
     </StyledPreview>
   );
 };

@@ -9,22 +9,13 @@ import {
 } from '../../../../utils/dateValidation';
 
 export default async function handler(req, res) {
-  console.log('hello, from reservation server');
   const { id } = req.query;
   const reservation = JSON.parse(req.body, dateReviver);
-  console.log(
-    '🚀 ~ file: reserve.js ~ line 14 ~ handler ~ reservation',
-    reservation
-  );
 
   //* retrieve availability data ****************************************
   let availability = {};
   try {
     availability = await fetchAvailability(id);
-    console.log(
-      '🚀 ~ file: reserve.js ~ line 24 ~ handler ~ availability',
-      availability
-    );
   } catch (e) {
     return res.status(500).json({ error: 'Property availability not found' });
   }

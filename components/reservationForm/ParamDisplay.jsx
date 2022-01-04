@@ -5,6 +5,8 @@ const StyledReviewWrapper = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: flex-start;
+  padding-top: 8px;
+  padding-bottom: 8px;
 `;
 const StyledHeading = styled.h3`
   display: flex;

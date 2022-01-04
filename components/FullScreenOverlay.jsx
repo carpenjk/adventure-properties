@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { condition } from 'dataweaver';
+import { condition, getProp } from 'dataweaver';
 import { useState } from 'react';
 
 const StyledOverlay = styled.div`
@@ -11,6 +11,7 @@ const StyledOverlay = styled.div`
   height: 100%;
   justify-content: center;
   align-items: center;
+  align-items: ${getProp('alignItems')};
   z-index: 99999;
   background-color: white;
   ${condition('isOpen')`
@@ -31,8 +32,8 @@ const StyledCloseButton = styled.button`
     background: rgba(220, 220, 220, 0.3);
   }
 `;
-const FullScreenOverlay = ({ children, onClose, isOpen }) => (
-  <StyledOverlay isOpen={isOpen}>
+const FullScreenOverlay = ({ children, onClose, isOpen, alignItems }) => (
+  <StyledOverlay isOpen={isOpen} alignItems={alignItems}>
     <StyledCloseButton onClick={onClose}>X</StyledCloseButton>
     {children}
   </StyledOverlay>

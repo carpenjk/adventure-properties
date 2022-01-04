@@ -8,7 +8,7 @@ import Spacer from '../base/Spacer';
 const StyledWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  padding: 16px;
+  padding: 100px 16px 16px 16px;
 `;
 const FullScreenInputContainer = ({
   buttonText,
@@ -21,7 +21,11 @@ const FullScreenInputContainer = ({
     return (
       <ClientOnly>
         <Portal>
-          <FullScreenOverlay isOpen={isOpen} onClose={onClose}>
+          <FullScreenOverlay
+            isOpen={isOpen}
+            onClose={onClose}
+            alignItems="flex-start"
+          >
             <StyledWrapper>
               {children}
               <Spacer space="16px" vertical />

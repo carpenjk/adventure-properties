@@ -8,6 +8,12 @@ import {
   guestOptions,
 } from '../data/reservation';
 
+// constants used in cookies
+const PATH = '/';
+const MAX_AGE = 3600;
+const SAME_SITE = true;
+
+// context object
 const ReservationContext = React.createContext();
 
 const ReservationProvider = ({ children }) => {
@@ -16,6 +22,7 @@ const ReservationProvider = ({ children }) => {
   const [resEndDate, setResEndDate] = useState('');
   const [numGuests, setNumGuests] = useState('');
   const [isCompleted, setIsCompleted] = useState(false);
+  const [isInEditMode, setIsInEditMode] = useState(false);
 
   const numGuestID = numGuests ? Object.keys(numGuests)[0] : undefined;
 
@@ -84,11 +91,23 @@ const ReservationProvider = ({ children }) => {
   const arriveDateString = arriveDateVal ? arriveDateVal.toDateString() : '';
   const departDateString = departDateVal ? departDateVal.toDateString() : '';
 
-  const setSessionData = (values) => {
-    const PATH = '/';
-    const MAX_AGE = 3600;
-    const SAME_SITE = true;
+  const clearSessionData = () => {
+    setCookie(
+      'reservation',
+      JSON.stringify({
+        numGuests: '',
+        resStartDate: '',
+        resEndDate: '',
+      }),
+      {
+        path: PATH,
+        maxAge: MAX_AGE, // Expires after 1hr
+        sameSite: SAME_SITE,
+      }
+    );
+  };
 
+  const setSessionData = (values) => {
     if (!values) {
       setCookie(
         'reservation',
@@ -104,19 +123,7 @@ const ReservationProvider = ({ children }) => {
         }
       );
     } else {
-      setCookie(
-        'reservation',
-        JSON.stringify({
-          numGuests: '',
-          resStartDate: '',
-          resEndDate: '',
-        }),
-        {
-          path: PATH,
-          maxAge: MAX_AGE, // Expires after 1hr
-          sameSite: SAME_SITE,
-        }
-      );
+      clearSessionData();
     }
   };
 
@@ -127,8 +134,7 @@ const ReservationProvider = ({ children }) => {
     setResEndDate(sessionData.resEndDate);
   };
 
-  const clearSessionData = () => {};
-  const clearResSession = () => {
+  const clearSession = () => {
     setNumGuests('');
     setResStartDate('');
     setResEndDate('');
@@ -136,7 +142,7 @@ const ReservationProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    if (rsvCookie) {
+    if (rsvCookie && rsvCookie.resStartDate && rsvCookie.resEndDate) {
       const reservationCopy = {
         numGuests: rsvCookie.numGuests,
         resStartDate: new Date(rsvCookie.resStartDate),
@@ -160,11 +166,14 @@ const ReservationProvider = ({ children }) => {
         setDate,
         getNumGuests,
         setNumGuests: _setNumGuest,
+        isInEditMode,
+        setIsInEditMode,
         startDateProps,
         endDateProps,
         guestOptions,
         setSessionData,
         hydrateWithSession,
+        clearSessionData,
         selectedGuestOption,
         selectedGuestOptionIndex: getNumGuestOptionIndex(
           getNumGuests(numGuestID)

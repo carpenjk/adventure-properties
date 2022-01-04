@@ -82,6 +82,11 @@
   color: var(--primary);
 }
 
+.react-datepicker__day.react-datepicker__day--highlighted{
+  background-color: var(--primary);
+  color: var(--globalWhite);
+}
+
 /* keyboard selection */
 .react-datepicker__day--keyboard-selected {
   background-color: var(--lightBackground);

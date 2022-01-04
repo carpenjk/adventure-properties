@@ -6,6 +6,7 @@ import { breakpoint } from 'themeweaver';
 import dynamic from 'next/dynamic';
 import { fetchProperty } from '../../components/adapters/property/property';
 import useLightbox from '../../components/hooks/UseLightbox';
+import useReservation from '../../components/reservationForm/UseReservation';
 import { Media, mediaStyles } from '../../Media';
 import cmsClient from '../../Contentful';
 
@@ -22,6 +23,7 @@ import Spacer from '../../components/base/Spacer';
 import ReserveCTA from '../../components/reservationForm/ReserveCTA';
 import Fixed from '../../components/base/layout/Fixed';
 import PropertyTitle from '../../components/property/PropertyTitle';
+import FullScreenReservation from '../../components/reservationForm/FullScreenReservation';
 
 const Location = dynamic(() => import('../../components/property/Location'), {
   ssr: false,
@@ -109,6 +111,10 @@ const Property = ({ propertyData }) => {
     state,
     propertyType,
   } = propertyData.fields || {};
+
+  const { availability, reservation, reservationControl } = useReservation();
+
+  const { isInEditMode, setIsInEditMode } = reservationControl;
 
   const LIGHTBOX_PRELOAD_COUNT = 3;
 
@@ -285,13 +291,30 @@ const Property = ({ propertyData }) => {
                 </PropertyDetailCategory>
               </StyledDetails>
               <Media greaterThanOrEqual="1">
-                <ReservationForm title={title} maxGuests={guests} />
+                <ReservationForm
+                  availability={availability}
+                  reservation={reservation}
+                  control={reservationControl}
+                  title={title}
+                  maxGuests={guests}
+                />
               </Media>
             </StyledContent>
           </Section>
+          {isInEditMode && (
+            <FullScreenReservation
+              availability={availability}
+              reservation={reservation}
+              control={reservationControl}
+              isOpen={isInEditMode}
+              onClose={() => setIsInEditMode(false)}
+              title={title}
+              showTitle
+            />
+          )}
           <Media lessThan="1">
             <Fixed bottom width="100%">
-              <ReserveCTA title={title} />
+              <ReserveCTA title={title} maxGuests={guests} />
             </Fixed>
           </Media>
         </>

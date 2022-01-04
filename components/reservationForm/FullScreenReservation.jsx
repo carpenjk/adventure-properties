@@ -1,7 +1,7 @@
 import styled, { ThemeContext } from 'styled-components';
 import { useRef, useContext } from 'react';
 import { breakpoint } from 'themeweaver';
-import useReservation from './UseReservation';
+import { isAvail, isValidDeparture } from '../../utils/dateValidation';
 import useFullScreenInputSlide from './UseFullScreenInputSlide';
 import InputSlide from './InputSlide';
 import CustomSelect from '../base/input/CustomSelect';
@@ -34,9 +34,11 @@ const StyledDateRangeWrapper = styled.div`
 const FullScreenReservation = (props) => {
   const GUEST_ICON = '/static/assets/searchbar/icon/guest.svg';
   const GUEST_INPUT_ID = 'guests';
-  const NUM_SLIDES = 3;
+  const NUM_SLIDES = 2;
   const theme = useContext(ThemeContext);
-  const { isOpen, onClose, unit, unitAmount, price, total, title } = props;
+  const { isOpen, onClose, reservation, availability, control, title } = props;
+
+  const { error, price, unit, unitLabel, unitAmount, arriveDate } = reservation;
 
   const {
     getDate,
@@ -49,7 +51,7 @@ const FullScreenReservation = (props) => {
     setSessionData,
     selectedGuestOptionIndex,
     reservePreview,
-  } = useReservation();
+  } = control;
 
   const { slideControl, slideState } = useFullScreenInputSlide({
     enabled: true,
@@ -66,7 +68,7 @@ const FullScreenReservation = (props) => {
     if (slideControl && slideControl.currSlide < NUM_SLIDES - 1) {
       return 'Save';
     }
-    return 'Reserve';
+    return 'Save & Review';
   }
 
   const isLastSlide = slideControl.currSlide === NUM_SLIDES - 1;
@@ -79,7 +81,7 @@ const FullScreenReservation = (props) => {
       buttonText={getButtonText()}
     >
       <StyledWrapper ref={containerRef}>
-        <InvoiceHeader unit={unit} price={price} title={title} showTitle />
+        <InvoiceHeader unit={unit} price={price.avg} title={title} showTitle />
         <InputSlide slideState={slideState} index={0}>
           <InputGroup heading="Dates">
             <StyledDateRangeWrapper>
@@ -88,6 +90,10 @@ const FullScreenReservation = (props) => {
                 endProps={endDateProps}
                 startProps={startDateProps}
                 displayVertical={false}
+                filterStartDate={(dt) => isAvail(dt, availability)}
+                filterEndDate={(dt) =>
+                  isValidDeparture(dt, arriveDate, availability)
+                }
                 forceClose={false}
                 popperParent={containerRef}
                 showLabel
@@ -121,16 +127,6 @@ const FullScreenReservation = (props) => {
               height="4rem" //! refactor? Set height of React-Select objects to match input styling:
             />
           </InputGroup>
-        </InputSlide>
-        <InputSlide slideState={slideState} index={2}>
-          <ReservePreview
-            price={price}
-            unit={unit}
-            unitAmount={unitAmount}
-            title={title}
-            showTitle={false}
-            total={total}
-          />
         </InputSlide>
       </StyledWrapper>
     </FullScreenInputContainer>

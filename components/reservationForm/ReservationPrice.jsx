@@ -6,22 +6,23 @@ const StyledPrice = styled.div`
   display: block;
   position: relative;
   font-size: ${({ theme }) => theme.fontSizes[2]}px;
-
+  color: #000000;
   line-height: 3em;
 
-  ${condition(({ variant }) => variant === 'small')`
+  ${condition(({ variant }) => variant === 'link')`
     font-size: ${({ theme }) => theme.fontSizes[1]}px;
     line-height: 1.5em;
+    color: ${({ theme }) => theme.colors.link[0]};
+    color: inherit;
+    text-decoration: underline;
   `}
 `;
 
 const StyledAmount = styled.span`
-  font-family: Poppins;
+  font-family: ${({ theme }) => theme.fonts.poppins};
   font-style: normal;
   font-weight: bold;
   letter-spacing: 0.05em;
-
-  color: #000000;
 
   ${breakpoint(1)`
     font-size: 20px;
@@ -34,7 +35,6 @@ const StyledUnit = styled.span`
   font-weight: normal;
   line-height: 150%;
   letter-spacing: 0.025em;
-  color: #000000;
 `;
 
 const ReservationPrice = ({ price, unit, variant }) => (
