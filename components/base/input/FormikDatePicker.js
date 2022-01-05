@@ -139,10 +139,6 @@ const FormikDatePicker = (props) => {
     variant,
     ...restProps
   } = props;
-  console.log(
-    '🚀 ~ file: FormikDatePicker.js ~ line 144 ~ FormikDatePicker ~ restProps',
-    restProps
-  );
 
   const PopperContainer = ({ children }) => {
     if (popperParent && popperParent.current) {

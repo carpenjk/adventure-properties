@@ -104,8 +104,6 @@ class DateRange extends Component {
       }
     }
 
-    console.log(getMinDate());
-
     return (
       <>
         {/* Picker for start of range */}

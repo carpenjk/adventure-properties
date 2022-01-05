@@ -9,7 +9,7 @@ const StyledCategory = styled.div`
 `;
 const StyledTitle = styled.h2`
   font-weight: bold;
-  color: black;
+  color: ${({ theme }) => theme.colors.mainText};
 `;
 const PropertyDetailCategory = ({ children, title }) => (
   <StyledCategory>

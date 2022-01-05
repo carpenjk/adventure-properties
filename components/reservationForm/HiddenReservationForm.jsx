@@ -9,10 +9,6 @@ const HiddenReservationForm = ({
   propID,
 }) => {
   const { arriveDate, departDate, guests, userName, price } = reservation;
-  // console.log(
-  //   '🚀 ~ file: HiddenReservationForm.jsx ~ line 15 ~ HiddenReservationForm ~ reservation',
-  //   reservation
-  // );
 
   const [error, setError] = useState(false);
   const resObject = {
@@ -42,14 +38,9 @@ const HiddenReservationForm = ({
     resSchema
       .validate(resObject)
       .then((validated) => {
-        console.log(
-          '🚀 ~ file: HiddenReservationForm.jsx ~ line 33 ~ HiddenReservationForm ~ validated',
-          validated
-        );
         // onSubmit();
       })
       .catch((error) => {
-        console.log('reservation error: ', error);
         setError(error);
       });
 
@@ -58,12 +49,8 @@ const HiddenReservationForm = ({
       body: JSON.stringify(resObject),
     })
       .then((res) => res.json())
-      .then((data) => {
-        console.log('reservation response', data);
-      })
-      .catch((er) => {
-        // console.log('reservation error:', er);
-      });
+      .then((data) => {})
+      .catch((er) => {});
   }
 
   return (

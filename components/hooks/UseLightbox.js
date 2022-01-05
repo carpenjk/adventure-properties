@@ -1,8 +1,24 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useMemo, useState, useRef } from 'react';
 
-const useLightbox = ({ images, photoIndex, isOpen }) => {
+const useLightbox = ({ images, photoIndex, isOpen, srcSetParams }) => {
+  const imgObj = useMemo(
+    () =>
+      images.map((url) => ({
+        srcSet: `${srcSetParams.reduce((srcSet, param) => {
+          if (srcSet) {
+            return `${srcSet},
+                ${url}${param.suffix} ${param.size}`;
+          }
+          return `${url}${param.suffix} ${param.size}`;
+        }, '')}
+            `,
+        src: url,
+      })),
+    [images, srcSetParams]
+  );
+
   const [lightbox, setLightbox] = useState({
-    images,
+    images: imgObj,
     photoIndex,
     isOpen,
   });
@@ -62,14 +78,17 @@ const useLightbox = ({ images, photoIndex, isOpen }) => {
   const _handlePhotoClick = useCallback(handlePhotoClick, []);
   const _setImages = useCallback(setImages, []);
 
-  return {
-    ...lightbox,
+  const lightboxControl = useRef({
     handleLightboxClose: _handleLightboxClose,
     handleLightboxOpen: _handleLightboxOpen,
     handleMoveNext: _handleMoveNext,
     handleMovePrev: _handleMovePrev,
     handlePhotoClick: _handlePhotoClick,
     setImages: _setImages,
+  });
+  return {
+    lightbox,
+    lightboxControl: lightboxControl.current,
   };
 };
 

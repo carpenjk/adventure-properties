@@ -4,7 +4,7 @@ import { condition } from 'dataweaver';
 
 const StyledTitle = styled.h1`
   margin: 0;
-  font-family: Poppins;
+  font-family: ${({ theme }) => theme.fonts.poppins};
   font-weight: bold;
   font-size: ${({ theme }) => theme.fontSizes[4]}px;
   color: ${({ theme }) => theme.colors.mainText};
@@ -27,7 +27,7 @@ const StyledTitle = styled.h1`
 
   ${breakpoint(1)`
     margin: 0;
-    font-family: Poppins;
+    font-family: ${({ theme }) => theme.fonts.poppins};
     font-weight: bold;
     font-size: ${({ theme }) => theme.fontSizes[4]}px;
     color: ${({ theme }) => theme.colors.mainText};

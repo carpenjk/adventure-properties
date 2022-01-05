@@ -72,10 +72,6 @@ const useReservation = () => {
     if (!dailyPrices || dailyPrices.length === 0) {
       return undefined;
     }
-    console.log(
-      'calc total price: ',
-      dailyPrices.reduce((sum, currDate) => currDate.price + sum, 0)
-    );
     return dailyPrices.reduce((sum, currDate) => currDate.price + sum, 0);
   };
 
@@ -231,10 +227,8 @@ const useReservation = () => {
   }
 
   useEffect(() => {
-    console.log('response changed:', response);
     if (response) {
       if (response.message) {
-        console.log('isCompleted');
         setIsCompleted(true);
       } else {
         setIsCompleted(false);

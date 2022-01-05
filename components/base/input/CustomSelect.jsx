@@ -135,7 +135,6 @@ class CustomSelect extends Component {
   };
 
   handleSelectChange(option) {
-    console.log('handleSelectChange');
     const {
       onInputChange,
       valueFunctions,

@@ -47,7 +47,6 @@ export function isValidDeparture(date, arDate, availability) {
 }
 
 export async function validateReservation(resObject, maxGuests) {
-  console.log('validating');
   const resSchema = yup.object().shape({
     user: yup.string().required(),
     cmsID: yup.string().required().length(22),

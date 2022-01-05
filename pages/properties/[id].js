@@ -1,8 +1,6 @@
-import styled from 'styled-components';
 import Head from 'next/head';
 
-import { useEffect, useCallback, useMemo } from 'react';
-import { breakpoint } from 'themeweaver';
+import { useCallback } from 'react';
 import dynamic from 'next/dynamic';
 import { fetchProperty } from '../../components/adapters/property/property';
 import useLightbox from '../../components/hooks/UseLightbox';
@@ -24,58 +22,13 @@ import ReserveCTA from '../../components/reservationForm/ReserveCTA';
 import Fixed from '../../components/base/layout/Fixed';
 import PropertyTitle from '../../components/property/PropertyTitle';
 import FullScreenReservation from '../../components/reservationForm/FullScreenReservation';
+import PropertyContent from '../../components/property/PropertyContent';
+import PropertyDetails from '../../components/property/PropertyDetails';
+import PropertyDescription from '../../components/property/PropertyDescription';
 
 const Location = dynamic(() => import('../../components/property/Location'), {
   ssr: false,
 });
-
-const StyledContent = styled.div`
-  display: flex;
-  align-items: flex-start;
-  padding: ${({ theme }) => theme.space[3]}px;
-  width: 100%;
-  max-width: 1200px;
-`;
-
-const StyledDetails = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  flex 0 1 770px;
-  width: 100%;
-  
-  
-  > h1 {
-    margin: 0;
-    font-family: Poppins;
-    font-weight: bold;
-    font-size: ${({ theme }) => theme.fontSizes[4]}px;
-    color: ${({ theme }) => theme.colors.mainText};
-
-  }
-  > * {
-    padding-bottom: ${({ theme }) => theme.space[5]}px;
-  }
-
-  ${breakpoint(1)`
-    min-width: 400px;
-    padding: ${({ theme }) => theme.space[5]}px;
-  `}
-`;
-
-const StyledDescription = styled.p`
-  margin: 0;
-  display: flex;
-  align-items: center;
-  padding-left: ${({ theme }) => theme.space[2]}px;
-  padding-right: ${({ theme }) => theme.space[2]}px;
-
-  font-family: Open Sans;
-  font-size: ${({ theme }) => theme.fontSizes[2]}px;
-  line-height: 150%;
-  letter-spacing: 0.025em;
-  color: ${({ theme }) => theme.colors.mainText};
-`;
 
 export async function getStaticPaths() {
   const properties = await cmsClient.getEntries({
@@ -97,6 +50,12 @@ export async function getStaticProps(context) {
   return staticProps;
 }
 
+const SRC_SET_PARAMS = [
+  { suffix: '?fit=fill&w=640&q=80', size: '640w' },
+  { suffix: '?fit=fill&w=1000&q=80', size: '1000w' },
+  { suffix: '?fit=fill&w=2000&q=80', size: '2000w' },
+];
+
 //* ********* Component *********************************/
 const Property = ({ propertyData }) => {
   // property data
@@ -117,32 +76,35 @@ const Property = ({ propertyData }) => {
   const { isInEditMode, setIsInEditMode } = reservationControl;
 
   const LIGHTBOX_PRELOAD_COUNT = 3;
+  const POSITION_OFFSET = 0;
 
-  const lightbox = useLightbox({ images: [], photoIndex: 0, isOpen: false });
-  const {
-    images,
-    photoIndex,
-    isOpen: isLightboxOpen,
-    handleLightboxClose,
-    handleLightboxOpen,
-    handleMoveNext,
-    handleMovePrev,
-    handlePhotoClick,
-  } = lightbox;
-
-  // ! Remove and add to props
-  const positionOffset = 0;
-
-  // Build list of image urls for Lightbox
-  useEffect(() => {
+  const getImgUrls = () => {
+    let urls = [];
     if (propertyData && propertyData.fields) {
       const mainUrl = `http:${propertyData.fields.mainPhoto.fields.file.url}`;
       const addUrls = propertyData.fields.additionalPhotos.map(
         (photo) => `http:${photo.fields.file.url}`
       );
-      lightbox.setImages([mainUrl, ...addUrls]);
+      urls = [mainUrl, ...addUrls];
     }
-  }, [propertyData, lightbox.setImages]);
+    return urls;
+  };
+
+  const { lightbox, lightboxControl } = useLightbox({
+    images: getImgUrls(),
+    srcSetParams: SRC_SET_PARAMS,
+    photoIndex: 0,
+    isOpen: false,
+  });
+
+  const { images, photoIndex, isOpen: isLightboxOpen } = lightbox;
+  const {
+    handleLightboxClose,
+    handleLightboxOpen,
+    handleMoveNext,
+    handleMovePrev,
+    handlePhotoClick,
+  } = lightboxControl;
 
   //* ******* helpers ****************
   const getAttributeList = useCallback(
@@ -175,27 +137,10 @@ const Property = ({ propertyData }) => {
   }, [propertyData.dbData]);
 
   const PictureTiles = usePictureTiles({
-    images,
+    images: getImgUrls(),
     onOverlayClick: handleLightboxOpen,
     onPhotoClick: handlePhotoClick,
   });
-
-  const largeModifiers = '?fit=fill&w=2000&q=80';
-  const mediumModifiers = '?fit=fill&w=1000&q=80';
-  const smallModifiers = '?fit=fill&w=640&q=80';
-
-  const imgObj = useMemo(
-    () =>
-      images.map((url) => ({
-        srcSet: `
-          ${url}${smallModifiers} 640w,
-          ${url}${mediumModifiers} 1000w,
-          ${url}${largeModifiers} 2000w
-            `,
-        src: url,
-      })),
-    [images]
-  );
 
   return (
     <>
@@ -218,14 +163,14 @@ const Property = ({ propertyData }) => {
           <Section
             semKey="property_images"
             position="relative"
-            offsetTop={positionOffset}
+            offsetTop={POSITION_OFFSET}
           >
             <Media lessThan="1">
               <ClientOnly>
                 <Lightbox
                   currIndex={photoIndex}
                   isOpen={isLightboxOpen}
-                  images={imgObj || []}
+                  images={images || []}
                   imgCount={images.length}
                   preloadCount={LIGHTBOX_PRELOAD_COUNT}
                   showNavArrows={false}
@@ -241,7 +186,7 @@ const Property = ({ propertyData }) => {
                 <Lightbox
                   currIndex={photoIndex}
                   isOpen={isLightboxOpen}
-                  images={imgObj || []}
+                  images={images || []}
                   imgCount={images.length}
                   preloadCount={LIGHTBOX_PRELOAD_COUNT}
                   PictureTile={PictureTiles}
@@ -255,10 +200,10 @@ const Property = ({ propertyData }) => {
           <Section
             semKey="property_details"
             position="relative"
-            offsetTop={positionOffset}
+            offsetTop={POSITION_OFFSET}
           >
-            <StyledContent>
-              <StyledDetails>
+            <PropertyContent>
+              <PropertyDetails>
                 <PropertyTitle title={title} />
                 <AttributesSummary
                   guests={guests}
@@ -266,7 +211,7 @@ const Property = ({ propertyData }) => {
                   baths={baths}
                   propertyType={propertyType}
                 />
-                <StyledDescription>{description}</StyledDescription>
+                <PropertyDescription>{description}</PropertyDescription>
                 <PropertyDetailCategory title="Location">
                   <Location
                     location={location}
@@ -289,7 +234,7 @@ const Property = ({ propertyData }) => {
                     {getAttributeList('availability')}
                   </AttributeList>
                 </PropertyDetailCategory>
-              </StyledDetails>
+              </PropertyDetails>
               <Media greaterThanOrEqual="1">
                 <ReservationForm
                   availability={availability}
@@ -299,7 +244,7 @@ const Property = ({ propertyData }) => {
                   maxGuests={guests}
                 />
               </Media>
-            </StyledContent>
+            </PropertyContent>
           </Section>
           {isInEditMode && (
             <FullScreenReservation

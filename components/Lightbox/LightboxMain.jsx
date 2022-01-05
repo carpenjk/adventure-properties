@@ -162,6 +162,7 @@ const LightBoxMain = (props) => {
   if (!isOpen && PictureTile) {
     return <PictureTile />;
   }
+
   return (
     <StyledLightboxMain
       isOpen={isOpen}
