@@ -30,7 +30,6 @@ const useFullScreenInputSlide = ({ enabled, onNext }) => {
     next,
     prev,
     setCurrent,
-    currSlide,
   };
 
   return {

@@ -1,5 +1,3 @@
-import styled from 'styled-components';
-import { breakpoint } from 'themeweaver';
 import Spacer from '../base/Spacer';
 import LineItem from './LineItem';
 import InvoiceTotal from './InvoiceTotal';

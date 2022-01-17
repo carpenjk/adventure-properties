@@ -1,18 +1,24 @@
 import { useRouter } from 'next/router';
 import { signIn, useSession } from 'next-auth/client';
 import { useState, useContext, useEffect, useCallback } from 'react';
+import {
+  dateReviver,
+  getDateRangeString,
+  compareDateOnly,
+} from '../../utils/dates';
+import {
+  validateReservation,
+  isValidDeparture,
+  isAvail,
+} from '../../utils/dataValidation';
 
 import { ReservationContext } from '../../contexts/ReservationContext';
 import useAvailability from '../adapters/property/UseAvailability';
-import { validateReservation } from '../../utils/dateValidation';
 
 const useReservation = () => {
   const {
     arriveDateVal,
-    arriveDateString,
-    dateRangeString,
     departDateVal,
-    departDateString,
     numGuests,
     getDate,
     setDate,
@@ -24,37 +30,23 @@ const useReservation = () => {
     setSessionData,
     clearSessionData,
     selectedGuestOptionIndex,
-    isCompleted,
-    setIsCompleted,
     isInEditMode,
     setIsInEditMode,
   } = useContext(ReservationContext);
   const [session, loading] = useSession();
 
   const router = useRouter();
-  const [isResReady, setIsResReady] = useState(false);
+  const [validateOnChange, setValidateOnChange] = useState(false);
+  const [isValid, setIsValid] = useState(false);
   const [error, setError] = useState('');
-  const [isResAttempted, setIsResAttempted] = useState(false);
   const [response, setResponse] = useState();
 
   const { id } = router.query;
   const user = session && session.user ? session.user : '';
 
-  function reservePreview() {
-    if (!isResReady) {
-      setIsResAttempted(true);
-      return;
-    }
-    setSessionData();
-    router.push({
-      pathname: '/properties/[id]/reserve',
-      query: { id },
-    });
-    setIsInEditMode(false);
-  }
-
   const availability = useAvailability(router.query.id);
 
+  // * Price functions ************************************************
   const getDailyPrices = () => {
     // no user input to lookup
     if (!availability || !arriveDateVal || !departDateVal) {
@@ -84,6 +76,15 @@ const useReservation = () => {
     return total / dailyPrices.length;
   };
 
+  const getTodayPrice = () => {
+    if (!availability) {
+      return 0;
+    }
+    return availability.avail.find((a) => compareDateOnly(a.date, new Date()))
+      .price;
+  };
+
+  // * Unit functions *****************************************
   const calcUnitAmount = () => {
     const dailyPrices = getDailyPrices();
     return !dailyPrices ? 0 : dailyPrices.length;
@@ -96,18 +97,7 @@ const useReservation = () => {
     return 'nights';
   };
 
-  // const getDateRangeString = (start, end) => {
-  //   const arriveYear = start.getFullYear();
-  //   const departYear = end.getFullYear();
-  //   const arriveMonth = start.getMonth();
-  //   const departMonth = end.getMonth();
-  //   const arriveDay = start.getDate();
-  //   const departDay = end.getDate();
-  //   return arriveYear === departYear
-  //     ? `${arriveMonth} ${arriveDay} - ${departMonth} ${departDay} ${departYear}`
-  //     : `${arriveMonth} ${arriveDay} ${arriveYear} - ${departMonth} ${departDay} ${departYear}`;
-  // };
-
+  // * Reservation Validation functions *******************
   const isSelected = useCallback(
     (field) => {
       switch (field) {
@@ -123,57 +113,128 @@ const useReservation = () => {
     [arriveDateVal, departDateVal, numGuests]
   );
 
-  const _isResReady = useCallback(
-    () =>
-      isSelected('arriveDate') &&
-      isSelected('departDate') &&
-      isSelected('guests'),
-    [isSelected]
+  const isBlank = () =>
+    !isSelected('arriveDate') &&
+    !isSelected('departDate') &&
+    !isSelected('guests');
+
+  const validateArrival = useCallback(() => {
+    if (!isSelected('arriveDate')) {
+      setError('Please select an arrival date');
+      return false;
+    }
+    if (!isAvail(arriveDateVal, availability)) {
+      setError('Arival date is unavailable');
+      return false;
+    }
+    return true;
+  }, [isSelected, arriveDateVal, availability]);
+
+  const validateDeparture = useCallback(() => {
+    if (!isSelected('departDate')) {
+      setError('Please select a departure date');
+      return false;
+    }
+    if (!isValidDeparture(departDateVal, arriveDateVal, availability)) {
+      setError('Departure date is invalid');
+      return false;
+    }
+    return true;
+  }, [isSelected, arriveDateVal, departDateVal, availability]);
+
+  const validateGuests = useCallback(() => {
+    if (!isSelected('guests')) {
+      setError('Please select number of guests');
+      return false;
+    }
+    return true;
+  }, [isSelected]);
+
+  const validateFields = useCallback(
+    (fields) => {
+      let isInputValid = false;
+      const validators = {
+        arriveDate: validateArrival,
+        departDate: validateDeparture,
+        guests: validateGuests,
+      };
+
+      for (let i = 0; i < fields.length; i += 1) {
+        isInputValid = validators[fields[i]]();
+        if (!isInputValid) break;
+      }
+      return isInputValid;
+    },
+    [validateArrival, validateDeparture, validateGuests]
   );
 
-  useEffect(() => {
-    setIsResReady(_isResReady);
-  }, [arriveDateVal, departDateVal, numGuests, _isResReady]);
+  const validateAll = useCallback(() => {
+    if (!validateArrival()) {
+      return false;
+    }
+    if (!validateDeparture()) {
+      return false;
+    }
+    if (!validateGuests()) {
+      return false;
+    }
+    return true;
+  }, [validateArrival, validateDeparture, validateGuests]);
 
+  const validate = useCallback(
+    (opt) => {
+      const { validateOnChange: revalidateOnChange = false, fields } =
+        opt || {};
+
+      let isValidInput = true;
+      if (fields) {
+        isValidInput = validateFields(fields);
+      } else {
+        isValidInput = validateAll();
+      }
+      setIsValid(isValidInput);
+      setValidateOnChange(revalidateOnChange || false);
+      return isValidInput;
+    },
+    [validateAll, validateFields]
+  );
+
+  //* validation effects ************************************ */
+  // validate on change to inputs
   useEffect(() => {
-    // clear error if all selected
-    if (isResReady) {
-      setError('');
+    if (validateOnChange) {
+      validate({ validateOnChange: true });
+    }
+  }, [arriveDateVal, departDateVal, numGuests, validate, validateOnChange]);
+
+  // clear error when valid
+  useEffect(() => {
+    if (!isValid) {
       return;
     }
-
-    // if not all selected and reserve attempted, set error
-    if (isResAttempted) {
-      if (!isSelected('arriveDate')) {
-        setError('Please select an arrival date');
-      } else if (!isSelected('departDate')) {
-        setError('Please select a departure date');
-      } else if (!isSelected('guests')) {
-        setError('Please select number of guests');
-      }
-    }
-  }, [isSelected, isResAttempted, isResReady]);
+    setError('');
+  }, [isValid]);
 
   const reservation = {
     user,
     arriveDate: arriveDateVal,
     departDate: departDateVal,
-    dateRangeString,
+    dateRangeString: getDateRangeString(arriveDateVal, departDateVal),
     error,
     price: {
       prices: getDailyPrices(),
       avg: getAvgDailyPrice(),
       total: calcTotalPrice(),
+      today: getTodayPrice(),
     },
     guests: numGuests,
     unit: 'night',
     unitLabel: getUnit(),
     unitAmount: calcUnitAmount(),
     currSymbol: '$',
+    isBlank: isBlank(),
     isSelected,
-    isResAttempted,
-    isResReady,
-    isCompleted,
+    isValid,
     response,
     object: {
       user: 'test',
@@ -181,31 +242,49 @@ const useReservation = () => {
       start_date: arriveDateVal,
       end_date: departDateVal,
       guests: numGuests,
+      avgPrice: getAvgDailyPrice(),
       price: calcTotalPrice(),
+      unit: 'night',
+      unitAmount: calcUnitAmount(),
     },
     display: {
       description: `${getAvgDailyPrice()} x ${calcUnitAmount()}${getUnit()}`,
     },
   };
 
-  //* **handlers****************************************** */
+  //* handlers****************************************** */
+  async function reservePreview() {
+    const isValidInput = validate({ validateOnChange: true });
+    if (!isValidInput) {
+      // setIsResAttempted(true);
+      return;
+    }
+    setSessionData();
+    router.push({
+      pathname: '/properties/[id]/reserve',
+      query: { id },
+    });
+    setIsInEditMode(false);
+  }
+
   async function handleReservation(maxGuests) {
+    console.log('reserve');
     async function sendRes() {
       fetch(`/api/properties/${router.query.id}/reserve`, {
         method: 'POST', // or 'PUT'
         body: JSON.stringify(reservation.object),
       })
-        .then((res) => res.json())
+        .then((res) => res.text())
+        .then((text) => JSON.parse(text, dateReviver))
         .then((data) => {
-          const { message, error } = data;
           setResponse({
             ...data,
           });
           if (data.message) {
-            setIsCompleted(true);
             clearSessionData();
           }
-        });
+        })
+        .catch((e) => setResponse({ ...e }));
     }
 
     // persist reservation parameters in a cookie
@@ -216,25 +295,18 @@ const useReservation = () => {
     }
 
     try {
-      const validated = await validateReservation(
-        reservation.object,
-        maxGuests
-      );
-      await sendRes();
+      await validateReservation(reservation.object, maxGuests);
     } catch (e) {
+      console.log(
+        '🚀 ~ file: UseReservation.js ~ line 356 ~ handleReservation ~ e',
+        e
+      );
       setError(e);
+      return;
     }
+    console.log('sending reservation');
+    await sendRes();
   }
-
-  useEffect(() => {
-    if (response) {
-      if (response.message) {
-        setIsCompleted(true);
-      } else {
-        setIsCompleted(false);
-      }
-    }
-  }, [response]);
 
   const reservationControl = {
     getDate,
@@ -251,30 +323,13 @@ const useReservation = () => {
     selectedGuestOptionIndex,
     reserve: handleReservation,
     reservePreview,
+    validate,
   };
 
   return {
     availability,
     reservation,
     reservationControl,
-    // arriveDateVal,
-    // arriveDateString,
-    // getDateRangeString,
-    // departDateVal,
-    // departDateString,
-    // numGuests,
-    // getDate,
-    // setDate,
-    // getNumGuests,
-    // setNumGuests,
-    // startDateProps,
-    // endDateProps,
-    // guestOptions,
-    // setSessionData,
-    // selectedGuestOptionIndex,
-    // reserve: handleReservation,
-    // reservePreview,
-    // isResReady,
   };
 };
 

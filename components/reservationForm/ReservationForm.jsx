@@ -1,15 +1,14 @@
 import styled, { ThemeContext } from 'styled-components';
-import { Field, Form, Formik, FormikProps } from 'formik';
-import { useRef, useContext, useEffect } from 'react';
+import { useRef, useContext } from 'react';
 import { breakpoint } from 'themeweaver';
-import { isAvail, isValidDeparture } from '../../utils/dateValidation';
+import { isAvail, isValidDeparture } from '../../utils/dataValidation';
 import DateRange from '../searchbar/DateRange';
 import CustomSelect from '../base/input/CustomSelect';
+import ErrorContainer from './ErrorContainer';
 import Spacer from '../base/Spacer';
 import InputGroup from './InputGroup';
 import InvoiceContent from './InvoiceContent';
 import ActionButton from '../base/ActionButton';
-import useReservation from './UseReservation';
 import InvoiceHeader from './InvoiceHeader';
 
 const StyledReserveWrapper = styled.div`
@@ -54,18 +53,11 @@ const StyledButtonWrapper = styled.div`
   justify-content: center;
   width: 100%;
 `;
-const StyledErrorWrapper = styled.div`
-  display: flex;
-  justify-content: center;
-  font-family: Open Sans;
-  font-style: normal;
-  font-weight: bold;
-  font-size: 14px;
-  color: ${({ theme }) => theme.colors.action[1]};
-`;
 
+//* hard coded constants *******************************************
 const GUEST_ICON = '/static/assets/searchbar/icon/guest.svg';
 const GUEST_INPUT_ID = 'guests';
+const FORM_SPACING = ['16px', '32px'];
 
 //*  Component Function ********************************************
 const ReservationForm = (props) => {
@@ -86,12 +78,15 @@ const ReservationForm = (props) => {
 
   const { error, price, unit, unitAmount, arriveDate } = reservation;
   const { title, showTitle, maxGuests } = props;
+
+  // only allow guest selection <= property capacity
   const filteredGuestOptions = guestOptions.filter(
     (guest) => guest.value <= maxGuests
   );
-  const FORM_SPACING = ['16px', '32px'];
 
   // * refs ****************************************************
+
+  // used for react-datepicker "popper" container / calendar popup
   const formContainerRef = useRef();
   const guestRef = useRef();
 
@@ -100,7 +95,7 @@ const ReservationForm = (props) => {
     <StyledReserveWrapper ref={formContainerRef}>
       <InvoiceHeader
         unit={unit}
-        price={price.avg}
+        price={price.avg || price.today}
         title={title}
         showTitle={showTitle}
       />
@@ -156,7 +151,7 @@ const ReservationForm = (props) => {
         total={price.total}
       />
       <Spacer vertical space={FORM_SPACING} />
-      <StyledErrorWrapper>{error}</StyledErrorWrapper>
+      <ErrorContainer error={error} />
       <Spacer vertical space={FORM_SPACING} />
       <StyledButtonWrapper>
         <ActionButton variant="reserve" onClick={reservePreview}>

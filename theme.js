@@ -7,7 +7,7 @@ export const theme = withThemeweaver(
       primary: '#7789C8',
       secondary: '#C6D8FF',
       tertiary: '#CDF7f6',
-      action: ['#FCEEEF', '#E5707A'],
+      action: ['#FCEEEF', '#E5707A', '#F3B9BD'],
       link: ['#6074BE', '#344783'],
       lightText: '#979797',
       mainText: '#444649',

@@ -20,13 +20,14 @@ export async function fetchProperty(id) {
   // return property;
   const cmsProps = await fetchCMSProps(id);
   const dbProps = await fetchDBProps(id);
+  const { availability, ...remDBProps } = dbProps;
 
   return {
     props: {
       propertyData: {
         id,
-        ...cmsProps,
-        dbData: dbProps,
+        ...cmsProps.fields,
+        ...remDBProps,
       },
     },
   };

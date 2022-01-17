@@ -21,7 +21,6 @@ const ReservationProvider = ({ children }) => {
   const [resStartDate, setResStartDate] = useState('');
   const [resEndDate, setResEndDate] = useState('');
   const [numGuests, setNumGuests] = useState('');
-  const [isCompleted, setIsCompleted] = useState(false);
   const [isInEditMode, setIsInEditMode] = useState(false);
 
   const numGuestID = numGuests ? Object.keys(numGuests)[0] : undefined;
@@ -36,7 +35,6 @@ const ReservationProvider = ({ children }) => {
     guestOptions.findIndex((option) => option.value == val);
 
   const selectedGuestOption = getNumGuestOption(getNumGuests(numGuestID));
-  const getGuestOption = (val) => getNumGuestOption(val);
 
   // obj returned from input component
   const setDate = (obj) => {
@@ -65,31 +63,6 @@ const ReservationProvider = ({ children }) => {
 
   const arriveDateVal = getDate(startDateProps.id);
   const departDateVal = getDate(endDateProps.id);
-  const arriveMonth = arriveDateVal
-    ? new Intl.DateTimeFormat('en', { month: 'short' }).format(arriveDateVal)
-    : '';
-  const arriveDay = arriveDateVal
-    ? new Intl.DateTimeFormat('en', { day: '2-digit' }).format(arriveDateVal)
-    : '';
-  const arriveYear = arriveDateVal
-    ? new Intl.DateTimeFormat('en', { year: 'numeric' }).format(arriveDateVal)
-    : '';
-  const departMonth = departDateVal
-    ? new Intl.DateTimeFormat('en', { month: 'short' }).format(departDateVal)
-    : '';
-  const departDay = departDateVal
-    ? new Intl.DateTimeFormat('en', { day: '2-digit' }).format(departDateVal)
-    : '';
-  const departYear = departDateVal
-    ? new Intl.DateTimeFormat('en', { year: 'numeric' }).format(departDateVal)
-    : '';
-
-  const dateRangeString =
-    arriveYear === departYear
-      ? `${arriveMonth} ${arriveDay} - ${departMonth} ${departDay} ${departYear}`
-      : `${arriveMonth} ${arriveDay} ${arriveYear} - ${departMonth} ${departDay} ${departYear}`;
-  const arriveDateString = arriveDateVal ? arriveDateVal.toDateString() : '';
-  const departDateString = departDateVal ? departDateVal.toDateString() : '';
 
   const clearSessionData = () => {
     setCookie(
@@ -127,7 +100,6 @@ const ReservationProvider = ({ children }) => {
     }
   };
 
-  const fetchClientSideData = (url) => fetch(url).then((r) => r.json());
   const hydrateWithSession = (sessionData) => {
     setNumGuests(sessionData.numGuests);
     setResStartDate(sessionData.resStartDate);
@@ -142,25 +114,28 @@ const ReservationProvider = ({ children }) => {
   };
 
   useEffect(() => {
+    console.log('cookie changed', rsvCookie);
+    let reservationCopy = {
+      numGuests: '',
+      resStartDate: '',
+      resEndDate: '',
+    };
     if (rsvCookie && rsvCookie.resStartDate && rsvCookie.resEndDate) {
-      const reservationCopy = {
+      reservationCopy = {
         numGuests: rsvCookie.numGuests,
         resStartDate: new Date(rsvCookie.resStartDate),
         resEndDate: new Date(rsvCookie.resEndDate),
       };
-
-      hydrateWithSession(reservationCopy);
     }
+    console.log('Hydrate with Session');
+    hydrateWithSession(reservationCopy);
   }, [rsvCookie]);
 
   return (
     <ReservationContext.Provider
       value={{
         arriveDateVal,
-        arriveDateString,
-        dateRangeString,
         departDateVal,
-        departDateString,
         numGuests,
         getDate,
         setDate,
@@ -178,8 +153,6 @@ const ReservationProvider = ({ children }) => {
         selectedGuestOptionIndex: getNumGuestOptionIndex(
           getNumGuests(numGuestID)
         ),
-        isCompleted,
-        setIsCompleted,
       }}
     >
       {children}

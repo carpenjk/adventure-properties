@@ -120,70 +120,6 @@ const StyledSelect = styled.div`
 `;
 
 class CustomSelect extends Component {
-  constructor(props) {
-    super(props);
-    this.styleRef = createRef();
-    // this.state = {
-    //   isOpen: false,
-    //   isFocused: false,
-    // };
-  }
-
-  focus = () => {
-    if (this.props.useInnerRef && this.props.useInnerRef.current)
-      this.props.useInnerRef.current.select.focus();
-  };
-
-  handleSelectChange(option) {
-    const {
-      onInputChange,
-      valueFunctions,
-      id,
-      nextFocusRef,
-      focusNext,
-    } = this.props;
-    // this.setState({ isOpen: false });
-    if (onInputChange) {
-      onInputChange();
-    } else {
-      valueFunctions.set({ [this.props.id]: Number(option.value) });
-    }
-    if (focusNext) {
-      nextFocusRef.current.focus();
-    } else {
-      this.focus();
-    }
-  }
-
-  handleFocus(option) {
-    if (this.props.onFocus) this.props.onFocus(option);
-    // this.setState({ isOpen: true, isFocused: true });
-  }
-
-  handleBlur(option) {
-    const { onBlur } = this.props;
-    // this.setState({ isOpen: false, isFocused: false });
-    if (onBlur) onBlur(option);
-  }
-
-  icon = () => ({
-    alignItems: 'center',
-    display: 'flex',
-    ':before': {
-      content: '" "',
-      background: getProp('icon')(this.props)
-        ? `url(${getProp('icon')(this.props)}) center no-repeat`
-        : 'none',
-      overflow: 'hidden',
-      display: 'flex',
-      alignItems: 'center',
-      position: 'absolute',
-      left: getProp('iconOffset')(this.props),
-      height: getProp('iconHeight')(this.props),
-      width: getProp('iconWidth')(this.props),
-    },
-  });
-
   customStyles = {
     container: (defaultStyles) => ({
       ...defaultStyles,
@@ -273,6 +209,68 @@ class CustomSelect extends Component {
     }),
   };
 
+  constructor(props) {
+    super(props);
+    this.styleRef = createRef();
+    this.handleSelectChange = this.handleSelectChange.bind(this);
+    this.handleBlur = this.handleBlur.bind(this);
+    this.handleFocus = this.handleFocus.bind(this);
+  }
+
+  handleSelectChange(option) {
+    const {
+      onInputChange,
+      valueFunctions,
+      id,
+      nextFocusRef,
+      focusNext,
+    } = this.props;
+    // this.setState({ isOpen: false });
+    if (onInputChange) {
+      onInputChange();
+    } else {
+      valueFunctions.set({ [id]: Number(option.value) });
+    }
+    if (focusNext) {
+      nextFocusRef.current.focus();
+    } else {
+      this.focus();
+    }
+  }
+
+  handleFocus(option) {
+    const { onFocus } = this.props || false;
+    if (onFocus) onFocus(option);
+  }
+
+  handleBlur(option) {
+    const { onBlur } = this.props || false;
+    if (onBlur) onBlur(option);
+  }
+
+  focus = () => {
+    const { useInnerRef } = this.props || false;
+    if (useInnerRef && useInnerRef.current) useInnerRef.current.select.focus();
+  };
+
+  icon = () => ({
+    alignItems: 'center',
+    display: 'flex',
+    ':before': {
+      content: '" "',
+      background: getProp('icon')(this.props)
+        ? `url(${getProp('icon')(this.props)}) center no-repeat`
+        : 'none',
+      overflow: 'hidden',
+      display: 'flex',
+      alignItems: 'center',
+      position: 'absolute',
+      left: getProp('iconOffset')(this.props),
+      height: getProp('iconHeight')(this.props),
+      width: getProp('iconWidth')(this.props),
+    },
+  });
+
   render() {
     const {
       innerKey,
@@ -304,9 +302,10 @@ class CustomSelect extends Component {
             SingleValue: customSingleValue,
             Menu: customMenu,
           }}
-          onChange={onInputChange || this.handleSelectChange.bind(this)}
-          onBlur={this.handleBlur.bind(this)}
-          onFocus={this.handleFocus.bind(this)}
+          // workaround: binding this.handleSelectChange to this in constructor failed
+          onChange={this.handleSelectChange}
+          onBlur={this.handleBlur}
+          onFocus={this.handleFocus}
           ref={useInnerRef}
         />
       </StyledSelect>

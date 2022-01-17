@@ -1,15 +1,5 @@
 import * as yup from 'yup';
-
-function dates(availability) {
-  return availability && availability.avail ? availability.avail : availability;
-}
-
-function findDate(date, availability) {
-  if (!availability) {
-    return false;
-  }
-  return dates(availability).find((dt) => dt.date.getTime() === date.getTime());
-}
+import { dates, findDate } from './dates';
 
 // logic to determine available dates for property
 export function isAvail(date, availability) {
@@ -46,8 +36,24 @@ export function isValidDeparture(date, arDate, availability) {
   return dateTime > arDateTime && dateTime <= nextBookedDate.getTime();
 }
 
-export async function validateReservation(resObject, maxGuests) {
-  const resSchema = yup.object().shape({
+function getTemplate(maxGuests) {
+  return {
+    user: yup.string().required(),
+    cmsID: yup.string().required().length(22),
+    start_Date: yup.date().required('Arrival date must be selected'),
+    end_Date: yup.date().required('Departure date must be selected'),
+    guests: yup
+      .number('Number of guests must be selected')
+      .required('Number of guests must be selected')
+      .positive('Number of guests must be greater than 0')
+      .integer('Number of guests must be a whole number')
+      .max(maxGuests, `Number of guests must be below ${maxGuests}`),
+    price: yup.number().required().positive(),
+  };
+}
+
+export async function validateReservation(resObj, maxGuests) {
+  const resTemplate = {
     user: yup.string().required(),
     cmsID: yup.string().required().length(22),
     guests: yup
@@ -59,20 +65,9 @@ export async function validateReservation(resObject, maxGuests) {
     start_date: yup.date().required('Arrival date must be selected'),
     end_date: yup.date().required('Departure date must be selected'),
     price: yup.number().required().positive(),
-  });
+  };
 
-  const validated = await resSchema.validate(resObject);
+  const resSchema = yup.object().shape(resTemplate);
+  const validated = await resSchema.validate(resObj);
   return validated;
-}
-
-export function dateReviver(key, value) {
-  function isDate() {
-    const regDate = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/;
-    return regDate.test(value);
-  }
-
-  if (isDate()) {
-    return new Date(value);
-  }
-  return value;
 }

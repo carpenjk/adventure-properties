@@ -15,7 +15,6 @@ class DateRange extends Component {
       endDate: {
         id: endProps.id,
         ref: createRef(),
-        minDate: new Date(get(endProps.id)),
       },
     };
   }
@@ -91,10 +90,9 @@ class DateRange extends Component {
     // get values for each controlled component
 
     const { startDate, endDate } = this.state;
-    const { get, set } = valueFunctions;
+    const { get } = valueFunctions;
     const startDateVal = get(startProps.id);
     const endDateVal = get(endProps.id);
-    const minDate = undefined;
 
     function getMinDate() {
       const dt = new Date();

@@ -2,11 +2,8 @@ import * as yup from 'yup';
 import cmsClient from '../../../../Contentful';
 import saveReservation from '../../../../utils/adapters/reserve';
 import fetchAvailability from '../../../../utils/availability';
-import {
-  isValidDeparture,
-  isAvail,
-  dateReviver,
-} from '../../../../utils/dateValidation';
+import { isValidDeparture, isAvail } from '../../../../utils/dataValidation';
+import { dateReviver } from '../../../../utils/dates';
 
 export default async function handler(req, res) {
   const { id } = req.query;
@@ -87,5 +84,5 @@ export default async function handler(req, res) {
 
   // We made it through the validation, let's reserve!
 
-  res.status(200).json({ message: 'Property has been reserved!' });
+  res.status(200).json({ reservation, message: 'Reservation confirmed!' });
 }

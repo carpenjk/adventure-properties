@@ -9,12 +9,8 @@ const StyledButton = styled.button`
   color: ${getProp('color')};
 `;
 
-const LinkButton = ({ color, children, onClick, className }) => (
-  <StyledButton
-    className={className}
-    color={color || '#0000EE'}
-    onClick={onClick}
-  >
+const LinkButton = ({ children, color, ...remProps }) => (
+  <StyledButton color={color || '#0000EE'} {...remProps}>
     {children}
   </StyledButton>
 );

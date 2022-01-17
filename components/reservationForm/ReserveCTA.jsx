@@ -1,14 +1,11 @@
 import styled from 'styled-components';
 import { useState, useEffect } from 'react';
 import { breakpoint } from 'themeweaver';
-import { condition } from 'dataweaver';
-
 import useLockBodyScroll from '../hooks/UseLockBodyScroll';
-import ReservationPrice from './ReservationPrice';
 import ActionButton from '../base/ActionButton';
-import LinkButton from '../base/LinkButton';
 import useReservation from './UseReservation';
 import FullScreenReservation from './FullScreenReservation';
+import OverviewButton from './OverviewButton';
 
 const StyledWrapper = styled.div`
   display: flex;
@@ -20,7 +17,7 @@ const StyledWrapper = styled.div`
   border: 4px solid ${({ theme }) => theme.colors.secondaryText};
   border-radius: 3px;
 
-  font-family: Open Sans;
+  font-family: ${({ theme }) => theme.fonts.openSans};
   font-style: normal;
   font-weight: normal;
   font-size: 12px;
@@ -34,7 +31,7 @@ const StyledInnerWrapper = styled.div`
   align-items: center;
 
   width: 100%;
-  max-width: 300px;
+  max-width: ${({ maxWidth }) => maxWidth};
 
   > button.link {
     color: ${({ theme }) => theme.colors.link[0]};
@@ -42,10 +39,6 @@ const StyledInnerWrapper = styled.div`
   > button.link:hover {
     color: ${({ theme }) => theme.colors.link[1]};
   }
-
-  ${condition('isAmount')`
-    max-width: 575px;
-  `}
 
   > div {
     display: flex;
@@ -60,46 +53,18 @@ const StyledInnerWrapper = styled.div`
   `}
 `;
 
-const StyledTotal = styled.div`
-  font-weight: bold;
-  font-family: Poppins;
-  font-style: normal;
-  font-weight: bold;
-  font-size: 14px;
-  line-height: 150%;
-  -webkit-letter-spacing: 0.05em;
-  letter-spacing: 0.05em;
-  color: #000000;
-`;
-
-const StyledUnits = styled.div`
-  font-family: ${({ theme }) => theme.fonts.openSans};
-  color: inherit;
-  text-decoration: underline;
-`;
-
-const StyledChar = styled.span`
-  font-family: ${({ theme }) => theme.fonts.openSans};
-  font-weight: normal;
-  color: ${({ theme }) => theme.colors.link[0]};
-  padding-left: 1em;
-  padding-right: 1em;
-  &:hover {
-    color: ${({ theme }) => theme.colors.link[1]};
-  }
-`;
-
-const StyledButtonLayout = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-`;
-
 const ReserveCTA = ({ title, openInitialRender }) => {
   const { availability, reservation, reservationControl } = useReservation();
 
   // reservation properties
-  const { price, unit, unitLabel, unitAmount, isResReady } = reservation;
+  const {
+    price,
+    unit,
+    unitLabel,
+    unitAmount,
+    isResReady,
+    isValid,
+  } = reservation;
   const { reservePreview } = reservationControl;
 
   // passed in props
@@ -127,26 +92,22 @@ const ReserveCTA = ({ title, openInitialRender }) => {
   return (
     <>
       <StyledWrapper>
-        <StyledInnerWrapper isAmount={isAmount}>
-          <LinkButton className="link" onClick={handleInputOpen}>
-            <StyledButtonLayout>
-              <ReservationPrice price={price.avg} unit={unit} variant="link" />
-              {isAmount && (
-                <>
-                  <StyledChar>x</StyledChar>
-                  <StyledUnits>{`${unitAmount} ${unitLabel}`}</StyledUnits>
-                  <StyledChar>|</StyledChar>
-                </>
-              )}
-            </StyledButtonLayout>
-            {isAmount && <StyledTotal>${price.total} Total</StyledTotal>}
-          </LinkButton>
-          {!isResReady && (
+        <StyledInnerWrapper maxWidth={isAmount ? '575px' : '300px'}>
+          <OverviewButton
+            isAmount={isAmount}
+            price={price}
+            unit={unit}
+            unitAmount={unitAmount}
+            unitLabel={unitLabel}
+            className="link"
+            onClick={handleInputOpen}
+          />
+          {!isValid && (
             <ActionButton variant="reserve" onClick={handleInputOpen}>
               Check Availability
             </ActionButton>
           )}
-          {isResReady && (
+          {isValid && (
             <ActionButton variant="reserve" onClick={reservePreview}>
               Reserve
             </ActionButton>

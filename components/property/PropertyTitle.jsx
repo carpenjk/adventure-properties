@@ -23,6 +23,14 @@ const StyledTitle = styled.h1`
     letter-spacing: 0.025em;
     text-align: left;
   `}
+  ${condition('asLink')`
+    color: ${({ theme }) => theme.colors.link[0]};
+    text-decoration: underline;
+
+    &:hover {
+      color: ${({ theme }) => theme.colors.link[1]};
+    }
+  `}
   
 
   ${breakpoint(1)`
@@ -30,15 +38,16 @@ const StyledTitle = styled.h1`
     font-family: ${({ theme }) => theme.fonts.poppins};
     font-weight: bold;
     font-size: ${({ theme }) => theme.fontSizes[4]}px;
-    color: ${({ theme }) => theme.colors.mainText};
 
     ${condition(({ variant }) => variant === 'review')`
       font-size: ${({ theme }) => theme.fontSizes[3]}px;
     `}
   `}
 `;
-const PropertyTitle = ({ title, variant }) => (
-  <StyledTitle variant={variant}>{title}</StyledTitle>
+const PropertyTitle = ({ title, variant, asLink }) => (
+  <StyledTitle asLink={asLink} variant={variant}>
+    {title}
+  </StyledTitle>
 );
 
 export default PropertyTitle;

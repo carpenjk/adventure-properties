@@ -16,6 +16,7 @@ import {
   getFontSize,
   getLineHeight,
 } from 'themeweaver';
+import { condition } from 'dataweaver';
 
 const StyledButton = styled.button`
   display: flex;
@@ -67,14 +68,29 @@ const StyledButton = styled.button`
     background-color: ${(props) =>
       getBackgroundColor(`${props.semKey}_hover`, 'white')};
   }
+  ${condition('disabled')`
+    &:hover {
+      color: ${(props) => getColor(props.semKey, 'white')(props, 1)};
+    background-color: ${(props) =>
+      getBackgroundColor(props.semKey, '#E5707A')(props, 1)};
+    }
+  `}
   `}
 `;
 
-const ActionButton = ({ variant, children, ...rest }) => (
-  <StyledButton {...rest} semKey={`button.${variant}`}>
-    {children}
-  </StyledButton>
-);
+const ActionButton = ({ variant, children, ...rest }) => {
+  const { disabled } = rest;
+  console.log(
+    '🚀 ~ file: ActionButton.jsx ~ line 82 ~ ActionButton ~ disabled',
+    disabled
+  );
+
+  return (
+    <StyledButton {...rest} semKey={`button.${variant}`}>
+      {children}
+    </StyledButton>
+  );
+};
 
 ActionButton.defaultProps = {
   variant: 'action',

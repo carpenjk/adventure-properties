@@ -1,6 +1,5 @@
 import styled from 'styled-components';
 import { condition, getProp } from 'dataweaver';
-import { useState } from 'react';
 
 const StyledOverlay = styled.div`
   display: none;
@@ -13,7 +12,7 @@ const StyledOverlay = styled.div`
   align-items: center;
   align-items: ${getProp('alignItems')};
   z-index: 99999;
-  background-color: white;
+  background-color: ${({ theme }) => theme.colors.white};
   ${condition('isOpen')`
     display: flex;
   `}

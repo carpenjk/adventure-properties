@@ -1,7 +1,7 @@
 import styled, { ThemeContext } from 'styled-components';
-import { useRef, useContext } from 'react';
+import { useRef, useContext, useState, useEffect } from 'react';
 import { breakpoint } from 'themeweaver';
-import { isAvail, isValidDeparture } from '../../utils/dateValidation';
+import { isAvail, isValidDeparture } from '../../utils/dataValidation';
 import useFullScreenInputSlide from './UseFullScreenInputSlide';
 import InputSlide from './InputSlide';
 import CustomSelect from '../base/input/CustomSelect';
@@ -9,7 +9,7 @@ import FullScreenInputContainer from './FullScreenInputContainer';
 import InvoiceHeader from './InvoiceHeader';
 import InputGroup from './InputGroup';
 import DateRange from '../searchbar/DateRange';
-import ReservePreview from './ReservePreview';
+import ErrorContainer from './ErrorContainer';
 
 const StyledWrapper = styled.div`
   display: flex;
@@ -31,14 +31,16 @@ const StyledDateRangeWrapper = styled.div`
   `}
 `;
 
+const GUEST_ICON = '/static/assets/searchbar/icon/guest.svg';
+const GUEST_INPUT_ID = 'guests';
+const SLIDE_FIELDS = [['arriveDate', 'departDate'], ['guests']];
+
 const FullScreenReservation = (props) => {
-  const GUEST_ICON = '/static/assets/searchbar/icon/guest.svg';
-  const GUEST_INPUT_ID = 'guests';
-  const NUM_SLIDES = 2;
   const theme = useContext(ThemeContext);
   const { isOpen, onClose, reservation, availability, control, title } = props;
 
-  const { error, price, unit, unitLabel, unitAmount, arriveDate } = reservation;
+  const { error, price, unit, arriveDate, departDate, guests } = reservation;
+  const [isSaveAttempted, setIsSaveAttempted] = useState(false);
 
   const {
     getDate,
@@ -51,27 +53,49 @@ const FullScreenReservation = (props) => {
     setSessionData,
     selectedGuestOptionIndex,
     reservePreview,
+    validate,
   } = control;
 
   const { slideControl, slideState } = useFullScreenInputSlide({
     enabled: true,
   });
 
+  const isLastSlide = slideState.currSlide === SLIDE_FIELDS.length - 1;
+
   const containerRef = useRef();
 
   function handleSave() {
+    const isValid = validate({
+      fields: SLIDE_FIELDS[slideState.currSlide],
+      validateOnChange: false,
+    });
+    if (!isValid) {
+      setIsSaveAttempted(true);
+      return;
+    }
     slideControl.next();
     setSessionData();
   }
 
   function getButtonText() {
-    if (slideControl && slideControl.currSlide < NUM_SLIDES - 1) {
+    if (slideControl && slideControl.currSlide < SLIDE_FIELDS.length - 1) {
       return 'Save';
     }
     return 'Save & Review';
   }
 
-  const isLastSlide = slideControl.currSlide === NUM_SLIDES - 1;
+  // reset isSaveAttempted on new slide
+  useEffect(() => {
+    setIsSaveAttempted(false);
+  }, [slideState.currSlide]);
+
+  // revalidate fields on current slide when value changed
+  useEffect(() => {
+    validate({
+      fields: SLIDE_FIELDS[slideState.currSlide],
+      validateOnChange: false,
+    });
+  }, [arriveDate, departDate, guests]);
 
   return (
     <FullScreenInputContainer
@@ -128,6 +152,10 @@ const FullScreenReservation = (props) => {
             />
           </InputGroup>
         </InputSlide>
+        <ErrorContainer
+          isSaveAttempted={isSaveAttempted}
+          error={isSaveAttempted && error}
+        />
       </StyledWrapper>
     </FullScreenInputContainer>
   );

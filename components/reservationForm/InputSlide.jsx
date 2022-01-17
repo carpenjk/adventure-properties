@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import { useState } from 'react';
 import { condition } from 'dataweaver';
 
 const StyledInputSlide = styled.div`
@@ -10,7 +9,6 @@ const StyledInputSlide = styled.div`
 const InputSlide = (props) => {
   const { children, index, slideState } = props;
   const { isEnabled, currSlide } = slideState;
-  // const [isCurrent, setIsCurrent] = useState(index === currSlide);
   const isCurrent = index === currSlide;
 
   return (

@@ -1,25 +1,26 @@
 import styled from 'styled-components';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
 import { signIn, useSession } from 'next-auth/client';
 import Head from 'next/head';
-import { useRouter } from 'next/router';
+import { useEffect } from 'react';
 import { fetchProperty } from '../../../components/adapters/property/property';
 import cmsClient from '../../../Contentful';
-import { Media, mediaStyles } from '../../../Media';
+import { mediaStyles } from '../../../Media';
 import useReservation from '../../../components/reservationForm/UseReservation';
-import InvoiceContent from '../../../components/reservationForm/InvoiceContent';
-import ParamDisplay from '../../../components/reservationForm/ParamDisplay';
 import PropertyTitle from '../../../components/property/PropertyTitle';
+import ReserveButtons from '../../../components/reservationForm/ReserveButtons';
+import ReservationReview from '../../../components/reservationForm/ReservationReview';
+import ReservationResponse from '../../../components/reservationForm/ReservationResponse';
+import ReservationError from '../../../components/reservationForm/ReservationError';
 import Spacer from '../../../components/base/Spacer';
-import { theme } from '../../../theme';
-import ActionButton from '../../../components/base/ActionButton';
-import LinkButton from '../../../components/base/LinkButton';
 
 const StyledContent = styled.div`
   margin: auto;
   display: flex;
   flex-direction: column;
   width: 100%;
-  max-width: 800px;
+  max-width: 500px;
   align-items: center;
   justify-content: center;
 `;
@@ -33,56 +34,6 @@ const StyledImgWrapper = styled.div`
     width: 100%;
     height: 100%;
     object-fit: cover;
-  }
-`;
-const StyledInvoiceWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  width: 100%;
-  padding-top: 16px;
-  padding-left: 8px;
-  padding-right: 8px;
-  padding-bottom: 16px;
-  max-width: 500px;
-  > .inputData {
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-  }
-`;
-
-const StyledResponse = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  height: 100px;
-  background-color: ${({ theme }) => theme.colors.tertiary};
-  border: 2px solid ${({ theme }) => theme.colors.action[0]};
-  border-radius: 5px;
-  padding: 16px;
-
-  font-family: ${({ theme }) => theme.fonts.openSans};
-  color: ${({ theme, isError }) =>
-    !isError ? theme.colors.primary : theme.colors.action[1]};
-  font-size: 18px;
-  font-weight: bold;
-`;
-
-const StyledEditWrapper = styled.div`
-  display: flex;
-  justify-content: flex-end;
-  text-decoration: underline;
-
-  > button {
-    font-family: ${({ theme }) => theme.fonts.openSans};
-    letter-spacing: 0.08em;
-    font-size: ${({ theme }) => theme.fontSizes[2]}px;
-    font-weight: normal;
-    color: ${({ theme }) => theme.colors.link[0]};
-  }
-  > button:hover {
-    color: ${({ theme }) => theme.colors.link[1]};
   }
 `;
 
@@ -107,25 +58,29 @@ export async function getStaticProps(context) {
 }
 
 const Reserve = ({ propertyData }) => {
-  const [session, loading] = useSession();
-  const { id } = propertyData;
-  const { title, guests: maxGuests } = propertyData.fields || {};
-  const { reservation, reservationControl } = useReservation();
   const router = useRouter();
+  const { id } = router.query;
+  const [session, loading] = useSession();
+  const { reservation, reservationControl } = useReservation();
+  const { error, response, isBlank } = reservation;
+  const { reserve, setIsInEditMode, validate } = reservationControl;
+  const { title, guests: maxGuests } = propertyData || {};
 
-  const {
-    dateRangeString,
-    guests,
-    price,
-    isCompleted,
-    unit,
-    unitAmount,
-    response,
-  } = reservation;
+  const isReservationError =
+    (response && response.error && true) || (error && true);
+  const isComplete = response && response.message && true;
 
-  const { reserve, setIsInEditMode } = reservationControl;
+  const mediumModifiers = '?fit=fill&w=500&q=80';
+  const smallModifiers = '?fit=fill&w=350&q=80';
 
-  const isReservationError = response && response.error;
+  const mainUrl = `http:${propertyData.mainPhoto.fields.file.url}`;
+  const img = {
+    srcSet: `
+      ${mainUrl}${smallModifiers} 350w,
+      ${mainUrl}${mediumModifiers} 500w,
+        `,
+    src: `${mainUrl}${smallModifiers}`,
+  };
 
   function handleReserve() {
     // event.preventDefault();
@@ -144,17 +99,9 @@ const Reserve = ({ propertyData }) => {
     handleGoBack();
   }
 
-  const mediumModifiers = '?fit=fill&w=500&q=80';
-  const smallModifiers = '?fit=fill&w=350&q=80';
-
-  const mainUrl = `http:${propertyData.fields.mainPhoto.fields.file.url}`;
-  const img = {
-    srcSet: `
-      ${mainUrl}${smallModifiers} 350w,
-      ${mainUrl}${mediumModifiers} 500w,
-        `,
-    src: `${mainUrl}${smallModifiers}`,
-  };
+  useEffect(() => {
+    validate();
+  }, [validate]);
 
   return (
     <>
@@ -174,52 +121,36 @@ const Reserve = ({ propertyData }) => {
               <img src={img.src} alt="description" />
             </picture>
           </StyledImgWrapper>
-          <StyledInvoiceWrapper>
-            <PropertyTitle title={title} variant="review" />
-            <Spacer vertical space="8px" />
-            <Spacer vertical space="4px" background={theme.colors.tertiary} />
-            <Spacer vertical space="8px" />
-            <ParamDisplay title="Dates" displayString={dateRangeString} />
-            <Spacer vertical space="8px" />
-            <Spacer vertical space="4px" background={theme.colors.tertiary} />
-            <Spacer vertical space="8px" />
-            <ParamDisplay title="Guests" displayString={`${guests} Guests`} />
-            <Spacer vertical space="8px" />
-            <Spacer vertical space="4px" background={theme.colors.tertiary} />
-            <Spacer vertical space="8px" />
-            <InvoiceContent
-              price={price.avg}
-              unit={unit}
-              unitAmount={unitAmount}
-              total={price.total}
+          <Spacer vertical space="8px" />
+          <Link href={`/properties/${id}`} passHref>
+            <a>
+              <PropertyTitle title={title} variant="review" asLink />
+            </a>
+          </Link>
+          {/* reservation being reviewed */}
+          {!response && !error && (
+            <ReservationReview
+              reservation={reservation}
+              control={reservationControl}
+              maxGuests={maxGuests}
+              title={title}
             />
-            <Spacer vertical space="16px" />
-            {response && (
-              <>
-                <StyledResponse isError={response && response.error}>
-                  {response.message ? response.message : response.error}
-                </StyledResponse>
-                <Spacer vertical space="8px" />
-              </>
-            )}
-            {!isCompleted && (
-              <>
-                <StyledEditWrapper>
-                  <LinkButton onClick={handleEdit}>edit reservation</LinkButton>
-                </StyledEditWrapper>
-                <Spacer vertical space="20px" />
-                <div className="inputData">
-                  <ActionButton
-                    type="submit"
-                    variant="reserve"
-                    onClick={!isReservationError ? handleReserve : handleGoBack}
-                  >
-                    {!isReservationError ? 'Reserve' : 'Go Back'}
-                  </ActionButton>
-                </div>
-              </>
-            )}
-          </StyledInvoiceWrapper>
+          )}
+          {/* reservation attempted */}
+          {response && <ReservationResponse response={response} />}
+          {/* reservation refreshed */}
+          {!response && error && (
+            <ReservationError error={error} userRefresh={isBlank} />
+          )}
+          <ReserveButtons
+            reserveDisabled={isReservationError}
+            showEdit={!isComplete}
+            showReserve={!isComplete}
+            isError={isReservationError}
+            onEdit={handleEdit}
+            onReserve={handleReserve}
+            onBack={handleGoBack}
+          />
         </StyledContent>
       </main>
     </>

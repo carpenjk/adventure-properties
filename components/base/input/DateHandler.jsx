@@ -126,39 +126,20 @@ class DateHandler extends Component {
     super(props);
     this.styleRef = createRef();
     this.prevWrapperClass = '';
+    this.handleFocus = this.handleFocus.bind(this);
   }
 
-  getMargin = (mode) => {
-    const { portal: portalMargin } = inputMargin || '';
-    const { desktop: desktopMargin } = inputMargin || '';
-    return mode === 'portal'
-      ? portalMargin || 'margin-bottom: 10px'
-      : desktopMargin || 'margin-right: 10px';
-  };
-
-  _PopperContainer = ({ children }) => {
-    const { popperParent, forceClose } = this.props;
-    if (popperParent && popperParent.current) {
-      return createPortal(children, popperParent.current);
-    }
-    return null;
-  };
-
-  PopperContainer = this._PopperContainer.bind(this);
-
   componentDidUpdate() {
-    if (
-      this.props.forceClose &&
-      this.props.inputRef &&
-      this.props.inputRef.current
-    )
-      this.props.inputRef.current.setOpen(false);
+    const { forceClose, inputRef } = this.props;
+    if (forceClose && inputRef && inputRef.current)
+      inputRef.current.setOpen(false);
   }
 
   handleFocus(e) {
+    const { onFocus } = this.props;
     e.target.readOnly = true;
-    if (this.props.onFocus) {
-      this.props.onFocus();
+    if (onFocus) {
+      onFocus();
     }
   }
 
@@ -171,33 +152,16 @@ class DateHandler extends Component {
     }
   };
 
-  render() {
-    // const {
-    //   filterDate,
-    //   id,
-    //   placeholder,
-    //   icon,
-    //   iconOffset,
-    //   label,
-    //   textOffset,
-    //   width,
-    //   startDate,
-    //   endDate,
-    //   includeDates,
-    //   selected,
-    //   selectsStart,
-    //   selectsEnd,
-    //   showLabel,
-    //   minDate,
-    //   onChange,
-    //   onSelect,
-    //   onFocus,
-    //   inputRef,
-    //   allowSameDay,
-    //   openToDate,
-    //   variant,
-    // } = this.props;
+  // custom "popper" calendar popup container for react-datepicker
+  PopperContainer = ({ children }) => {
+    const { popperParent } = this.props;
+    if (popperParent && popperParent.current) {
+      return createPortal(children, popperParent.current);
+    }
+    return null;
+  };
 
+  render() {
     const {
       id,
       placeholder,
@@ -225,7 +189,7 @@ class DateHandler extends Component {
         <DatePicker
           {...remProps}
           id={id}
-          onFocus={this.handleFocus.bind(this)}
+          onFocus={this.handleFocus}
           onKeyDown={this.handleKeyDown}
           placeholderText={placeholder}
           popperContainer={this.PopperContainer}

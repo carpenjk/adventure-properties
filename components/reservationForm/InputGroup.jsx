@@ -14,11 +14,11 @@ const StyledInputGroupHeading = styled.div`
   display: flex;
   justify-content: flex-start;
   margin: 0;
-  font-family: Open Sans;
+  font-family: ${({ theme }) => theme.fonts.openSans};
   font-size: ${({ theme }) => theme.fontSizes[2]}px;
   font-weight: bold;
   letter-spacing: 0.025em;
-  color: #000000;
+  color: ${({ theme }) => theme.colors.mainText};
   padding-bottom: 8px;
 
   ${breakpoint(1)`
