@@ -22,7 +22,7 @@ const StyledResponse = styled.div`
   font-family: ${({ theme }) => theme.fonts.openSans};
   color: ${({ theme, isError }) =>
     !isError ? theme.colors.primary : theme.colors.action[1]};
-  font-size: 18px;
+  font-size: ${({ theme }) => theme.fontSizes[3]}px;
   font-weight: bold;
 `;
 

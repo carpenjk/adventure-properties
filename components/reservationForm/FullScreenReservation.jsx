@@ -37,7 +37,15 @@ const SLIDE_FIELDS = [['arriveDate', 'departDate'], ['guests']];
 
 const FullScreenReservation = (props) => {
   const theme = useContext(ThemeContext);
-  const { isOpen, onClose, reservation, availability, control, title } = props;
+  const {
+    isOpen,
+    onClose,
+    reservation,
+    availability,
+    control,
+    title,
+    onReview,
+  } = props;
 
   const { error, price, unit, arriveDate, departDate, guests } = reservation;
   const [isSaveAttempted, setIsSaveAttempted] = useState(false);
@@ -52,7 +60,7 @@ const FullScreenReservation = (props) => {
     guestOptions,
     setSessionData,
     selectedGuestOptionIndex,
-    reservePreview,
+    reserveReview,
     validate,
   } = control;
 
@@ -75,6 +83,14 @@ const FullScreenReservation = (props) => {
     }
     slideControl.next();
     setSessionData();
+  }
+
+  function handleReview(e) {
+    if (onReview) {
+      onReview(e);
+      return;
+    }
+    reserveReview();
   }
 
   function getButtonText() {
@@ -101,7 +117,7 @@ const FullScreenReservation = (props) => {
     <FullScreenInputContainer
       isOpen={isOpen}
       onClose={onClose}
-      onAction={!isLastSlide ? handleSave : reservePreview}
+      onAction={!isLastSlide ? handleSave : handleReview}
       buttonText={getButtonText()}
     >
       <StyledWrapper ref={containerRef}>

@@ -1,5 +1,5 @@
 import styled, { ThemeContext } from 'styled-components';
-import { useRef, useContext } from 'react';
+import { useState, useRef, useContext } from 'react';
 import { breakpoint } from 'themeweaver';
 import { isAvail, isValidDeparture } from '../../utils/dataValidation';
 import DateRange from '../searchbar/DateRange';
@@ -63,7 +63,7 @@ const FORM_SPACING = ['16px', '32px'];
 const ReservationForm = (props) => {
   const theme = useContext(ThemeContext);
 
-  const { availability, reservation, control } = props;
+  const { availability, reservation, control, onReview } = props;
   const {
     getDate,
     setDate,
@@ -73,11 +73,12 @@ const ReservationForm = (props) => {
     endDateProps,
     guestOptions,
     selectedGuestOptionIndex,
-    reservePreview,
+    reserveReview,
   } = control;
 
   const { error, price, unit, unitAmount, arriveDate } = reservation;
   const { title, showTitle, maxGuests } = props;
+  const [showError, setShowError] = useState(false);
 
   // only allow guest selection <= property capacity
   const filteredGuestOptions = guestOptions.filter(
@@ -89,6 +90,15 @@ const ReservationForm = (props) => {
   // used for react-datepicker "popper" container / calendar popup
   const formContainerRef = useRef();
   const guestRef = useRef();
+
+  function handleReview() {
+    setShowError(true);
+    if (onReview) {
+      onReview();
+      return;
+    }
+    reserveReview();
+  }
 
   // *** Component return value ***********************
   return (
@@ -151,10 +161,10 @@ const ReservationForm = (props) => {
         total={price.total}
       />
       <Spacer vertical space={FORM_SPACING} />
-      <ErrorContainer error={error} />
+      {showError && <ErrorContainer error={error} />}
       <Spacer vertical space={FORM_SPACING} />
       <StyledButtonWrapper>
-        <ActionButton variant="reserve" onClick={reservePreview}>
+        <ActionButton variant="reserve" onClick={handleReview}>
           Reserve
         </ActionButton>
       </StyledButtonWrapper>

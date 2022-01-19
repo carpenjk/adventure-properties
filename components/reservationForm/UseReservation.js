@@ -120,11 +120,11 @@ const useReservation = () => {
 
   const validateArrival = useCallback(() => {
     if (!isSelected('arriveDate')) {
-      setError('Please select an arrival date');
+      setError('Please select an arrival date.');
       return false;
     }
     if (!isAvail(arriveDateVal, availability)) {
-      setError('Arival date is unavailable');
+      setError('Arival date is unavailable.');
       return false;
     }
     return true;
@@ -132,7 +132,7 @@ const useReservation = () => {
 
   const validateDeparture = useCallback(() => {
     if (!isSelected('departDate')) {
-      setError('Please select a departure date');
+      setError('Please select a departure date.');
       return false;
     }
     if (!isValidDeparture(departDateVal, arriveDateVal, availability)) {
@@ -204,6 +204,8 @@ const useReservation = () => {
   useEffect(() => {
     if (validateOnChange) {
       validate({ validateOnChange: true });
+    } else {
+      validate({ validateOnChange: false });
     }
   }, [arriveDateVal, departDateVal, numGuests, validate, validateOnChange]);
 
@@ -237,7 +239,7 @@ const useReservation = () => {
     isValid,
     response,
     object: {
-      user: 'test',
+      user: session ? session.user.email : undefined,
       cmsID: id,
       start_date: arriveDateVal,
       end_date: departDateVal,
@@ -253,7 +255,12 @@ const useReservation = () => {
   };
 
   //* handlers****************************************** */
-  async function reservePreview() {
+  async function reserveReview() {
+    if (!session) {
+      setSessionData();
+      signIn();
+      return;
+    }
     const isValidInput = validate({ validateOnChange: true });
     if (!isValidInput) {
       // setIsResAttempted(true);
@@ -264,11 +271,9 @@ const useReservation = () => {
       pathname: '/properties/[id]/reserve',
       query: { id },
     });
-    setIsInEditMode(false);
   }
 
   async function handleReservation(maxGuests) {
-    console.log('reserve');
     async function sendRes() {
       fetch(`/api/properties/${router.query.id}/reserve`, {
         method: 'POST', // or 'PUT'
@@ -288,23 +293,17 @@ const useReservation = () => {
     }
 
     // persist reservation parameters in a cookie
-    // setSessionData();
     if (!session) {
-      console.log('You must sign in');
-      // signIn();
+      setSessionData();
+      signIn();
     }
 
     try {
       await validateReservation(reservation.object, maxGuests);
     } catch (e) {
-      console.log(
-        '🚀 ~ file: UseReservation.js ~ line 356 ~ handleReservation ~ e',
-        e
-      );
-      setError(e);
+      setError(e.message);
       return;
     }
-    console.log('sending reservation');
     await sendRes();
   }
 
@@ -322,7 +321,7 @@ const useReservation = () => {
     setSessionData,
     selectedGuestOptionIndex,
     reserve: handleReservation,
-    reservePreview,
+    reserveReview,
     validate,
   };
 

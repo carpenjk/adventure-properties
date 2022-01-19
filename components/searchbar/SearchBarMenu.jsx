@@ -54,7 +54,7 @@ const StyledSearchBar = styled.div`
   max-height: ${getMaxHeight('searchBar', 'none')};
   max-width: ${getMaxWidth('searchBar', 'none')};
   width: ${getWidth('searchBar', 'auto')};
-  z-index: 10001;
+  z-index: 999999;
   border-radius: ${getBorderRadius('searchBar', '8px')};
 
   ${condition('isSearchBarFocused')`

@@ -60,7 +60,6 @@ export async function getStaticProps(context) {
 const Reserve = ({ propertyData }) => {
   const router = useRouter();
   const { id } = router.query;
-  const [session, loading] = useSession();
   const { reservation, reservationControl } = useReservation();
   const { error, response, isBlank } = reservation;
   const { reserve, setIsInEditMode, validate } = reservationControl;

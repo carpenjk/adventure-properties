@@ -1,4 +1,3 @@
-import { session } from 'next-auth/client';
 import React, { useState, useEffect } from 'react';
 import { useCookies } from 'react-cookie';
 
@@ -114,7 +113,6 @@ const ReservationProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    console.log('cookie changed', rsvCookie);
     let reservationCopy = {
       numGuests: '',
       resStartDate: '',
@@ -127,7 +125,6 @@ const ReservationProvider = ({ children }) => {
         resEndDate: new Date(rsvCookie.resEndDate),
       };
     }
-    console.log('Hydrate with Session');
     hydrateWithSession(reservationCopy);
   }, [rsvCookie]);
 

@@ -53,19 +53,11 @@ const StyledInnerWrapper = styled.div`
   `}
 `;
 
-const ReserveCTA = ({ title, openInitialRender }) => {
+const ReserveCTA = ({ title, openInitialRender, onReview }) => {
   const { availability, reservation, reservationControl } = useReservation();
 
   // reservation properties
-  const {
-    price,
-    unit,
-    unitLabel,
-    unitAmount,
-    isResReady,
-    isValid,
-  } = reservation;
-  const { reservePreview } = reservationControl;
+  const { price, unit, unitLabel, unitAmount, isValid } = reservation;
 
   // passed in props
   const [isInputOpen, setIsInputOpen] = useState(openInitialRender);
@@ -108,7 +100,7 @@ const ReserveCTA = ({ title, openInitialRender }) => {
             </ActionButton>
           )}
           {isValid && (
-            <ActionButton variant="reserve" onClick={reservePreview}>
+            <ActionButton variant="reserve" onClick={onReview}>
               Reserve
             </ActionButton>
           )}
@@ -123,6 +115,7 @@ const ReserveCTA = ({ title, openInitialRender }) => {
           showTitle
           isOpen={isInputOpen}
           onClose={handlePortalClose}
+          onReview={onReview}
         />
       )}
     </>

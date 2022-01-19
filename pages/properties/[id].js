@@ -1,4 +1,6 @@
+import 'react-loader-spinner/dist/loader/css/react-spinner-loader.css';
 import Head from 'next/head';
+import { useState } from 'react';
 import { fetchProperty } from '../../components/adapters/property/property';
 import useLightbox from '../../components/hooks/UseLightbox';
 import useReservation from '../../components/reservationForm/UseReservation';
@@ -15,6 +17,7 @@ import ReserveCTA from '../../components/reservationForm/ReserveCTA';
 import Fixed from '../../components/base/layout/Fixed';
 import FullScreenReservation from '../../components/reservationForm/FullScreenReservation';
 import PropertyContent from '../../components/property/PropertyContent';
+import Spinner from '../../components/base/Spinner';
 
 export async function getStaticPaths() {
   const properties = await cmsClient.getEntries({
@@ -51,11 +54,8 @@ const Property = ({ propertyData }) => {
   const { title, guests } = propertyData || {};
   // reservation objects
   const { availability, reservation, reservationControl } = useReservation();
-  const { isInEditMode, setIsInEditMode } = reservationControl;
-  console.log(
-    '🚀 ~ file: [id].js ~ line 54 ~ Property ~ reservation',
-    reservation
-  );
+  const { isInEditMode, setIsInEditMode, reserveReview } = reservationControl;
+  const [showSpinner, setShowSpinner] = useState(false);
 
   // build array of lightbox images
   const getImgUrls = () => {
@@ -89,6 +89,13 @@ const Property = ({ propertyData }) => {
     onOverlayClick: handleLightboxOpen,
     onPhotoClick: handlePhotoClick,
   });
+
+  function handleReservationReview() {
+    setShowSpinner(true);
+    setIsInEditMode(false);
+    reserveReview();
+    setShowSpinner(false);
+  }
 
   return (
     <>
@@ -150,6 +157,7 @@ const Property = ({ propertyData }) => {
             availability={availability}
             reservation={reservation}
             reservationControl={reservationControl}
+            onReservationReview={handleReservationReview}
           />
         </Section>
         {isInEditMode && (
@@ -159,16 +167,22 @@ const Property = ({ propertyData }) => {
             control={reservationControl}
             isOpen={isInEditMode}
             onClose={() => setIsInEditMode(false)}
-            title={title}
+            onReview={handleReservationReview}
             showTitle
+            title={title}
           />
         )}
         <Media lessThan="1">
           <Fixed bottom width="100%">
-            <ReserveCTA title={title} maxGuests={guests} />
+            <ReserveCTA
+              title={title}
+              maxGuests={guests}
+              onReview={handleReservationReview}
+            />
           </Fixed>
         </Media>
       </>
+      {showSpinner && <Spinner message="Preparing Reservation" />}
     </>
   );
 };

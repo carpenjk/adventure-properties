@@ -7,7 +7,8 @@ const options = {
   debug: true,
   session: {
     jwt: true,
-    maxAge: 30 * 24 * 60 * 60, // the session will last 30 days
+    // maxAge: 30 * 24 * 60 * 60, // the session will last 30 days
+    maxAge: 1 * 60 * 60, // the session will last 30 days
   },
   providers: [
     Providers.Auth0({

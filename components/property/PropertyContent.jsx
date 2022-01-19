@@ -15,7 +15,13 @@ const Location = dynamic(() => import('../../components/property/Location'), {
 });
 
 const PropertyContent = (props) => {
-  const { attributes, availability, reservation, reservationControl } = props;
+  const {
+    attributes,
+    availability,
+    reservation,
+    reservationControl,
+    onReservationReview,
+  } = props;
   const {
     baths,
     beds,
@@ -83,6 +89,7 @@ const PropertyContent = (props) => {
           control={reservationControl}
           title={title}
           maxGuests={guests}
+          onReview={onReservationReview}
         />
       </Media>
     </ContentContainer>

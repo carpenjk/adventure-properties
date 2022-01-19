@@ -78,19 +78,11 @@ const StyledButton = styled.button`
   `}
 `;
 
-const ActionButton = ({ variant, children, ...rest }) => {
-  const { disabled } = rest;
-  console.log(
-    '🚀 ~ file: ActionButton.jsx ~ line 82 ~ ActionButton ~ disabled',
-    disabled
-  );
-
-  return (
-    <StyledButton {...rest} semKey={`button.${variant}`}>
-      {children}
-    </StyledButton>
-  );
-};
+const ActionButton = ({ variant, children, ...rest }) => (
+  <StyledButton {...rest} semKey={`button.${variant}`}>
+    {children}
+  </StyledButton>
+);
 
 ActionButton.defaultProps = {
   variant: 'action',

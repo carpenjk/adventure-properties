@@ -3,7 +3,7 @@ import useIsoLayoutEffect from './UseIsoLayoutEffect';
 
 const useLockBodyScroll = (hideScrollbar, isLocked) => {
   const [isBodyLocked, setIsLockBody] = useState(
-    isLocked === undefined && true
+    isLocked === undefined || isLocked === true
   );
   const [origOverflow, setOrigOverflow] = useState();
   const [origPosition, setOrigPosition] = useState();

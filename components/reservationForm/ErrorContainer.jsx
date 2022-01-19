@@ -3,6 +3,7 @@ import styled from 'styled-components';
 const StyledErrorWrapper = styled.div`
   display: flex;
   justify-content: center;
+  padding: ${({ theme }) => theme.space[3]}px;
   font-family: ${({ theme }) => theme.fonts.OpenSans};
   font-style: normal;
   font-weight: bold;
