@@ -72,13 +72,23 @@ const StyledLocation = styled.div`
 `;
 
 const PropertyCaption = (props) => {
-  const { beds, baths, maxGuests, price, location, propertyType, tags } = props;
+  const {
+    beds,
+    baths,
+    currSymbol,
+    maxGuests,
+    price,
+    location,
+    propertyType,
+    tags,
+    unit,
+  } = props;
   return (
     <>
       <StyledAttributes>
         <Price>
-          {price}
-          <CaptionItem caption={` /night`} />
+          {`${currSymbol}${price}`}
+          <CaptionItem caption={` /${unit}`} />
         </Price>
         <CaptionItem
           caption={`${maxGuests} Guest${maxGuests > 1 ? 's' : ''}`}

@@ -15,6 +15,8 @@ import {
 import { ReservationContext } from '../../contexts/ReservationContext';
 import useAvailability from '../adapters/property/UseAvailability';
 
+const CURR_SYMBOL = '$';
+
 const useReservation = () => {
   const {
     arriveDateVal,
@@ -41,10 +43,9 @@ const useReservation = () => {
   const [error, setError] = useState('');
   const [response, setResponse] = useState();
 
-  const { id } = router.query;
-  const user = session && session.user ? session.user : '';
+  const { propID } = router.query;
 
-  const availability = useAvailability(router.query.id);
+  const availability = useAvailability(propID);
 
   // * Price functions ************************************************
   const getDailyPrices = () => {
@@ -218,7 +219,6 @@ const useReservation = () => {
   }, [isValid]);
 
   const reservation = {
-    user,
     arriveDate: arriveDateVal,
     departDate: departDateVal,
     dateRangeString: getDateRangeString(arriveDateVal, departDateVal),
@@ -233,14 +233,14 @@ const useReservation = () => {
     unit: 'night',
     unitLabel: getUnit(),
     unitAmount: calcUnitAmount(),
-    currSymbol: '$',
+    currSymbol: CURR_SYMBOL,
     isBlank: isBlank(),
     isSelected,
     isValid,
     response,
     object: {
-      user: session ? session.user.email : undefined,
-      cmsID: id,
+      userID: session ? session.user.email : undefined,
+      cmsID: propID,
       start_date: arriveDateVal,
       end_date: departDateVal,
       guests: numGuests,
@@ -248,6 +248,7 @@ const useReservation = () => {
       price: calcTotalPrice(),
       unit: 'night',
       unitAmount: calcUnitAmount(),
+      currSymbol: CURR_SYMBOL,
     },
     display: {
       description: `${getAvgDailyPrice()} x ${calcUnitAmount()}${getUnit()}`,
@@ -268,17 +269,20 @@ const useReservation = () => {
     }
     setSessionData();
     router.push({
-      pathname: '/properties/[id]/reserve',
-      query: { id },
+      pathname: '/properties/[propID]/reserve',
+      query: { propID },
     });
   }
 
   async function handleReservation(maxGuests) {
     async function sendRes() {
-      fetch(`/api/properties/${router.query.id}/reserve`, {
-        method: 'POST', // or 'PUT'
-        body: JSON.stringify(reservation.object),
-      })
+      fetch(
+        `/api/properties/${router.query.propID}/reservations/users/${session.user.email}`,
+        {
+          method: 'POST', // or 'PUT'
+          body: JSON.stringify(reservation.object),
+        }
+      )
         .then((res) => res.text())
         .then((text) => JSON.parse(text, dateReviver))
         .then((data) => {

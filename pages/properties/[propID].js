@@ -1,6 +1,6 @@
 import 'react-loader-spinner/dist/loader/css/react-spinner-loader.css';
 import Head from 'next/head';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { fetchProperty } from '../../components/adapters/property/property';
 import useLightbox from '../../components/hooks/UseLightbox';
 import useReservation from '../../components/reservationForm/UseReservation';
@@ -25,7 +25,7 @@ export async function getStaticPaths() {
   });
 
   const paths = properties.items.map((p) => ({
-    params: { id: p.sys.id },
+    params: { propID: p.sys.id },
   }));
   return {
     paths,
@@ -35,7 +35,7 @@ export async function getStaticPaths() {
 
 //* *********** data fetchers ****************************/
 export async function getStaticProps(context) {
-  const staticProps = await fetchProperty(context.params.id);
+  const staticProps = await fetchProperty(context.params.propID);
   return staticProps;
 }
 
@@ -54,6 +54,7 @@ const Property = ({ propertyData }) => {
   const { title, guests } = propertyData || {};
   // reservation objects
   const { availability, reservation, reservationControl } = useReservation();
+  const { error } = reservation;
   const { isInEditMode, setIsInEditMode, reserveReview } = reservationControl;
   const [showSpinner, setShowSpinner] = useState(false);
 
@@ -94,8 +95,14 @@ const Property = ({ propertyData }) => {
     setShowSpinner(true);
     setIsInEditMode(false);
     reserveReview();
-    setShowSpinner(false);
+    if (error) {
+      setShowSpinner(false);
+    }
   }
+
+  useEffect(() => {
+    console.log('showSpinner changed:', showSpinner);
+  }, [showSpinner]);
 
   return (
     <>

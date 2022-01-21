@@ -1,18 +1,21 @@
 import * as yup from 'yup';
-import cmsClient from '../../../../Contentful';
-import saveReservation from '../../../../utils/adapters/reserve';
-import fetchAvailability from '../../../../utils/availability';
-import { isValidDeparture, isAvail } from '../../../../utils/dataValidation';
-import { dateReviver } from '../../../../utils/dates';
+import cmsClient from '../../../../../../Contentful';
+import saveReservation from '../../../../../../utils/adapters/reserve';
+import fetchAvailability from '../../../../../../utils/adapters/availability';
+import {
+  isValidDeparture,
+  isAvail,
+} from '../../../../../../utils/dataValidation';
+import { dateReviver } from '../../../../../../utils/dates';
 
 export default async function handler(req, res) {
-  const { id } = req.query;
+  const { propID, userID } = req.query;
   const reservation = JSON.parse(req.body, dateReviver);
 
   //* retrieve availability data ****************************************
   let availability = {};
   try {
-    availability = await fetchAvailability(id);
+    availability = await fetchAvailability(propID);
   } catch (e) {
     return res.status(500).json({ error: 'Property availability not found' });
   }
@@ -31,7 +34,7 @@ export default async function handler(req, res) {
   //* Retrieve Property data from cms ********************************
   let property = {};
   try {
-    property = await cmsClient.getEntry(id);
+    property = await cmsClient.getEntry(propID);
   } catch (error) {
     return res.status(500).json({ error: 'Property not found' });
   }
@@ -39,7 +42,6 @@ export default async function handler(req, res) {
   //* Validation schema **********************************************
   const { guests } = property.fields;
   const resSchema = yup.object().shape({
-    user: yup.string().required(),
     cmsID: yup.string().required().length(22),
     guests: yup
       .number()
@@ -76,7 +78,7 @@ export default async function handler(req, res) {
   }
 
   try {
-    await saveReservation(reservation);
+    await saveReservation({ userID, ...reservation });
   } catch (error) {
     //
     res.status(500).json({ error: 'Reservation failed' });

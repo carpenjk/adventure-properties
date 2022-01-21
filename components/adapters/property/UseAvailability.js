@@ -20,11 +20,6 @@ const useAvailability = (propID) => {
     [avail]
   );
 
-  // const getAvailWithDates = avail.map((dt) => ({
-  //   ...dt,
-  //   date: new Date(dt.date),
-  // }));
-
   const createAvailability = useCallback(() => {
     if (avail) {
       const availWithDates = getAvailWithDates();

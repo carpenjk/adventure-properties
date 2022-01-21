@@ -38,7 +38,7 @@ export function isValidDeparture(date, arDate, availability) {
 
 function getTemplate(maxGuests) {
   return {
-    user: yup.string().required(),
+    userID: yup.string().required(),
     cmsID: yup.string().required().length(22),
     start_Date: yup.date().required('Arrival date must be selected'),
     end_Date: yup.date().required('Departure date must be selected'),
@@ -54,7 +54,7 @@ function getTemplate(maxGuests) {
 
 export async function validateReservation(resObj, maxGuests) {
   const resTemplate = {
-    user: yup.string().required(),
+    userID: yup.string().required(),
     cmsID: yup.string().required().length(22),
     guests: yup
       .number()

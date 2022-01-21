@@ -44,7 +44,7 @@ export async function getStaticPaths() {
   });
 
   const paths = properties.items.map((p) => ({
-    params: { id: p.sys.id },
+    params: { propID: p.sys.id },
   }));
   return {
     paths,
@@ -53,13 +53,13 @@ export async function getStaticPaths() {
 }
 
 export async function getStaticProps(context) {
-  const staticProps = await fetchProperty(context.params.id);
+  const staticProps = await fetchProperty(context.params.propID);
   return staticProps;
 }
 
 const Reserve = ({ propertyData }) => {
   const router = useRouter();
-  const { id } = router.query;
+  const { propID } = router.query;
   const { reservation, reservationControl } = useReservation();
   const { error, response, isBlank } = reservation;
   const { reserve, setIsInEditMode, validate } = reservationControl;
@@ -88,8 +88,8 @@ const Reserve = ({ propertyData }) => {
 
   function handleGoBack() {
     router.push({
-      pathname: '/properties/[id]',
-      query: { id },
+      pathname: '/properties/[propID]',
+      query: { propID },
     });
   }
 
@@ -121,7 +121,7 @@ const Reserve = ({ propertyData }) => {
             </picture>
           </StyledImgWrapper>
           <Spacer vertical space="8px" />
-          <Link href={`/properties/${id}`} passHref>
+          <Link href={`/properties/${propID}`} passHref>
             <a>
               <PropertyTitle title={title} variant="review" asLink />
             </a>
