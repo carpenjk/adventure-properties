@@ -2,13 +2,14 @@ import styled from 'styled-components';
 import PropertyTitle from '../property/PropertyTitle';
 import PropertyCaption from './PropertyCaption';
 
-const StyledLargeLayout = styled.div`
+const StyledContainer = styled.div`
   display: flex;
   flex: none;
   flex-direction: column;
   justify-content: space-around;
   align-content: stretch;
   width: 100%;
+  max-width: 341px;
 
   background: #ffffff;
   box-sizing: border-box;
@@ -41,34 +42,41 @@ const StyledLargeLayout = styled.div`
     object-fit: cover;
   }
 `;
-const LargeLayout = ({ url, property, price, unit, currSymbol }) => {
+const buildPicUrl = (property) => {
+  if (property && property.mainPhoto) {
+    return `http:${property.mainPhoto.fields.file.url}?w=325`;
+  }
+  return undefined;
+};
+const PhotoLayout = ({ property, price, unit, currSymbol }) => {
   const {
     heading,
     beds,
     baths,
-    maxGuests,
+    guests,
     city,
     state,
     propertyType,
+    title,
     nearbyActivities,
   } = property;
 
   const cityState = `${city}, ${state}`;
 
   return (
-    <StyledLargeLayout>
+    <StyledContainer>
       <div className="headingWrapper">
-        <PropertyTitle variant="card" title={heading} />
+        <PropertyTitle variant="card" title={title} />
       </div>
       <figure>
         <div className="image">
-          <img src={url} alt={heading} />
+          <img src={buildPicUrl(property)} alt={heading} />
         </div>
         <figcaption>
           <PropertyCaption
             beds={beds}
             baths={baths}
-            maxGuests={maxGuests}
+            maxGuests={guests}
             price={price}
             unit={unit}
             currSymbol={currSymbol}
@@ -78,31 +86,8 @@ const LargeLayout = ({ url, property, price, unit, currSymbol }) => {
           />
         </figcaption>
       </figure>
-    </StyledLargeLayout>
+    </StyledContainer>
   );
-};
-
-const PhotoLayout = ({ variant, property, currSymbol, price, unit }) => {
-  const buildPicUrl = () => {
-    if (property && property.mainPhoto) {
-      return `http:${property.mainPhoto.fields.file.url}?w=325`;
-    }
-    return undefined;
-  };
-  switch (variant) {
-    case 'large':
-      return (
-        <LargeLayout
-          url={buildPicUrl()}
-          property={property}
-          price={price}
-          unit={unit}
-          currSymbol={currSymbol}
-        />
-      );
-    default:
-      return <div>Loading</div>;
-  }
 };
 
 export default PhotoLayout;

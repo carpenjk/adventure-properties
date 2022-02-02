@@ -1,17 +1,17 @@
 import Head from 'next/head';
-import { signIn, useSession } from 'next-auth/client';
+import { useSession } from 'next-auth/client';
 import styled from 'styled-components';
 import { mediaStyles } from '../Media';
-import useReservations from '../components/adapters/reservation/useReservations';
-
-import ReservationList from '../components/property/ReservationList';
+import ReservationContent from '../components/cards/ReservationContent';
+import Spinner from '../components/base/Spinner';
+import Login from '../components/base/login';
 
 const StyledContent = styled.div`
   margin: auto;
   display: flex;
   flex-direction: column;
   width: 100%;
-  max-width: 500px;
+  max-width: 1080px;
   align-items: center;
   justify-content: center;
 `;
@@ -21,7 +21,7 @@ const Reservations = () => {
   return (
     <>
       <Head>
-        <title>Property</title>
+        <title>Reservations</title>
         <style
           type="text/css"
           dangerouslySetInnerHTML={{ __html: mediaStyles }}
@@ -29,12 +29,13 @@ const Reservations = () => {
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
       <main style={{ width: '100%' }}>
+        {loading && <Spinner />}
+        {!loading && !session && <Login />}
         {session && (
           <StyledContent>
-            <ReservationList />
+            <ReservationContent />
           </StyledContent>
         )}
-        {!session && <div>You must be logged in the view reservations</div>}
       </main>
     </>
   );

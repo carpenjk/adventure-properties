@@ -10,18 +10,6 @@ const StyledAttributes = styled.div`
     margin: 0;
   }
 `;
-const StyledCaptionItem = styled.span`
-  display: flex;
-  align-items: center;
-  /* text/small2 */
-  padding-left: 0.4rem;
-  padding-right: 0.4rem;
-  font-family: Poppins;
-  font-style: normal;
-  font-weight: 500;
-  font-size: 11px;
-  color: var(--lightText);
-`;
 
 const Price = styled.span`
   display: flex;
@@ -30,11 +18,11 @@ const Price = styled.span`
   flex-wrap: wrap;
   margin: 0;
   max-width: 50px;
-  font-family: Poppins;
+  font-family: ${({ theme }) => theme.fonts.poppins};
   font-style: normal;
-  font-weight: 600;
+  font-weight: bold;
   font-size: 1.6rem;
-  color: var(--mainText);
+  color: ${({ theme }) => theme.colors.mainText};
   letter-spacing: 0.2em;
   > * {
     letter-spacing: initial;
@@ -48,10 +36,8 @@ const StyledTags = styled.ul`
   list-style: none;
 `;
 const StyledTag = styled.li`
-  color: var(--action);
-  /* text/small2 */
-
-  font-family: Poppins;
+  color: ${({ theme }) => theme.colors.action[1]};
+  font-family: ${({ theme }) => theme.fonts.poppins};
   font-style: normal;
   font-weight: 500;
   font-size: 12px;
@@ -67,7 +53,7 @@ const StyledLocation = styled.div`
   font-weight: normal;
   font-size: 17px;
   line-height: 24px;
-  color: var(--mainText);
+  color: ${({ theme }) => theme.colors.primary};
   text-transform: uppercase;
 `;
 

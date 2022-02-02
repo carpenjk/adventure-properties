@@ -2,12 +2,6 @@ import styled from 'styled-components';
 import { getDateRangeString } from '../../utils/dates';
 import ReservationReview from './ReservationReview';
 
-const StyledWrapper = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-`;
-
 const StyledResponse = styled.div`
   display: flex;
   align-items: center;
@@ -32,22 +26,15 @@ const ReservationResponse = ({ response }) => {
     message = false,
     error = false,
   } = response;
-  const {
-    start_date: arriveDate,
-    end_date: departDate,
-    guests,
-    unit,
-    unitAmount,
-    avgPrice,
-    price,
-  } = resObject || {};
+  const { arriveDate, departDate, guests, unit, unitAmount, avgPrice, price } =
+    resObject || {};
 
   const reservation = {
     arriveDate,
     departDate,
     dateRangeString: getDateRangeString(
-      resObject.start_date,
-      resObject.end_date
+      resObject.arriveDate,
+      resObject.departDate
     ),
     guests,
     unit,

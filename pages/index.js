@@ -35,9 +35,6 @@ const Index = ({ features }) => (
 export default Index;
 
 export async function getStaticProps(context) {
-  // const session = await getSession({ req: context.req });
-  // console.log(context);
-
   const featureProps = await cmsClient.getEntries({
     content_type: 'property',
   });

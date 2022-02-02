@@ -21,8 +21,8 @@ export default async function saveReservation(reservation) {
           arrayFilters: [
             {
               'isBooked.date': {
-                $gte: reservation.start_date,
-                $lte: reservation.end_date,
+                $gte: reservation.arriveDate,
+                $lte: reservation.departDate,
               },
             },
           ],

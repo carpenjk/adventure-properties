@@ -241,8 +241,8 @@ const useReservation = () => {
     object: {
       userID: session ? session.user.email : undefined,
       cmsID: propID,
-      start_date: arriveDateVal,
-      end_date: departDateVal,
+      arriveDate: arriveDateVal,
+      departDate: departDateVal,
       guests: numGuests,
       avgPrice: getAvgDailyPrice(),
       price: calcTotalPrice(),
@@ -301,7 +301,6 @@ const useReservation = () => {
       setSessionData();
       signIn();
     }
-
     try {
       await validateReservation(reservation.object, maxGuests);
     } catch (e) {

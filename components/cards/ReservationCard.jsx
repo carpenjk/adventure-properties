@@ -3,27 +3,25 @@ import ReservationCardLayout from './ReservationCardLayout';
 
 const ReservationCard = (props) => {
   const {
-    property,
     reservation,
     cardRef,
     innerRef,
     scale,
     scaleOnHover,
     scaleOnFocus,
-    url,
   } = props;
 
+  const { url } = reservation.property;
+
   return (
-    <Card innerRef={cardRef} url={url}>
-      <ReservationCardLayout
-        property={property}
-        reservation={reservation}
-        scaleOnHover={scaleOnHover}
-        scaleOnFocus={scaleOnFocus}
-        scale={scale}
-        innerRef={innerRef}
-        cardRef={cardRef}
-      />
+    <Card
+      innerRef={cardRef}
+      url={url}
+      scaleOnHover={scaleOnHover}
+      scaleOnFocus={scaleOnFocus}
+      scale={scale}
+    >
+      <ReservationCardLayout reservation={reservation} innerRef={innerRef} />
     </Card>
   );
 };

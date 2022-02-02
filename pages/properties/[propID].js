@@ -35,8 +35,12 @@ export async function getStaticPaths() {
 
 //* *********** data fetchers ****************************/
 export async function getStaticProps(context) {
-  const staticProps = await fetchProperty(context.params.propID);
-  return staticProps;
+  const property = await fetchProperty(context.params.propID);
+  return {
+    props: {
+      property,
+    },
+  };
 }
 
 const SRC_SET_PARAMS = [
@@ -49,9 +53,9 @@ const LIGHTBOX_PRELOAD_COUNT = 3;
 const POSITION_OFFSET = 0;
 
 //* ********* Component *********************************/
-const Property = ({ propertyData }) => {
+const Property = ({ property }) => {
   // property data
-  const { title, guests } = propertyData || {};
+  const { title, guests } = property || {};
   // reservation objects
   const { availability, reservation, reservationControl } = useReservation();
   const { error } = reservation;
@@ -61,8 +65,8 @@ const Property = ({ propertyData }) => {
   // build array of lightbox images
   const getImgUrls = () => {
     let urls = [];
-    const mainUrl = `http:${propertyData.mainPhoto.fields.file.url}`;
-    const addUrls = propertyData.additionalPhotos.map(
+    const mainUrl = `http:${property.mainPhoto.fields.file.url}`;
+    const addUrls = property.additionalPhotos.map(
       (photo) => `http:${photo.fields.file.url}`
     );
     urls = [mainUrl, ...addUrls];
@@ -99,10 +103,6 @@ const Property = ({ propertyData }) => {
       setShowSpinner(false);
     }
   }
-
-  useEffect(() => {
-    console.log('showSpinner changed:', showSpinner);
-  }, [showSpinner]);
 
   return (
     <>
@@ -160,7 +160,7 @@ const Property = ({ propertyData }) => {
           offsetTop={POSITION_OFFSET}
         >
           <PropertyContent
-            attributes={propertyData}
+            attributes={property}
             availability={availability}
             reservation={reservation}
             reservationControl={reservationControl}

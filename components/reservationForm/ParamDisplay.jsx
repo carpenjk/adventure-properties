@@ -1,35 +1,61 @@
 import styled from 'styled-components';
+import { condition } from 'dataweaver';
+import { breakpoint } from 'themeweaver';
 
-const StyledReviewWrapper = styled.div`
+const StyledWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: stretch;
   align-items: flex-start;
-  padding-top: 8px;
-  padding-bottom: 8px;
+  padding-top: ${({ theme }) => theme.space[2]}px;
+  padding-bottom: ${({ theme }) => theme.space[2]}px;
+
+  ${breakpoint(1)`
+    width: unset;
+    
+    ${condition(({ variant }) => variant === 'card')` 
+      width: 220px;
+      font-size: ${({ theme }) => theme.fontSizes[3]}px;
+      padding-left: ${({ theme }) => theme.space[3]}px;
+      padding-right: ${({ theme }) => theme.space[3]}px;
+    `}
+  `}
 `;
+
 const StyledHeading = styled.h3`
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  font-size: 18px;
+  color: ${({ theme }) => theme.colors.heading[2]};
+  font-size: ${({ theme }) => theme.fontSizes[3]}px;
   line-height: 2em;
   margin: 0;
+
+  ${condition(({ variant }) => variant === 'card')`
+    font-size: ${({ theme }) => theme.fontSizes[3]}px;
+    font-size: 16px;
+  `}
 `;
 const StyledParam = styled.div`
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  font-family: Open Sans;
+  font-family: ${({ theme }) => theme.fonts.openSans};
   font-size: 16px;
-  color: #444649;
+  color: ${({ theme }) => theme.colors.mainText};
   line-height: 2em;
+
+  ${condition(({ variant }) => variant === 'card')`
+    display: block;
+    width: 100%;
+    font-size: ${({ theme }) => theme.fontSizes[2]}px;
+`}
 `;
-const ParamDisplay = ({ displayString, title }) => (
-  <StyledReviewWrapper>
-    <StyledHeading>{title}</StyledHeading>
-    <StyledParam>{displayString}</StyledParam>
-  </StyledReviewWrapper>
+const ParamDisplay = ({ displayString, title, variant }) => (
+  <StyledWrapper variant={variant}>
+    <StyledHeading variant={variant}>{title}</StyledHeading>
+    <StyledParam variant={variant}>{displayString}</StyledParam>
+  </StyledWrapper>
 );
 
 export default ParamDisplay;

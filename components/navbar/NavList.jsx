@@ -70,7 +70,7 @@ const NavList = () => {
         {session && (
           <li>
             <IconDropDown icon={AccountIcon}>
-              <NavLink href="/">My Adventures</NavLink>
+              <NavLink href="/reservations">My Adventures</NavLink>
               <NavLink href="/">Favorites</NavLink>
               <NavLink href="/" onClick={signOut} externalLink>
                 Log Out

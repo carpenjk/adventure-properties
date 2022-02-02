@@ -12,6 +12,7 @@ export const theme = withThemeweaver(
       lightText: '#979797',
       mainText: '#444649',
       secondaryText: '#E5707A',
+      heading: ['#444649', '#6074BE', '#344783'],
       lightBackground: '#F8F8F8',
       disabledBackground: '#E2E2E2',
       white: '#ffffff',
@@ -84,6 +85,14 @@ export const theme = withThemeweaver(
         paddingLeft: 2,
       }),
       ...variant('reserve', {
+        backgroundColor: 'action[1]',
+        color: 'lightBackground',
+        fontFamily: 'roboto',
+        fontSize: [3, 3],
+        paddingLeft: [value('1.5em', value('2em'))],
+        paddingRight: [value('1.5em', value('2em'))],
+      }),
+      ...variant('login', {
         backgroundColor: 'action[1]',
         color: 'lightBackground',
         fontFamily: 'roboto',

@@ -5,8 +5,8 @@ export default async function fetchReservations(user) {
   const reservations = await client
     .db()
     .collection('reservations')
-    .find({ user })
+    .find({ userID: user })
+    .sort({ arriveDate: 1 })
     .toArray();
-
   return reservations;
 }

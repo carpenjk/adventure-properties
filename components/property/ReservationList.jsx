@@ -1,49 +1,43 @@
 import styled from 'styled-components';
 import { breakpoint } from 'themeweaver';
-import property from '../../data/property';
-import useReservations from '../adapters/reservation/useReservations';
 import ReservationCard from '../cards/ReservationCard';
 
-const StyledContent = styled.ul`
+const StyledList = styled.ul`
   min-height: 300px;
-  background: gray;
+  background-color: ${({ theme }) => theme.colors.secondary};
   display: flex;
   justify-content: center;
   align-items: center;
   width: 100%;
   flex-direction: column;
   margin: 0;
+  padding: ${({ theme }) => theme.space[2]}px;
+`;
+const StyledItem = styled.li`
+  padding-top: ${({ theme }) => theme.space[1]}px;
+  padding-bottom: ${({ theme }) => theme.space[1]}px;
 
-  ${breakpoint(2)`
-    flex-direction: row;
-    align-items: center;
-    flex-wrap: wrap;
-
+  ${breakpoint(1)`
+    padding-top: ${({ theme }) => theme.space[2]}px;
+    padding-bottom: ${({ theme }) => theme.space[2]}px;
   `}
 `;
 
-const TEST_URL = 'http://localhost:3000/properties/1rMtf4yHiwfQ0jENe8jT5q';
-const ReservationList = () => {
-  const reservations = useReservations();
-
-  return (
-    <StyledContent>
-      {reservations &&
-        reservations.map((res) => (
-          // const { reservation, property } = res; //! use this and update below
+const ReservationList = ({ reservations }) => (
+  <StyledList>
+    {reservations &&
+      reservations.map((res) => (
+        <StyledItem key={res._id}>
           <ReservationCard
-            key={res.cmsID + res.start_date} //! add res id to reservation
-            url={TEST_URL}
-            property={property}
             reservation={res}
-            scale={1.11}
-            scaleOnHover={[false, false, true]}
-            scaleOnFocus={[false, false, true]}
+            scale={1.015}
+            scaleOnHover={(false, true)}
+            scaleOnFocus={[false, true]}
             innerRef={undefined} //! is this needed?
           />
-        ))}
-    </StyledContent>
-  );
-};
+        </StyledItem>
+      ))}
+  </StyledList>
+);
 
 export default ReservationList;

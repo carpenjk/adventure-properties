@@ -25,7 +25,7 @@ export default async function handler(req, res) {
     const priceSum = availability
       .filter(
         (dt) =>
-          dt.date >= reservation.start_date && dt.date < reservation.end_date
+          dt.date >= reservation.arriveDate && dt.date < reservation.departDate
       )
       .reduce((sum, day) => day.price + sum, 0);
     return p === priceSum;
@@ -49,17 +49,17 @@ export default async function handler(req, res) {
       .positive('Number of guests must be greater than 0')
       .integer('Number of guests must be a whole number')
       .max(guests, `Number of guests must be below ${guests}`),
-    start_date: yup
+    arriveDate: yup
       .date()
       .required('Arrival date must be selected')
       .test('is-available', 'property not available', (value) =>
         isAvail(value, availability)
       ),
-    end_date: yup
+    departDate: yup
       .date()
       .required('Departure date must be selected')
       .test('is-valid-departure', 'Departure date is invalid', (value) =>
-        isValidDeparture(value, reservation.start_date, availability)
+        isValidDeparture(value, reservation.arriveDate, availability)
       ),
     price: yup
       .number()

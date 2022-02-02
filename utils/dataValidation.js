@@ -40,8 +40,8 @@ function getTemplate(maxGuests) {
   return {
     userID: yup.string().required(),
     cmsID: yup.string().required().length(22),
-    start_Date: yup.date().required('Arrival date must be selected'),
-    end_Date: yup.date().required('Departure date must be selected'),
+    arriveDate: yup.date().required('Arrival date must be selected'),
+    departDate: yup.date().required('Departure date must be selected'),
     guests: yup
       .number('Number of guests must be selected')
       .required('Number of guests must be selected')
@@ -62,8 +62,8 @@ export async function validateReservation(resObj, maxGuests) {
       .positive('Number of guests must be greater than 0')
       .integer('Number of guests must be a whole number')
       .max(maxGuests, `Number of guests must be below ${maxGuests}`),
-    start_date: yup.date().required('Arrival date must be selected'),
-    end_date: yup.date().required('Departure date must be selected'),
+    arriveDate: yup.date().required('Arrival date must be selected'),
+    departDate: yup.date().required('Departure date must be selected'),
     price: yup.number().required().positive(),
   };
 

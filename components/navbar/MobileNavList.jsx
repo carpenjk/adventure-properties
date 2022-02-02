@@ -41,7 +41,7 @@ const MobileNavList = ({ data }) => {
         {session && (
           <>
             <li>
-              <NavLink href="/">My Adventures</NavLink>
+              <NavLink href="/reservations">My Adventures</NavLink>
             </li>
             <li>
               <NavLink href="/">Favorites</NavLink>

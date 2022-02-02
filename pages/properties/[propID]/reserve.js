@@ -53,17 +53,21 @@ export async function getStaticPaths() {
 }
 
 export async function getStaticProps(context) {
-  const staticProps = await fetchProperty(context.params.propID);
-  return staticProps;
+  const property = await fetchProperty(context.params.propID);
+  return {
+    props: {
+      property,
+    },
+  };
 }
 
-const Reserve = ({ propertyData }) => {
+const Reserve = ({ property }) => {
   const router = useRouter();
   const { propID } = router.query;
   const { reservation, reservationControl } = useReservation();
   const { error, response, isBlank } = reservation;
   const { reserve, setIsInEditMode, validate } = reservationControl;
-  const { title, guests: maxGuests } = propertyData || {};
+  const { title, guests: maxGuests } = property || {};
 
   const isReservationError =
     (response && response.error && true) || (error && true);
@@ -72,7 +76,7 @@ const Reserve = ({ propertyData }) => {
   const mediumModifiers = '?fit=fill&w=500&q=80';
   const smallModifiers = '?fit=fill&w=350&q=80';
 
-  const mainUrl = `http:${propertyData.mainPhoto.fields.file.url}`;
+  const mainUrl = `http:${property.mainPhoto.fields.file.url}`;
   const img = {
     srcSet: `
       ${mainUrl}${smallModifiers} 350w,

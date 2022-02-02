@@ -17,8 +17,8 @@ const StyledTitle = styled.h1`
     display: flex;
     align-items: center;
     color: ${({ theme }) => theme.colors.mainText};
-    font-size: ${({ theme }) => theme.fontSizes[3]}px;
-    font-weight: 700;
+    font-size: 16px;
+    font-weight: bold;
     line-height: 150%;
     letter-spacing: 0.025em;
     text-align: left;
@@ -42,6 +42,17 @@ const StyledTitle = styled.h1`
     ${condition(({ variant }) => variant === 'review')`
       font-size: ${({ theme }) => theme.fontSizes[3]}px;
     `}
+
+    ${condition(({ variant }) => variant === 'card')`
+    display: flex;
+    align-items: center;
+    color: ${({ theme }) => theme.colors.mainText};
+    font-size: 16px;
+    font-weight: bold;
+    line-height: 150%;
+    letter-spacing: 0.025em;
+    text-align: left;
+  `}
   `}
 `;
 const PropertyTitle = ({ title, variant, asLink }) => (
