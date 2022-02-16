@@ -7,7 +7,7 @@
 }
 
 .react-datepicker-popper[data-placement^='bottom'] {
-  margin-top: 18px; /* triangle size + 2px */
+  /* margin-top: 18px; triangle size + 2px */
 }
 
 .react-datepicker__triangle {
@@ -15,9 +15,7 @@
 }
 
 .react-datepicker-popper[data-placement^='bottom'] .react-datepicker__triangle {
-  margin-top: -20px; /* triangle size */
   border-bottom-color: #ccc;
-  /* set margin here to move arrow left or right or use position left in .react-datepicker__triangle */
 }
 
 .react-datepicker-popper[data-placement^='bottom']

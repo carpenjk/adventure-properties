@@ -84,12 +84,20 @@ const PropertyCaption = (props) => {
         <CaptionItem caption={propertyType} />
       </StyledAttributes>
       <StyledTags>
-        <StyledTag>
-          {tags.reduce((result, tag, index) => {
+        {/* {tags.reduce((result, tag, index) => {
             const suffix = index === tags.length - 1 ? '...' : ', ';
             return result + tag + suffix;
-          }, [])}
-        </StyledTag>
+          }, [])} */}
+        {tags.map((tag, index) => {
+          const isLast = index === tags.length - 1;
+          const suffix = isLast ? '...' : ', ';
+          return (
+            <StyledTag key={tag}>
+              <span>{`${tag}${suffix}`}</span>
+              {!isLast && <span>&nbsp;</span>}
+            </StyledTag>
+          );
+        })}
       </StyledTags>
       <StyledLocation>{location}</StyledLocation>
     </>

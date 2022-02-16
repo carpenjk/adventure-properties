@@ -1,16 +1,26 @@
+import { getSession } from 'next-auth/client';
 import * as yup from 'yup';
 import cmsClient from '../../../../../../Contentful';
-import saveReservation from '../../../../../../utils/adapters/reserve';
-import fetchAvailability from '../../../../../../utils/adapters/availability';
 import {
+  checkSession,
   isValidDeparture,
   isAvail,
 } from '../../../../../../utils/dataValidation';
+import saveReservation from '../../../../../../utils/adapters/reserve';
+import fetchAvailability from '../../../../../../utils/adapters/availability';
+
 import { dateReviver } from '../../../../../../utils/dates';
 
 export default async function handler(req, res) {
   const { propID, userID } = req.query;
   const reservation = JSON.parse(req.body, dateReviver);
+  const session = await getSession({ req });
+
+  if (!checkSession(session, userID)) {
+    return res
+      .status(400)
+      .json({ error: 'Reservation user does not match logged in user' });
+  }
 
   //* retrieve availability data ****************************************
   let availability = {};

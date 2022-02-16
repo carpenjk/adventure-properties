@@ -137,14 +137,16 @@ class DateHandler extends Component {
 
   handleFocus(e) {
     const { onFocus } = this.props;
-    e.target.readOnly = true;
+
+    // commented out due to poor accessibility functionality on react-datepicker
+    // e.target.readOnly = true;
     if (onFocus) {
       onFocus();
     }
   }
 
   handleKeyDown = (e) => {
-    const { inputRef } = this.props;
+    const { inputRef, onChange } = this.props;
     if (inputRef && inputRef.current) {
       if (e.key === 'Tab') {
         inputRef.current.setOpen(false);
@@ -153,13 +155,14 @@ class DateHandler extends Component {
   };
 
   // custom "popper" calendar popup container for react-datepicker
-  PopperContainer = ({ children }) => {
-    const { popperParent } = this.props;
-    if (popperParent && popperParent.current) {
-      return createPortal(children, popperParent.current);
-    }
-    return null;
-  };
+  // PopperContainer = ({ children }) => {
+  //   console.log('popper parent');
+  //   const { popperParent } = this.props;
+  //   if (popperParent && popperParent.current) {
+  //     return createPortal(children, popperParent.current);
+  //   }
+  //   return null;
+  // };
 
   render() {
     const {
@@ -192,7 +195,7 @@ class DateHandler extends Component {
           onFocus={this.handleFocus}
           onKeyDown={this.handleKeyDown}
           placeholderText={placeholder}
-          popperContainer={this.PopperContainer}
+          // popperContainer={this.PopperContainer}
           popperPlacement="bottom"
           popperModifiers={{
             offset: {

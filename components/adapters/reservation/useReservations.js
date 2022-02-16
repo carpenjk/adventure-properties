@@ -1,7 +1,6 @@
 import useSWR from 'swr';
 import { useState, useEffect, useCallback } from 'react';
 import { useSession } from 'next-auth/client';
-import useProperties from '../property/useProperties';
 import { dateReviver } from '../../../utils/dates';
 
 const fetchReservations = (url) =>
@@ -13,7 +12,6 @@ const useReservations = () => {
   const [session, loading] = useSession();
   const userID = session ? session.user.email : '';
   const [reservations, setReservations] = useState([]);
-  const { properties, setPropIDs } = useProperties(false);
 
   const { data, error } = useSWR(
     userID ? `/api/users/${userID}/reservations` : null,
@@ -22,21 +20,9 @@ const useReservations = () => {
 
   useEffect(() => {
     if (data) {
-      const propList = data.map((r) => r.cmsID);
-      setPropIDs(propList);
+      setReservations(data.reservations);
     }
-  }, [data, setPropIDs]);
-
-  useEffect(() => {
-    if (properties) {
-      setReservations(
-        data.map((res) => ({
-          ...res,
-          property: properties.find((p) => p.cmsID === res.cmsID),
-        }))
-      );
-    }
-  }, [properties, data]);
+  }, [data]);
 
   return reservations;
 };

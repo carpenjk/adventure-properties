@@ -2,17 +2,7 @@ import { useRef } from 'react';
 import styled from 'styled-components';
 import { getProp } from 'dataweaver';
 
-import {
-  breakpoint,
-  getBorderRadius,
-  getPaddingTop,
-  getPaddingBottom,
-  getPaddingRight,
-  getPaddingLeft,
-  getWidth,
-  getMaxWidth,
-  getZIndex,
-} from 'themeweaver';
+import { breakpoint } from 'themeweaver';
 import useIsoLayoutEffect from '../hooks/UseIsoLayoutEffect';
 import useWindowSize from '../hooks/UseWindowSize';
 
@@ -24,30 +14,19 @@ const StyledBanner = styled.div`
   right: ${getProp('offsetRight')};
   display: flex;
   flex-direction: column;
-  padding-top: ${getPaddingTop('banner', '10px')};
-  padding-right: ${getPaddingRight('banner', '10px')};
-  padding-bottom: ${getPaddingBottom('banner', '10px')};
-  padding-left: ${getPaddingLeft('banner', '10px')};
+  padding: 10px;
   margin: auto;
-  width: ${getWidth('banner', '90%')};
-  max-width: ${getMaxWidth('banner', '50.1rem')};
-  z-index: ${getZIndex('banner', '999')};
-
-  &.banner H1 {
-    margin: 0 0 10px 0;
-  }
-  &.banner H2 {
-    margin: 0;
-  }
+  width: 90%;
+  font-size: ${({ theme }) => theme.fontSizes[4]}px;
+  max-width: 21em;
+  z-index: 999;
 
   ${breakpoint(1)`
     position: absolute;
-    top: 10rem;
     right: ${getProp('offsetRight', 1)};
     bottom: ${getProp('offsetBottom', 1)};
     left: ${getProp('offsetLeft', 1)};
-    width: ${getWidth('banner', '90%')};
-    max-width: ${getMaxWidth('banner', '50.1rem')};
+    width: 90%;
     margin: 0;
   `}
 `;
@@ -57,14 +36,14 @@ StyledBanner.defaultProps = {
   offsetTop: '10rem',
   offsetRight: 'auto',
   offsetBottom: 'auto',
-  offsetLeft: ['auto', '2.5rem'],
+  offsetLeft: ['auto', '1.05em'],
 };
 
 const StyledBackground = styled.div`
   content: '';
   background: #ffffff;
   opacity: 0.85;
-  border-radius: ${getBorderRadius('banner', '3px')};
+  border-radius: 3px;
 
   position: absolute;
   top: 0;
@@ -76,6 +55,20 @@ const StyledBackground = styled.div`
 
 const StyledWrapper = styled.div`
   margin: 0;
+
+  > h1 {
+    margin: 0 0 10px 0;
+    font-family: ${({ theme }) => theme.fonts.poppins};
+    font-size: ${({ theme }) => theme.fontSizes[4]}px;
+    font-weight: bold;
+    color: ${({ theme }) => theme.colors.mainText};
+  }
+  > h2 {
+    margin: 0;
+    font-size: ${({ theme }) => theme.fontSizes[3]}px;
+    color: ${({ theme }) => theme.colors.secondaryText};
+    letter-spacing: 0.05em;
+  }
 `;
 
 const HeroBanner = (props) => {

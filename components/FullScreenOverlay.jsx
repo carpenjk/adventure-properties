@@ -11,7 +11,7 @@ const StyledOverlay = styled.div`
   justify-content: center;
   align-items: center;
   align-items: ${getProp('alignItems')};
-  z-index: 99999;
+  z-index: 9999999;
   background-color: ${({ theme }) => theme.colors.white};
   ${condition('isOpen')`
     display: flex;

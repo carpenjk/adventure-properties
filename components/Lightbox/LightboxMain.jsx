@@ -14,6 +14,7 @@ const StyledLightboxMain = styled.div`
 
   overflow: hidden;
   z-index: 10003;
+  z-index: 9999999;
 
   ${condition('isOpen')`
     height: 100%;

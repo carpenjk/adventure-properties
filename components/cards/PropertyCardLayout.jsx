@@ -1,73 +1,59 @@
-import styled from 'styled-components';
-import PropertyTitle from '../property/PropertyTitle';
-import PropertyCaption from './PropertyCaption';
+import styled, { ThemeContext } from 'styled-components';
+import { breakpoint } from 'themeweaver';
 
-const StyledLargeLayout = styled.div`
+import PhotoLayout from './PhotoLayout';
+import PropertyDescription from './PropertyDescription';
+
+const StyledContainer = styled.div`
   display: flex;
-  flex: none;
   flex-direction: column;
-  justify-content: space-around;
-  align-content: stretch;
+  align-items: center;
   width: 100%;
+  flex: none;
+  padding: ${({ theme }) => theme.space[2]}px;
+  border-radius: 5px;
+  max-width: 341px;
 
-  background: #ffffff;
-  box-sizing: border-box;
+  ${breakpoint(1)`
+    height: auto;
+    max-width: none;
+    flex-direction: row;
 
-  padding: 8px;
+  `}
+  ${breakpoint(2)`
+    align-items: stretch;
+    max-width: 341px;
+  `}
+`;
 
-  .headingWrapper {
-    flex: none;
-    margin: 0 0 1.5rem 0;
+const StyledDescWrapper = styled.div`
+  display: none;
+
+  ${breakpoint(1)`
     display: flex;
     align-items: center;
-  }
-  figure {
-    margin: 0;
-  }
-  .image {
-    grid-column: 1/5;
-    grid-row: 2 / span 1;
-    background-position: center;
-    background-size: cover;
-    background-repeat: no-repeat;
-  }
-  .footer {
-    grid-column: 1/5;
-    grid-row: 3 / span 1;
-  }
-  img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
+    justify-content: center;    
+  `}
+  ${breakpoint(2)`
+    display: none;
+  `}
 `;
-const LargeLayout = ({ url, data }) => {
-  const { heading, ...remData } = data;
 
+const PropertyCardLayout = (props) => {
+  const { property, scale, innerRef } = props;
   return (
-    <StyledLargeLayout>
-      <div className="headingWrapper">
-        <PropertyTitle variant="card" title={heading} />
-      </div>
-      <figure>
-        <div className="image">
-          <img src={url} alt={heading} />
-        </div>
-        <figcaption>
-          <PropertyCaption {...remData} />
-        </figcaption>
-      </figure>
-    </StyledLargeLayout>
+    <StyledContainer ref={innerRef} scale={scale}>
+      <PhotoLayout
+        property={property}
+        currSymbol={property.currSymbol}
+        price={property.displayPrice}
+        unit={property.unit}
+      />
+      <StyledDescWrapper>
+        <PropertyDescription description={property.description} />
+      </StyledDescWrapper>
+    </StyledContainer>
   );
-};
-
-const PropertyCardLayout = ({ picUrl, variant, data }) => {
-  switch (variant) {
-    case 'large':
-      return <LargeLayout url={picUrl()} data={data} />;
-    default:
-      return <div>Loading</div>;
-  }
 };
 
 export default PropertyCardLayout;

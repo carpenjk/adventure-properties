@@ -1,7 +1,11 @@
 import styled, { ThemeContext } from 'styled-components';
 import { useRef, useContext, useState, useEffect } from 'react';
 import { breakpoint } from 'themeweaver';
-import { isAvail, isValidDeparture } from '../../utils/dataValidation';
+import {
+  filterGuestOptions,
+  isAvail,
+  isValidDeparture,
+} from '../../utils/dataValidation';
 import useFullScreenInputSlide from './UseFullScreenInputSlide';
 import InputSlide from './InputSlide';
 import CustomSelect from '../base/input/CustomSelect';
@@ -45,6 +49,7 @@ const FullScreenReservation = (props) => {
     control,
     title,
     onReview,
+    maxGuests,
   } = props;
 
   const { error, price, unit, arriveDate, departDate, guests } = reservation;
@@ -162,7 +167,7 @@ const FullScreenReservation = (props) => {
               textOffset="1.8rem"
               width="100%"
               placeholderColor={theme.colors.lightText}
-              options={guestOptions}
+              options={filterGuestOptions(guestOptions, maxGuests)}
               valueFunctions={{ get: getNumGuests, set: setNumGuests }}
               height="4rem" //! refactor? Set height of React-Select objects to match input styling:
             />

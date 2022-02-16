@@ -1,6 +1,22 @@
 import * as yup from 'yup';
 import { dates, findDate } from './dates';
 
+export function checkSession(session, user) {
+  console.log(
+    '🚀 ~ file: dataValidation.js ~ line 5 ~ checkSession ~ user',
+    user
+  );
+  console.log(
+    '🚀 ~ file: dataValidation.js ~ line 5 ~ checkSession ~ session',
+    session
+  );
+  if (!session) {
+    return false;
+  }
+  const isValid = user ? session.user.email === user : session && true;
+  return isValid;
+}
+
 // logic to determine available dates for property
 export function isAvail(date, availability) {
   // find date within initial availability
@@ -34,6 +50,10 @@ export function isValidDeparture(date, arDate, availability) {
   }
   // dates after res start up to next booked date are available for departure
   return dateTime > arDateTime && dateTime <= nextBookedDate.getTime();
+}
+
+export function filterGuestOptions(options, maxGuests) {
+  return options.filter((guest) => guest.value <= maxGuests);
 }
 
 function getTemplate(maxGuests) {

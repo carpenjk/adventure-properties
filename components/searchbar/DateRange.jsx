@@ -1,4 +1,5 @@
 import { Component, createRef } from 'react';
+
 import DateHandler from '../base/input/DateHandler';
 
 class DateRange extends Component {
@@ -38,7 +39,6 @@ class DateRange extends Component {
     const {
       endDate: { ref: endDateRef },
     } = this.state;
-
     // move focus to end date component
     if (endDateRef && endDateRef.current) endDateRef.current.input.focus();
   };
@@ -110,6 +110,7 @@ class DateRange extends Component {
           variant={variant}
           key="startDate"
           id={startProps.id}
+          name={startProps.id}
           label="Arrive"
           showLabel={showLabel}
           placeholder={startProps.placeholder}
@@ -127,7 +128,7 @@ class DateRange extends Component {
           onFocus={onFocus}
           inputRef={startDate.ref}
           allowSameDay
-          popperParent={popperParent}
+          // popperParent={popperParent}
           forceClose={forceClose}
         />
         {/* Picker for end of range */}
@@ -137,6 +138,7 @@ class DateRange extends Component {
           variant={variant}
           key="endDate"
           id={endProps.id}
+          name={endProps.id}
           label="Depart"
           showLabel={showLabel}
           placeholder={endProps.placeholder}
@@ -150,13 +152,12 @@ class DateRange extends Component {
           minDate={getMinDate()}
           highlightDates={[startDateVal || undefined]}
           selectsEnd
-          selectsRange
           openToDate={startDateVal}
           onSelect={this.handleEndSelect}
           onChange={this.handleEndChange}
           onFocus={onFocus}
           inputRef={endDate.ref}
-          popperParent={popperParent}
+          // popperParent={popperParent}
           forceClose={forceClose}
         />
       </>

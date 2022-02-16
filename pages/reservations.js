@@ -1,12 +1,16 @@
 import Head from 'next/head';
-import { useSession } from 'next-auth/client';
+import { useSession, getSession } from 'next-auth/client';
 import styled from 'styled-components';
+import { checkSession } from '../utils/dataValidation';
 import { mediaStyles } from '../Media';
 import ReservationContent from '../components/cards/ReservationContent';
-import Spinner from '../components/base/Spinner';
 import Login from '../components/base/login';
+import { withDates } from '../utils/dates';
+import { fetchReservationsWithProperty } from '../utils/adapters/reservations';
+import Section from '../components/base/semantic/Section';
 
 const StyledContent = styled.div`
+  padding: ${({ theme }) => theme.space[2]}px;
   margin: auto;
   display: flex;
   flex-direction: column;
@@ -16,8 +20,28 @@ const StyledContent = styled.div`
   justify-content: center;
 `;
 
-const Reservations = () => {
-  const [session, loading] = useSession();
+export async function getServerSideProps(context) {
+  const session = await getSession(context);
+  if (session && session.user) {
+    const resWithPropeties = await fetchReservationsWithProperty(
+      session.user.email
+    );
+    return {
+      props: {
+        session,
+        reservations: JSON.parse(JSON.stringify(resWithPropeties)),
+      },
+    };
+  }
+  return {
+    props: {
+      session,
+    },
+  };
+}
+
+const Reservations = ({ reservations, session }) => {
+  const res = reservations ? withDates(reservations) : undefined;
   return (
     <>
       <Head>
@@ -29,16 +53,18 @@ const Reservations = () => {
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
       <main style={{ width: '100%' }}>
-        {loading && <Spinner />}
-        {!loading && !session && <Login />}
-        {session && (
-          <StyledContent>
-            <ReservationContent />
-          </StyledContent>
-        )}
+        <Section semKey="reservations" position="relative">
+          {/* {loading && <Spinner />} */}
+          {/* {!loading && !session && <Login />} */}
+          {!session && <Login />}
+          {session && (
+            <StyledContent>
+              <ReservationContent reservations={res} />
+            </StyledContent>
+          )}
+        </Section>
       </main>
     </>
   );
 };
-
 export default Reservations;

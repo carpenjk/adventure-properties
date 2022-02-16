@@ -171,6 +171,7 @@ const Property = ({ property }) => {
           <FullScreenReservation
             availability={availability}
             reservation={reservation}
+            maxGuests={guests}
             control={reservationControl}
             isOpen={isInEditMode}
             onClose={() => setIsInEditMode(false)}

@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import { useState, useEffect } from 'react';
 import { breakpoint } from 'themeweaver';
+import { validate } from 'schema-utils';
 import useLockBodyScroll from '../hooks/UseLockBodyScroll';
 import ActionButton from '../base/ActionButton';
 import useReservation from './UseReservation';
@@ -53,8 +54,12 @@ const StyledInnerWrapper = styled.div`
   `}
 `;
 
-const ReserveCTA = ({ title, openInitialRender, onReview }) => {
+const ReserveCTA = ({ maxGuests, title, openInitialRender, onReview }) => {
   const { availability, reservation, reservationControl } = useReservation();
+  console.log(
+    '🚀 ~ file: ReserveCTA.jsx ~ line 58 ~ ReserveCTA ~ reservation',
+    reservation
+  );
 
   // reservation properties
   const { price, unit, unitLabel, unitAmount, isValid } = reservation;
@@ -84,7 +89,7 @@ const ReserveCTA = ({ title, openInitialRender, onReview }) => {
   return (
     <>
       <StyledWrapper>
-        <StyledInnerWrapper maxWidth={isAmount ? '575px' : '300px'}>
+        <StyledInnerWrapper maxWidth={isAmount ? '400px' : '300px'}>
           <OverviewButton
             isAmount={isAmount}
             price={price}
@@ -110,6 +115,7 @@ const ReserveCTA = ({ title, openInitialRender, onReview }) => {
         <FullScreenReservation
           availability={availability}
           reservation={reservation}
+          maxGuests={maxGuests}
           control={reservationControl}
           title={title}
           showTitle

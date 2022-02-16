@@ -4,7 +4,6 @@ import ReservationCard from '../cards/ReservationCard';
 
 const StyledList = styled.ul`
   min-height: 300px;
-  background-color: ${({ theme }) => theme.colors.secondary};
   display: flex;
   justify-content: center;
   align-items: center;
@@ -30,10 +29,9 @@ const ReservationList = ({ reservations }) => (
         <StyledItem key={res._id}>
           <ReservationCard
             reservation={res}
-            scale={1.015}
+            scale={1.02}
             scaleOnHover={(false, true)}
             scaleOnFocus={[false, true]}
-            innerRef={undefined} //! is this needed?
           />
         </StyledItem>
       ))}

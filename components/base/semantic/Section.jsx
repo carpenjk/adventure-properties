@@ -12,6 +12,7 @@ import {
   getMarginBottom,
   getMarginLeft,
   breakpoint,
+  getBackgroundColor,
 } from 'themeweaver';
 
 const StyledSection = styled.section`
@@ -34,6 +35,8 @@ const StyledSection = styled.section`
   margin-left: ${(props) => getMarginLeft(props.semKey, '0')(props)};
   min-height: ${(props) => getMinHeight(props.semKey, '0')(props)};
   max-height: ${(props) => getMaxHeight(props.semKey, 'none')(props)};
+  background-color: ${(props) =>
+    getBackgroundColor(props.semKey, 'none')(props)};
 
   ${breakpoint(1)`
     position: ${getProp('position')};
@@ -48,6 +51,8 @@ const StyledSection = styled.section`
     margin-left: ${(props) => getMarginLeft(props.semKey, '0')(props)};
     min-height: ${(props) => getMinHeight(props.semKey, '0')(props)};
     max-height: ${(props) => getMaxHeight(props.semKey, 'none')(props)};
+    background-color: ${(props) =>
+      getBackgroundColor(props.semKey, 'none')(props)};
   `}
 `;
 StyledSection.defaultProps = {

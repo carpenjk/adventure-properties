@@ -32,6 +32,9 @@ export function dateReviver(key, value) {
   }
   return value;
 }
+export function withDates(obj) {
+  return JSON.parse(JSON.stringify(obj), dateReviver);
+}
 
 export function getDateRangeString(arriveDate, departDate) {
   const arriveMonth = arriveDate

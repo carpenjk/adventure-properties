@@ -1,34 +1,23 @@
 import styled from 'styled-components';
-import {
-  breakpoint,
-  getColor,
-  getFontFamily,
-  getFontSize,
-  getLetterSpacing,
-  getLineHeight,
-  getPaddingBottom,
-  getPaddingLeft,
-  getPaddingRight,
-  getPaddingTop,
-} from 'themeweaver';
+import { breakpoint } from 'themeweaver';
 import { condition } from 'dataweaver';
 
 const StyledDescription = styled.div`
   width: 100%;
-  height: 20em;
+  height: 15em;
   display: flex;
   justify-content: flex-start;
   align-items: center;
 
-  color: ${getColor('property_description', 'inherit')};
-  font-family: ${getFontFamily('property_description', 'inherit')};
-  font-size: ${getFontSize('property_description', 'inherit')};
-  line-height: ${getLineHeight('property_description', 'initial')};
-  letter-spacing: ${getLetterSpacing('property_description', 'initial')};
-  padding-top: ${getPaddingTop('property_description', '32px')};
-  padding-right: ${getPaddingRight('property_description', '320x')};
-  padding-bottom: ${getPaddingBottom('property_description', '32px')};
-  padding-left: ${getPaddingLeft('property_description', '32px')};
+  color: ${({ theme }) => theme.colors.mainText};
+  font-family: ${({ theme }) => theme.fonts.openSans};
+  font-size: ${({ theme }) => theme.fontSizes[2]}px;
+  line-height: 150%;
+  letter-spacing: 0.025em;
+  padding-top: ${({ theme }) => theme.space[5]}px;
+  padding-right: ${({ theme }) => theme.space[5]}px;
+  padding-bottom: ${({ theme }) => theme.space[5]}px;
+  padding-left: ${({ theme }) => theme.space[5]}px;
 
   ${condition('hide')`
     display: none;

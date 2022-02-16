@@ -1,7 +1,11 @@
 import styled, { ThemeContext } from 'styled-components';
 import { useState, useRef, useContext } from 'react';
 import { breakpoint } from 'themeweaver';
-import { isAvail, isValidDeparture } from '../../utils/dataValidation';
+import {
+  filterGuestOptions,
+  isAvail,
+  isValidDeparture,
+} from '../../utils/dataValidation';
 import DateRange from '../searchbar/DateRange';
 import CustomSelect from '../base/input/CustomSelect';
 import ErrorContainer from './ErrorContainer';
@@ -147,7 +151,7 @@ const ReservationForm = (props) => {
           textOffset="1.8rem"
           width="100%"
           placeholderColor={theme.colors.lightText}
-          options={filteredGuestOptions}
+          options={filterGuestOptions(guestOptions, maxGuests)}
           valueFunctions={{ get: getNumGuests, set: setNumGuests }}
           ref={guestRef}
           height="4rem" //! refactor? Set height of React-Select objects to match input styling:

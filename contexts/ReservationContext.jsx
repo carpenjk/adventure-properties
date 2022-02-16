@@ -17,8 +17,8 @@ const ReservationContext = React.createContext();
 
 const ReservationProvider = ({ children }) => {
   const [cookie, setCookie] = useCookies(['reservation']);
-  const [resStartDate, setResStartDate] = useState('');
-  const [resEndDate, setResEndDate] = useState('');
+  const [resStartDate, setResStartDate] = useState();
+  const [resEndDate, setResEndDate] = useState();
   const [numGuests, setNumGuests] = useState('');
   const [isInEditMode, setIsInEditMode] = useState(false);
 
@@ -107,16 +107,16 @@ const ReservationProvider = ({ children }) => {
 
   const clearSession = () => {
     setNumGuests('');
-    setResStartDate('');
-    setResEndDate('');
+    setResStartDate(null);
+    setResEndDate(null);
     clearSessionData();
   };
 
   useEffect(() => {
     let reservationCopy = {
       numGuests: '',
-      resStartDate: '',
-      resEndDate: '',
+      resStartDate: null,
+      resEndDate: null,
     };
     if (rsvCookie && rsvCookie.resStartDate && rsvCookie.resEndDate) {
       reservationCopy = {

@@ -49,6 +49,7 @@ export const GlobalStyles = () => (
       html {
         height: 100%;
         width: 100%;
+        min-width: 320px;
         box-sizing: border-box;
         margin: 0;
         font-family: 'Open Sans', sans-serif;
@@ -72,14 +73,14 @@ export const GlobalStyles = () => (
         font-family: ${theme.fonts.poppins};
         font-weight: 700;
         color: ${theme.colors.mainText};
-        font-size: 2.6rem;
+        font-size: ${theme.fontSizes[4]}px;
       }
 
       h2 {
         font-family: ${theme.fonts.poppins};
         font-weight: 700;
         color: ${theme.colors.secondaryText};
-        font-size: 2rem;
+        font-size: ${theme.fontSizes[3]}px;
         letter-spacing: 0.05em;
       }
 

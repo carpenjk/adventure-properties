@@ -17,6 +17,8 @@ const StyledCard = styled.div`
   `}
 
   &:focus {
+    border: 3px solid ${({ theme }) => `${theme.colors.link[0]}8A`};
+    outline: none;
     ${condition('scaleOnFocus')`
       transform: scale(${getProp('scale')});
     `}
@@ -56,6 +58,7 @@ const Card = ({
   <Link href={url}>
     <a tabIndex={-1}>
       <StyledCard
+        tabIndex={0}
         inactive={inactive}
         scaleOnHover={scaleOnHover}
         scaleOnFocus={scaleOnFocus}

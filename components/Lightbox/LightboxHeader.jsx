@@ -3,9 +3,9 @@ import { breakpoint } from 'themeweaver';
 
 const StyledHeader = styled.div`
   position: absolute;
-  top: calc(32px);
-  left: 32px;
-  right: 32px;
+  top: 32px;
+  left: 0;
+  right: 0;
   margin: 0 auto;
   display: flex;
   justify-content: space-between;
@@ -17,8 +17,6 @@ const StyledHeader = styled.div`
 
   ${breakpoint(1)`
     top: calc(112px - 64px);
-    left: 32px;
-    right: 32px;
   `}
 
   > span {

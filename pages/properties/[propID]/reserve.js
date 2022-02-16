@@ -1,7 +1,6 @@
 import styled from 'styled-components';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { signIn, useSession } from 'next-auth/client';
 import Head from 'next/head';
 import { useEffect } from 'react';
 import { fetchProperty } from '../../../components/adapters/property/property';
@@ -14,8 +13,11 @@ import ReservationReview from '../../../components/reservationForm/ReservationRe
 import ReservationResponse from '../../../components/reservationForm/ReservationResponse';
 import ReservationError from '../../../components/reservationForm/ReservationError';
 import Spacer from '../../../components/base/Spacer';
+import ReservationPicture from '../../../components/reservation/ReservationPicture';
 
 const StyledContent = styled.div`
+  padding-top: ${({ theme }) => theme.space[3]}px;
+  padding-bottom: ${({ theme }) => theme.space[3]}px;
   margin: auto;
   display: flex;
   flex-direction: column;
@@ -23,18 +25,6 @@ const StyledContent = styled.div`
   max-width: 500px;
   align-items: center;
   justify-content: center;
-`;
-const StyledImgWrapper = styled.div`
-  display: flex;
-  width: 100%;
-  max-width 500px;
-
-  img {
-    touch-action: pinch-zoom;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
 `;
 
 //* *********** static data ****************************/
@@ -73,17 +63,7 @@ const Reserve = ({ property }) => {
     (response && response.error && true) || (error && true);
   const isComplete = response && response.message && true;
 
-  const mediumModifiers = '?fit=fill&w=500&q=80';
-  const smallModifiers = '?fit=fill&w=350&q=80';
-
   const mainUrl = `http:${property.mainPhoto.fields.file.url}`;
-  const img = {
-    srcSet: `
-      ${mainUrl}${smallModifiers} 350w,
-      ${mainUrl}${mediumModifiers} 500w,
-        `,
-    src: `${mainUrl}${smallModifiers}`,
-  };
 
   function handleReserve() {
     // event.preventDefault();
@@ -109,7 +89,7 @@ const Reserve = ({ property }) => {
   return (
     <>
       <Head>
-        <title>Property</title>
+        <title>{title}</title>
         <style
           type="text/css"
           dangerouslySetInnerHTML={{ __html: mediaStyles }}
@@ -118,12 +98,7 @@ const Reserve = ({ property }) => {
       </Head>
       <main style={{ width: '100%' }}>
         <StyledContent>
-          <StyledImgWrapper key={img.src}>
-            <picture>
-              <source srcSet={img.srcSet} />
-              <img src={img.src} alt="description" />
-            </picture>
-          </StyledImgWrapper>
+          <ReservationPicture url={mainUrl} alt={title} />
           <Spacer vertical space="8px" />
           <Link href={`/properties/${propID}`} passHref>
             <a>

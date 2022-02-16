@@ -1,5 +1,3 @@
-import NavToggle from '../components/navbar/NavToggle';
-import NavList from '../components/navbar/NavList';
 import MobileNavList from '../components/navbar/MobileNavList';
 import HeroBanner from '../components/hero/HeroBanner';
 import SearchBar from '../components/searchbar/SearchBar';
@@ -71,7 +69,7 @@ export const slider1Data = {
   items: [
     {
       key: 'skiing1',
-      heading: '1 Bdr With Amazing Views',
+      title: '1 Bdr With Amazing Views',
       description:
         'Lorem ipsum dolor, sit amet consectetur adipisicing elit. Facere dolorem voluptatem iure. Corrupti architecto distinctio autem. Dicta consequuntur natus possimus quia libero, recusandae laborum blanditiis, quaerat ipsa quisquam deleniti dolorem? Laudantium inventore accusamus natus enim dignissimos vero est atque libero!',
       location: 'Sugarloaf, ME',
@@ -80,13 +78,19 @@ export const slider1Data = {
       beds: 1,
       baths: 1,
       propertyType: 'Cabin',
-      tags: ['Skiing', 'Snowshoeing', 'Birding', 'Snowmobiling', 'Hiking'],
+      nearbyActivities: [
+        'Skiing',
+        'Snowshoeing',
+        'Birding',
+        'Snowmobiling',
+        'Hiking',
+      ],
       currSymbol: '$',
       unit: 'night',
     },
     {
       key: 'skiing2',
-      heading: '2 Bdr With Amazing Views',
+      title: '2 Bdr With Amazing Views',
       description:
         'Lorem ipsum dolor, sit amet consectetur adipisicing elit. Facere dolorem voluptatem iure. Corrupti architecto distinctio autem. Dicta consequuntur natus possimus quia libero, recusandae laborum blanditiis, quaerat ipsa quisquam deleniti dolorem? Laudantium inventore accusamus natus enim dignissimos vero est atque libero!',
       location: 'Sugarloaf, ME',
@@ -95,13 +99,19 @@ export const slider1Data = {
       beds: 2,
       baths: 1,
       propertyType: 'Cabin',
-      tags: ['Skiing', 'Snowshoeing', 'Birding', 'Snowmobiling', 'Hiking'],
+      nearbyActivities: [
+        'Skiing',
+        'Snowshoeing',
+        'Birding',
+        'Snowmobiling',
+        'Hiking',
+      ],
       currSymbol: '$',
       unit: 'night',
     },
     {
       key: 'skiing3',
-      heading: '3 Bdr With Amazing Views',
+      title: '3 Bdr With Amazing Views',
       description: 'this is a description of the property',
       location: 'Sugarloaf, ME',
       price: '239',
@@ -109,7 +119,13 @@ export const slider1Data = {
       beds: 3,
       baths: 1,
       propertyType: 'Cabin',
-      tags: ['Skiing', 'Snowshoeing', 'Birding', 'Snowmobiling', 'Hiking'],
+      nearbyActivities: [
+        'Skiing',
+        'Snowshoeing',
+        'Birding',
+        'Snowmobiling',
+        'Hiking',
+      ],
       currSymbol: '$',
       unit: 'night',
     },

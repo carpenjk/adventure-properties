@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { breakpoint } from 'themeweaver';
 import PropertyTitle from '../property/PropertyTitle';
 import PropertyCaption from './PropertyCaption';
 
@@ -8,13 +9,14 @@ const StyledContainer = styled.div`
   flex-direction: column;
   justify-content: space-around;
   align-content: stretch;
-  width: 100%;
-  max-width: 341px;
+  max-width: 325px;
+
+  ${breakpoint(2)`
+    width: 100%;
+  `}
 
   background: #ffffff;
   box-sizing: border-box;
-
-  padding: 8px;
 
   .headingWrapper {
     flex: none;
@@ -44,13 +46,12 @@ const StyledContainer = styled.div`
 `;
 const buildPicUrl = (property) => {
   if (property && property.mainPhoto) {
-    return `http:${property.mainPhoto.fields.file.url}?w=325`;
+    return `http:${property.mainPhoto.fields.file.url}?fit=fill&w=325&h=217&q=80`;
   }
   return undefined;
 };
 const PhotoLayout = ({ property, price, unit, currSymbol }) => {
   const {
-    heading,
     beds,
     baths,
     guests,
@@ -62,6 +63,7 @@ const PhotoLayout = ({ property, price, unit, currSymbol }) => {
   } = property;
 
   const cityState = `${city}, ${state}`;
+  const url = buildPicUrl(property);
 
   return (
     <StyledContainer>
@@ -70,7 +72,7 @@ const PhotoLayout = ({ property, price, unit, currSymbol }) => {
       </div>
       <figure>
         <div className="image">
-          <img src={buildPicUrl(property)} alt={heading} />
+          <img src={url} alt={title} />
         </div>
         <figcaption>
           <PropertyCaption

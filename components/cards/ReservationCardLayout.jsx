@@ -27,7 +27,7 @@ const ReservationCardLayout = (props) => {
   const { avgPrice, currSymbol, property, unit } = reservation;
 
   return (
-    <StyledContainer tabIndex={0} ref={innerRef} scale={scale}>
+    <StyledContainer ref={innerRef} scale={scale}>
       <ReservationCardDetails reservation={reservation} />
       <PhotoLayout
         property={property}

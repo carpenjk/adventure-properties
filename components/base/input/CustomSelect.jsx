@@ -175,7 +175,7 @@ class CustomSelect extends Component {
     }),
     menuList: (defaultStyles) => ({
       ...defaultStyles,
-      height: 200,
+      maxHeight: 200,
       padding: 0,
       boxShadow: '0px 5px 5px rgba(0, 0, 0, 0.15)',
       // hide scroll bars for multiple browsers

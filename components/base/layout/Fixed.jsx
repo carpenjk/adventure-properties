@@ -3,8 +3,9 @@ import styled from 'styled-components';
 
 const StyledFixed = styled.div`
   position: fixed;
-  height: ${getProp('height') || 'auto'};
-  width: ${getProp('width') || 'auto'};
+  height: ${getProp('height')};
+  width: ${getProp('width')};
+  min-width: ${getProp('minWidth')};
   z-index: 10001;
   ${condition('top')`
     top: 0;
@@ -19,6 +20,12 @@ const StyledFixed = styled.div`
     left: 0;
   `}
 `;
+
+StyledFixed.defaultProps = {
+  height: 'auto',
+  width: 'auto',
+  minWidth: '320px',
+};
 
 const Fixed = ({ children, ...passProps }) => (
   <StyledFixed {...passProps}>{children}</StyledFixed>
