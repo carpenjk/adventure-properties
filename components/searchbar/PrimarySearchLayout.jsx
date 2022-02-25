@@ -21,20 +21,22 @@ const PrimarySearchLayout = (props) => {
       <InputBase
         key="destination"
         id="destination"
-        placeholder="Enter a destination or activity"
+        tw={{ semKey: 'input', variant: 'searchBar' }}
         name="destination"
+        placeholder={{
+          value: 'Destination',
+          translateX: '-21px',
+          translateY: '-18px',
+        }}
         valueFunctions={valueFunctions}
-        textOffset="2.6rem"
+        textOffset="26px"
         icon="./static/assets/searchbar/icon/location.svg"
-        iconOffset="0.5rem"
-        width={['100%', '33.2rem']}
+        iconOffset="5px"
+        width={['100%', '340px']}
         input={searchProps}
         onFocus={onInputFocus}
-        inputRef={(el) => (inputRefs.current[0] = el)}
-        nextFocusRef={
-          searchProps.focusNext ? inputRefs.current[index + 1] : undefined
-        }
-        height="4rem" //! refactor? Set height of React-Select objects to match input styling:
+        showInsetPlaceholder
+        ref={(el) => (inputRefs.current[0] = el)}
       />
     </>
   );

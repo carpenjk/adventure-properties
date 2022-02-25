@@ -10,10 +10,6 @@ import {
   getFontSize,
   getFontWeight,
   getLetterSpacing,
-  getMarginTop,
-  getMarginRight,
-  getMarginBottom,
-  getMarginLeft,
   getPaddingTop,
   getPaddingRight,
   getPaddingBottom,
@@ -23,6 +19,8 @@ import {
 import { getProp } from 'dataweaver';
 import DropDownIncrArrow from '../DropDownIncrArrow';
 import withUseRef from '../../WithUseRef';
+import InputWrapper from './InputWrapper';
+import InsetPlaceholder from './InsetPlaceholder';
 
 // custom component for holding selected value
 const customSingleValue = ({ children, ...props }) => (
@@ -39,85 +37,58 @@ const customMenu = (props) => (
 );
 
 const StyledSelect = styled.div`
+  position: relative;
   display: block;
-  width: ${getProp('wrapperWidth', 1)};
-  margin-top: ${(props) => getMarginTop(`input.${props.variant}`, '0')(props)};
-  margin-right: ${(props) =>
-    getMarginRight(`input.${props.variant}`, '0')(props)};
-  margin-bottom: ${(props) =>
-    getMarginBottom(`input.${props.variant}`, '0')(props)};
-  margin-left: ${(props) =>
-    getMarginLeft(`input.${props.variant}`, '0')(props)};
+  width: 100%;
+  background-color: ${getBackgroundColor({}, 'white')};
+  border-radius: ${getBorderRadius({}, '5px')};
+  cursor: pointer;
 
-  & .customSelect__control--is-focused {
-    outline: 5px auto -webkit-focus-ring-color;
+  &:focus-within {
+    outline: 3px solid ${({ theme }) => `${theme.colors.link[0]}`};
   }
 
   & > .customSelect {
-    color: ${(props) => getColor(`input.${props.variant}`, 'inherit')(props)};
+    color: ${getColor({}, 'inherit')};
 
-    height: ${(props) => getHeight(`input.${props.variant}`, '0')(props)};
-    box-shadow: ${(props) =>
-      getBoxShadow(
-        `input.${props.variant}`,
-        '0px 0px 8px rgba(192, 192, 192, 0.52)'
-      )(props)};
-    border-radius: ${(props) =>
-      getBorderRadius(`input.${props.variant}`, '5px')(props)};
-    padding-top: ${(props) =>
-      getPaddingTop(`input.${props.variant}`, '0')(props)};
-    padding-right: ${(props) =>
-      getPaddingRight(`input.${props.variant}`, '0')(props)};
-    padding-bottom: ${(props) =>
-      getPaddingBottom(`input.${props.variant}`, '0')(props)};
+    height: ${getHeight({}, '0')};
+    box-shadow: ${getBoxShadow({}, '0px 0px 8px rgba(192, 192, 192, 0.52)')};
+    border-radius: ${getBorderRadius({}, '5px')};
+    padding-top: ${getPaddingTop({}, '0')};
+    padding-right: ${getPaddingRight({}, '0')};
+    padding-bottom: ${getPaddingBottom({}, '0')};
     border-style: none;
   }
 
   & input {
-    height: ${(props) => getHeight(`input.${props.variant}`, '0')(props)};
+    height: ${getHeight({}, '0')};
   }
 
   & > * {
     width: 100%;
-    background-color: ${(props) =>
-      getBackgroundColor(`input.${props.variant}`, 'initial')(props)};
-
-    font-family: ${(props) =>
-      getFontFamily(`input.${props.variant}`, 'inherit')(props)};
-    font-weight: ${(props) =>
-      getFontWeight(`input.${props.variant}`, 'normal')(props)};
-    font-size: ${(props) =>
-      getFontSize(`input.${props.variant}`, '1.6rem')(props)};
-    letter-spacing: ${(props) =>
-      getLetterSpacing(`input.${props.variant}`, '0.025em')(props)};
+    font-family: ${getFontFamily({}, 'inherit')};
+    font-weight: ${getFontWeight({}, 'normal')};
+    font-size: ${getFontSize({}, '1.6rem')};
+    letter-spacing: ${getLetterSpacing({}, '0.025em')};
   }
 
   ${breakpoint(1)`
-    width: ${getProp('wrapperWidth', 1)};
-    margin-top: ${(props) =>
-      getMarginTop(`input.${props.variant}`, '0')(props)};
-    margin-right: ${(props) =>
-      getMarginRight(`input.${props.variant}`, '1.4rem')(props)};
-    margin-bottom: ${(props) =>
-      getMarginBottom(`input.${props.variant}`, '2rem')(props)};
-    margin-left: ${(props) =>
-      getMarginLeft(`input.${props.variant}`, '0')(props)};
+    width: 100%;
+    background-color: ${getBackgroundColor({}, 'white')};
 
     & > * {
-      background-color: ${(props) =>
-        getBackgroundColor(`input.${props.variant}`, 'initial')(props)};
-      font-family: ${(props) =>
-        getFontFamily(`input.${props.variant}`, 'inherit')(props)};
-      font-weight: ${(props) =>
-        getFontWeight(`input.${props.variant}`, 'normal')(props)};
-      font-size: ${(props) =>
-        getFontSize(`input.${props.variant}`, '1.6rem')(props)};
-      letter-spacing: ${(props) =>
-        getLetterSpacing(`input.${props.variant}`, '0.025em')(props)};
+      font-family: ${getFontFamily({}, 'inherit')};
+      font-weight: ${getFontWeight({}, 'normal')};
+      font-size: ${getFontSize({}, '1.6rem')};
+      letter-spacing: ${getLetterSpacing({}, '0.025em')};
     }
 
   `}
 `;
+
+const DEFAULT_TW = {
+  semKey: 'select',
+};
 
 class CustomSelect extends Component {
   customStyles = {
@@ -129,13 +100,15 @@ class CustomSelect extends Component {
       // none of react-select's styles are passed to <Control />
       ...this.icon(),
       width: '100%',
+      height: '100%',
       boxSizing: 'border-box',
-      paddingLeft: getProp('textOffset')(this.props),
+
       // This line disable the blue border
       boxShadow: 'none',
     }),
     valueContainer: (defaultStyles) => ({
       ...defaultStyles,
+      padding: `0 0 0 ${getProp('textOffset')(this.props)}`,
       border: 'none',
       boxShadow: 'none',
       maxHeight: this.props.height, // max height must be set to match input styling
@@ -157,11 +130,14 @@ class CustomSelect extends Component {
         opacity,
         transition,
         color: getColor('select.searchBar', 'inherit'),
+        margin: 0,
       };
     },
     placeholder: (defaultStyles) => ({
       ...defaultStyles,
-      color: getProp('placeholderColor')(this.props),
+      color: this.props.showInsetPlaceholder
+        ? 'transparent'
+        : getColor('select.searchBar', 'inherit'),
     }),
     menu: (defaultStyles) => ({
       ...defaultStyles,
@@ -215,6 +191,9 @@ class CustomSelect extends Component {
     this.handleSelectChange = this.handleSelectChange.bind(this);
     this.handleBlur = this.handleBlur.bind(this);
     this.handleFocus = this.handleFocus.bind(this);
+    this.state = {
+      isActive: false,
+    };
   }
 
   handleSelectChange(option) {
@@ -225,7 +204,7 @@ class CustomSelect extends Component {
       nextFocusRef,
       focusNext,
     } = this.props;
-    // this.setState({ isOpen: false });
+
     if (onInputChange) {
       onInputChange();
     } else {
@@ -240,17 +219,21 @@ class CustomSelect extends Component {
 
   handleFocus(option) {
     const { onFocus } = this.props || false;
+    this.setState({ isActive: true });
     if (onFocus) onFocus(option);
   }
 
   handleBlur(option) {
-    const { onBlur } = this.props || false;
+    const { onBlur, innerRef } = this.props || false;
+    if (innerRef && !innerRef.current.state.value) {
+      this.setState({ isActive: false });
+    }
     if (onBlur) onBlur(option);
   }
 
   focus = () => {
-    const { useInnerRef } = this.props || false;
-    if (useInnerRef && useInnerRef.current) useInnerRef.current.select.focus();
+    const { innerRef } = this.props || false;
+    if (innerRef && innerRef.current) innerRef.current.select.focus();
   };
 
   icon = () => ({
@@ -274,41 +257,65 @@ class CustomSelect extends Component {
   render() {
     const {
       innerKey,
+      innerRef,
       name,
       placeholder,
       width,
       options,
-      onInputChange,
-      useInnerRef,
+      showInsetPlaceholder,
+      textOffset,
+      tw,
       variant,
       value,
     } = this.props;
 
+    const { isActive } = this.state;
+    const mergedTW = { ...DEFAULT_TW, ...tw };
+
     return (
-      <StyledSelect variant={variant} wrapperWidth={width} ref={this.styleRef}>
-        <Select
-          id={innerKey}
-          name={name}
-          instanceId={innerKey}
-          className="customSelect"
-          classNamePrefix="customSelect"
-          value={value}
-          blurInputOnSelect={false}
-          isSearchable={false}
-          placeholder={placeholder}
-          styles={this.customStyles}
-          options={options}
-          components={{
-            SingleValue: customSingleValue,
-            Menu: customMenu,
-          }}
-          // workaround: binding this.handleSelectChange to this in constructor failed
-          onChange={this.handleSelectChange}
-          onBlur={this.handleBlur}
-          onFocus={this.handleFocus}
-          ref={useInnerRef}
-        />
-      </StyledSelect>
+      <InputWrapper tw={mergedTW} width={width}>
+        <StyledSelect
+          tw={mergedTW}
+          variant={variant}
+          wrapperWidth={width}
+          ref={this.styleRef}
+        >
+          {showInsetPlaceholder && (
+            <InsetPlaceholder
+              tw={mergedTW}
+              isActive={isActive}
+              offset={textOffset}
+              translateX={placeholder.translateX}
+              translateY={placeholder.translateY}
+            >
+              {placeholder.value}
+            </InsetPlaceholder>
+          )}
+
+          <Select
+            id={innerKey}
+            name={name}
+            instanceId={innerKey}
+            className="customSelect"
+            classNamePrefix="customSelect"
+            value={value}
+            blurInputOnSelect={false}
+            isSearchable={false}
+            placeholder={placeholder.value}
+            styles={this.customStyles}
+            options={options}
+            components={{
+              SingleValue: customSingleValue,
+              Menu: customMenu,
+            }}
+            // workaround: binding this.handleSelectChange to this in constructor failed
+            onChange={this.handleSelectChange}
+            onBlur={this.handleBlur}
+            onFocus={this.handleFocus}
+            ref={innerRef}
+          />
+        </StyledSelect>
+      </InputWrapper>
     );
   }
 }

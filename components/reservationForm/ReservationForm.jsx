@@ -116,7 +116,7 @@ const ReservationForm = (props) => {
       <InputGroup heading="Dates">
         <StyledDateRangeWrapper>
           <DateRange
-            variant="reservation"
+            tw={{ variant: 'reservation' }}
             endProps={endDateProps}
             startProps={startDateProps}
             filterStartDate={(dt) => isAvail(dt, availability)}
@@ -134,27 +134,25 @@ const ReservationForm = (props) => {
       <Spacer vertical space={FORM_SPACING} />
       <InputGroup heading="Guests">
         <CustomSelect
-          variant="searchBar"
+          tw={{ variant: 'reservation' }}
           value={guestOptions[selectedGuestOptionIndex]}
           theme={theme}
           key="guests"
           innerKey="guestsSelect"
           name={GUEST_INPUT_ID}
           id={GUEST_INPUT_ID}
-          placeholder="Guests"
+          placeholder={{ value: 'Guests' }}
           focusNext={false}
           icon={GUEST_ICON}
-          iconOffset="0.5rem"
-          iconWidth="1.6rem"
-          iconHeight="1.6rem"
-          showLabel
-          textOffset="1.8rem"
+          iconOffset="5px"
+          iconWidth="16px"
+          iconHeight="16px"
+          textOffset="26px"
           width="100%"
           placeholderColor={theme.colors.lightText}
           options={filterGuestOptions(guestOptions, maxGuests)}
           valueFunctions={{ get: getNumGuests, set: setNumGuests }}
           ref={guestRef}
-          height="4rem" //! refactor? Set height of React-Select objects to match input styling:
         />
       </InputGroup>
       <Spacer vertical space={FORM_SPACING} />

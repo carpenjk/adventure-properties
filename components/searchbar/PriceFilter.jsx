@@ -3,38 +3,39 @@ import { ThemeContext } from 'styled-components';
 import CustomSelect from '../base/input/CustomSelect';
 import withFilterGroup from './WithFilterGroup';
 
-import { priceFilters as inputs } from '../../compConfig';
+import { priceFilters } from '../../data/input';
 
 const PriceFilter = (props) => {
   const { valueFunctions } = props;
   const theme = useContext(ThemeContext);
+  const { minPrice, maxPrice } = priceFilters;
   return (
-    <React.Fragment>
+    <>
       <CustomSelect
-        innerKey={'minPriceSelect'}
+        innerKey="minPriceSelect"
         theme={theme}
         key="minPrice"
-        name={inputs.minPrice.id}
-        placeholder={inputs.minPrice.placeholder}
-        width={inputs.minPrice.width}
-        textOffset={inputs.minPrice.textOffset}
-        options={inputs.minPrice.options}
+        name={minPrice.id}
+        placeholder={minPrice.placeholder}
+        width={minPrice.width}
+        textOffset={minPrice.textOffset}
+        options={minPrice.options}
         height="4rem" //! refactor? Set height of React-Select objects to match input styling
         valueFunctions={valueFunctions}
       />
       <CustomSelect
-        innerKey={'maxPriceSelect'}
+        innerKey="maxPriceSelect"
         theme={theme}
         key="maxPrice"
-        name={inputs.maxPrice.id}
-        placeholder={inputs.maxPrice.placeholder}
-        width={inputs.maxPrice.width}
-        textOffset={inputs.maxPrice.textOffset}
-        options={inputs.maxPrice.options}
+        name={maxPrice.id}
+        placeholder={maxPrice.placeholder}
+        width={maxPrice.width}
+        textOffset={maxPrice.textOffset}
+        options={maxPrice.options}
         height="4rem" //! refactor? Set height of React-Select objects to match input styling
         valueFunctions={valueFunctions}
       />
-    </React.Fragment>
+    </>
   );
 };
 

@@ -1,6 +1,6 @@
 import { useContext } from 'react';
-import styled from 'styled-components';
-import { ThemeContext } from 'styled-components';
+import styled, { ThemeContext } from 'styled-components';
+
 import { breakpoint } from 'themeweaver';
 import withFilterGroup from './WithFilterGroup';
 import Checkbox from '../base/input/Checkbox';
@@ -23,23 +23,21 @@ const CheckFilters = (props) => {
   const theme = useContext(ThemeContext);
   return (
     <StyledList>
-      {filters.map((filter) => {
-        return (
-          <li key={filter.id}>
-            <Checkbox
-              id={filter.id}
-              name={filter.name}
-              label={filter.label}
-              input={filter}
-              valueFunctions={valueFunctions}
-              fg={theme.colors.primary}
-              bg={theme.colors.white}
-              fg_checked={theme.colors.white}
-              bg_checked={theme.colors.primary}
-            />
-          </li>
-        );
-      })}
+      {filters.map((filter) => (
+        <li key={filter.id}>
+          <Checkbox
+            id={filter.id}
+            name={filter.name}
+            label={filter.label}
+            input={filter}
+            valueFunctions={valueFunctions}
+            fg={theme.colors.primary}
+            bg={theme.colors.white}
+            fg_checked={theme.colors.white}
+            bg_checked={theme.colors.primary}
+          />
+        </li>
+      ))}
     </StyledList>
   );
 };

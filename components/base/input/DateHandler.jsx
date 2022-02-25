@@ -1,5 +1,4 @@
 import React, { Component, createRef } from 'react';
-import { createPortal } from 'react-dom';
 import styled from 'styled-components';
 import {
   breakpoint,
@@ -10,10 +9,6 @@ import {
   getFontWeight,
   getHeight,
   getLetterSpacing,
-  getMarginTop,
-  getMarginRight,
-  getMarginBottom,
-  getMarginLeft,
   getBoxShadow,
   getBorderRadius,
   getMinWidth,
@@ -22,103 +17,111 @@ import { getProp } from 'dataweaver';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import InputLabel from './InputLabel';
+import InputWrapper from './InputWrapper';
+import InsetPlaceholder from './InsetPlaceholder';
 
 const StyledDateHandler = styled.div`
-display: block;
-position: relative;
-width: ${getProp('width')};
-min-width: ${(props) => getMinWidth(`date.${props.variant}`, '0')(props)};
-margin-top: ${(props) => getMarginTop(`date.${props.variant}`, '0')(props)};
-margin-right: ${(props) => getMarginRight(`date.${props.variant}`, '0')(props)};
-margin-bottom: ${(props) =>
-  getMarginBottom(`date.${props.variant}`, '0')(props)};
-margin-left: ${(props) => getMarginLeft(`date.${props.variant}`, '0')(props)};
-
-
-
-.react-datepicker-popper {
+  display: block;
   position: relative;
-  z-index: 99999;
-  tabIndex="0";
-}
-.react-datepicker-wrapper {
-  width: 100%;
-  box-sizing: border-box;
-}
-.react-datepicker__input-container {
-  width:100%;
-}
-.react-datepicker__input-container > input {
-  width: 100%;
-  padding-left: ${getProp('textOffset')};
-  background-image: url(${getProp('icon')});
-  background-repeat: no-repeat;
-  background-position: ${getProp('iconOffset')} 50%;
-  box-shadow: ${(props) =>
-    getBoxShadow(
-      `date.${props.variant}`,
-      '0px 0px 8px rgba(192, 192, 192, 0.52)'
-    )(props)};
-  border-radius: ${(props) =>
-    getBorderRadius(`date.${props.variant}`, '5px')(props)};
-  border-style: none;
-  color: ${(props) => getColor(`date.${props.variant}`, 'inherit')(props)};
-  background-color: ${(props) =>
-    getBackgroundColor(`date.${props.variant}`, 'initial')(props)};
-  font-family: ${(props) =>
-    getFontFamily(`date.${props.variant}`, 'inherit')(props)};
-  font-weight: ${(props) =>
-    getFontWeight(`date.${props.variant}`, 'normal')(props)};
-  font-size: ${(props) =>
-    getFontSize(`date.${props.variant}`, '1.6rem')(props)};
-  height: ${(props) => getHeight(`date.${props.variant}`, 'auto')(props)};
-  letter-spacing: ${(props) =>
-    getLetterSpacing(`date.${props.variant}`, '0.025em')(props)};
   
-}
-
-${breakpoint(1)`
-  width: ${getProp('width')};
-  min-width: ${(props) => getMinWidth(`date.${props.variant}`, '0')(props)};
-  margin-top: ${(props) => getMarginTop(`date.${props.variant}`, '0')(props)};
-  margin-right: ${(props) =>
-    getMarginRight(`date.${props.variant}`, '0')(props)};
-  margin-bottom: ${(props) =>
-    getMarginBottom(`date.${props.variant}`, '0')(props)};
-  margin-left: ${(props) => getMarginLeft(`date.${props.variant}`, '0')(props)};
-
+  width: 100%;
   
 
-  .react-datepicker__input-container > input {
-    width: ${getProp('width')};
 
-    color: ${(props) => getColor(`date.${props.variant}`, 'inherit')(props)};
-    background-color: ${(props) =>
-      getBackgroundColor(`date.${props.variant}`, 'initial')(props)};
-    font-family: ${(props) =>
-      getFontFamily(`date.${props.variant}`, 'inherit')(props)};
-    font-weight: ${(props) =>
-      getFontWeight(`date.${props.variant}`, 'normal')(props)};
-    font-size: ${(props) =>
-      getFontSize(`date.${props.variant}`, '1.6rem')(props)};
-    letter-spacing: ${(props) =>
-      getLetterSpacing(`date.${props.variant}`, '0.025em')(props)};
-    box-shadow: ${(props) =>
-      getBoxShadow(
-        `date.${props.variant}`,
-        '0px 0px 8px rgba(192, 192, 192, 0.52)'
-      )(props)};
-    border-radius: ${(props) =>
-      getBorderRadius(`date.${props.variant}`, '5px')(props)};
+  .react-datepicker-popper {
+    position: relative;
+    z-index: 99999;
+    tabIndex="0";
   }
-`}
+  .react-datepicker-wrapper {
+    width: 100%;
+    box-sizing: border-box;
+  }
+  .react-datepicker__input-container {
+    width:100%;
+  }
+  .react-datepicker__input-container > input {
+    width: 100%;
+    height: auto;
+    padding-left: ${getProp('textOffset')};
+    
+    border-style: none;
+    color: ${getColor({}, 'inherit')};
+    background-color: transparent;
+    background-image: url(${getProp('icon')});
+    background-repeat: no-repeat;
+    background-position: ${getProp('iconOffset')} 50%;
+    font-family: ${getFontFamily({}, 'inherit')};
+    font-weight: ${getFontWeight({}, 'normal')};
+    font-size: ${getFontSize({}, '1.6rem')};
+    letter-spacing: ${getLetterSpacing({}, '0.025em')};
+  }
+
+  ${breakpoint(1)`
+    width: 100%;
+
+    .react-datepicker-wrapper {
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+    }
+
+    .react-datepicker__input-container {
+      height: 100%;
+    }
+    .react-datepicker__input-container > input {
+      width: 100%;
+      height: 100%;
+      color: ${getColor({}, 'inherit')};
+      background-color: transparent;
+  
+      background-image: url(${getProp('icon')});
+      background-repeat: no-repeat;
+      background-position: ${getProp('iconOffset')} 50%;
+      cursor: pointer;
+      font-family: ${getFontFamily({}, 'inherit')};
+      font-weight: ${getFontWeight({}, 'normal')};
+      font-size: ${getFontSize({}, '1.6rem')};
+      letter-spacing: ${getLetterSpacing({}, '0.025em')};
+      &:focus{
+        outline: none;
+      }
+  `}
 `;
 
+const StyledInnerWrapper = styled.div`
+  position: relative;
+  height: ${getHeight({}, 'auto')};
+  min-width: ${getMinWidth({}, '0')};
+  background-color: ${(getBackgroundColor({}), 'white')};
+  box-shadow: ${getBoxShadow({}, '0px 0px 8px rgba(192, 192, 192, 0.52)')};
+  border-radius: ${getBorderRadius({}, '5px')};
+
+  &:focus-within {
+    outline: 3px solid ${({ theme }) => `${theme.colors.link[0]}`};
+  }
+
+  ${breakpoint(1)`
+    height: ${getHeight({}, 'auto')};
+    min-width: ${getMinWidth({}, '0')};
+    background-color: ${(getBackgroundColor({}), 'white')};
+
+    box-shadow: ${getBoxShadow({}, '0px 0px 8px rgba(192, 192, 192, 0.52)')};
+    border-radius: ${getBorderRadius({}, '5px')};
+  
+    `}
+`;
+
+const DEFAULT_TW = {
+  semKey: 'date',
+};
+
 StyledDateHandler.defaultProps = {
-  textOffset: '2.6rem',
+  textOffset: '26px',
   icon: '',
-  iconOffset: '0.5rem',
-  width: '12.5rem',
+  iconOffset: '5px',
+  width: '125px',
 };
 
 class DateHandler extends Component {
@@ -127,6 +130,19 @@ class DateHandler extends Component {
     this.styleRef = createRef();
     this.prevWrapperClass = '';
     this.handleFocus = this.handleFocus.bind(this);
+    this.state = {
+      isActive: false,
+    };
+  }
+
+  componentDidMount() {
+    const { selected, inputRef } = this.props;
+    if (inputRef) {
+      inputRef.current.setPreSelection('');
+    }
+    if (selected) {
+      this.setState({ isActive: true });
+    }
   }
 
   componentDidUpdate() {
@@ -135,13 +151,36 @@ class DateHandler extends Component {
       inputRef.current.setOpen(false);
   }
 
+  handleClick(e) {
+    const { inputRef } = this.props;
+    if (inputRef && e.target === inputRef.current) {
+      inputRef.current.setFocus(true);
+    }
+  }
+
   handleFocus(e) {
     const { onFocus } = this.props;
-
     // commented out due to poor accessibility functionality on react-datepicker
     // e.target.readOnly = true;
+    this.setState({ isActive: true });
     if (onFocus) {
-      onFocus();
+      onFocus(e);
+    }
+  }
+
+  handleBlur(e) {
+    const { selected, onBlur, inputRef } = this.props;
+    if (inputRef) {
+      console.log(
+        '🚀 ~ file: DateHandler.jsx ~ line 161 ~ DateHandler ~ handleBlur ~ inputRef',
+        inputRef
+      );
+    }
+    if (!selected) {
+      this.setState({ isActive: false });
+    }
+    if (onBlur) {
+      onBlur(e);
     }
   }
 
@@ -174,47 +213,68 @@ class DateHandler extends Component {
       textOffset,
       width,
       showLabel,
+      showInsetPlaceholder,
       inputRef,
-      variant,
+      tw,
       ...remProps
     } = this.props;
 
+    const { isActive } = this.state;
+    const mergedTW = { ...DEFAULT_TW, ...tw };
     return (
-      <StyledDateHandler
-        variant={variant}
-        icon={icon}
-        iconOffset={iconOffset}
-        textOffset={textOffset}
-        width={width}
-        ref={this.styleRef}
-      >
-        {showLabel && <InputLabel htmlFor={id}>{label}</InputLabel>}
-        <DatePicker
-          {...remProps}
-          id={id}
-          onFocus={this.handleFocus}
-          onKeyDown={this.handleKeyDown}
-          placeholderText={placeholder}
-          // popperContainer={this.PopperContainer}
-          popperPlacement="bottom"
-          popperModifiers={{
-            offset: {
-              enabled: true,
-              offset: '0px, 0px',
-            },
-            flip: {
-              enabled: false,
-            },
-            preventOverflow: {
-              enabled: true,
-              escapeWithReference: false,
-              boundariesElement: 'viewport',
-            },
-          }}
-          strictParsing
-          ref={inputRef}
-        />
-      </StyledDateHandler>
+      <InputWrapper tw={mergedTW} width={width}>
+        <StyledDateHandler
+          tw={mergedTW}
+          icon={icon}
+          iconOffset={iconOffset}
+          textOffset={textOffset}
+          width={width}
+          ref={this.styleRef}
+          onFocus={(e) => this.handleFocus(e)}
+        >
+          {showLabel && <InputLabel htmlFor={id}>{label}</InputLabel>}
+          <StyledInnerWrapper tw={mergedTW}>
+            {showInsetPlaceholder && (
+              <InsetPlaceholder
+                tw={mergedTW}
+                isActive={isActive}
+                offset={textOffset}
+                translateX={placeholder.translateX}
+                translateY={placeholder.translateY}
+              >
+                {placeholder.value}
+              </InsetPlaceholder>
+            )}
+
+            <DatePicker
+              {...remProps}
+              id={id}
+              onBlur={(e) => this.handleBlur(e)}
+              onKeyDown={(e) => this.handleKeyDown(e)}
+              placeholderText={!showInsetPlaceholder ? placeholder.value : ''}
+              // popperContainer={this.PopperContainer}
+              popperPlacement="bottom"
+              popperModifiers={{
+                offset: {
+                  enabled: true,
+                  offset: '0px, 0px',
+                },
+                flip: {
+                  enabled: false,
+                },
+                preventOverflow: {
+                  enabled: true,
+                  escapeWithReference: false,
+                  boundariesElement: 'viewport',
+                },
+              }}
+              strictParsing
+              shouldCloseOnSelect
+              ref={inputRef}
+            />
+          </StyledInnerWrapper>
+        </StyledDateHandler>
+      </InputWrapper>
     );
   }
 }

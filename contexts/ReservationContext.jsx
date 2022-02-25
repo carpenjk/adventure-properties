@@ -1,11 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useCookies } from 'react-cookie';
 
-import {
-  startDateProps,
-  endDateProps,
-  guestOptions,
-} from '../data/reservation';
+import { startDateProps, endDateProps, guestOptions } from '../data/input';
 
 // constants used in cookies
 const PATH = '/';

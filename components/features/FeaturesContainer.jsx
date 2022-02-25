@@ -1,7 +1,6 @@
-import Link from 'next/link';
 import styled from 'styled-components';
 import React from 'react';
-import { breakpoint, getMaxWidth, getMaxHeight } from 'themeweaver';
+import { breakpoint, getMaxWidth } from 'themeweaver';
 
 import FeaturesHeader from './FeaturesHeader';
 import PropertyCard from '../cards/PropertyCard';

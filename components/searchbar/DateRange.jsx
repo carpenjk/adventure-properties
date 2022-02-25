@@ -83,12 +83,16 @@ class DateRange extends Component {
       onFocus,
       popperParent,
       forceClose,
+      showInsetPlaceholder,
       showLabel,
-      variant,
+      tw,
     } = this.props;
 
-    // get values for each controlled component
+    const isTwAry = Array.isArray(tw);
+    const twStartDate = isTwAry ? tw[0] : tw;
+    const twEndDate = isTwAry ? tw[1] : tw;
 
+    // get values for each controlled component
     const { startDate, endDate } = this.state;
     const { get } = valueFunctions;
     const startDateVal = get(startProps.id);
@@ -106,13 +110,14 @@ class DateRange extends Component {
       <>
         {/* Picker for start of range */}
         <DateHandler
+          tw={twStartDate}
           filterDate={filterStartDate}
-          variant={variant}
           key="startDate"
           id={startProps.id}
           name={startProps.id}
           label="Arrive"
           showLabel={showLabel}
+          showInsetPlaceholder={showInsetPlaceholder}
           placeholder={startProps.placeholder}
           icon={startProps.icon.url}
           iconOffset={startProps.icon.iconOffset}
@@ -133,14 +138,15 @@ class DateRange extends Component {
         />
         {/* Picker for end of range */}
         <DateHandler
+          tw={twEndDate}
           allowSameDay={false}
           filterDate={filterEndDate}
-          variant={variant}
           key="endDate"
           id={endProps.id}
           name={endProps.id}
           label="Depart"
           showLabel={showLabel}
+          showInsetPlaceholder={showInsetPlaceholder}
           placeholder={endProps.placeholder}
           icon={endProps.icon.url}
           iconOffset={endProps.icon.iconOffset}

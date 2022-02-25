@@ -15,8 +15,8 @@ import {
   getFontWeight,
   getFontSize,
   getLineHeight,
+  getTransform,
 } from 'themeweaver';
-import { condition } from 'dataweaver';
 
 const StyledButton = styled.button`
   display: flex;
@@ -25,66 +25,62 @@ const StyledButton = styled.button`
   justify-content: center;
   cursor: pointer;
 
-  width: ${(props) => getWidth(props.semKey, 'auto')};
-  height: ${(props) => getHeight(props.semKey, 'auto')};
-  color: ${(props) => getColor(props.semKey, 'white')};
-  background-color: ${(props) => getBackgroundColor(props.semKey, '#E5707A')};
-  padding-top: ${(props) => getPaddingTop(props.semKey, '1em')};
-  padding-right: ${(props) => getPaddingRight(props.semKey, '2em')};
-  padding-bottom: ${(props) => getPaddingBottom(props.semKey, '1em')};
-  padding-left: ${(props) => getPaddingLeft(props.semKey, '2em')};
-  border: ${(props) => getBorder(props.semKey, '2px solid #cdf7f6')};
-  border-radius: ${(props) => getBorderRadius(props.semKey, '10px')};
-  font-family: ${(props) => getFontFamily(props.semKey, 'inherit')};
-  font-weight: ${(props) => getFontWeight(props.semKey, 'bold')};
-  font-size: ${(props) => getFontSize(props.semKey, '18px')};
-  line-height: ${(props) => getLineHeight(props.semKey, '21px')};
+  width: ${getWidth({}, 'auto')};
+  height: ${getHeight({}, 'auto')};
+  color: ${getColor({}, 'white')};
+  background-color: ${getBackgroundColor({}, '#E5707A')};
+  padding-top: ${getPaddingTop({}, '1em')};
+  padding-right: ${getPaddingRight({}, '2em')};
+  padding-bottom: ${getPaddingBottom({}, '1em')};
+  padding-left: ${getPaddingLeft({}, '2em')};
+  border: ${getBorder({}, '2px solid #cdf7f6')};
+  border-radius: ${getBorderRadius({}, '10px')};
+  font-family: ${getFontFamily({}, 'inherit')};
+  font-weight: ${getFontWeight({}, 'bold')};
+  font-size: ${getFontSize({}, '18px')};
+  line-height: ${getLineHeight({}, '21px')};
 
   &:hover {
-    color: ${(props) => getColor(`${props.semKey}_hover`, '#E5707A')};
-    background-color: ${(props) =>
-      getBackgroundColor(`${props.semKey}_hover`, 'white')};
+    color: ${getColor({ suffix: '_hover' }, '#E5707A')};
+    background-color: ${getBackgroundColor({ suffix: '_hover' }, 'white')};
+    transform: ${getTransform({ suffix: '_hover' }, 'none')};
   }
 
   ${breakpoint(1)`
-  width: ${(props) => getWidth(props.semKey, 'auto')(props, 1)};
-  height: ${(props) => getHeight(props.semKey, 'auto')(props, 1)};
-  color: ${(props) => getColor(props.semKey, 'white')(props, 1)};
-  background-color: ${(props) =>
-    getBackgroundColor(props.semKey, '#E5707A')(props, 1)};
-  padding-top: ${(props) => getPaddingTop(props.semKey, '1em')(props, 1)};
-  padding-right: ${(props) => getPaddingRight(props.semKey, '2em')(props, 1)};
-  padding-bottom: ${(props) => getPaddingBottom(props.semKey, '1em')(props, 1)};
-  padding-left: ${(props) => getPaddingLeft(props.semKey, '2em')(props, 1)};
-  border: ${(props) => getBorder(props.semKey, '2px solid #cdf7f6')(props, 1)};
-  border-radius: ${(props) => getBorderRadius(props.semKey, '10px')(props, 1)};
-  font-family: ${(props) => getFontFamily(props.semKey, 'inherit')(props, 1)};
-  font-weight: ${(props) => getFontWeight(props.semKey, 'bold')(props, 1)};
-  font-size: ${(props) => getFontSize(props.semKey, '18px')(props, 1)};
-  line-height: ${(props) => getLineHeight(props.semKey, '21px')(props, 1)};
+    width: ${getWidth({}, 'auto')};
+    height: ${getHeight({}, 'auto')};
+    color: ${getColor({}, 'white')};
+    background-color: ${getBackgroundColor({}, '#E5707A')};
+    padding-top: ${getPaddingTop({}, '1em')};
+    padding-right: ${getPaddingRight({}, '2em')};
+    padding-bottom: ${getPaddingBottom({}, '1em')};
+    padding-left: ${getPaddingLeft({}, '2em')};
+    border: ${getBorder({}, '2px solid #cdf7f6')};
+    border-radius: ${getBorderRadius({}, '10px')};
+    font-family: ${getFontFamily({}, 'inherit')};
+    font-weight: ${getFontWeight({}, 'bold')};
+    font-size: ${getFontSize({}, '18px')};
+    line-height: ${getLineHeight({}, '21px')};
 
-  &:hover {
-    color: ${(props) => getColor(`${props.semKey}_hover`, '#E5707A')};
-    background-color: ${(props) =>
-      getBackgroundColor(`${props.semKey}_hover`, 'white')};
-  }
-  ${condition('disabled')`
     &:hover {
-      color: ${(props) => getColor(props.semKey, 'white')(props, 1)};
-    background-color: ${(props) =>
-      getBackgroundColor(props.semKey, '#E5707A')(props, 1)};
+      color: ${getColor({ suffix: '_hover' }, '#E5707A')};
+      background-color: ${getBackgroundColor({ suffix: '_hover' }, 'white')};
+      transform: ${getTransform({ suffix: '_hover' }, 'none')};
     }
-  `}
   `}
 `;
 
-const ActionButton = ({ variant, children, ...rest }) => (
-  <StyledButton {...rest} semKey={`button.${variant}`}>
-    {children}
-  </StyledButton>
-);
-
-ActionButton.defaultProps = {
-  variant: 'action',
+const DEFAULT_TW = {
+  semKey: 'button',
 };
+
+const ActionButton = ({ tw, variant, children, ...rest }) => {
+  const mergedTw = { ...DEFAULT_TW, ...tw };
+  return (
+    <StyledButton tw={mergedTw} {...rest} semKey={`button.${variant}`}>
+      {children}
+    </StyledButton>
+  );
+};
+
 export default ActionButton;

@@ -4,6 +4,7 @@ import Section from '../components/base/semantic/Section';
 import SearchBar from '../components/searchbar/SearchBar';
 import HeroContainer from '../components/hero/HeroContainer';
 import FeaturesContainer from '../components/features/FeaturesContainer';
+import Filters from '../components/searchbar/Filters';
 
 //* configs
 import { fetchFeaturedProperties } from '../components/adapters/property/property';
@@ -34,7 +35,7 @@ const Index = (props) => {
       </Head>
       <Section semKey="hero" position="relative">
         <HeroContainer backgroundImage={HERO_IMAGE} />
-        <SearchBar openMaxWidth={['none', '1000px']} />
+        <SearchBar FilterFields={Filters} openMaxWidth={['none', '1000px']} />
       </Section>
       <Section semKey="features" className="features">
         <FeaturesContainer items={features} />

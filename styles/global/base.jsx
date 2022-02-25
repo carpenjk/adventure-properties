@@ -91,20 +91,7 @@ export const GlobalStyles = () => (
       p {
         color: ${theme.colors.mainText};
       }
-      .input,
-      input {
-        font-family: ${theme.fonts.poppins};
-        font-size: 1.6rem;
-        letter-spacing: 0.025em;
-        color: ${theme.colors.primary};
 
-        height: 4rem;
-        background-color: ${theme.colors.white};
-        box-shadow: 0px 0px 8px rgba(192, 192, 192, 0.52);
-        border-radius: 5px;
-        padding: 0;
-        border-style: none;
-      }
       ::placeholder {
         color: ${theme.colors.lightText};
         opacity: 100%;

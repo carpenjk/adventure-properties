@@ -1,6 +1,5 @@
-import { useState, useEffect, useLayoutEffect } from 'react';
-import { checkFiltersData } from '../../compConfig';
-import React from 'react';
+import React, { useState, useEffect, useLayoutEffect } from 'react';
+import { checkFiltersData } from '../../data/input';
 
 const SearchBarContext = React.createContext();
 
@@ -9,7 +8,7 @@ const SearchBarProvider = (props) => {
   const [isSearchBarFocused, setIsSearchBarFocused] = useState(false);
   const [isSearchFiltersOpen, setIsSearchFiltersOpen] = useState(false);
 
-  //set up state for each search field using id of input in config file
+  // set up state for each search field using id of input in config file
   const [searchFields, setSearchFields] = useState({
     destination: '',
     arriveDate: '',
@@ -18,17 +17,19 @@ const SearchBarProvider = (props) => {
   });
 
   function createCheckFilterState() {
-    return checkFiltersData.reduce((acc, filterGroup) => {
-      return {
+    return checkFiltersData.reduce(
+      (acc, filterGroup) => ({
         ...acc,
-        ...filterGroup.filters.reduce((acc, filter) => {
-          return {
+        ...filterGroup.filters.reduce(
+          (acc, filter) => ({
             ...acc,
             [filter.id]: { value: 0, filterFn: (filter) => filter >= value },
-          };
-        }, {}),
-      };
-    }, {});
+          }),
+          {}
+        ),
+      }),
+      {}
+    );
   }
 
   const [checkFiltersState, setCheckFilters] = useState(
@@ -43,21 +44,17 @@ const SearchBarProvider = (props) => {
     ...createCheckFilterState(),
   });
 
-  //@param filter must match id of input in config file
-  const getFilter = (filterId) => {
-    return searchFilters[filterId];
-  };
+  // @param filter must match id of input in config file
+  const getFilter = (filterId) => searchFilters[filterId];
 
-  //@param filter must match id of input in config file
-  const getFilterValue = (filterId) => {
-    return searchFilters[filterId].value;
-  };
+  // @param filter must match id of input in config file
+  const getFilterValue = (filterId) => searchFilters[filterId].value;
 
   function updateSearch(inputs) {
     if (inputs) setSearchFields(() => ({ ...searchFields, ...inputs }));
   }
 
-  //@param field must match id of input in config file
+  // @param field must match id of input in config file
   function getSearchValue(field) {
     return searchFields[field];
   }
@@ -78,9 +75,9 @@ const SearchBarProvider = (props) => {
     return { ...searchFilters, ...newFilter };
   };
 
-  //@param filter must match id of input in config file
+  // @param filter must match id of input in config file
   // Usage requires passing an object with filter id as object key
-  //e.g. set({ [id]: checked });
+  // e.g. set({ [id]: checked });
   const updateFilters = (filter) => {
     if (filter) {
       setSearchFilters((prevFilter) => createNewFilter(prevFilter, filter));
@@ -100,7 +97,7 @@ const SearchBarProvider = (props) => {
 
   // lifecyle methods
 
-  //check and set is started after every search criteria update
+  // check and set is started after every search criteria update
   const useIsoLayoutEffect =
     typeof window !== 'undefined' ? useLayoutEffect : useEffect;
 

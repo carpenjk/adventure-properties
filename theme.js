@@ -1,4 +1,4 @@
-import { withThemeweaver, variant, value, getBorderColor } from 'themeweaver';
+import { withThemeweaver, variant, value } from 'themeweaver';
 import { breakpoints } from './Media';
 
 export const theme = withThemeweaver(
@@ -111,6 +111,11 @@ export const theme = withThemeweaver(
         fontFamily: 'roboto',
         fontSize: 2,
       }),
+      ...variant('search_hover', {
+        backgroundColor: 'action[1]',
+        color: 'lightBackground',
+        transform: value('scale(1.04)'),
+      }),
       ...variant('signUp', {
         backgroundColor: 'tertiary',
         color: 'primary',
@@ -131,12 +136,22 @@ export const theme = withThemeweaver(
       }),
     },
     input: {
+      ...variant('default', {
+        height: value('60px'),
+        marginTop: 0,
+        marginRight: [0, 2],
+        marginBottom: [0, 1],
+        marginLeft: 0,
+        color: 'primary',
+        fontSize: 2,
+        fontFamily: 'poppins',
+      }),
       ...variant('searchBar', {
-        height: value('4rem'),
-        marginTop: 1,
-        marginRight: [1, 2],
-        marginBottom: [1, 1],
-        marginLeft: 1,
+        height: value('60px'),
+        marginTop: 0,
+        marginRight: [0, 2],
+        marginBottom: [0, 1],
+        marginLeft: 0,
         color: 'primary',
         fontSize: 2,
         fontFamily: 'poppins',
@@ -148,8 +163,14 @@ export const theme = withThemeweaver(
       }),
     },
     select: {
-      ...variant('searchBar', {
-        height: value('4rem'),
+      ...variant('default', {
+        height: value('60px'),
+        color: 'primary',
+        fontSize: 2,
+        fontFamily: 'poppins',
+      }),
+      ...variant('reservation', {
+        height: value('40px'),
         color: 'primary',
         fontSize: 2,
         fontFamily: 'poppins',
@@ -164,7 +185,7 @@ export const theme = withThemeweaver(
     },
     date: {
       ...variant('searchBar', {
-        height: value('4rem'),
+        height: value('60px'),
         color: 'primary',
         fontSize: 2,
         fontFamily: 'poppins',
@@ -202,7 +223,7 @@ export const theme = withThemeweaver(
       borderRadius: 2,
     },
     searchBar: {
-      backgroundColor: 'white',
+      backgroundColor: 'lightBackground',
       width: [value('90vw'), value('auto')],
       maxWidth: [value('500px'), value('none')],
       borderRadius: 2,

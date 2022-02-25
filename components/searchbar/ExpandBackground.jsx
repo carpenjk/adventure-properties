@@ -34,7 +34,6 @@ const StyledBackground = styled.div`
     
     border-radius: ${getBorderRadius('searchBar', '8px')};
     top: -${getPaddingTop('searchBar', '1rem')};
-    
     right: -${getPaddingRight('searchBar', '1rem')};
     bottom: -${getPaddingBottom('searchBar', '1rem')};
     left: -${getPaddingLeft('searchBar', '1rem')};
