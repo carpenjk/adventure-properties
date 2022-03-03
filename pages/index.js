@@ -1,4 +1,5 @@
 import Head from 'next/head';
+import { checkFiltersData as checkFilters } from '../data/input';
 import { mediaStyles } from '../Media';
 import Section from '../components/base/semantic/Section';
 import SearchBar from '../components/searchbar/SearchBar';
@@ -8,6 +9,8 @@ import Filters from '../components/searchbar/Filters';
 
 //* configs
 import { fetchFeaturedProperties } from '../components/adapters/property/property';
+import PrimarySearchFields from '../components/searchbar/PrimarySearchFields';
+import SecondarySearchFields from '../components/searchbar/SecondarySearchFields';
 
 // static variables
 const HERO_IMAGE = '/static/assets/lofoten-2220461.png';
@@ -35,7 +38,13 @@ const Index = (props) => {
       </Head>
       <Section semKey="hero" position="relative">
         <HeroContainer backgroundImage={HERO_IMAGE} />
-        <SearchBar FilterFields={Filters} openMaxWidth={['none', '1000px']} />
+        <SearchBar
+          PrimarySearchFields={PrimarySearchFields}
+          SecondarySearchFields={SecondarySearchFields}
+          FilterFields={Filters}
+          checkFilters={checkFilters}
+          openMaxWidth={['none', '1000px']}
+        />
       </Section>
       <Section semKey="features" className="features">
         <FeaturesContainer items={features} />

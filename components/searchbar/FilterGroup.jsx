@@ -1,23 +1,46 @@
 import styled from 'styled-components';
-import FilterHeader from '../FilterHeader';
+import {
+  breakpoint,
+  getMarginTop,
+  getMarginRight,
+  getMarginBottom,
+  getMarginLeft,
+  getPaddingTop,
+  getPaddingRight,
+  getPaddingBottom,
+  getPaddingLeft,
+} from 'themeweaver';
+import FilterHeader from './FilterHeader';
 
-const FilterGroup = (props) => {
-  const StyleWrapper = styled.div`
-    display: flex;
-    flex-direction: column;
-    margin-top: 500px;
-  `;
-  const FilterContainer = styled.div`
-    display: flex;
+const StyledFilterGroup = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin-top: ${getMarginTop('searchBar_container.filterGroup', '4rem')};
+  margin-right: ${getMarginRight('searchBar_container.filterGroup', '0')};
+  margin-bottom: ${getMarginBottom('searchBar_container.filterGroup', '0')};
+  margin-left: ${getMarginLeft('searchBar_container.filterGroup', '0')};
+  padding-top: ${getPaddingTop('searchBar_container.filterGroup', '0')};
+  padding-right: ${getPaddingRight('searchBar_container.filterGroup', '0')};
+  padding-bottom: ${getPaddingBottom(
+    'searchBar_container.filterGroup',
+    '1.6rem'
+  )};
+  padding-left: ${getPaddingLeft('searchBar_container.filterGroup', '0')};
+`;
+const FilterContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+
+  ${breakpoint(1)`
     flex-direction: row;
-  `;
+  `}
+`;
 
-  return (
-    <StyleWrapper key="wrapper">
-      <FilterHeader headerText={props.title} key="title" />
-      <FilterContainer>{props.children}</FilterContainer>
-    </StyleWrapper>
-  );
-};
+const FilterGroup = ({ children, title }) => (
+  <StyledFilterGroup key="wrapper">
+    <FilterHeader headerText={title} key="title" />
+    <FilterContainer>{children}</FilterContainer>
+  </StyledFilterGroup>
+);
 
 export default FilterGroup;

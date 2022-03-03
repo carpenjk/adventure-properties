@@ -1,42 +1,40 @@
 import { useContext } from 'react';
 import { ThemeContext } from 'styled-components';
-import CustomSelect from '../base/input/CustomSelect';
-import withFilterGroup from './WithFilterGroup';
 
 import { priceFilters } from '../../data/input';
+import FormikSelect from '../base/input/FormikSelect';
 
-const PriceFilter = (props) => {
-  const { valueFunctions } = props;
+const PriceFilters = () => {
   const theme = useContext(ThemeContext);
   const { minPrice, maxPrice } = priceFilters;
   return (
     <>
-      <CustomSelect
-        innerKey="minPriceSelect"
+      <FormikSelect
+        id={minPrice.id}
+        instanceId={minPrice.id}
+        name={minPrice.id}
         theme={theme}
         key="minPrice"
-        name={minPrice.id}
         placeholder={minPrice.placeholder}
         width={minPrice.width}
         textOffset={minPrice.textOffset}
         options={minPrice.options}
-        height="4rem" //! refactor? Set height of React-Select objects to match input styling
-        valueFunctions={valueFunctions}
+        showInsetPlaceholder
       />
-      <CustomSelect
-        innerKey="maxPriceSelect"
+      <FormikSelect
+        id={minPrice.id}
+        instanceId={minPrice.id}
+        name={maxPrice.id}
         theme={theme}
         key="maxPrice"
-        name={maxPrice.id}
         placeholder={maxPrice.placeholder}
         width={maxPrice.width}
         textOffset={maxPrice.textOffset}
         options={maxPrice.options}
-        height="4rem" //! refactor? Set height of React-Select objects to match input styling
-        valueFunctions={valueFunctions}
+        showInsetPlaceholder
       />
     </>
   );
 };
 
-export default withFilterGroup(PriceFilter);
+export default PriceFilters;

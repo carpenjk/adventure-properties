@@ -12,16 +12,21 @@ import {
 import { getProp } from 'dataweaver';
 
 const StyledLabel = styled.label`
-  color: ${getColor('checkbox.searchBar', 'inherit')};
-  background-color: ${getBackgroundColor('checkbox.searchBar', 'initial')};
-  font-family: ${getFontFamily('checkbox.searchBar', 'inherit')};
-  font-weight: ${getFontWeight('checkbox.searchBar', 'normal')};
-  font-size: ${getFontSize('checkbox.searchBar', '1.6rem')};
-  letter-spacing: ${getLetterSpacing('checkbox.searchBar', '0.025em')};
+  padding: 2px;
+  color: ${getColor({}, 'inherit')};
+  border-radius: ${getBorderRadius({}, '5px')};
+  background-color: ${getBackgroundColor({}, 'initial')};
+  font-family: ${getFontFamily({}, 'inherit')};
+  font-weight: ${getFontWeight({}, 'normal')};
+  font-size: ${getFontSize({}, '1.6rem')};
+  letter-spacing: ${getLetterSpacing({}, '0.025em')};
   display: flex;
   position: relative;
   align-items: center;
   cursor: pointer;
+  &:focus-within {
+    outline: 3px solid ${({ theme }) => `${theme.colors.link[0]}`};
+  }
 `;
 
 const HiddenCheckbox = styled.input`
@@ -34,7 +39,7 @@ const HiddenCheckbox = styled.input`
 
   &:checked ~ .checkbox-custom {
     background-color: ${getProp('bg_checked')};
-    border-radius: ${getBorderRadius('checkbox.searchBar', '5px')};
+    border-radius: ${getBorderRadius({}, '5px')};
     -webkit-transform: rotate(0deg) scale(1);
     -ms-transform: rotate(0deg) scale(1);
     transform: rotate(0deg) scale(1);
@@ -64,7 +69,7 @@ const CustomCheckbox = styled.span`
   width: 1.1em;
   margin-right: 1.5rem;
   background-color: ${getProp('bg')};
-  border-radius: ${getBorderRadius('checkbox.searchBar', '5px')};
+  border-radius: ${getBorderRadius({}, '5px')};
   transition: all 0.3s ease-out;
   -webkit-transition: all 0.3s ease-out;
   -moz-transition: all 0.3s ease-out;
@@ -90,48 +95,61 @@ const CustomCheckbox = styled.span`
   }
 `;
 
-const Checkbox = (props) => {
-  const { id, name, label, fg, bg, fg_checked, bg_checked } = props;
-  const { set, get } = props.valueFunctions;
-  const filterRef = useRef(null);
+const DEFAULT_TW = {
+  semKey: 'checkbox',
+};
 
-  const handleCheckFilterChange = (e) => {
-    const { id } = e.target;
-    set(id);
-  };
+const Checkbox = (props) => {
+  const {
+    id,
+    value,
+    label,
+    fg,
+    bg,
+    fgChecked,
+    bgChecked,
+    onChange,
+    tw,
+  } = props;
+  const filterRef = useRef(null);
+  const mergedTW = { ...DEFAULT_TW, ...tw };
 
   const handleKeyPress = (e) => {
-    const { id } = e.target;
     switch (e.which) {
       case 13:
       case 32:
-        set(id);
+        onChange(filterRef.current);
+        break;
+      default:
     }
   };
+
+  const handleChange = (e) => {
+    onChange(filterRef.current);
+  };
+
   return (
-    <StyledLabel htmlFor={id}>
+    <StyledLabel
+      tw={mergedTW}
+      htmlFor={id}
+      tabIndex="0"
+      onKeyPress={handleKeyPress}
+      value={value}
+    >
       <HiddenCheckbox
-        id={id}
-        name={name}
+        {...props}
+        onChange={handleChange}
+        tw={mergedTW}
         type="checkbox"
         tabIndex="-1"
-        fg={fg}
-        bg={bg}
-        fg_checked={fg_checked}
-        bg_checked={bg_checked}
-        checked={get(id) || false}
-        onChange={handleCheckFilterChange}
       />
       <CustomCheckbox
-        id={id}
-        name={name}
+        tw={mergedTW}
         className="checkbox-custom"
         fg={fg}
         bg={bg}
-        fg_checked={fg_checked}
-        bg_checked={bg_checked}
-        tabIndex="0"
-        onKeyPress={handleKeyPress}
+        fg_checked={fgChecked}
+        bg_checked={bgChecked}
         ref={filterRef}
       />
       <span>{label}</span>

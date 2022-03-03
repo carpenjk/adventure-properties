@@ -1,3 +1,4 @@
+import { Field } from 'formik';
 import InputBase from '../base/input/InputBase';
 
 const searchProps = {
@@ -14,21 +15,21 @@ const searchProps = {
   focusNext: false,
 };
 
-const PrimarySearchLayout = (props) => {
-  const { valueFunctions, onInputFocus, inputRefs } = props;
+const PrimarySearchFields = (props) => {
+  const { onInputFocus, inputRefs } = props;
   return (
     <>
-      <InputBase
+      <Field
+        as={InputBase}
         key="destination"
         id="destination"
-        tw={{ semKey: 'input', variant: 'searchBar' }}
         name="destination"
+        tw={{ semKey: 'input', variant: 'searchBar' }}
         placeholder={{
           value: 'Destination',
           translateX: '-21px',
           translateY: '-18px',
         }}
-        valueFunctions={valueFunctions}
         textOffset="26px"
         icon="./static/assets/searchbar/icon/location.svg"
         iconOffset="5px"
@@ -42,4 +43,4 @@ const PrimarySearchLayout = (props) => {
   );
 };
 
-export default PrimarySearchLayout;
+export default PrimarySearchFields;

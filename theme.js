@@ -139,8 +139,8 @@ export const theme = withThemeweaver(
       ...variant('default', {
         height: value('60px'),
         marginTop: 0,
-        marginRight: [0, 2],
-        marginBottom: [0, 1],
+        marginRight: [0, 0],
+        marginBottom: [0, 0],
         marginLeft: 0,
         color: 'primary',
         fontSize: 2,
@@ -149,8 +149,8 @@ export const theme = withThemeweaver(
       ...variant('searchBar', {
         height: value('60px'),
         marginTop: 0,
-        marginRight: [0, 2],
-        marginBottom: [0, 1],
+        marginRight: [0, 0],
+        marginBottom: [0, 0],
         marginLeft: 0,
         color: 'primary',
         fontSize: 2,

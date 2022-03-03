@@ -1,11 +1,5 @@
 import styled from 'styled-components';
-import {
-  breakpoint,
-  getMarginTop,
-  getMarginRight,
-  getMarginBottom,
-  getMarginLeft,
-} from 'themeweaver';
+import { breakpoint } from 'themeweaver';
 import { condition } from 'dataweaver';
 
 const StyledInputGroup = styled.div`
@@ -24,14 +18,6 @@ const StyledInputGroup = styled.div`
       display: none;
     `}
       
-
-      &.inputGroup > * {
-        margin-top: ${getMarginTop('input.searchBar', '0')};
-        margin-right: ${getMarginRight('input.searchBar', '1.4rem')};
-        margin-bottom: ${getMarginBottom('input.searchBar', '2rem')};
-        margin-left: ${getMarginLeft('input.searchBar', '0')};
-        margin: 0;
-      }   
   `}
 `;
 
@@ -40,11 +26,11 @@ StyledInputGroup.defaultProps = {
 };
 
 const InputGroup = (props) => {
-  const { InputFields, hide, groupKey } = props;
+  const { hide, children } = props;
 
   return (
-    <StyledInputGroup key={groupKey} className="inputGroup" hide={hide}>
-      <InputFields {...props} />
+    <StyledInputGroup className="inputGroup" hide={hide}>
+      {children}
     </StyledInputGroup>
   );
 };

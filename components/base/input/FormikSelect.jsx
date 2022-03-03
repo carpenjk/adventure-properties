@@ -1,27 +1,22 @@
-import { Field } from 'formik';
+import { useField } from 'formik';
 import CustomSelect from './CustomSelect';
 
-const FormikSelect = ({ id, options, name, guestRef, ...restProps }) => (
-  <Field name={name}>
-    {({ form, field }) => {
-      const { setFieldValue } = form;
-      const { value } = field;
-      const getOption = (val) => options.find((opt) => opt.value === val);
-
-      return (
-        // Picker for start of range
-        <CustomSelect
-          id={id}
-          options={options}
-          {...restProps}
-          value={getOption(value)}
-          onInputChange={(val) => setFieldValue(name, val.value)}
-          ref={guestRef}
-          height="4rem" //! refactor? Set height of React-Select objects to match input styling:
-        />
-      );
-    }}
-  </Field>
-);
+const FormikSelect = (props) => {
+  const { options } = props;
+  const [field, meta, { setValue }] = useField(props);
+  const { value } = field;
+  const getOption = (val) => {
+    if (!val) return '';
+    return options.find((opt) => opt.value === val);
+  };
+  return (
+    // Picker for start of range
+    <CustomSelect
+      {...props}
+      value={getOption(value) || ''}
+      onChange={(val) => setValue(val.value)}
+    />
+  );
+};
 
 export default FormikSelect;

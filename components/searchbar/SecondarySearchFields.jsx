@@ -1,39 +1,41 @@
 import { useContext } from 'react';
 import { ThemeContext } from 'styled-components';
 
-import DateRange from './DateRange';
-import CustomSelect from '../base/input/CustomSelect';
 import { startDateProps, endDateProps, guestOptions } from '../../data/input';
+import FormikDateRange from '../base/input/FormikDateRange';
+import FormikSelect from '../base/input/FormikSelect';
+import { gtDateOnly } from '../../utils/dates';
 
-const SecondarySearchLayout = (props) => {
+const SecondarySearchFields = (props) => {
   const {
-    valueFunctions,
     onInputFocus,
     inputRefs,
     searchBarRef,
     isSearchBarFocused,
+    values,
   } = props;
+
   const theme = useContext(ThemeContext);
 
   return (
     <>
-      <DateRange
+      <FormikDateRange
         tw={{ variant: 'searchBar' }}
         key="dateRange"
+        values={values}
+        filterEndDate={(dt) => gtDateOnly(dt, values[startDateProps.id])}
         startProps={startDateProps}
         endProps={endDateProps}
-        valueFunctions={valueFunctions}
         onFocus={onInputFocus}
         ref={(el) => (inputRefs.current[0] = el)}
         popperParent={searchBarRef}
         forceClose={!isSearchBarFocused}
         showInsetPlaceholder
       />
-      <CustomSelect
+      <FormikSelect
         theme={theme}
-        key="guests"
-        innerKey="guestsSelect"
         id="guests"
+        instanceId="guests"
         name="guests"
         placeholder={{
           value: 'Guests',
@@ -46,14 +48,13 @@ const SecondarySearchLayout = (props) => {
         iconHeight="16px"
         textOffset="26px"
         width="158px"
-        placeholderColor={theme.colors.lightText}
         options={guestOptions}
-        valueFunctions={valueFunctions}
+        showInsetPlaceholder
         onFocus={onInputFocus}
-        ref={(el) => (inputRefs.current[1] = el)}
+        // ref={(el) => (inputRefs.current[1] = el)}
       />
     </>
   );
 };
 
-export default SecondarySearchLayout;
+export default SecondarySearchFields;

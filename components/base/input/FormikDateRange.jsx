@@ -1,6 +1,6 @@
-import { Component, createRef } from 'react';
 import { Field } from 'formik';
-import FormikDatePicker from './FormikDatePicker';
+import { Component, createRef } from 'react';
+import DateHandler from './DateHandler';
 
 class FormikDateRange extends Component {
   constructor(props) {
@@ -11,33 +11,12 @@ class FormikDateRange extends Component {
       startDate: {
         id: startProps.id,
         ref: createRef(),
-        value: '',
       },
       endDate: {
         id: endProps.id,
         ref: createRef(),
-        value: '',
       },
     };
-  }
-
-  componentDidUpdate(prevProps, prevState) {
-    const { startDate, endDate } = this.state;
-    // const { valueFunctions } = this.props;
-    // const { get, set } = valueFunctions || {};
-    // const { get: prevGet } = prevProps.valueFunctions || {};
-
-    // const prevDate = prevGet(prevState.startDate.id);
-    // const newDate = get(startDate.id);
-
-    const prevDate = prevState.startDate.value;
-    const newDate = startDate.value;
-
-    // if start date changes, clear endDate to force valid range selection
-    if (prevDate && newDate && prevDate.getTime() !== newDate.getTime()) {
-      // set({ [endDate.id]: null });
-      this.setEndDateValue('');
-    }
   }
 
   //* event handlers *********************************************************
@@ -45,7 +24,6 @@ class FormikDateRange extends Component {
     const {
       endDate: { ref: endDateRef },
     } = this.state;
-
     // move focus to end date component
     if (endDateRef && endDateRef.current) endDateRef.current.input.focus();
   };
@@ -54,26 +32,6 @@ class FormikDateRange extends Component {
     const { nextFocusRef, focusNext } = this.props;
     if (focusNext && nextFocusRef) nextFocusRef.focus();
   };
-
-  setStartDateValue(val) {
-    this.setState((prev) => ({
-      ...prev,
-      startDate: {
-        ...prev.startDate,
-        value: val,
-      },
-    }));
-  }
-
-  setEndDateValue(val) {
-    this.setState((prev) => ({
-      ...prev,
-      endDate: {
-        ...prev.endDate,
-        value: val,
-      },
-    }));
-  }
 
   //* external methods*******************************************************
   focus() {
@@ -88,14 +46,30 @@ class FormikDateRange extends Component {
       filterStartDate,
       filterEndDate,
       onFocus,
-      popperParent,
       forceClose,
+      showInsetPlaceholder,
       showLabel,
-      variant,
+      tw,
+      values,
     } = this.props;
+
+    const isTwAry = Array.isArray(tw);
+    const twStartDate = isTwAry ? tw[0] : tw;
+    const twEndDate = isTwAry ? tw[1] : tw;
 
     // get values for each controlled component
     const { startDate, endDate } = this.state;
+
+    const startDateVal = values[startProps.id];
+    const endDateVal = values[endProps.id];
+
+    function getMinDate() {
+      const dt = new Date();
+      if (startDateVal) {
+        dt.setUTCDate(startDateVal.getUTCDate() + 1);
+        return dt;
+      }
+    }
 
     return (
       <>
@@ -106,34 +80,36 @@ class FormikDateRange extends Component {
 
             const handleStartChange = (val) => {
               setFieldValue(startProps.id, val);
-              this.setStartDateValue(val);
+              if (val > endDateVal) {
+                setFieldValue(endProps.id, '');
+              }
             };
             return (
-              // Picker for start of range
-              <FormikDatePicker
-                selected={value}
-                onChange={handleStartChange}
-                // onChange={(val) => setFieldValue(startProps.id, val)}
+              <DateHandler
+                tw={twStartDate}
                 filterDate={filterStartDate}
-                variant={variant}
                 key="startDate"
                 id={startProps.id}
+                name={startProps.id}
                 label="Arrive"
                 showLabel={showLabel}
-                placeholderText={startProps.placeholder}
+                showInsetPlaceholder={showInsetPlaceholder}
+                placeholder={startProps.placeholder}
                 icon={startProps.icon.url}
                 iconOffset={startProps.icon.iconOffset}
                 textOffset={startProps.textOffset}
                 width={startProps.width}
-                startDate={startDate.value}
-                endDate={endDate.value}
+                selected={value}
+                startDate={value}
+                endDate={endDateVal}
                 selectsStart
                 minDate={new Date()}
+                onChange={handleStartChange}
                 onSelect={this.handleStartSelect}
                 onFocus={onFocus}
                 inputRef={startDate.ref}
                 allowSameDay
-                popperParent={popperParent}
+                // popperParent={popperParent}
                 forceClose={forceClose}
               />
             );
@@ -147,32 +123,36 @@ class FormikDateRange extends Component {
 
             const handleEndChange = (val) => {
               setFieldValue(endProps.id, val);
-              this.setEndDateValue(val);
             };
             // Picker for start of range
             return (
-              <FormikDatePicker
-                selected={value}
-                onChange={handleEndChange}
+              <DateHandler
+                tw={twEndDate}
+                allowSameDay={false}
                 filterDate={filterEndDate}
-                variant={variant}
                 key="endDate"
                 id={endProps.id}
+                name={endProps.id}
                 label="Depart"
                 showLabel={showLabel}
-                placeholderText={endProps.placeholder}
+                showInsetPlaceholder={showInsetPlaceholder}
+                placeholder={endProps.placeholder}
                 icon={endProps.icon.url}
                 iconOffset={endProps.icon.iconOffset}
                 textOffset={endProps.textOffset}
                 width={endProps.width}
-                startDate={startDate.value}
-                endDate={endDate.value}
-                minDate={startDate.value}
+                selected={value}
+                startDate={startDateVal}
+                endDate={value}
+                minDate={getMinDate()}
+                highlightDates={[startDateVal || undefined]}
                 selectsEnd
+                openToDate={startDateVal}
                 onSelect={this.handleEndSelect}
+                onChange={handleEndChange}
                 onFocus={onFocus}
                 inputRef={endDate.ref}
-                popperParent={popperParent}
+                // popperParent={popperParent}
                 forceClose={forceClose}
               />
             );

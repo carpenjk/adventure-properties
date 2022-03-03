@@ -9,16 +9,45 @@ export function findDate(date, availability) {
   return dates(availability).find((dt) => dt.date.getTime() === date.getTime());
 }
 
+function _splitDate(dt) {
+  if (!dt.getDate) {
+    return {
+      date: '',
+      month: '',
+      year: '',
+    };
+  }
+  return {
+    date: dt.getDate(),
+    month: dt.getMonth(),
+    year: dt.getFullYear(),
+  };
+}
+
 export function compareDateOnly(dt1, dt2) {
-  const dt1Date = dt1.getDate();
-  const dt1Month = dt1.getMonth();
-  const dt1Year = dt1.getFullYear();
-  const dt2Date = dt2.getDate();
-  const dt2Month = dt2.getMonth();
-  const dt2Year = dt2.getFullYear();
+  const { date: dt1Date, month: dt1Month, year: dt1Year } = _splitDate(dt1);
+  const { date: dt2Date, month: dt2Month, year: dt2Year } = _splitDate(dt2);
+  // const dt1Date = dt1.getDate();
+  // const dt1Month = dt1.getMonth();
+  // const dt1Year = dt1.getFullYear();
+  // const dt2Date = dt2.getDate();
+  // const dt2Month = dt2.getMonth();
+  // const dt2Year = dt2.getFullYear();
   const isEqual =
     dt1Date === dt2Date && dt1Month === dt2Month && dt1Year === dt2Year;
   return isEqual;
+}
+
+export function gtDateOnly(dt1, dt2) {
+  const { date: dt1Date, month: dt1Month, year: dt1Year } = _splitDate(dt1);
+  const { date: dt2Date, month: dt2Month, year: dt2Year } = _splitDate(dt2);
+  if (dt1Year > dt2Year) {
+    return true;
+  }
+  if (dt1Month > dt2Month) {
+    return true;
+  }
+  return dt1Date > dt2Date;
 }
 
 export function dateReviver(key, value) {

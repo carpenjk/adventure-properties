@@ -3,14 +3,9 @@ import { SearchBarContext } from './searchBarContext';
 import FiltersContainer from './FiltersContainer';
 
 const SearchFilters = (props) => {
-  const { isScrollable, FilterFields } = props;
+  const { isScrollable, checkFilters, FilterFields } = props;
   //* context *********************************************************
-  const {
-    isSearchFiltersOpen,
-    updateFilters,
-    getFilterValue,
-    toggleBooleanFilter,
-  } = useContext(SearchBarContext);
+  const { isSearchFiltersOpen } = useContext(SearchBarContext);
 
   return (
     <FiltersContainer
@@ -20,11 +15,7 @@ const SearchFilters = (props) => {
         isSearchFiltersOpen ? 'searchFiltersOpen' : ''
       }`}
     >
-      <FilterFields
-        updateFilters={updateFilters}
-        getFilterValue={getFilterValue}
-        toggleBooleanFilter={toggleBooleanFilter}
-      />
+      <FilterFields checkFilters={checkFilters} />
     </FiltersContainer>
   );
 };

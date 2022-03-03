@@ -33,7 +33,6 @@ const StyledWrapper = styled.div`
   ${breakpoint(1)`
     width: ${getProp('width', 1)};
     border-radius: ${getBorderRadius({}, '5px')};
-  
     margin-top: ${getMarginTop({}, '0')};
     margin-right: ${getMarginRight({}, '0')};
     margin-bottom: ${getMarginBottom({}, '0')};

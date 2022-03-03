@@ -134,13 +134,13 @@ const ReservationForm = (props) => {
       <Spacer vertical space={FORM_SPACING} />
       <InputGroup heading="Guests">
         <CustomSelect
+          id={GUEST_INPUT_ID}
+          name={GUEST_INPUT_ID}
+          instanceId="guestsSelect"
+          key="guests"
           tw={{ variant: 'reservation' }}
           value={guestOptions[selectedGuestOptionIndex]}
           theme={theme}
-          key="guests"
-          innerKey="guestsSelect"
-          name={GUEST_INPUT_ID}
-          id={GUEST_INPUT_ID}
           placeholder={{ value: 'Guests' }}
           focusNext={false}
           icon={GUEST_ICON}
@@ -151,7 +151,9 @@ const ReservationForm = (props) => {
           width="100%"
           placeholderColor={theme.colors.lightText}
           options={filterGuestOptions(guestOptions, maxGuests)}
-          valueFunctions={{ get: getNumGuests, set: setNumGuests }}
+          onChange={(opt) =>
+            setNumGuests({ [GUEST_INPUT_ID]: Number(opt.value) })
+          }
           ref={guestRef}
         />
       </InputGroup>

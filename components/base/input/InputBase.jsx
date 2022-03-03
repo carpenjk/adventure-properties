@@ -85,14 +85,11 @@ class InputBase extends Component {
   }
 
   componentDidMount() {
-    const {
-      valueFunctions: { get },
-      id,
-    } = this.props;
+    const { value } = this.props;
     if (this.inputRef) {
       this.inputRef.current.value = '';
     }
-    if (get(id)) {
+    if (value) {
       this.setState({ isActive: true });
     }
   }
@@ -106,25 +103,17 @@ class InputBase extends Component {
   }
 
   handleBlur = (e) => {
-    const { nextFocusRef } = this.props;
+    const { nextFocusRef, onChange } = this.props;
     const { inputRef } = this;
     if (inputRef && !inputRef.current.value) {
       this.setState({ isActive: false });
     }
 
-    this.handleInputChange(e);
-    if (nextFocusRef) nextFocusRef.focus();
-  };
-
-  handleInputChange = (e) => {
-    const { valueFunctions } = this.props;
-    if (this.onInputChange) {
-      this.onInputChange(e);
-    } else {
-      const { id, value } = e.target;
-      if (id) valueFunctions.set({ [id]: value });
-      e.stopPropagation();
+    if (onChange) {
+      onChange(e);
     }
+
+    if (nextFocusRef) nextFocusRef.focus();
   };
 
   focus() {
@@ -135,16 +124,12 @@ class InputBase extends Component {
   render() {
     const { isActive } = this.state;
     const {
-      id,
-      valueFunctions,
       textOffset,
-      icon,
-      iconOffset,
       width,
       placeholder,
-      onClick,
       showInsetPlaceholder,
       tw,
+      ...remProps
     } = this.props;
     const mergedTW = { ...DEFAULT_TW, ...tw };
 
@@ -165,17 +150,12 @@ class InputBase extends Component {
           <StyledInput
             tw={mergedTW}
             type="text"
-            value={valueFunctions.get(id)}
+            {...remProps}
             className="input"
-            id={id}
-            onClick={onClick}
             onBlur={(e) => this.handleBlur(e)}
-            onChange={(e) => this.handleInputChange(e)}
             onFocus={(e) => this.handleFocus(e)}
             ref={this.inputRef}
             textOffset={textOffset}
-            icon={icon}
-            iconOffset={iconOffset}
           />
         </StyledBackground>
       </InputWrapper>

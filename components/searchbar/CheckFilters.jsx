@@ -2,8 +2,7 @@ import { useContext } from 'react';
 import styled, { ThemeContext } from 'styled-components';
 
 import { breakpoint } from 'themeweaver';
-import withFilterGroup from './WithFilterGroup';
-import Checkbox from '../base/input/Checkbox';
+import FormikCheckbox from '../base/input/FormikCheckbox';
 
 const StyledList = styled.ul`
   margin-left: 10px;
@@ -19,22 +18,22 @@ const StyledList = styled.ul`
 `;
 
 const CheckFilters = (props) => {
-  const { filters, valueFunctions } = props;
+  const { filters, name } = props;
   const theme = useContext(ThemeContext);
   return (
     <StyledList>
       {filters.map((filter) => (
         <li key={filter.id}>
-          <Checkbox
-            id={filter.id}
-            name={filter.name}
+          <FormikCheckbox
+            tw={{ variant: 'searchBar' }}
+            name={name}
+            value={filter.name}
             label={filter.label}
             input={filter}
-            valueFunctions={valueFunctions}
             fg={theme.colors.primary}
             bg={theme.colors.white}
-            fg_checked={theme.colors.white}
-            bg_checked={theme.colors.primary}
+            fgChecked={theme.colors.white}
+            bgChecked={theme.colors.primary}
           />
         </li>
       ))}
@@ -42,4 +41,4 @@ const CheckFilters = (props) => {
   );
 };
 
-export default withFilterGroup(CheckFilters);
+export default CheckFilters;

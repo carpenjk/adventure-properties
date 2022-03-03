@@ -1,29 +1,25 @@
-import { checkFiltersData as filters } from '../../data/input';
-import PriceFilter from './PriceFilter';
-import RoomsFilter from './RoomsFilter';
+import PriceFilters from './PriceFilters';
+import RoomsFilters from './RoomsFilters';
 import CheckFilters from './CheckFilters';
+import FilterGroup from './FilterGroup';
 
-const Filters = ({ updateFilters, getFilterValue, toggleBooleanFilter }) => (
+const Filters = ({ checkFilters }) => (
   <>
     <li key="priceFilter">
-      <PriceFilter
-        title="Price"
-        valueFunctions={{ get: getFilterValue, set: updateFilters }}
-      />
+      <FilterGroup title="Price">
+        <PriceFilters />
+      </FilterGroup>
     </li>
     <li key="bedFilter">
-      <RoomsFilter
-        title="Rooms"
-        valueFunctions={{ get: getFilterValue, set: updateFilters }}
-      />
+      <FilterGroup title="Rooms">
+        <RoomsFilters />
+      </FilterGroup>
     </li>
-    {filters.map((filter) => (
+    {checkFilters.map((filter) => (
       <li key={filter.title}>
-        <CheckFilters
-          title={filter.title}
-          filters={filter.filters}
-          valueFunctions={{ get: getFilterValue, set: toggleBooleanFilter }}
-        />
+        <FilterGroup title={filter.title}>
+          <CheckFilters name={filter.title} filters={filter.filters} />
+        </FilterGroup>
       </li>
     ))}
   </>

@@ -197,19 +197,12 @@ class CustomSelect extends Component {
   }
 
   handleSelectChange(option) {
-    const {
-      onInputChange,
-      valueFunctions,
-      id,
-      nextFocusRef,
-      focusNext,
-    } = this.props;
+    const { onChange, nextFocusRef, focusNext } = this.props;
 
-    if (onInputChange) {
-      onInputChange();
-    } else {
-      valueFunctions.set({ [id]: Number(option.value) });
+    if (onChange) {
+      onChange(option);
     }
+
     if (focusNext) {
       nextFocusRef.current.focus();
     } else {
@@ -256,7 +249,8 @@ class CustomSelect extends Component {
 
   render() {
     const {
-      innerKey,
+      id,
+      instanceId,
       innerRef,
       name,
       placeholder,
@@ -293,9 +287,9 @@ class CustomSelect extends Component {
           )}
 
           <Select
-            id={innerKey}
+            id={id}
+            instanceId={instanceId}
             name={name}
-            instanceId={innerKey}
             className="customSelect"
             classNamePrefix="customSelect"
             value={value}

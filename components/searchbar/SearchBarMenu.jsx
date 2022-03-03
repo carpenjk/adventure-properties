@@ -1,5 +1,13 @@
 // hooks
 import { useContext, useRef } from 'react';
+import { Formik, useFormikContext } from 'formik';
+
+import {
+  checkFiltersData,
+  endDateProps,
+  startDateProps,
+} from '../../data/input';
+
 import useIsoOnClickOutside from '../hooks/UseIsoOnClickOutside';
 import { SearchBarContext } from './searchBarContext';
 
@@ -11,8 +19,6 @@ import MoreButton from '../base/MoreButton';
 import SearchFilters from './SearchFilters';
 import PopupModal from '../base/PopupModal';
 import InputGroup from './InputGroup';
-import PrimarySearchLayout from './PrimarySearchLayout';
-import SecondarySearchLayout from './SecondarySearchLayout';
 import MenuContainer from './MenuContainer';
 import SearchFieldsContainer from './SearchFieldsContainer';
 import ButtonContainer from './ButtonContainer';
@@ -23,17 +29,28 @@ const DEFAULT_OFFSET_TOP_PX = 20;
 //* *****************************************************************
 //* Beginning of Functional Component ******************************
 const SearchBarMenu = (props) => {
-  const { offsetTop, openMaxWidth, FilterFields } = props;
+  const {
+    offsetTop,
+    openMaxWidth,
+    checkFilters,
+    FilterFields,
+    PrimarySearchFields,
+    SecondarySearchFields,
+  } = props;
   //* context *********************************************************
   const {
     updateSearch,
     getSearchValue,
     isStarted,
+    searchHasValues,
     isSearchBarFocused,
     setIsSearchBarFocused,
     isSearchFiltersOpen,
     setIsSearchFiltersOpen,
   } = useContext(SearchBarContext);
+
+  const formik = useFormikContext();
+  const { values } = formik;
 
   //* Dom References ***********************************************
   const searchBarRef = useRef(null);
@@ -44,6 +61,13 @@ const SearchBarMenu = (props) => {
 
   //* variables ****************************************************
   const searchBarOffsetTop = offsetTop || DEFAULT_OFFSET_TOP_PX;
+
+  //* helpers ******************************************************
+  const getInitialCheckFilters = () =>
+    checkFiltersData.reduce(
+      (obj, filter) => ({ ...obj, [filter.title]: [] }),
+      {}
+    );
 
   //* event handlers ***********************************************
   const handleFocus = (e) => {
@@ -57,7 +81,6 @@ const SearchBarMenu = (props) => {
 
   //* hooks/lifecycle
   useIsoOnClickOutside(searchBarRef, onClickOutsideEffect, [isStarted]);
-
   //* component rendering ********************************************************
   return (
     <>
@@ -81,34 +104,79 @@ const SearchBarMenu = (props) => {
           isSearchFiltersOpen={isSearchFiltersOpen}
           isSearchBarFocused={isSearchBarFocused}
         >
-          <SearchFieldsContainer isSearchFiltersOpen={isSearchFiltersOpen}>
-            <InputGroup
-              key="primarySearch"
-              groupkey="primaryGroup"
-              hide={false}
-              isSearchBarFocused={isSearchBarFocused}
-              InputFields={PrimarySearchLayout}
-              inputRefs={visibleInputRefs}
-              valueFunctions={{ get: getSearchValue, set: updateSearch }}
-              onInputFocus={handleFocus}
+          {/* <Formik
+            initialValues={{
+              destination: '',
+              guests: '',
+              [startDateProps.id]: '',
+              [endDateProps.id]: '',
+              ...getInitialCheckFilters(),
+            }}
+          >
+            {(formik) => {
+              const { values } = formik;
+              console.log(
+                '🚀 ~ file: SearchBarMenu.jsx ~ line 113 ~ SearchBarMenu ~ formik',
+                formik
+              );
+              return (
+                <form>
+                  <SearchFieldsContainer
+                    isSearchFiltersOpen={isSearchFiltersOpen}
+                  >
+                    <InputGroup hide={false}>
+                      <PrimarySearchFields
+                        inputRefs={visibleInputRefs}
+                        onInputFocus={handleFocus}
+                        searchBarRef={searchBarRef}
+                        values={values}
+                      />
+                    </InputGroup>
+                    <InputGroup hide={[!isSearchBarFocused, false]}>
+                      <SecondarySearchFields
+                        isSearchBarFocused={isSearchBarFocused}
+                        inputRefs={secondaryInputRefs}
+                        onInputFocus={handleFocus}
+                        searchBarRef={searchBarRef}
+                        values={values}
+                      />
+                    </InputGroup>
+                  </SearchFieldsContainer>
+                  <SearchFilters
+                    FilterFields={FilterFields}
+                    checkFilters={checkFilters}
+                    isScrollable={[false, true]}
+                  />
+                </form>
+              );
+            }}
+          </Formik> */}
+          <form>
+            <SearchFieldsContainer isSearchFiltersOpen={isSearchFiltersOpen}>
+              <InputGroup hide={false}>
+                <PrimarySearchFields
+                  inputRefs={visibleInputRefs}
+                  onInputFocus={handleFocus}
+                  searchBarRef={searchBarRef}
+                  values={values}
+                />
+              </InputGroup>
+              <InputGroup hide={[!isSearchBarFocused, false]}>
+                <SecondarySearchFields
+                  isSearchBarFocused={isSearchBarFocused}
+                  inputRefs={secondaryInputRefs}
+                  onInputFocus={handleFocus}
+                  searchBarRef={searchBarRef}
+                  values={values}
+                />
+              </InputGroup>
+            </SearchFieldsContainer>
+            <SearchFilters
+              FilterFields={FilterFields}
+              checkFilters={checkFilters}
+              isScrollable={[false, true]}
             />
-            <InputGroup
-              key="secondarySearch"
-              groupKey="secondaryGroup"
-              hide={[!isSearchBarFocused, false]}
-              isSearchBarFocused={isSearchBarFocused}
-              InputFields={SecondarySearchLayout}
-              inputRefs={secondaryInputRefs}
-              valueFunctions={{ get: getSearchValue, set: updateSearch }}
-              onInputFocus={handleFocus}
-              lastItemMargin={[{ bottom: '4px' }, { right: '4px' }]}
-              searchBarRef={searchBarRef}
-            />
-          </SearchFieldsContainer>
-          <SearchFilters
-            FilterFields={FilterFields}
-            isScrollable={[false, true]}
-          />
+          </form>
         </MenuContainer>
         <ButtonContainer
           isDisplayed={[isSearchBarFocused, isSearchBarFocused || isStarted]}

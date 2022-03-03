@@ -1,45 +1,42 @@
 import { useContext } from 'react';
 import { ThemeContext } from 'styled-components';
-import CustomSelect from '../base/input/CustomSelect';
-import withFilterGroup from './WithFilterGroup';
-
 import { roomsFilters } from '../../data/input';
+import FormikSelect from '../base/input/FormikSelect';
 
-const RoomsFilter = (props) => {
+const RoomsFilters = (props) => {
   const { valueFunctions } = props;
   const theme = useContext(ThemeContext);
   const { bedroom, bathroom } = roomsFilters;
 
   return (
     <>
-      <CustomSelect
-        innerKey="bedSelect"
-        theme={theme}
-        key="bedFilter"
+      <FormikSelect
+        id={bedroom.id}
+        instanceId={bedroom.id}
         name={bedroom.id}
+        key="bedFilter"
+        theme={theme}
         placeholder={bedroom.placeholder}
         width={bedroom.width}
         textOffset={bedroom.textOffset}
         options={bedroom.options}
-        wrapperClass="roomsFilter"
-        height="4rem" //! refactor? Set height of React-Select objects to match input styling
         valueFunctions={valueFunctions}
+        showInsetPlaceholder
       />
-      <CustomSelect
-        innerKey="bathSelect"
-        theme={theme}
-        key="bathFilter"
+      <FormikSelect
+        id={bathroom.id}
+        instanceId={bathroom.id}
         name={bathroom.id}
+        key="bathFilter"
+        theme={theme}
         placeholder={bathroom.placeholder}
         width={bathroom.width}
         textOffset={bathroom.textOffset}
         options={bathroom.options}
-        wrapperClass="roomsFilter"
-        height="4rem" //! refactor? Set height of React-Select objects to match input styling
-        valueFunctions={valueFunctions}
+        showInsetPlaceholder
       />
     </>
   );
 };
 
-export default withFilterGroup(RoomsFilter);
+export default RoomsFilters;

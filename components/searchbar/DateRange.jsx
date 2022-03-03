@@ -54,16 +54,16 @@ class DateRange extends Component {
   };
 
   handleStartChange = (date) => {
-    const { onInputChange } = this.props;
+    const { onChange } = this.props;
     const { startDate } = this.state;
-    const change = onInputChange || this.handleChange;
+    const change = onChange || this.handleChange;
     change(date, startDate.id);
   };
 
   handleEndChange = (date) => {
-    const { onInputChange } = this.props;
+    const { onChange } = this.props;
     const { endDate } = this.state;
-    const change = onInputChange || this.handleChange;
+    const change = onChange || this.handleChange;
     change(date, endDate.id);
   };
 
