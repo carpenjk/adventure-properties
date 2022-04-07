@@ -93,9 +93,9 @@ export const checkFiltersData = [
         type: 'Checkbox',
       },
       {
-        id: 'mountains',
-        name: 'mountains',
-        label: 'Mountains',
+        id: 'mountain',
+        name: 'mountain',
+        label: 'Mountain',
         type: 'Checkbox',
       },
       {
