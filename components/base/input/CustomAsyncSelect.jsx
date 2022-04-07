@@ -1,5 +1,6 @@
 import React, { Component, createRef } from 'react';
-import Select, { components } from 'react-select';
+import { components } from 'react-select';
+import AsyncSelect from 'react-select/async';
 import styled from 'styled-components';
 import {
   breakpoint,
@@ -21,13 +22,6 @@ import DropDownIncrArrow from '../DropDownIncrArrow';
 import withUseRef from '../../WithUseRef';
 import InputWrapper from './InputWrapper';
 import InsetPlaceholder from './InsetPlaceholder';
-
-// custom component for holding selected value
-const customSingleValue = ({ children, ...props }) => (
-  <components.SingleValue {...props}>
-    {props.data.selectedLabel}
-  </components.SingleValue>
-);
 
 const customMenu = (props) => (
   <>
@@ -90,7 +84,7 @@ const DEFAULT_TW = {
   semKey: 'select',
 };
 
-class CustomSelect extends Component {
+class CustomAsyncSelect extends Component {
   customStyles = {
     container: (defaultStyles) => ({
       ...defaultStyles,
@@ -121,18 +115,6 @@ class CustomSelect extends Component {
     indicatorSeparator: () => ({
       display: 'none',
     }),
-    singleValue: (defaultStyles, state) => {
-      const opacity = state.isDisabled ? 0.5 : 1;
-      const transition = 'opacity 300ms';
-
-      return {
-        ...defaultStyles,
-        opacity,
-        transition,
-        color: getColor('select.searchBar', 'inherit'),
-        margin: 0,
-      };
-    },
     placeholder: (defaultStyles) => ({
       ...defaultStyles,
       color: this.props.showInsetPlaceholder
@@ -218,7 +200,7 @@ class CustomSelect extends Component {
 
   handleBlur(option) {
     const { onBlur, innerRef } = this.props || false;
-    if (innerRef && !innerRef.current.state.value) {
+    if (innerRef && !innerRef.current.select.state.value) {
       this.setState({ isActive: false });
     }
     if (onBlur) onBlur(option);
@@ -255,12 +237,15 @@ class CustomSelect extends Component {
       name,
       placeholder,
       width,
-      options,
       showInsetPlaceholder,
       textOffset,
       tw,
       variant,
       value,
+      loadOptions,
+      getOptionLabel,
+      getOptionValue,
+      isMulti,
     } = this.props;
 
     const { isActive } = this.state;
@@ -286,7 +271,12 @@ class CustomSelect extends Component {
             </InsetPlaceholder>
           )}
 
-          <Select
+          <AsyncSelect
+            isMulti={isMulti}
+            isSearchable
+            loadOptions={loadOptions}
+            getOptionLabel={getOptionLabel}
+            getOptionValue={getOptionValue}
             id={id}
             instanceId={instanceId}
             name={name}
@@ -294,14 +284,12 @@ class CustomSelect extends Component {
             classNamePrefix="customSelect"
             value={value}
             blurInputOnSelect={false}
-            isSearchable={false}
             placeholder={
               placeholder && placeholder.value ? placeholder.value : placeholder
             }
             styles={this.customStyles}
-            options={options}
             components={{
-              SingleValue: customSingleValue,
+              // SingleValue: customSingleValue,
               Menu: customMenu,
             }}
             onChange={this.handleSelectChange}
@@ -315,4 +303,4 @@ class CustomSelect extends Component {
   }
 }
 
-export default withUseRef(CustomSelect);
+export default withUseRef(CustomAsyncSelect);

@@ -1,5 +1,4 @@
-import { Field } from 'formik';
-import InputBase from '../base/input/InputBase';
+import LocationInput from '../base/input/LocationInput';
 
 const searchProps = {
   id: 'destination',
@@ -16,11 +15,22 @@ const searchProps = {
 };
 
 const PrimarySearchFields = (props) => {
-  const { onInputFocus, inputRefs } = props;
+  const {
+    onInputFocus,
+    inputRefs,
+    isSearchBarFocused,
+    currentInputElement,
+  } = props;
+
+  function getInputRef() {
+    if (inputRefs && inputRefs.current && inputRefs.current[0]) {
+      return inputRefs.current[0].inputRef.current;
+    }
+  }
+
   return (
     <>
-      <Field
-        as={InputBase}
+      <LocationInput
         key="destination"
         id="destination"
         name="destination"
@@ -34,6 +44,12 @@ const PrimarySearchFields = (props) => {
         icon="./static/assets/searchbar/icon/location.svg"
         iconOffset="5px"
         width={['100%', '340px']}
+        autoCompleteWidth="100%"
+        autoCompleteOptions={{
+          autoCompleteWidth: '100%',
+          forceClose:
+            !isSearchBarFocused || currentInputElement !== getInputRef(),
+        }}
         input={searchProps}
         onFocus={onInputFocus}
         showInsetPlaceholder

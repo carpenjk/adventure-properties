@@ -54,6 +54,10 @@ const POSITION_OFFSET = 0;
 
 //* ********* Component *********************************/
 const Property = ({ property }) => {
+  console.log(
+    '🚀 ~ file: [propID].js ~ line 57 ~ Property ~ property',
+    property
+  );
   // property data
   const { title, guests } = property || {};
   // reservation objects

@@ -19,6 +19,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 import InputLabel from './InputLabel';
 import InputWrapper from './InputWrapper';
 import InsetPlaceholder from './InsetPlaceholder';
+import DatePickerStyles from './DatePickerStyles';
 
 const StyledDateHandler = styled.div`
   display: block;
@@ -222,59 +223,61 @@ class DateHandler extends Component {
     const { isActive } = this.state;
     const mergedTW = { ...DEFAULT_TW, ...tw };
     return (
-      <InputWrapper tw={mergedTW} width={width}>
-        <StyledDateHandler
-          tw={mergedTW}
-          icon={icon}
-          iconOffset={iconOffset}
-          textOffset={textOffset}
-          width={width}
-          ref={this.styleRef}
-          onFocus={(e) => this.handleFocus(e)}
-        >
-          {showLabel && <InputLabel htmlFor={id}>{label}</InputLabel>}
-          <StyledInnerWrapper tw={mergedTW}>
-            {showInsetPlaceholder && (
-              <InsetPlaceholder
-                tw={mergedTW}
-                isActive={isActive}
-                offset={textOffset}
-                translateX={placeholder.translateX}
-                translateY={placeholder.translateY}
-              >
-                {placeholder.value}
-              </InsetPlaceholder>
-            )}
+      <DatePickerStyles>
+        <InputWrapper tw={mergedTW} width={width}>
+          <StyledDateHandler
+            tw={mergedTW}
+            icon={icon}
+            iconOffset={iconOffset}
+            textOffset={textOffset}
+            width={width}
+            ref={this.styleRef}
+            onFocus={(e) => this.handleFocus(e)}
+          >
+            {showLabel && <InputLabel htmlFor={id}>{label}</InputLabel>}
+            <StyledInnerWrapper tw={mergedTW}>
+              {showInsetPlaceholder && (
+                <InsetPlaceholder
+                  tw={mergedTW}
+                  isActive={isActive}
+                  offset={textOffset}
+                  translateX={placeholder.translateX}
+                  translateY={placeholder.translateY}
+                >
+                  {placeholder.value}
+                </InsetPlaceholder>
+              )}
 
-            <DatePicker
-              {...remProps}
-              id={id}
-              onBlur={(e) => this.handleBlur(e)}
-              onKeyDown={(e) => this.handleKeyDown(e)}
-              placeholderText={!showInsetPlaceholder ? placeholder.value : ''}
-              // popperContainer={this.PopperContainer}
-              popperPlacement="bottom"
-              popperModifiers={{
-                offset: {
-                  enabled: true,
-                  offset: '0px, 0px',
-                },
-                flip: {
-                  enabled: false,
-                },
-                preventOverflow: {
-                  enabled: true,
-                  escapeWithReference: false,
-                  boundariesElement: 'viewport',
-                },
-              }}
-              strictParsing
-              shouldCloseOnSelect
-              ref={inputRef}
-            />
-          </StyledInnerWrapper>
-        </StyledDateHandler>
-      </InputWrapper>
+              <DatePicker
+                {...remProps}
+                id={id}
+                onBlur={(e) => this.handleBlur(e)}
+                onKeyDown={(e) => this.handleKeyDown(e)}
+                placeholderText={!showInsetPlaceholder ? placeholder.value : ''}
+                // popperContainer={this.PopperContainer}
+                popperPlacement="bottom"
+                popperModifiers={{
+                  offset: {
+                    enabled: true,
+                    offset: '0px, 0px',
+                  },
+                  flip: {
+                    enabled: false,
+                  },
+                  preventOverflow: {
+                    enabled: true,
+                    escapeWithReference: false,
+                    boundariesElement: 'viewport',
+                  },
+                }}
+                strictParsing
+                shouldCloseOnSelect
+                ref={inputRef}
+              />
+            </StyledInnerWrapper>
+          </StyledDateHandler>
+        </InputWrapper>
+      </DatePickerStyles>
     );
   }
 }

@@ -22,7 +22,7 @@ export default async function saveReservation(reservation) {
             {
               'isBooked.date': {
                 $gte: reservation.arriveDate,
-                $lte: reservation.departDate,
+                $lt: reservation.departDate,
               },
             },
           ],

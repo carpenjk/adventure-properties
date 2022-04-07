@@ -1,3 +1,5 @@
+import DateDiff from 'date-diff';
+
 export function dates(availability) {
   return availability && availability.avail ? availability.avail : availability;
 }
@@ -22,6 +24,11 @@ function _splitDate(dt) {
     month: dt.getMonth(),
     year: dt.getFullYear(),
   };
+}
+
+export function diffDays(d1, d2) {
+  const diff = new DateDiff(d1, d2);
+  return diff.days();
 }
 
 export function compareDateOnly(dt1, dt2) {

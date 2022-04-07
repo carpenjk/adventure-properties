@@ -45,10 +45,8 @@ const StyledWrapper = styled.div`
   `}
 `;
 
-const InputWrapper = ({ children, tw, width }) => (
-  <StyledWrapper tw={tw} width={width}>
-    {children}
-  </StyledWrapper>
+const InputWrapper = ({ children, ...props }) => (
+  <StyledWrapper {...props}>{children}</StyledWrapper>
 );
 
 export default InputWrapper;

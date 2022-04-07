@@ -27,7 +27,7 @@ const CheckFilters = (props) => {
           <FormikCheckbox
             tw={{ variant: 'searchBar' }}
             name={name}
-            value={filter.name}
+            value={filter.label}
             label={filter.label}
             input={filter}
             fg={theme.colors.primary}

@@ -10,6 +10,7 @@ const SearchBarProvider = (props) => {
   const [isStarted, setIsStarted] = useState(false);
   const [isSearchBarFocused, setIsSearchBarFocused] = useState(false);
   const [isSearchFiltersOpen, setIsSearchFiltersOpen] = useState(false);
+  const [currentInputElement, setCurrentInputElement] = useState();
 
   function searchHasValues() {
     if (!values) return false;
@@ -23,10 +24,6 @@ const SearchBarProvider = (props) => {
       }
       return inpHasValue;
     }, false);
-    console.log(
-      '🚀 ~ file: searchBarContext.js ~ line 26 ~ valuesNotBlank ~ valuesNotBlank',
-      valuesNotBlank
-    );
     return valuesNotBlank;
   }
 
@@ -134,6 +131,8 @@ const SearchBarProvider = (props) => {
         // getSearchValue,
         // searchFields,
         // searchFilters,
+        currentInputElement,
+        setCurrentInputElement,
         values,
         isStarted,
         isSearchBarFocused,

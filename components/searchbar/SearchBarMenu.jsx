@@ -1,13 +1,6 @@
 // hooks
-import { useContext, useRef } from 'react';
-import { Formik, useFormikContext } from 'formik';
-
-import {
-  checkFiltersData,
-  endDateProps,
-  startDateProps,
-} from '../../data/input';
-
+import { useEffect, useContext, useRef } from 'react';
+import { Form, useFormikContext } from 'formik';
 import useIsoOnClickOutside from '../hooks/UseIsoOnClickOutside';
 import { SearchBarContext } from './searchBarContext';
 
@@ -47,10 +40,12 @@ const SearchBarMenu = (props) => {
     setIsSearchBarFocused,
     isSearchFiltersOpen,
     setIsSearchFiltersOpen,
+    currentInputElement,
+    setCurrentInputElement,
   } = useContext(SearchBarContext);
 
   const formik = useFormikContext();
-  const { values } = formik;
+  const { values, handleSubmit } = formik;
 
   //* Dom References ***********************************************
   const searchBarRef = useRef(null);
@@ -62,16 +57,10 @@ const SearchBarMenu = (props) => {
   //* variables ****************************************************
   const searchBarOffsetTop = offsetTop || DEFAULT_OFFSET_TOP_PX;
 
-  //* helpers ******************************************************
-  const getInitialCheckFilters = () =>
-    checkFiltersData.reduce(
-      (obj, filter) => ({ ...obj, [filter.title]: [] }),
-      {}
-    );
-
   //* event handlers ***********************************************
   const handleFocus = (e) => {
     setIsSearchBarFocused(true);
+    setCurrentInputElement(e.target);
   };
 
   const onClickOutsideEffect = () => {
@@ -87,77 +76,31 @@ const SearchBarMenu = (props) => {
       {isSearchBarFocused && (
         <PopupModal isOpen={[isSearchBarFocused, isSearchFiltersOpen]} />
       )}
-
-      <SearchBarContainer
-        isSearchFiltersOpen={isSearchFiltersOpen}
-        isSearchBarFocused={isSearchBarFocused}
-        offsetTop={searchBarOffsetTop}
-        openMaxWidth={openMaxWidth}
-        searchBarRef={searchBarRef}
-      >
-        <ExpandedBackground
-          isExpanded={isSearchBarFocused}
-          hideRight={[false, isSearchFiltersOpen]}
-          innerRef={searchBarBgRef}
-        />
-        <MenuContainer
+      <Form autoComplete="off">
+        <SearchBarContainer
           isSearchFiltersOpen={isSearchFiltersOpen}
           isSearchBarFocused={isSearchBarFocused}
+          offsetTop={searchBarOffsetTop}
+          openMaxWidth={openMaxWidth}
+          searchBarRef={searchBarRef}
         >
-          {/* <Formik
-            initialValues={{
-              destination: '',
-              guests: '',
-              [startDateProps.id]: '',
-              [endDateProps.id]: '',
-              ...getInitialCheckFilters(),
-            }}
+          <ExpandedBackground
+            isExpanded={isSearchBarFocused}
+            hideRight={[false, isSearchFiltersOpen]}
+            innerRef={searchBarBgRef}
+          />
+          <MenuContainer
+            isSearchFiltersOpen={isSearchFiltersOpen}
+            isSearchBarFocused={isSearchBarFocused}
           >
-            {(formik) => {
-              const { values } = formik;
-              console.log(
-                '🚀 ~ file: SearchBarMenu.jsx ~ line 113 ~ SearchBarMenu ~ formik',
-                formik
-              );
-              return (
-                <form>
-                  <SearchFieldsContainer
-                    isSearchFiltersOpen={isSearchFiltersOpen}
-                  >
-                    <InputGroup hide={false}>
-                      <PrimarySearchFields
-                        inputRefs={visibleInputRefs}
-                        onInputFocus={handleFocus}
-                        searchBarRef={searchBarRef}
-                        values={values}
-                      />
-                    </InputGroup>
-                    <InputGroup hide={[!isSearchBarFocused, false]}>
-                      <SecondarySearchFields
-                        isSearchBarFocused={isSearchBarFocused}
-                        inputRefs={secondaryInputRefs}
-                        onInputFocus={handleFocus}
-                        searchBarRef={searchBarRef}
-                        values={values}
-                      />
-                    </InputGroup>
-                  </SearchFieldsContainer>
-                  <SearchFilters
-                    FilterFields={FilterFields}
-                    checkFilters={checkFilters}
-                    isScrollable={[false, true]}
-                  />
-                </form>
-              );
-            }}
-          </Formik> */}
-          <form>
             <SearchFieldsContainer isSearchFiltersOpen={isSearchFiltersOpen}>
               <InputGroup hide={false}>
                 <PrimarySearchFields
                   inputRefs={visibleInputRefs}
                   onInputFocus={handleFocus}
                   searchBarRef={searchBarRef}
+                  isSearchBarFocused={isSearchBarFocused}
+                  currentInputElement={currentInputElement}
                   values={values}
                 />
               </InputGroup>
@@ -176,20 +119,20 @@ const SearchBarMenu = (props) => {
               checkFilters={checkFilters}
               isScrollable={[false, true]}
             />
-          </form>
-        </MenuContainer>
-        <ButtonContainer
-          isDisplayed={[isSearchBarFocused, isSearchBarFocused || isStarted]}
-          isSearchFiltersOpen={isSearchFiltersOpen}
-        >
-          <MoreButton
-            text="More Filters"
-            onClick={() => setIsSearchFiltersOpen(() => !isSearchFiltersOpen)}
-            expanded={isSearchFiltersOpen}
-          />
-          <SearchButton />
-        </ButtonContainer>
-      </SearchBarContainer>
+          </MenuContainer>
+          <ButtonContainer
+            isDisplayed={[isSearchBarFocused, isSearchBarFocused || isStarted]}
+            isSearchFiltersOpen={isSearchFiltersOpen}
+          >
+            <MoreButton
+              text="More Filters"
+              onClick={() => setIsSearchFiltersOpen(() => !isSearchFiltersOpen)}
+              expanded={isSearchFiltersOpen}
+            />
+            <SearchButton type="submit" />
+          </ButtonContainer>
+        </SearchBarContainer>
+      </Form>
     </>
   );
 };

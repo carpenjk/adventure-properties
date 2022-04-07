@@ -78,11 +78,12 @@ export const guestOptions = [
 export const checkFiltersData = [
   {
     title: 'Experience',
-    filters: [
+    name: 'experience',
+    checkboxes: [
       {
         id: 'goodForWork',
         name: 'goodForWork',
-        label: 'Good for Work',
+        label: 'Good For Work',
         type: 'Checkbox',
       },
       {
@@ -142,55 +143,9 @@ export const checkFiltersData = [
     ],
   },
   {
-    title: 'Nearby Activities',
-    filters: [
-      {
-        id: 'golf',
-        name: 'golf',
-        label: 'Golfing',
-        type: 'Checkbox',
-      },
-      {
-        id: 'hike',
-        name: 'hike',
-        label: 'Hiking',
-        type: 'Checkbox',
-      },
-      {
-        id: 'ski',
-        name: 'ski',
-        label: 'Ski/Snowboard',
-        type: 'Checkbox',
-      },
-      {
-        id: 'snowshoe',
-        name: 'snowshoe',
-        label: 'Snowshoeing',
-        type: 'Checkbox',
-      },
-      {
-        id: 'fish',
-        name: 'fish',
-        label: 'Fishing',
-        type: 'Checkbox',
-      },
-      {
-        id: 'hunt',
-        name: 'hunt',
-        label: 'Hunting',
-        type: 'Checkbox',
-      },
-      {
-        id: 'boating',
-        name: 'boating',
-        label: 'Boating',
-        type: 'Checkbox',
-      },
-    ],
-  },
-  {
     title: 'Property Type',
-    filters: [
+    name: 'propertyType',
+    checkboxes: [
       {
         id: 'house',
         name: 'house',
@@ -225,7 +180,8 @@ export const checkFiltersData = [
   },
   {
     title: 'Availability',
-    filters: [
+    name: 'availability',
+    checkboxes: [
       {
         id: 'longTerm',
         name: 'longTerm',
@@ -266,6 +222,78 @@ export const checkFiltersData = [
         id: 'fall',
         name: 'fall',
         label: 'Fall',
+        type: 'Checkbox',
+      },
+    ],
+  },
+  {
+    title: 'Amenities',
+    name: 'amenities',
+    checkboxes: [
+      {
+        id: 'airConditioning',
+        name: 'airConditioning',
+        label: 'Air Conditioning',
+        type: 'Checkbox',
+      },
+      {
+        id: 'heating',
+        name: 'heating',
+        label: 'Heating',
+        type: 'Checkbox',
+      },
+      {
+        id: 'hotTub',
+        name: 'hotTub',
+        label: 'Hot Tub',
+        type: 'Checkbox',
+      },
+      {
+        id: 'fireplace',
+        name: 'fireplace',
+        label: 'Fireplace',
+        type: 'Checkbox',
+      },
+      {
+        id: 'fullyFurnished',
+        name: 'fullyFurnished',
+        label: 'Fully Furnished',
+        type: 'Checkbox',
+      },
+      {
+        id: 'washer',
+        name: 'washer',
+        label: 'Washer',
+        type: 'Checkbox',
+      },
+      {
+        id: 'dryer',
+        name: 'dryer',
+        label: 'Dryer',
+        type: 'Checkbox',
+      },
+    ],
+  },
+  {
+    title: 'Access',
+    name: 'access',
+    checkboxes: [
+      {
+        id: 'beachfront',
+        name: 'beachfront',
+        label: 'Beachfront',
+        type: 'Checkbox',
+      },
+      {
+        id: 'waterfront',
+        name: 'waterfront',
+        label: 'Waterfront',
+        type: 'Checkbox',
+      },
+      {
+        id: 'skiInSkiOut',
+        name: 'skiInSkiOut',
+        label: 'Ski-in/ski-out',
         type: 'Checkbox',
       },
     ],
@@ -418,23 +446,23 @@ export const roomsFilters = {
     options: [
       {
         value: '1',
-        label: '1+',
-        selectedLabel: '1+',
+        label: '1',
+        selectedLabel: '1',
       },
       {
         value: '2',
-        label: '2+',
-        selectedLabel: '2+',
+        label: '2',
+        selectedLabel: '2',
       },
       {
         value: '3',
-        label: '3+',
-        selectedLabel: '3+',
+        label: '3',
+        selectedLabel: '3',
       },
       {
         value: '4',
-        label: '4+',
-        selectedLabel: '4+',
+        label: '4',
+        selectedLabel: '4',
       },
       {
         value: '5',
@@ -457,23 +485,23 @@ export const roomsFilters = {
     options: [
       {
         value: '1',
-        label: '1+',
-        selectedLabel: '1+',
+        label: '1',
+        selectedLabel: '1',
       },
       {
         value: '2',
-        label: '2+',
-        selectedLabel: '2+',
+        label: '2',
+        selectedLabel: '2',
       },
       {
         value: '3',
-        label: '3+',
-        selectedLabel: '3+',
+        label: '3',
+        selectedLabel: '3',
       },
       {
         value: '4',
-        label: '4+',
-        selectedLabel: '4+',
+        label: '4',
+        selectedLabel: '4',
       },
       {
         value: '5',

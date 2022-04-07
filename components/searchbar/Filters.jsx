@@ -2,6 +2,7 @@ import PriceFilters from './PriceFilters';
 import RoomsFilters from './RoomsFilters';
 import CheckFilters from './CheckFilters';
 import FilterGroup from './FilterGroup';
+import ActivitiesFilter from './ActivitiesFilter';
 
 const Filters = ({ checkFilters }) => (
   <>
@@ -15,10 +16,15 @@ const Filters = ({ checkFilters }) => (
         <RoomsFilters />
       </FilterGroup>
     </li>
+    <li key="nearbyActivities">
+      <FilterGroup title="Nearby Activities">
+        <ActivitiesFilter />
+      </FilterGroup>
+    </li>
     {checkFilters.map((filter) => (
       <li key={filter.title}>
         <FilterGroup title={filter.title}>
-          <CheckFilters name={filter.title} filters={filter.filters} />
+          <CheckFilters name={filter.name} filters={filter.checkboxes} />
         </FilterGroup>
       </li>
     ))}

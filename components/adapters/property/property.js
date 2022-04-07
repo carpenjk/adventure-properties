@@ -1,8 +1,8 @@
 import cmsClient from '../../../Contentful';
 import clientPromise from '../../../utils/mongodb';
 
-const fetchCMSAttributes = async (ids) => {
-  const property = await cmsClient.getEntry(ids);
+const fetchCMSAttributes = async (id) => {
+  const property = await cmsClient.getEntry(id);
   return property;
 };
 
@@ -14,14 +14,26 @@ const fetchManyCMSAttributes = async (ids) => {
   return properties;
 };
 
-const fetchDBAttributes = async (ids) => {
+const fetchDBAttributes = async (id) => {
   const dbClient = await clientPromise;
   const property = await dbClient
     .db()
     .collection('properties')
-    .findOne({ cmsID: ids }, { projection: { nearbyActivities: 1, _id: 0 } });
+    .findOne({ cmsID: id }, { projection: { nearbyActivities: 1, _id: 0 } });
   return property;
 };
+
+export const getPriceDescriptors = () => ({ unit: 'night', currSymbol: '$' });
+
+const addDisplayPrice = (props) =>
+  props.map((p) => {
+    const { availability, ...remProps } = p;
+    return {
+      ...remProps,
+      displayPrice: p.availability[0].price,
+      ...getPriceDescriptors(),
+    };
+  });
 
 const fetchManyDBAttributes = async (ids, includeDisplayPrice) => {
   const baseProjection = { cmsID: 1, nearbyActivities: 1, _id: 0 };
@@ -35,39 +47,39 @@ const fetchManyDBAttributes = async (ids, includeDisplayPrice) => {
     .find({ cmsID: { $in: ids } }, { projection: projectionObj })
     .toArray();
 
-  const transformProperties = (props) =>
-    props.map((p) => {
-      const { availability, ...remProps } = p;
-      return {
-        ...remProps,
-        displayPrice: p.availability[0].price,
-        unit: 'night',
-        currSymbol: '$',
-      };
-    });
-
   // price used for feature listing
   const propertiesWithPrice = includeDisplayPrice
-    ? transformProperties(properties)
+    ? addDisplayPrice(properties)
     : properties;
   return propertiesWithPrice;
 };
 
 function createProperty(cmsProps, dbProps) {
-  const { sys, fields } = cmsProps;
+  const { sys, fields } = cmsProps || {};
+  const cmsID = sys ? sys.id : dbProps.cmsID;
   return {
-    cmsID: sys.id,
+    cmsID,
     ...fields,
     ...dbProps,
-    url: `/properties/${sys.id}`,
+    url: `/properties/${cmsID}`,
   };
 }
 
-const createCombinedProperties = (cms, db) =>
-  cms.items.map((cmsProp) => {
-    const dbAttributes = db.find((dbProp) => dbProp.cmsID === cmsProp.sys.id);
-    return createProperty(cmsProp, dbAttributes);
-  });
+export const createCombinedProperties = (cms, db) => {
+  const isCms = cms && cms.length > 0;
+  const isDb = db && db.length > 0;
+  if (!isCms && !isDb) {
+    return undefined;
+  }
+  if (isCms) {
+    return cms.map((cmsProp) => {
+      const dbProps = db.find((dbProp) => dbProp.cmsID === cmsProp.sys.id);
+      return createProperty(cmsProp, dbProps);
+    });
+  }
+  // no cms results
+  return db.map((dbProps) => createProperty(undefined, dbProps));
+};
 
 export async function fetchProperty(id) {
   const cmsProps = await fetchCMSAttributes(id);
@@ -78,7 +90,7 @@ export async function fetchProperty(id) {
 export async function fetchProperties(propIDs) {
   const cmsProps = await fetchManyCMSAttributes(propIDs);
   const dbProps = await fetchManyDBAttributes(propIDs);
-  return createCombinedProperties(cmsProps, dbProps);
+  return createCombinedProperties(cmsProps.items, dbProps);
 }
 
 export async function fetchFeaturedProperties() {
@@ -90,5 +102,5 @@ export async function fetchFeaturedProperties() {
   const propIDs = cmsProps.items.map((p) => p.sys.id);
 
   const dbProps = await fetchManyDBAttributes(propIDs, true);
-  return createCombinedProperties(cmsProps, dbProps);
+  return createCombinedProperties(cmsProps.items, dbProps);
 }

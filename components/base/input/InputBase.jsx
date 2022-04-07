@@ -12,9 +12,13 @@ import {
   getBoxShadow,
   getBorderRadius,
 } from 'themeweaver';
-import { getProp } from 'dataweaver';
+import { condition, getProp } from 'dataweaver';
+
 import InputWrapper from './InputWrapper';
 import InsetPlaceholder from './InsetPlaceholder';
+import AutoCompleteSelector from './AutoCompleteSelector';
+
+const StyledEventWrapper = styled.div``;
 
 const StyledInput = styled.input`
   display: block;
@@ -35,6 +39,10 @@ const StyledInput = styled.input`
   background-repeat: no-repeat;
   background-position: ${getProp('iconOffset')} 50%;
   padding-left: ${getProp('textOffset')};
+
+  ${condition('autoCompleteOn')`
+    cursor: pointer;
+  `}
 
   &:focus {
     outline: 3px solid ${({ theme }) => `${theme.colors.link[0]}`};
@@ -57,6 +65,7 @@ const StyledBackground = styled.div`
   background-color: ${getBackgroundColor({}, 'white')};
   box-shadow: ${getBoxShadow({}, '0px 0px 8px rgba(192, 192, 192, 0.52)')};
   border-radius: ${getBorderRadius({}, '5px')};
+  overflow: visible;
   ${breakpoint(1)`
     background-color:${getBackgroundColor({}, 'white')};
     box-shadow: ${getBoxShadow({}, '0px 0px 8px rgba(192, 192, 192, 0.52)')};
@@ -95,35 +104,52 @@ class InputBase extends Component {
   }
 
   handleFocus(e) {
-    const { onFocus } = this.props;
+    const { onFocus, autoComplete } = this.props;
     this.setState({ isActive: true });
+    if (autoComplete) {
+      const { setIsOpen } = autoComplete.acState;
+      setIsOpen(true);
+    }
     if (onFocus) {
-      onFocus();
+      onFocus(e);
     }
   }
 
   handleBlur = (e) => {
-    const { nextFocusRef, onChange } = this.props;
+    const { nextFocusRef, onBlur } = this.props;
     const { inputRef } = this;
     if (inputRef && !inputRef.current.value) {
       this.setState({ isActive: false });
     }
-
-    if (onChange) {
-      onChange(e);
+    if (onBlur) {
+      onBlur(e);
     }
 
     if (nextFocusRef) nextFocusRef.focus();
   };
 
+  handleInput(e) {
+    const { onInput } = this.props;
+    if (e.target.value) {
+      this.setState({ isActive: false });
+    }
+    if (onInput) {
+      onInput(e);
+    }
+  }
+
   focus() {
-    const { inputRef } = this.props;
-    if (inputRef.current) inputRef.current.focus();
+    const { inputRef } = this;
+    if (inputRef && inputRef.current) inputRef.current.focus();
   }
 
   render() {
     const { isActive } = this.state;
     const {
+      useAutoComplete,
+      autoComplete,
+      autoCompleteOptions,
+      autoCompleteWidth,
       textOffset,
       width,
       placeholder,
@@ -131,34 +157,76 @@ class InputBase extends Component {
       tw,
       ...remProps
     } = this.props;
-    const mergedTW = { ...DEFAULT_TW, ...tw };
 
-    return (
-      <InputWrapper tw={mergedTW} width={width}>
-        <StyledBackground tw={mergedTW}>
-          {showInsetPlaceholder && (
-            <InsetPlaceholder
+    const mergedTW = { ...DEFAULT_TW, ...tw };
+    if (autoComplete) {
+      return (
+        <StyledEventWrapper onBlur={(e) => this.handleBlur(e)}>
+          <InputWrapper tw={mergedTW} width={width}>
+            <StyledBackground tw={mergedTW}>
+              {showInsetPlaceholder && (
+                <InsetPlaceholder
+                  tw={mergedTW}
+                  isActive={isActive}
+                  offset={textOffset}
+                  translateX={placeholder.translateX}
+                  translateY={placeholder.translateY}
+                >
+                  {placeholder.value}
+                </InsetPlaceholder>
+              )}
+              <StyledInput
+                autoCompleteOn={autoComplete && true}
+                tw={mergedTW}
+                type="text"
+                {...remProps}
+                className="input"
+                onFocus={(e) => this.handleFocus(e)}
+                ref={this.inputRef}
+                textOffset={textOffset}
+              />
+            </StyledBackground>
+          </InputWrapper>
+          {autoComplete && autoComplete.acState.isOpen && (
+            <AutoCompleteSelector
+              autoComplete={autoComplete}
+              width={autoCompleteWidth}
               tw={mergedTW}
-              isActive={isActive}
-              offset={textOffset}
-              translateX={placeholder.translateX}
-              translateY={placeholder.translateY}
-            >
-              {placeholder.value}
-            </InsetPlaceholder>
+              paddingLeft={textOffset}
+            />
           )}
-          <StyledInput
-            tw={mergedTW}
-            type="text"
-            {...remProps}
-            className="input"
-            onBlur={(e) => this.handleBlur(e)}
-            onFocus={(e) => this.handleFocus(e)}
-            ref={this.inputRef}
-            textOffset={textOffset}
-          />
-        </StyledBackground>
-      </InputWrapper>
+        </StyledEventWrapper>
+      );
+    }
+    return (
+      <>
+        <InputWrapper tw={mergedTW} width={width}>
+          <StyledBackground tw={mergedTW}>
+            {showInsetPlaceholder && (
+              <InsetPlaceholder
+                tw={mergedTW}
+                isActive={isActive}
+                offset={textOffset}
+                translateX={placeholder.translateX}
+                translateY={placeholder.translateY}
+              >
+                {placeholder.value}
+              </InsetPlaceholder>
+            )}
+            <StyledInput
+              tw={mergedTW}
+              type="text"
+              {...remProps}
+              className="input"
+              onInput={this.handleInput}
+              onBlur={(e) => this.handleBlur(e)}
+              onFocus={(e) => this.handleFocus(e)}
+              ref={this.inputRef}
+              textOffset={textOffset}
+            />
+          </StyledBackground>
+        </InputWrapper>
+      </>
     );
   }
 }

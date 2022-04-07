@@ -4,7 +4,6 @@ import { roomsFilters } from '../../data/input';
 import FormikSelect from '../base/input/FormikSelect';
 
 const RoomsFilters = (props) => {
-  const { valueFunctions } = props;
   const theme = useContext(ThemeContext);
   const { bedroom, bathroom } = roomsFilters;
 
@@ -20,7 +19,6 @@ const RoomsFilters = (props) => {
         width={bedroom.width}
         textOffset={bedroom.textOffset}
         options={bedroom.options}
-        valueFunctions={valueFunctions}
         showInsetPlaceholder
       />
       <FormikSelect

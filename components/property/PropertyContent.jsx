@@ -81,6 +81,9 @@ const PropertyContent = (props) => {
         <PropertyDetailCategory title="Availability">
           <AttributeList>{getAttributeList('availability')}</AttributeList>
         </PropertyDetailCategory>
+        <PropertyDetailCategory title="Access">
+          <AttributeList>{getAttributeList('access')}</AttributeList>
+        </PropertyDetailCategory>
       </PropertyDetails>
       <Media greaterThanOrEqual="1">
         <ReservationForm

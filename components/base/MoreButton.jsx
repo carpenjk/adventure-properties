@@ -43,9 +43,9 @@ const StyledButton = styled.button`
   `}
 `;
 const MoreButton = (props) => {
-  const { isExpanded, text, onClick, innerRef, tw } = props;
+  const { innerRef, isExpanded, text, ...remProps } = props;
   return (
-    <StyledButton tw={tw} onClick={onClick} ref={innerRef} tabIndex="0">
+    <StyledButton {...remProps} ref={innerRef} type="button" tabIndex="0">
       {isExpanded ? `- ${text}` : `+ ${text}`}
     </StyledButton>
   );
