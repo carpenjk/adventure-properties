@@ -79,8 +79,11 @@ class FormikDateRange extends Component {
             const { value } = field;
 
             const handleStartChange = (val) => {
-              setFieldValue(startProps.id, val);
-              if (val > endDateVal) {
+              const dt = val
+                ? new Date(val.getFullYear(), val.getMonth(), val.getDate())
+                : val;
+              setFieldValue(startProps.id, dt);
+              if (dt > endDateVal) {
                 setFieldValue(endProps.id, '');
               }
             };
@@ -120,9 +123,11 @@ class FormikDateRange extends Component {
           {({ form, field }) => {
             const { setFieldValue } = form;
             const { value } = field;
-
             const handleEndChange = (val) => {
-              setFieldValue(endProps.id, val);
+              const dt = val
+                ? new Date(val.getFullYear(), val.getMonth(), val.getDate())
+                : val;
+              setFieldValue(endProps.id, dt);
             };
             // Picker for start of range
             return (

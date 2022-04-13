@@ -1,10 +1,15 @@
 import Head from 'next/head';
+import ContentContainer from '../../components/base/layout/ContentContainer';
+import Dashboard from '../../components/searchResults/Dashboard';
 import { mediaStyles } from '../../Media';
 import { search } from '../../utils/search';
 
 const Search = ({ response, test }) => {
   console.log('🚀 ~ file: search.js ~ line 6 ~ Search ~ response', response);
-  const a = 1;
+
+  // const { message } = response;
+  const message =
+    'No results found in the destination provided. Here are some available listings in other locations.';
 
   return (
     <>
@@ -17,9 +22,9 @@ const Search = ({ response, test }) => {
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
       <main>
-        <div>results go here</div>
-        <input type="input" name="inp1" />
-        <input type="input" name="inp2" />
+        <ContentContainer>
+          <Dashboard message={message || ''} />
+        </ContentContainer>
       </main>
     </>
   );

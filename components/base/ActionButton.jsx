@@ -65,6 +65,7 @@ const StyledButton = styled.button`
     &:hover {
       color: ${getColor({ suffix: '_hover' }, '#E5707A')};
       background-color: ${getBackgroundColor({ suffix: '_hover' }, 'white')};
+      border: ${getBorder({ suffix: '_hover' }, '2px solid #cdf7f6')};
       transform: ${getTransform({ suffix: '_hover' }, 'none')};
     }
   `}

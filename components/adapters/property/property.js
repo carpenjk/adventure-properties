@@ -64,21 +64,23 @@ function createProperty(cmsProps, dbProps) {
     url: `/properties/${cmsID}`,
   };
 }
-
-export const createCombinedProperties = (cms, db) => {
+// @param sortSet: value of 'cms' or 'db' determines which set to maintain order
+export const createCombinedProperties = (cms, db, sortSet) => {
   const isCms = cms && cms.length > 0;
   const isDb = db && db.length > 0;
   if (!isCms && !isDb) {
     return undefined;
   }
-  if (isCms) {
-    return cms.map((cmsProp) => {
-      const dbProps = db.find((dbProp) => dbProp.cmsID === cmsProp.sys.id);
-      return createProperty(cmsProp, dbProps);
+  if (sortSet && sortSet === 'db') {
+    return db.map((dbItem) => {
+      const cmsFields = cms.find((cmsItem) => cmsItem.sys.id === dbItem.cmsID);
+      return createProperty(cmsFields, dbItem);
     });
   }
-  // no cms results
-  return db.map((dbProps) => createProperty(undefined, dbProps));
+  return cms.map((cmsItem) => {
+    const dbFields = db.find((dbItem) => dbItem.cmsID === cmsItem.sys.id);
+    return createProperty(cmsItem, dbFields);
+  });
 };
 
 export async function fetchProperty(id) {

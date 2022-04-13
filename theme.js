@@ -47,9 +47,14 @@ export const theme = withThemeweaver(
       paddingRight: 2,
     },
     content: {
-      paddingLeft: 2,
-      minWidth: ['', value('800px')],
-      maxWidth: value('1350px'),
+      ...variant('default', {
+        minWidth: ['', value('800px')],
+        maxWidth: value('1080px'),
+      }),
+      ...variant('property', {
+        minWidth: ['', value('800px')],
+        maxWidth: value('1200px'),
+      }),
     },
     button: {
       ...variant('nav', {
@@ -122,6 +127,24 @@ export const theme = withThemeweaver(
         fontFamily: 'roboto',
         fontSize: 3,
         lineHeight: value('21px'),
+      }),
+      ...variant('results', {
+        backgroundColor: 'white',
+        border: value('2px solid #cdf7f6'),
+        color: 'lightText',
+        fontFamily: 'poppins',
+        fontSize: 3,
+        fontWeight: 'bold',
+        lineHeight: value('150%'),
+        letterSpacing: value('0.025em'),
+        paddingTop: [2, 2],
+        paddingLeft: [2, 2],
+        paddingBottom: [2, 2],
+        paddingRight: [2, 2],
+      }),
+      ...variant('results_hover', {
+        color: 'action[1]',
+        border: value('2px solid #F3B9BD'),
       }),
     },
     h1: {

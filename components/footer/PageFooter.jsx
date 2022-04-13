@@ -102,10 +102,8 @@ const PageFooter = (props) => {
           Sign Up
         </ActionLink>
       </StyledSignUp>
-      {/* <StyledSpacer space="64px" /> */}
       <Spacer vertical space="64px" />
       <FooterNav navData={navData} />
-      {/* <StyledSpacer space="32px" /> */}
       <Spacer vertical space="32px" />
       <StyledCopyright>
         <p>Copyright 2021 Jeremy Carpenter</p>

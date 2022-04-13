@@ -10,7 +10,7 @@ import {
   validateReservation,
   isValidDeparture,
   isAvail,
-} from '../../utils/dataValidation';
+} from '../../data/validation/reservation';
 
 import { ReservationContext } from '../../contexts/ReservationContext';
 import useAvailability from '../adapters/property/UseAvailability';

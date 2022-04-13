@@ -33,7 +33,7 @@ const ReservationCardDetails = ({ reservation }) => {
         variant="card"
       />
       <ParamDisplay
-        displayString={`${guests} guest${guests > 1 && 's'}`}
+        displayString={`${guests} guest${guests > 1 ? 's' : ''}`}
         title="Guests"
         variant="card"
       />

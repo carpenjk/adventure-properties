@@ -5,7 +5,7 @@ import {
   checkSession,
   isValidDeparture,
   isAvail,
-} from '../../../../../../utils/dataValidation';
+} from '../../../../../../data/validation/reservation';
 import saveReservation from '../../../../../../utils/adapters/reserve';
 import fetchAvailability from '../../../../../../utils/adapters/availability';
 

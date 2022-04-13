@@ -1,6 +1,6 @@
 import dynamic from 'next/dynamic';
 import { Media } from '../../Media';
-import ContentContainer from './ContentContainer';
+import ContentContainer from '../base/layout/ContentContainer';
 import AttributeList from './AttributeList';
 import AttributesSummary from './AttributesSummary';
 import ReservationForm from '../reservationForm/ReservationForm';
@@ -56,7 +56,7 @@ const PropertyContent = (props) => {
   };
 
   return (
-    <ContentContainer>
+    <ContentContainer tw={{ variant: 'property' }}>
       <PropertyDetails>
         <PropertyTitle title={title} />
         <AttributesSummary

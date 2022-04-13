@@ -1,7 +1,6 @@
 import Head from 'next/head';
-import { useSession, getSession } from 'next-auth/client';
+import { getSession } from 'next-auth/client';
 import styled from 'styled-components';
-import { checkSession } from '../utils/dataValidation';
 import { mediaStyles } from '../Media';
 import ReservationContent from '../components/cards/ReservationContent';
 import Login from '../components/base/login';

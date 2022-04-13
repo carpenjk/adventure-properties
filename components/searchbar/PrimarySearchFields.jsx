@@ -1,19 +1,5 @@
 import LocationInput from '../base/input/LocationInput';
 
-const searchProps = {
-  id: 'destination',
-  type: 'InputBase',
-  placeholder: 'Enter a destinaton or activity',
-  icon: {
-    url: './static/assets/searchbar/icon/location.svg',
-    offset: '0.5rem',
-  },
-  textOffset: '2.7rem',
-  width: '33.2rem',
-  hideInitialMobile: false,
-  focusNext: false,
-};
-
 const PrimarySearchFields = (props) => {
   const {
     onInputFocus,
@@ -50,7 +36,6 @@ const PrimarySearchFields = (props) => {
           forceClose:
             !isSearchBarFocused || currentInputElement !== getInputRef(),
         }}
-        input={searchProps}
         onFocus={onInputFocus}
         showInsetPlaceholder
         ref={(el) => (inputRefs.current[0] = el)}

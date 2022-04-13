@@ -5,7 +5,7 @@ import {
   filterGuestOptions,
   isAvail,
   isValidDeparture,
-} from '../../utils/dataValidation';
+} from '../../data/validation/reservation';
 import DateRange from '../searchbar/DateRange';
 import CustomSelect from '../base/input/CustomSelect';
 import ErrorContainer from './ErrorContainer';

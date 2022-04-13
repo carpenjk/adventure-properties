@@ -1,5 +1,5 @@
 import * as yup from 'yup';
-import { dates, findDate } from './dates';
+import { dates, findDate } from '../../utils/dates';
 
 export function checkSession(session, user) {
   console.log(

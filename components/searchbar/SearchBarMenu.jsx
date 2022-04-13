@@ -1,5 +1,5 @@
 // hooks
-import { useEffect, useContext, useRef } from 'react';
+import { useContext, useRef } from 'react';
 import { Form, useFormikContext } from 'formik';
 import useIsoOnClickOutside from '../hooks/UseIsoOnClickOutside';
 import { SearchBarContext } from './searchBarContext';
@@ -32,10 +32,7 @@ const SearchBarMenu = (props) => {
   } = props;
   //* context *********************************************************
   const {
-    updateSearch,
-    getSearchValue,
     isStarted,
-    searchHasValues,
     isSearchBarFocused,
     setIsSearchBarFocused,
     isSearchFiltersOpen,
@@ -45,7 +42,7 @@ const SearchBarMenu = (props) => {
   } = useContext(SearchBarContext);
 
   const formik = useFormikContext();
-  const { values, handleSubmit } = formik;
+  const { values } = formik;
 
   //* Dom References ***********************************************
   const searchBarRef = useRef(null);
@@ -126,8 +123,8 @@ const SearchBarMenu = (props) => {
           >
             <MoreButton
               text="More Filters"
-              onClick={() => setIsSearchFiltersOpen(() => !isSearchFiltersOpen)}
-              expanded={isSearchFiltersOpen}
+              onClick={() => setIsSearchFiltersOpen((prev) => !prev)}
+              isExpanded={isSearchFiltersOpen}
             />
             <SearchButton type="submit" />
           </ButtonContainer>

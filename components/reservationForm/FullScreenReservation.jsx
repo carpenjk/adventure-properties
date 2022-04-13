@@ -5,7 +5,7 @@ import {
   filterGuestOptions,
   isAvail,
   isValidDeparture,
-} from '../../utils/dataValidation';
+} from '../../data/validation/reservation';
 import useFullScreenInputSlide from './UseFullScreenInputSlide';
 import InputSlide from './InputSlide';
 import CustomSelect from '../base/input/CustomSelect';
@@ -160,16 +160,15 @@ const FullScreenReservation = (props) => {
               placeholder="Guests"
               focusNext={false}
               icon={GUEST_ICON}
-              iconOffset="0.5rem"
-              iconWidth="1.6rem"
-              iconHeight="1.6rem"
+              iconOffset="5px"
+              iconWidth="16px"
+              iconHeight="16px"
+              textOffset="26px"
               showLabel
-              textOffset="1.8rem"
               width="100%"
               placeholderColor={theme.colors.lightText}
               options={filterGuestOptions(guestOptions, maxGuests)}
               valueFunctions={{ get: getNumGuests, set: setNumGuests }}
-              height="4rem" //! refactor? Set height of React-Select objects to match input styling:
             />
           </InputGroup>
         </InputSlide>

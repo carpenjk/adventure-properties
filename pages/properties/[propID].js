@@ -1,6 +1,6 @@
 import 'react-loader-spinner/dist/loader/css/react-spinner-loader.css';
 import Head from 'next/head';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { fetchProperty } from '../../components/adapters/property/property';
 import useLightbox from '../../components/hooks/UseLightbox';
 import useReservation from '../../components/reservationForm/UseReservation';
@@ -54,10 +54,6 @@ const POSITION_OFFSET = 0;
 
 //* ********* Component *********************************/
 const Property = ({ property }) => {
-  console.log(
-    '🚀 ~ file: [propID].js ~ line 57 ~ Property ~ property',
-    property
-  );
   // property data
   const { title, guests } = property || {};
   // reservation objects

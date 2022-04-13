@@ -30,10 +30,7 @@ const LocationInput = forwardRef(
         }
       } catch (e) {
         // do something
-        console.log(
-          '🚀 ~ file: LocationInput.jsx ~ line 30 ~ fetchACValues ~ e',
-          e
-        );
+        console.log(e);
       }
     }
 

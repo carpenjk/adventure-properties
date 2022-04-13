@@ -5,9 +5,10 @@ import {
   getPriceDescriptors,
   createCombinedProperties,
 } from '../components/adapters/property/property';
+import { SearchSchema } from '../data/validation/search';
 
 const pMap = {
-  destination: { qKey: 'fields.location[within]', source: 'cms' },
+  destination: { qKey: 'fields.location[near]', source: 'cms' },
   guests: { qKey: 'fields.guests[gte]', source: 'cms' },
   arriveDate: { source: 'db' },
   departDate: { source: 'db' },
@@ -46,14 +47,19 @@ function filterAry(ary, items, path) {
   }
   return ary.filter((item) => items.includes(drillPath(item, path)));
 }
-
 function filterDbByID(ary, cmsList) {
   return filterAry(ary, cmsList, 'cmsID');
 }
 function filterCmsByID(ary, cmsList) {
   return filterAry(ary, cmsList, 'sys.id');
 }
+function sortCMSByIDList(cms, ids) {
+  return removeUndefined(
+    ids.map((id) => cms.find((item) => item.sys.id === id))
+  );
+}
 
+// removes keys with empty values
 function cleanseParams(params) {
   const pNames = Object.keys(params);
   const cleansed = pNames.reduce((obj, p) => {
@@ -71,6 +77,7 @@ function cleanseParams(params) {
   return cleansed;
 }
 
+// parse and revive date params
 function parseParams(params) {
   const pNames = Object.keys(params);
   const parsed = pNames.reduce(
@@ -84,6 +91,7 @@ function parseParams(params) {
   return cleanseParams(parsed);
 }
 
+// split params into 2 separate objects based on source
 function splitParamsBySource(params) {
   let cmsParams;
   let dbParams;
@@ -98,7 +106,7 @@ function splitParamsBySource(params) {
   return { cmsParams, dbParams };
 }
 
-function getQuery(params) {
+function getCMSQuery(params) {
   const pNames = Object.keys(params);
   const pQuery = pNames.reduce((obj, p) => {
     const value = Array.isArray(params[p]) ? params[p].join(',') : params[p];
@@ -116,6 +124,9 @@ function postDBProcessing(results) {
   }));
 }
 
+// stage one filters based on availability
+// @param cmsIDs = array of CMS_IDs which are used to filter results (i.e. properties in a location)
+// uses a global static variable for non-dated search range
 function createStage1Match(params, cmsIDs) {
   const { arriveDate, departDate, nearbyActivities } = params || {};
   const dt = new Date();
@@ -161,6 +172,9 @@ function createStage1Match(params, cmsIDs) {
   };
 }
 
+// mongo group pipeline.
+// displayPrice used average or first available
+// availCount used in next stage to determine availability over entire date range.
 function createGroup(params) {
   const { arriveDate, departDate } = params || {};
   const isRange = arriveDate && departDate && true;
@@ -179,6 +193,7 @@ function createGroup(params) {
   };
 }
 
+// Further refines based on price filters and availability over entire date range (if applicable)
 function createStage2Match(params) {
   const { arriveDate, departDate, minPrice, maxPrice } = params || {};
 
@@ -205,15 +220,20 @@ function createStage2Match(params) {
   };
 }
 
-async function dbSearch(params, cmsIDs) {
+// Performs Mongo search
+// @param params: list of search params
+// @param cmsIDs: list of cmsIDs to filter search
+// @param sort: {<sortKey>: 1 || -1, ...}
+async function dbSearch(params, cmsIDs, sort) {
   // get filtered properties from db along with price;
   const dbClient = await clientPromise;
 
   const match1 = createStage1Match(params, cmsIDs);
   const group = createGroup(params);
   const match2 = createStage2Match(params);
+  const _sort = hasContents(sort) ? { $sort: sort } : undefined;
 
-  const pipelines = removeUndefined([match1, group, match2]);
+  const pipelines = removeUndefined([match1, group, match2, _sort]);
 
   const results = await dbClient
     .db()
@@ -253,7 +273,7 @@ async function cmsSearch(params, cmsIDs) {
     idFilter = { [pathOp]: criteria };
   }
 
-  const pQuery = getQuery(params);
+  const pQuery = getCMSQuery(params);
   const results = await cmsClient.getEntries({
     content_type: 'property',
     ...pQuery,
@@ -275,16 +295,47 @@ function getGeoFilter(geo) {
   return geo ? `${geo.lat},${geo.lon},100` : '';
 }
 
-export async function search(params) {
+function getPriceSort(sortBy, isLocationSearch) {
+  if (isLocationSearch) {
+    return sortBy;
+  }
+  // sort by price if not destination search
+  return { displayPrice: -1 };
+}
+
+function getMessage(results, ignoredLocation) {
+  if (!hasContents(results)) {
+    return { message: 'No results found.' };
+  }
+  if (ignoredLocation) {
+    return {
+      message:
+        'No results found in the destination provided. Here are some available listings in other locations.',
+    };
+  }
+}
+
+// @param params <object>: key pair object of search parameters
+// @param sortBy <object>: key = price or destination, value = -1 (desc) || 1 (asc)
+export async function search(params, sortBy) {
   let dbResults = [];
   let cmsResults = [];
+  let locationIDs = [];
   let geoFilter = '';
 
   const cleanParams = parseParams(params);
+  // validate data, return error
+  try {
+    await SearchSchema.validate(cleanParams);
+  } catch (error) {
+    return { error: error.message };
+  }
+
   const { cmsParams, dbParams } = splitParamsBySource(cleanParams);
   const { destination, ...CMSParamsExclDest } = cmsParams || {};
   const isCmsSearch = hasContents(CMSParamsExclDest);
   const isDestSearch = cmsParams && cmsParams.destination && true;
+  const priceSort = getPriceSort(sortBy, isDestSearch);
   let ignoredLocation = false;
 
   if (isDestSearch) {
@@ -295,40 +346,39 @@ export async function search(params) {
       ? await cmsSearch({ destination: geoFilter })
       : undefined;
 
-    const locationIDs = locationResults
+    locationIDs = locationResults
       ? getCmsIDs({ cmsResults: locationResults })
-      : undefined;
+      : [];
     ignoredLocation = !hasContents(locationIDs);
-    dbResults = postDBProcessing(await dbSearch(dbParams, locationIDs));
-    if (hasContents(dbResults)) {
-      cmsResults = await cmsSearch(CMSParamsExclDest, getCmsIDs({ dbResults }));
-    }
-  } else {
-    dbResults = await dbSearch(dbParams);
-    if (hasContents(dbResults)) {
-      cmsResults = await cmsSearch(CMSParamsExclDest, getCmsIDs({ dbResults }));
-    }
   }
+
+  // search
+  dbResults = postDBProcessing(
+    await dbSearch(dbParams, locationIDs, priceSort)
+  );
+
+  if (hasContents(dbResults)) {
+    // further refine search with cms filters
+    cmsResults = await cmsSearch(CMSParamsExclDest, getCmsIDs({ dbResults }));
+  }
+
+  const sortedCMSResults =
+    priceSort || !hasContents(locationIDs)
+      ? cmsResults
+      : sortCMSByIDList(cmsResults, locationIDs);
 
   let combinedResults = [];
   if (hasContents(dbResults) && hasContents(cmsResults)) {
     combinedResults = createCombinedProperties(
-      filterCmsByID(cmsResults, getCmsIDs({ dbResults })),
+      filterCmsByID(sortedCMSResults, getCmsIDs({ dbResults })),
       isCmsSearch
-        ? filterDbByID(dbResults, getCmsIDs({ cmsResults }))
-        : dbResults
+        ? filterDbByID(dbResults, getCmsIDs({ cmsResults: sortedCMSResults }))
+        : dbResults,
+      priceSort ? 'db' : 'cms'
     );
   }
-
-  let message = {};
-  if (!hasContents(combinedResults)) {
-    message = { message: 'No results found.' };
-  } else if (ignoredLocation) {
-    message = {
-      message:
-        'No results found in the destination provided. Here are some available listings in other locations.',
-    };
-  }
-
-  return { results: combinedResults, ...message };
+  return {
+    results: combinedResults,
+    ...getMessage(combinedResults, ignoredLocation),
+  };
 }
