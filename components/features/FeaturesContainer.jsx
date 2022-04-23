@@ -74,6 +74,7 @@ const FeaturesContainer = ({ items }) => (
             scale={1.02}
             scaleOnHover={[true, true, true]}
             scaleOnFocus={[true, true, true]}
+            showDescription={[false, true, false]}
           />
         </StyledListItem>
       ))}

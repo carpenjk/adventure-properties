@@ -65,7 +65,6 @@ const StyledSelect = styled.div`
   }
 
   & > * {
-    width: 100%;
     font-family: ${getFontFamily({}, 'inherit')};
     font-weight: ${getFontWeight({}, 'normal')};
     font-size: ${getFontSize({}, '1.6rem')};
@@ -187,13 +186,23 @@ class CustomSelect extends Component {
 
   constructor(props) {
     super(props);
-    this.styleRef = createRef();
+    this.inputRef = createRef();
     this.handleSelectChange = this.handleSelectChange.bind(this);
     this.handleBlur = this.handleBlur.bind(this);
     this.handleFocus = this.handleFocus.bind(this);
     this.state = {
       isActive: false,
     };
+  }
+
+  componentDidMount() {
+    const { value } = this.props;
+    if (this.inputRef) {
+      this.inputRef.current.value = '';
+    }
+    if (value) {
+      this.setState({ isActive: true });
+    }
   }
 
   handleSelectChange(option) {
@@ -262,18 +271,14 @@ class CustomSelect extends Component {
       variant,
       value,
     } = this.props;
+    const { inputRef } = this;
 
     const { isActive } = this.state;
     const mergedTW = { ...DEFAULT_TW, ...tw };
 
     return (
       <InputWrapper tw={mergedTW} width={width}>
-        <StyledSelect
-          tw={mergedTW}
-          variant={variant}
-          wrapperWidth={width}
-          ref={this.styleRef}
-        >
+        <StyledSelect tw={mergedTW} variant={variant} wrapperWidth={width}>
           {showInsetPlaceholder && (
             <InsetPlaceholder
               tw={mergedTW}
@@ -307,7 +312,7 @@ class CustomSelect extends Component {
             onChange={this.handleSelectChange}
             onBlur={this.handleBlur}
             onFocus={this.handleFocus}
-            ref={innerRef}
+            ref={inputRef}
           />
         </StyledSelect>
       </InputWrapper>

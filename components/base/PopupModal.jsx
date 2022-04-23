@@ -2,7 +2,6 @@ import styled from 'styled-components';
 import { breakpoint } from 'themeweaver';
 import { condition } from 'dataweaver';
 
-import { useRef } from 'react';
 const StyledPopupModal = styled.div` 
   content: ' ';
   position: fixed;
@@ -34,16 +33,14 @@ const StyledPopupModal = styled.div`
 `;
 
 const PopupModal = (props) => {
-  const modalRef = useRef();
-  const { isOpen } = props;
-
+  const { isOpen, children } = props;
+  console.log('render popup');
   return (
     <StyledPopupModal
       isOpen={isOpen}
       className={isOpen ? 'popup-isConditionallyOpen' : ''}
-      ref={modalRef}
     >
-      {props.children}
+      {children}
     </StyledPopupModal>
   );
 };

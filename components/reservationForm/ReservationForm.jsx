@@ -84,11 +84,6 @@ const ReservationForm = (props) => {
   const { title, showTitle, maxGuests } = props;
   const [showError, setShowError] = useState(false);
 
-  // only allow guest selection <= property capacity
-  const filteredGuestOptions = guestOptions.filter(
-    (guest) => guest.value <= maxGuests
-  );
-
   // * refs ****************************************************
 
   // used for react-datepicker "popper" container / calendar popup

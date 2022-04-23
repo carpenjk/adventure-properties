@@ -1,6 +1,8 @@
 // hooks
-import { useContext, useRef } from 'react';
+import { useContext, useEffect, useRef } from 'react';
 import { Form, useFormikContext } from 'formik';
+import { ThemeContext } from 'styled-components';
+import { useBreakpoints } from 'themeweaver';
 import useIsoOnClickOutside from '../hooks/UseIsoOnClickOutside';
 import { SearchBarContext } from './searchBarContext';
 
@@ -29,18 +31,29 @@ const SearchBarMenu = (props) => {
     FilterFields,
     PrimarySearchFields,
     SecondarySearchFields,
+    onExit,
   } = props;
   //* context *********************************************************
+
+  const { control, searchState } = useContext(SearchBarContext);
+  const { open, close } = control;
   const {
+    allOpenMode,
+    isOpen,
+    isHidden,
     isStarted,
+    isSecondaryOpen,
+    setIsSecondaryOpen,
+    isFiltersOpen,
+    setIsFiltersOpen,
     isSearchBarFocused,
     setIsSearchBarFocused,
-    isSearchFiltersOpen,
-    setIsSearchFiltersOpen,
     currentInputElement,
     setCurrentInputElement,
-  } = useContext(SearchBarContext);
+  } = searchState;
 
+  const theme = useContext(ThemeContext);
+  const br = useBreakpoints(theme);
   const formik = useFormikContext();
   const { values } = formik;
 
@@ -54,43 +67,83 @@ const SearchBarMenu = (props) => {
   //* variables ****************************************************
   const searchBarOffsetTop = offsetTop || DEFAULT_OFFSET_TOP_PX;
 
+  useEffect(() => {
+    console.log('searchbar menu mounted');
+  }, []);
+
+  useEffect(() => {
+    if (allOpenMode) {
+      open();
+    }
+  }, [allOpenMode, open]);
+
   //* event handlers ***********************************************
   const handleFocus = (e) => {
     setIsSearchBarFocused(true);
     setCurrentInputElement(e.target);
+    open({ secondary: true });
+  };
+
+  const handleSearch = (data) => {
+    control.hide();
   };
 
   const onClickOutsideEffect = () => {
     setIsSearchBarFocused(false);
-    setIsSearchFiltersOpen(false);
+
+    // if (br.current.width < br.br[1]) {
+    //   close({ filters: true, secondary: true });
+    // } else {
+    //   close({ filters: true });
+    // }
+    if (onExit) {
+      onExit();
+      return;
+    }
+    control.close();
   };
+
+  function getShowExpandedBackground() {
+    if (allOpenMode) {
+      return true;
+    }
+    return br.current.width > br.br[1]
+      ? isSearchBarFocused || isStarted
+      : isSecondaryOpen;
+  }
+  function getShowButtons() {
+    if (allOpenMode) {
+      return true;
+    }
+    return [isSearchBarFocused, isSearchBarFocused || isStarted];
+  }
 
   //* hooks/lifecycle
   useIsoOnClickOutside(searchBarRef, onClickOutsideEffect, [isStarted]);
   //* component rendering ********************************************************
   return (
     <>
-      {isSearchBarFocused && (
-        <PopupModal isOpen={[isSearchBarFocused, isSearchFiltersOpen]} />
-      )}
+      {isOpen && !isHidden && <PopupModal isOpen={isOpen} />}
       <Form autoComplete="off">
         <SearchBarContainer
-          isSearchFiltersOpen={isSearchFiltersOpen}
+          isHidden={isHidden}
+          isFiltersOpen={isFiltersOpen}
           isSearchBarFocused={isSearchBarFocused}
+          isSecondaryOpen={isSecondaryOpen}
           offsetTop={searchBarOffsetTop}
           openMaxWidth={openMaxWidth}
           searchBarRef={searchBarRef}
         >
           <ExpandedBackground
-            isExpanded={isSearchBarFocused}
-            hideRight={[false, isSearchFiltersOpen]}
+            isExpanded={getShowExpandedBackground()}
+            hideRight={[false, isFiltersOpen]}
             innerRef={searchBarBgRef}
           />
           <MenuContainer
-            isSearchFiltersOpen={isSearchFiltersOpen}
+            isFiltersOpen={isFiltersOpen}
             isSearchBarFocused={isSearchBarFocused}
           >
-            <SearchFieldsContainer isSearchFiltersOpen={isSearchFiltersOpen}>
+            <SearchFieldsContainer isFiltersOpen={isFiltersOpen}>
               <InputGroup hide={false}>
                 <PrimarySearchFields
                   inputRefs={visibleInputRefs}
@@ -101,7 +154,7 @@ const SearchBarMenu = (props) => {
                   values={values}
                 />
               </InputGroup>
-              <InputGroup hide={[!isSearchBarFocused, false]}>
+              <InputGroup hide={[!isSecondaryOpen, false]}>
                 <SecondarySearchFields
                   isSearchBarFocused={isSearchBarFocused}
                   inputRefs={secondaryInputRefs}
@@ -115,18 +168,22 @@ const SearchBarMenu = (props) => {
               FilterFields={FilterFields}
               checkFilters={checkFilters}
               isScrollable={[false, true]}
+              isFiltersOpen={isFiltersOpen}
             />
           </MenuContainer>
           <ButtonContainer
-            isDisplayed={[isSearchBarFocused, isSearchBarFocused || isStarted]}
-            isSearchFiltersOpen={isSearchFiltersOpen}
+            isDisplayed={getShowButtons()}
+            isFiltersOpen={isFiltersOpen}
           >
-            <MoreButton
-              text="More Filters"
-              onClick={() => setIsSearchFiltersOpen((prev) => !prev)}
-              isExpanded={isSearchFiltersOpen}
-            />
-            <SearchButton type="submit" />
+            {!allOpenMode && (
+              <MoreButton
+                text="More Filters"
+                onClick={() => setIsFiltersOpen((prev) => !prev)}
+                isExpanded={isFiltersOpen}
+              />
+            )}
+            {allOpenMode && <div />}
+            <SearchButton type="submit" onClick={handleSearch} />
           </ButtonContainer>
         </SearchBarContainer>
       </Form>

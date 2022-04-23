@@ -5,26 +5,23 @@ import { breakpoint } from 'themeweaver';
 const StyledMenuContainer = styled.div`
   overflow-y: visible;
 
-  ${condition('isSearchFiltersOpen')`
+  ${condition('isFiltersOpen')`
     overflow-y: auto;
+    padding: 4px;
   `}
 
   ${breakpoint(1)`
     display: flex;
     flex-direction: column;
-    ${condition('isSearchFiltersOpen')`
+    ${condition('isFiltersOpen')`
       padding: 8px;
     `}
   `}
 `;
 
-const MenuContainer = ({
-  children,
-  isSearchFiltersOpen,
-  isSearchBarFocused,
-}) => (
+const MenuContainer = ({ children, isFiltersOpen, isSearchBarFocused }) => (
   <StyledMenuContainer
-    isSearchFiltersOpen={isSearchFiltersOpen}
+    isFiltersOpen={isFiltersOpen}
     isSearchBarFocused={isSearchBarFocused}
   >
     {children}

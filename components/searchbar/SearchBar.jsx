@@ -2,17 +2,17 @@ import { Formik } from 'formik';
 import { SearchSchema } from '../../data/validation/search';
 
 import SearchBarMenu from './SearchBarMenu';
-import { SearchBarProvider } from './searchBarContext';
+import { SearchBarInnerProvider } from './searchBarContext';
 
-const SearchBar = ({ initialValues, onSubmit, ...props }) => (
+const SearchBar = ({ initialValues, onSubmit, allOpenMode, ...props }) => (
   <Formik
     initialValues={initialValues}
     validationSchema={SearchSchema}
     onSubmit={onSubmit}
   >
-    <SearchBarProvider>
+    <SearchBarInnerProvider allOpenMode={allOpenMode}>
       <SearchBarMenu {...props} />
-    </SearchBarProvider>
+    </SearchBarInnerProvider>
   </Formik>
 );
 

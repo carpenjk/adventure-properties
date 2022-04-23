@@ -1,16 +1,113 @@
-import React, { useState, useEffect, useLayoutEffect } from 'react';
+import React, {
+  useState,
+  useEffect,
+  useContext,
+  useCallback,
+  useMemo,
+} from 'react';
+import { ThemeContext } from 'styled-components';
+import { useBreakpoints } from 'themeweaver';
 import { useFormikContext } from 'formik';
 import useIsoLayoutEffect from '../hooks/UseIsoLayoutEffect';
-import { checkFiltersData } from '../../data/input';
 
 const SearchBarContext = React.createContext();
 
-const SearchBarProvider = (props) => {
+const SearchBarInnerProvider = ({
+  children,
+  openOnMount,
+  allOpenMode,
+  hideOnOpen,
+  onExit,
+}) => {
   const { values } = useFormikContext();
   const [isStarted, setIsStarted] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+  const [isHidden, setIsHidden] = useState(hideOnOpen || false);
+  const [isPrimaryOpen, setIsPrimaryOpen] = useState(true);
+  const [isSecondaryOpen, setIsSecondaryOpen] = useState(allOpenMode || false);
+  const [isFiltersOpen, setIsFiltersOpen] = useState(allOpenMode || false);
   const [isSearchBarFocused, setIsSearchBarFocused] = useState(false);
-  const [isSearchFiltersOpen, setIsSearchFiltersOpen] = useState(false);
   const [currentInputElement, setCurrentInputElement] = useState();
+
+  const theme = useContext(ThemeContext);
+  const br = useBreakpoints(theme);
+
+  const openCloseStateSetters = useMemo(
+    () => ({
+      allOpenMode: {
+        primary: setIsPrimaryOpen,
+        secondary: setIsSecondaryOpen,
+        filters: setIsFiltersOpen,
+      },
+      default:
+        br.current.width < br.br[1]
+          ? { secondary: setIsSecondaryOpen, filters: setIsFiltersOpen }
+          : { filters: setIsFiltersOpen },
+      manual: {
+        primary: setIsPrimaryOpen,
+        secondary: setIsSecondaryOpen,
+        filters: setIsFiltersOpen,
+      },
+    }),
+    [br, setIsFiltersOpen, setIsSecondaryOpen, setIsPrimaryOpen]
+  );
+
+  const setFromObj = useCallback(
+    (obj, bln) => {
+      Object.keys(obj).forEach((key) => {
+        openCloseStateSetters.manual[key](bln);
+      });
+    },
+    [openCloseStateSetters]
+  );
+
+  const setFromMode = useCallback(
+    (mode, bln) => {
+      setFromObj(openCloseStateSetters[mode], bln);
+    },
+    [setFromObj, openCloseStateSetters]
+  );
+
+  const open = useCallback(
+    (props) => {
+      const { primary, secondary, filters } = props || {};
+      if (!primary && !secondary && !filters) {
+        const mode = allOpenMode ? 'allOpenMode' : 'default';
+        // openCloseFns[mode].forEach((fn) => {
+        //   fn(true);
+        // });
+        setFromMode(mode, true);
+        setIsOpen(true);
+        return;
+      }
+      setFromObj(props, true);
+      setIsOpen(true);
+    },
+    [allOpenMode, setFromObj, setFromMode]
+  );
+
+  const close = useCallback(
+    (props) => {
+      const { primary, secondary, filters } = props || {};
+      if (!primary && !secondary && !filters) {
+        const mode = allOpenMode ? 'allOpenMode' : 'default';
+        // openCloseFns[mode].forEach((fn) => fn(false));
+        setFromMode(mode, false);
+        setIsOpen(false);
+        return;
+      }
+      setFromObj(props, false);
+      setIsOpen(false);
+    },
+    [allOpenMode, setFromObj, setFromMode]
+  );
+
+  function hide() {
+    setIsHidden(true);
+  }
+  function unHide() {
+    setIsHidden(false);
+  }
 
   function searchHasValues() {
     if (!values) return false;
@@ -27,127 +124,56 @@ const SearchBarProvider = (props) => {
     return valuesNotBlank;
   }
 
-  // set up state for each search field using id of input in config file
-  // const [searchFields, setSearchFields] = useState({
-  //   destination: '',
-  //   arriveDate: '',
-  //   departDate: '',
-  //   guests: '',
-  // });
-
-  // function createCheckFilterState() {
-  //   return checkFiltersData.reduce(
-  //     (acc, filterGroup) => ({
-  //       ...acc,
-  //       ...filterGroup.filters.reduce(
-  //         (acc, filter) => ({
-  //           ...acc,
-  //           [filter.id]: { value: 0, filterFn: (filter) => filter >= value },
-  //         }),
-  //         {}
-  //       ),
-  //     }),
-  //     {}
-  //   );
-  // }
-
-  // const [checkFiltersState, setCheckFilters] = useState(
-  //   createCheckFilterState()
-  // );
-
-  // const [searchFilters, setSearchFilters] = useState({
-  //   minPrice: { value: 0, filterFn: (filter) => filter >= value },
-  //   maxPrice: { value: 0, filterFn: (filter) => filter <= value },
-  //   beds: { value: 0, filterFn: (filter) => filter >= value },
-  //   baths: { value: 0, filterFn: (filter) => filter >= value },
-  //   ...createCheckFilterState(),
-  // });
-
-  // // @param filter must match id of input in config file
-  // const getFilter = (filterId) => searchFilters[filterId];
-
-  // // @param filter must match id of input in config file
-  // const getFilterValue = (filterId) => searchFilters[filterId].value;
-
-  // function updateSearch(inputs) {
-  //   if (inputs) setSearchFields(() => ({ ...searchFields, ...inputs }));
-  // }
-
-  // // @param field must match id of input in config file
-  // function getSearchValue(field) {
-  //   return searchFields[field];
-  // }
-
-  // function searchHasValues() {
-  //   const aryValues = Object.values(searchFields);
-  //   const valuesNotBlank = aryValues.reduce(
-  //     (containsValue, input) => containsValue || input !== '',
-  //     false
-  //   );
-  //   return valuesNotBlank;
-  // }
-  // const createNewFilter = (prevFilters, filter) => {
-  //   const filterId = Object.keys(filter)[0];
-  //   const prevFilter = prevFilters[filterId];
-  //   const newValue = { value: filter[filterId] };
-  //   const newFilter = { [filterId]: { ...prevFilter, ...newValue } };
-  //   return { ...searchFilters, ...newFilter };
-  // };
-
-  // // @param filter must match id of input in config file
-  // // Usage requires passing an object with filter id as object key
-  // // e.g. set({ [id]: checked });
-  // const updateFilters = (filter) => {
-  //   if (filter) {
-  //     setSearchFilters((prevFilter) => createNewFilter(prevFilter, filter));
-  //   }
-  // };
-
-  // const toggleBooleanFilter = (filterId) => {
-  //   setSearchFilters((prevFilters) => {
-  //     const toggledFilter = { [filterId]: !prevFilters[filterId].value };
-  //     return createNewFilter(prevFilters, toggledFilter);
-  //   });
-  // };
-
-  // function toggleSearchFiltersOpen() {
-  //   setIsSearchFiltersOpen(() => !isSearchFiltersOpen);
-  // }
-
-  // // lifecyle methods
-
-  // // check and set is started after every search criteria update
-  // const useIsoLayoutEffect =
-  //   typeof window !== 'undefined' ? useLayoutEffect : useEffect;
+  function handleExit() {
+    if (onExit) {
+      onExit();
+      return;
+    }
+    close();
+  }
 
   useIsoLayoutEffect(() => {
     setIsStarted(searchHasValues());
   }, [values]);
 
+  useEffect(() => {
+    if (openOnMount) {
+      open();
+    }
+  }, [openOnMount, open]);
+
   return (
     <SearchBarContext.Provider
       value={{
-        // updateSearch,
-        // getSearchValue,
-        // searchFields,
-        // searchFilters,
-        currentInputElement,
-        setCurrentInputElement,
-        values,
-        isStarted,
-        isSearchBarFocused,
-        setIsSearchBarFocused,
-        isSearchFiltersOpen,
-        setIsSearchFiltersOpen,
-        searchHasValues,
-        // updateFilters,
-        // toggleBooleanFilter,
-        // getFilterValue,
+        control: {
+          open,
+          close,
+          hide,
+          unHide,
+        },
+        searchState: {
+          allOpenMode,
+          isOpen,
+          isHidden,
+          isPrimaryOpen,
+          setIsPrimaryOpen,
+          isSecondaryOpen,
+          setIsSecondaryOpen,
+          isFiltersOpen,
+          setIsFiltersOpen,
+          isStarted,
+          isSearchBarFocused,
+          setIsSearchBarFocused,
+          currentInputElement,
+          setCurrentInputElement,
+          values,
+          onExit: handleExit,
+        },
       }}
     >
-      {props.children}
+      {children}
     </SearchBarContext.Provider>
   );
 };
 
-export { SearchBarProvider, SearchBarContext };
+export { SearchBarInnerProvider, SearchBarContext };

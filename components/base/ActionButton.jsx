@@ -18,6 +18,8 @@ import {
   getTransform,
 } from 'themeweaver';
 
+import { condition } from 'dataweaver';
+
 const StyledButton = styled.button`
   display: flex;
   justify-items: center;
@@ -68,6 +70,25 @@ const StyledButton = styled.button`
       border: ${getBorder({ suffix: '_hover' }, '2px solid #cdf7f6')};
       transform: ${getTransform({ suffix: '_hover' }, 'none')};
     }
+
+    ${condition('isActive')`
+    color: ${getColor({ suffix: '_isActive' }, '#E5707A')};
+    background-color: ${getBackgroundColor({ suffix: '_isActive' }, 'white')};
+    border: ${getBorder({ suffix: '_isActive' }, '2px solid #cdf7f6')};
+    transform: ${getTransform({ suffix: '_isActive' }, 'none')};
+    `}
+    
+    ${condition('isDisabled')`
+        opacity: 50%;
+        color: ${getColor({ suffix: '_isDisabled' }, '#E5707A')};
+        background-color: ${getBackgroundColor(
+          { suffix: '_isDisabled' },
+          'white'
+        )};
+        border: ${getBorder({ suffix: '_isDisabled' }, '2px solid #cdf7f6')};
+        transform: ${getTransform({ suffix: '_isDisabled' }, 'none')};
+    `}
+  
   `}
 `;
 

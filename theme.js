@@ -143,8 +143,19 @@ export const theme = withThemeweaver(
         paddingRight: [2, 2],
       }),
       ...variant('results_hover', {
+        color: 'action[0]',
+        backgroundColor: 'action[1]',
+        border: value('2px solid #F3B9BD'),
+      }),
+      ...variant('results_isActive', {
+        backgroundColor: 'action[0]',
         color: 'action[1]',
         border: value('2px solid #F3B9BD'),
+      }),
+      ...variant('results_isDisabled', {
+        backgroundColor: 'white',
+        border: value('2px solid #cdf7f6'),
+        color: 'lightText',
       }),
     },
     h1: {

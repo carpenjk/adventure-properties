@@ -56,10 +56,6 @@ const StyledInnerWrapper = styled.div`
 
 const ReserveCTA = ({ maxGuests, title, openInitialRender, onReview }) => {
   const { availability, reservation, reservationControl } = useReservation();
-  console.log(
-    '🚀 ~ file: ReserveCTA.jsx ~ line 58 ~ ReserveCTA ~ reservation',
-    reservation
-  );
 
   // reservation properties
   const { price, unit, unitLabel, unitAmount, isValid } = reservation;

@@ -23,7 +23,7 @@ const FormikCheckbox = (props) => {
       {...props}
       value={checkVal}
       onChange={handleChange}
-      checked={value.includes(checkVal)}
+      checked={value ? value.includes(checkVal) : false}
     />
   );
 };

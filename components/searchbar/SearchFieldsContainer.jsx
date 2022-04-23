@@ -13,8 +13,8 @@ const StyledSearchFields = styled.div`
   `}
 `;
 
-const SearchFieldsContainer = ({ isSearchFiltersOpen, children }) => (
-  <StyledSearchFields isSearchFiltersOpen={isSearchFiltersOpen}>
+const SearchFieldsContainer = ({ isFiltersOpen, children }) => (
+  <StyledSearchFields isSearchFiltersOpen={isFiltersOpen}>
     {children}
   </StyledSearchFields>
 );

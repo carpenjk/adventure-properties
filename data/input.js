@@ -7,7 +7,7 @@ export const startDateProps = {
     offset: '5px',
   },
   textOffset: '26px',
-  width: '125px',
+  width: ['100%', '125px'],
 };
 
 export const endDateProps = {
@@ -19,7 +19,7 @@ export const endDateProps = {
     offset: '5px',
   },
   textOffset: '26px',
-  width: '125px',
+  width: ['100%', '125px'],
 };
 
 export const guestOptions = [
@@ -311,7 +311,7 @@ export const priceFilters = {
       translateY: '-18px',
     },
     textOffset: '5px',
-    width: '13.5rem',
+    width: ['100%', '135px'],
     options: [
       {
         value: '0',
@@ -375,7 +375,7 @@ export const priceFilters = {
       translateY: '-18px',
     },
     textOffset: '5px',
-    width: '13.5rem',
+    width: ['100%', '135px'],
     options: [
       {
         value: '0',
@@ -442,7 +442,7 @@ export const roomsFilters = {
     },
     type: 'CustomSelect',
     textOffset: '5px',
-    width: '13.5rem',
+    width: ['100%', '135px'],
     options: [
       {
         value: '1',
@@ -481,7 +481,7 @@ export const roomsFilters = {
     },
     type: 'CustomSelect',
     textOffset: '5px',
-    width: '13.5rem',
+    width: ['100%', '135px'],
     options: [
       {
         value: '1',

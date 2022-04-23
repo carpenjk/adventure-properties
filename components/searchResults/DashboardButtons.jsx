@@ -1,24 +1,19 @@
-import styled from 'styled-components';
 import { getProp } from 'dataweaver';
 import ActionButton from '../base/ActionButton';
 import Spacer from '../base/Spacer';
 
-const StyledContainer = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  padding-top: 16px;
-  padding-bottom: 16px;
-`;
 const StyledMenuGroup = styled.div`
   display: flex;
   justify-content: ${getProp('justifyContent')};
   align-items: ${getProp('alignContent')};
 `;
-const Menu = () => (
-  <StyledContainer>
+const DashboardButtons = () => (
+  <>
     <StyledMenuGroup justifyContent="flex-start" alignItems="center">
-      <ActionButton tw={{ variant: 'results' }}>
+      <ActionButton
+        tw={{ variant: 'results' }}
+        onClick={() => setIsSearchMenuOpen((prev) => !prev)}
+      >
         <img src="/static/assets/searchResults/filter.svg" alt="filter" />
         <Spacer space="4px" />
         <span>Filters</span>
@@ -37,7 +32,7 @@ const Menu = () => (
         <span>Nearest</span>
       </ActionButton>
     </StyledMenuGroup>
-  </StyledContainer>
+  </>
 );
 
-export default Menu;
+export default DashboardButtons;

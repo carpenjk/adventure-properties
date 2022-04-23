@@ -42,16 +42,16 @@ const SecondarySearchFields = (props) => {
           translateX: '-21px',
           translateY: '-18px',
         }}
-        icon="./static/assets/searchbar/icon/guest.svg"
+        icon="/static/assets/searchbar/icon/guest.svg"
         iconOffset="5px"
         iconWidth="16px"
         iconHeight="16px"
         textOffset="26px"
-        width="158px"
+        width={['100%', '158px']}
         options={guestOptions}
         showInsetPlaceholder
         onFocus={onInputFocus}
-        // ref={(el) => (inputRefs.current[1] = el)}
+        ref={(el) => (inputRefs.current[1] = el)}
       />
     </>
   );

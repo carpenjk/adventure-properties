@@ -60,8 +60,8 @@ class FormikDateRange extends Component {
     // get values for each controlled component
     const { startDate, endDate } = this.state;
 
-    const startDateVal = values[startProps.id];
-    const endDateVal = values[endProps.id];
+    const startDateVal = values ? values[startProps.id] : '';
+    const endDateVal = values ? values[endProps.id] : '';
 
     function getMinDate() {
       const dt = new Date();

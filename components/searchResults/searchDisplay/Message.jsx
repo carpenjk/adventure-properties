@@ -2,20 +2,18 @@ import styled from 'styled-components';
 
 const StyledContainer = styled.div`
   display: flex;
-  height: 100px;
   padding-top: 16px;
   padding-bottom: 16px;
   flex: none;
   width: 100%;
 
   > span {
-    font-family: 'Roboto';
-    font-style: normal;
-    font-weight: 700;
-    font-size: 18px;
+    font-family: ${({ theme }) => theme.fonts.roboto};
+    font-weight: bold;
+    font-size: ${({ theme }) => theme.fontSizes[3]}px;
     line-height: 150%;
     letter-spacing: 0.025em;
-    color: #e5707a;
+    color: ${({ theme }) => theme.colors.action[1]};
   }
 `;
 const Message = ({ message }) => (

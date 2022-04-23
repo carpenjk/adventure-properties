@@ -11,7 +11,6 @@ const LocationInput = forwardRef(
     const [formikFields, meta, helpers] = useField(name);
     const [acValues, setAcValues] = useState([]);
     const inputRef = useRef();
-    const wrapperRef = useRef();
 
     async function fetchACValues(q) {
       try {
@@ -72,7 +71,7 @@ const LocationInput = forwardRef(
     }, [forceClose, acControl]);
 
     return (
-      <div ref={wrapperRef}>
+      <div>
         <InputBase
           name={name}
           {...formikFields}
@@ -86,5 +85,6 @@ const LocationInput = forwardRef(
     );
   }
 );
+LocationInput.displayName = 'LocationInput';
 
 export default LocationInput;

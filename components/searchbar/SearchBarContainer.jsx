@@ -27,13 +27,17 @@ const StyledSearchBar = styled.div`
   box-sizing: content-box;
   background-color: transparent;
 
-  max-height: ${getMaxHeight({}, 'none')};
+  max-height: ${getMaxHeight({}, '82vh')};
   max-width: ${getMaxWidth({}, 'none')};
   width: ${getWidth({}, 'auto')};
   z-index: 999999;
   border-radius: ${getBorderRadius({}, '8px')};
 
-  ${condition('isSearchBarFocused')`
+  ${condition('hide')`
+    display: none;
+  `}
+
+  ${condition('isSecondaryOpen')`
     background-color: ${getBackgroundColor({}, 'white')};
     margin-top: ${getMarginTop({}, '0')};
     margin-right: ${getMarginRight({}, '0')};
@@ -42,7 +46,7 @@ const StyledSearchBar = styled.div`
     max-width: ${getProp('openMaxWidth')};
   `}
 
-  ${condition('isSearchFiltersOpen')`
+  ${condition('isFiltersOpen')`
     width: 90vw;
     max-width: ${getProp('openMaxWidth')};
     max-height: ${getMaxHeight({}, '82vh')};
@@ -61,16 +65,15 @@ const StyledSearchBar = styled.div`
     min-width: ${getMinWidth({}, '0')};
     border-radius: ${getBorderRadius({}, '8px')};
 
+    ${condition('hide')`
+      display: none;
+    `}
+
     ${condition('isSearchBarFocused')`
-    background-color: ${getBackgroundColor({}, 'white')};
-    margin-top: ${getMarginTop({}, '0')};
-    margin-right: ${getMarginRight({}, '0')};
-    margin-bottom: ${getMarginBottom({}, '0')};
-    margin-left: ${getMarginLeft({}, '0')};
-    max-width: ${getProp('openMaxWidth')};
+      max-width: ${getProp('openMaxWidth')};
   `}
 
-  ${condition('isSearchFiltersOpen')`
+  ${condition('isFiltersOpen')`
     width: 90vw;
     max-width: ${getProp('openMaxWidth')};
     max-height: ${getMaxHeight({}, '82vh')};
@@ -90,7 +93,9 @@ StyledSearchBar.defaultProps = {
 const SearchBarContainer = (props) => {
   const {
     children,
-    isSearchFiltersOpen,
+    isHidden,
+    isFiltersOpen,
+    isSecondaryOpen,
     isSearchBarFocused,
     offsetTop,
     openMaxWidth,
@@ -101,10 +106,12 @@ const SearchBarContainer = (props) => {
   return (
     <StyledSearchBar
       tw={mergedTW}
-      isSearchFiltersOpen={isSearchFiltersOpen}
+      isFiltersOpen={isFiltersOpen}
       isSearchBarFocused={isSearchBarFocused}
+      isSecondaryOpen={isSecondaryOpen}
       offsetTop={offsetTop}
       openMaxWidth={openMaxWidth}
+      hide={isHidden}
       ref={searchBarRef}
     >
       {children}

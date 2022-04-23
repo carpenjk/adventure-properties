@@ -27,7 +27,7 @@ const PrimarySearchFields = (props) => {
           translateY: '-18px',
         }}
         textOffset="26px"
-        icon="./static/assets/searchbar/icon/location.svg"
+        icon="/static/assets/searchbar/icon/location.svg"
         iconOffset="5px"
         width={['100%', '340px']}
         autoCompleteWidth="100%"

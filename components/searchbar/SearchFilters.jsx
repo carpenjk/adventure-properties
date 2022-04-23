@@ -1,19 +1,14 @@
-import { useContext } from 'react';
-import { SearchBarContext } from './searchBarContext';
 import FiltersContainer from './FiltersContainer';
 
 const SearchFilters = (props) => {
-  const { isScrollable, checkFilters, FilterFields } = props;
+  const { isScrollable, checkFilters, FilterFields, isFiltersOpen } = props;
   //* context *********************************************************
-  const { isSearchFiltersOpen } = useContext(SearchBarContext);
 
   return (
     <FiltersContainer
-      isSearchFiltersOpen={isSearchFiltersOpen}
+      isSearchFiltersOpen={isFiltersOpen}
       isScrollable={isScrollable}
-      className={`searchFilters ${
-        isSearchFiltersOpen ? 'searchFiltersOpen' : ''
-      }`}
+      className={`searchFilters ${isFiltersOpen ? 'searchFiltersOpen' : ''}`}
     >
       <FilterFields checkFilters={checkFilters} />
     </FiltersContainer>

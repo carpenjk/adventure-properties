@@ -9,6 +9,8 @@ const PropertyCard = (props) => {
     scale,
     scaleOnHover,
     scaleOnFocus,
+    showDescription,
+    layoutDirection,
   } = props;
 
   const { url } = property;
@@ -21,7 +23,12 @@ const PropertyCard = (props) => {
       scaleOnFocus={scaleOnFocus}
       scale={scale}
     >
-      <PropertyCardLayout property={property} innerRef={innerRef} />
+      <PropertyCardLayout
+        property={property}
+        showDescription={showDescription}
+        innerRef={innerRef}
+        layoutDirection={layoutDirection}
+      />
     </Card>
   );
 };

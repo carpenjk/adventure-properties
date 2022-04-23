@@ -7,7 +7,7 @@ import useReservation from '../../components/reservationForm/UseReservation';
 import { Media, mediaStyles } from '../../Media';
 import cmsClient from '../../Contentful';
 
-import Lightbox from '../../components/Lightbox/Lightbox';
+import Lightbox from '../../components/lightbox/Lightbox';
 import Section from '../../components/base/semantic/Section';
 import BackButton from '../../components/base/BackButton';
 import ClientOnly from '../../components/ClientOnly';

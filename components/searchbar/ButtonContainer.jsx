@@ -32,9 +32,9 @@ const StyledButtonContainer = styled.div`
   `}
 `;
 
-const ButtonContainer = ({ children, isDisplayed, isSearchFiltersOpen }) => (
+const ButtonContainer = ({ children, isDisplayed, isFiltersOpen }) => (
   <StyledButtonContainer
-    isSearchFiltersOpen={isSearchFiltersOpen}
+    isSearchFiltersOpen={isFiltersOpen}
     isDisplayed={isDisplayed}
   >
     {children}

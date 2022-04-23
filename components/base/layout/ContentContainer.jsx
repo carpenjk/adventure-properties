@@ -8,8 +8,6 @@ import {
 } from 'themeweaver';
 
 const StyledContent = styled.div`
-  display: flex;
-  align-items: flex-start;
   padding-top: ${getPaddingTop({}, '16px')};
   padding-right: ${getPaddingRight({}, '16px')};
   padding-bottom: ${getPaddingBottom({}, '16px')};

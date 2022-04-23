@@ -1,5 +1,5 @@
 import useSWR from 'swr';
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/client';
 import { dateReviver } from '../../../utils/dates';
 

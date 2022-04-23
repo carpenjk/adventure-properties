@@ -1,7 +1,8 @@
 import { useField } from 'formik';
+import { forwardRef } from 'react';
 import CustomSelect from './CustomSelect';
 
-const FormikSelect = (props) => {
+const FormikSelect = forwardRef((props, ref) => {
   const { options } = props;
   const [field, meta, { setValue }] = useField(props);
   const { value } = field;
@@ -15,8 +16,11 @@ const FormikSelect = (props) => {
       {...props}
       value={getOption(value) || ''}
       onChange={(val) => setValue(val.value)}
+      ref={ref}
     />
   );
-};
+});
+
+FormikSelect.displayName = 'FormikSelect';
 
 export default FormikSelect;

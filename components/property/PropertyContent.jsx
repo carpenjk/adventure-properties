@@ -8,6 +8,7 @@ import PropertyDescription from './PropertyDescription';
 import PropertyDetailCategory from './PropertyDetailCategory';
 import PropertyDetails from './PropertyDetails';
 import PropertyTitle from './PropertyTitle';
+import PropertyLayout from './PropertyLayout';
 
 // Load location on the client. Errors on server
 const Location = dynamic(() => import('../../components/property/Location'), {
@@ -57,44 +58,46 @@ const PropertyContent = (props) => {
 
   return (
     <ContentContainer tw={{ variant: 'property' }}>
-      <PropertyDetails>
-        <PropertyTitle title={title} />
-        <AttributesSummary
-          guests={guests}
-          beds={beds}
-          baths={baths}
-          propertyType={propertyType}
-        />
-        <PropertyDescription>{description}</PropertyDescription>
-        <PropertyDetailCategory title="Location">
-          <Location location={location} locationName={`${city}, ${state}`} />
-        </PropertyDetailCategory>
-        <PropertyDetailCategory title="Amenities">
-          <AttributeList>{getAttributeList('amenities')}</AttributeList>
-        </PropertyDetailCategory>
-        <PropertyDetailCategory title="Experience">
-          <AttributeList>{getAttributeList('experience')}</AttributeList>
-        </PropertyDetailCategory>
-        <PropertyDetailCategory title="Nearby Activities">
-          <AttributeList>{getNearbyActivities()}</AttributeList>
-        </PropertyDetailCategory>
-        <PropertyDetailCategory title="Availability">
-          <AttributeList>{getAttributeList('availability')}</AttributeList>
-        </PropertyDetailCategory>
-        <PropertyDetailCategory title="Access">
-          <AttributeList>{getAttributeList('access')}</AttributeList>
-        </PropertyDetailCategory>
-      </PropertyDetails>
-      <Media greaterThanOrEqual="1">
-        <ReservationForm
-          availability={availability}
-          reservation={reservation}
-          control={reservationControl}
-          title={title}
-          maxGuests={guests}
-          onReview={onReservationReview}
-        />
-      </Media>
+      <PropertyLayout>
+        <PropertyDetails>
+          <PropertyTitle title={title} />
+          <AttributesSummary
+            guests={guests}
+            beds={beds}
+            baths={baths}
+            propertyType={propertyType}
+          />
+          <PropertyDescription>{description}</PropertyDescription>
+          <PropertyDetailCategory title="Location">
+            <Location location={location} locationName={`${city}, ${state}`} />
+          </PropertyDetailCategory>
+          <PropertyDetailCategory title="Amenities">
+            <AttributeList>{getAttributeList('amenities')}</AttributeList>
+          </PropertyDetailCategory>
+          <PropertyDetailCategory title="Experience">
+            <AttributeList>{getAttributeList('experience')}</AttributeList>
+          </PropertyDetailCategory>
+          <PropertyDetailCategory title="Nearby Activities">
+            <AttributeList>{getNearbyActivities()}</AttributeList>
+          </PropertyDetailCategory>
+          <PropertyDetailCategory title="Availability">
+            <AttributeList>{getAttributeList('availability')}</AttributeList>
+          </PropertyDetailCategory>
+          <PropertyDetailCategory title="Access">
+            <AttributeList>{getAttributeList('access')}</AttributeList>
+          </PropertyDetailCategory>
+        </PropertyDetails>
+        <Media greaterThanOrEqual="1">
+          <ReservationForm
+            availability={availability}
+            reservation={reservation}
+            control={reservationControl}
+            title={title}
+            maxGuests={guests}
+            onReview={onReservationReview}
+          />
+        </Media>
+      </PropertyLayout>
     </ContentContainer>
   );
 };

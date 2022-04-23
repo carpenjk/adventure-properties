@@ -1,13 +1,45 @@
+import { condition } from 'dataweaver';
 import Head from 'next/head';
+import { useRouter } from 'next/router';
+import { useState } from 'react';
+import styled from 'styled-components';
+import useHasMounted from '../../components/hooks/UseHasMounted';
 import ContentContainer from '../../components/base/layout/ContentContainer';
-import Dashboard from '../../components/searchResults/Dashboard';
+import {
+  endDateProps,
+  startDateProps,
+  checkFiltersData as CheckFilters,
+} from '../../data/input';
+import {
+  getInitialCheckFilters,
+  prepValues,
+  SearchSchema,
+} from '../../data/validation/search';
 import { mediaStyles } from '../../Media';
-import { search } from '../../utils/search';
+import { search } from '../../utils/search/search';
+import { parseParams } from '../../utils/search/params';
+import SearchBarProvider from '../../components/searchbar/SearchBarProvider';
+import SearchResultLayout from '../../components/searchResults/SearchResultLayout';
 
-const Search = ({ response, test }) => {
+const blankParams = {
+  destination: '',
+  guests: '',
+  [startDateProps.id]: '',
+  [endDateProps.id]: '',
+  nearbyActivities: '',
+  ...getInitialCheckFilters(),
+};
+
+const Search = ({ response }) => {
+  const router = useRouter();
+  const parsedParams = parseParams(router.query);
+  const initialParamValues = { ...blankParams, ...parsedParams };
   console.log('🚀 ~ file: search.js ~ line 6 ~ Search ~ response', response);
 
   // const { message } = response;
+  const { results, error } = response;
+  console.log('🚀 ~ file: search.js ~ line 54 ~ Search ~ results', results);
+
   const message =
     'No results found in the destination provided. Here are some available listings in other locations.';
 
@@ -21,9 +53,26 @@ const Search = ({ response, test }) => {
         />
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
-      <main>
+      <main style={{ position: 'relative' }}>
         <ContentContainer>
-          <Dashboard message={message || ''} />
+          <SearchBarProvider
+            allOpenMode
+            hideOnOpen
+            initialValues={initialParamValues}
+            schema={SearchSchema}
+            onSubmit={async (values) => {
+              router.push({
+                pathname: '/properties/search',
+                query: { ...prepValues(values) },
+              });
+            }}
+          >
+            <SearchResultLayout
+              results={results}
+              message={message}
+              error={error}
+            />
+          </SearchBarProvider>
         </ContentContainer>
       </main>
     </>
@@ -34,19 +83,12 @@ const Search = ({ response, test }) => {
 
 export async function getServerSideProps(context) {
   const { query } = context;
-  const error = null;
-  let results = null;
-
-  results = await search(query);
-  console.log(
-    '🚀 ~ file: search.js ~ line 62 ~ getServerSideProps ~ results',
-    results
-  );
+  const response = await search(query);
 
   return {
     props: {
       test: 'test',
-      response: results,
+      response,
     },
   };
 }

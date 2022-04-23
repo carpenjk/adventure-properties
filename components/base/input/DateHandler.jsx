@@ -24,10 +24,7 @@ import DatePickerStyles from './DatePickerStyles';
 const StyledDateHandler = styled.div`
   display: block;
   position: relative;
-  
   width: 100%;
-  
-
 
   .react-datepicker-popper {
     position: relative;
@@ -35,15 +32,18 @@ const StyledDateHandler = styled.div`
     tabIndex="0";
   }
   .react-datepicker-wrapper {
+    height:100%;
     width: 100%;
     box-sizing: border-box;
   }
   .react-datepicker__input-container {
+    height: 100%;
     width:100%;
   }
   .react-datepicker__input-container > input {
+    cursor: pointer;
+    height: 100%;
     width: 100%;
-    height: auto;
     padding-left: ${getProp('textOffset')};
     
     border-style: none;
@@ -72,15 +72,14 @@ const StyledDateHandler = styled.div`
       height: 100%;
     }
     .react-datepicker__input-container > input {
-      width: 100%;
       height: 100%;
+      width: 100%;
       color: ${getColor({}, 'inherit')};
       background-color: transparent;
-  
       background-image: url(${getProp('icon')});
       background-repeat: no-repeat;
       background-position: ${getProp('iconOffset')} 50%;
-      cursor: pointer;
+      
       font-family: ${getFontFamily({}, 'inherit')};
       font-weight: ${getFontWeight({}, 'normal')};
       font-size: ${getFontSize({}, '1.6rem')};

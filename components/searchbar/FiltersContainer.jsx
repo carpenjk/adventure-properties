@@ -1,7 +1,6 @@
 import styled from 'styled-components';
 import { breakpoint } from 'themeweaver';
 import { condition } from 'dataweaver';
-import { checkFiltersData as filters } from '../../data/input';
 
 const StyledSearchFilter = styled.ul`
   display: none;

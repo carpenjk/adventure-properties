@@ -66,7 +66,6 @@ const Reserve = ({ property }) => {
   const mainUrl = `http:${property.mainPhoto.fields.file.url}`;
 
   function handleReserve() {
-    // event.preventDefault();
     reserve(maxGuests);
   }
 
