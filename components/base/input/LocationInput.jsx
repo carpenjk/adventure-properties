@@ -25,7 +25,9 @@ const LocationInput = forwardRef(
           setAcValues([]);
         }
         if (data && data.map) {
-          setAcValues(data.map((sugg) => getLocationDisplay(sugg)));
+          const suggestions = data.map((sugg) => getLocationDisplay(sugg));
+          const deduped = [...new Set(suggestions)];
+          setAcValues(deduped);
         }
       } catch (e) {
         // do something
