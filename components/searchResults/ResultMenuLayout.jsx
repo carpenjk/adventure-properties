@@ -5,7 +5,6 @@ import { useRouter } from 'next/router';
 import ActionButton from '../base/ActionButton';
 import Spacer from '../base/Spacer';
 import { SearchBarContext } from '../searchbar/searchBarContext';
-import { prepValues } from '../../data/validation/search';
 
 const StyledMenuGroup = styled.div`
   display: flex;
@@ -19,8 +18,6 @@ function toggleSort(obj) {
 }
 const ResultMenuLayout = () => {
   const { control } = useContext(SearchBarContext);
-  const [priceSort, setPriceSort] = useState();
-  const [locationSort, setlocationSort] = useState();
   const router = useRouter();
   const { query } = router;
   const { sortBy } = query;

@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { useDebouncedCallback } from 'use-debounce';
 
+// @param onInput: onInput can be a function or an array cotaining a function and debounce duration
+// [handleInput, 750]
 const useAutoComplete = (props) => {
   const { values, onSelect, onInput, displayFunction } = props;
   const [keyboardIndex, setKeyboardIndex] = useState(-1);
@@ -38,6 +40,7 @@ const useAutoComplete = (props) => {
 
   function _onInputChange(e) {
     setIsOpen(true);
+    setKeyboardIndex(0);
     if (_onInput) {
       _onInput(e);
     }

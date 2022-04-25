@@ -227,7 +227,7 @@ class CustomSelect extends Component {
 
   handleBlur(option) {
     const { onBlur, innerRef } = this.props || false;
-    if (innerRef && !innerRef.current.state.value) {
+    if (innerRef && innerRef.current && !innerRef.current.state.value) {
       this.setState({ isActive: false });
     }
     if (onBlur) onBlur(option);

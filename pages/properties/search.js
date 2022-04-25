@@ -1,15 +1,7 @@
-import { condition } from 'dataweaver';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
-import { useState } from 'react';
-import styled from 'styled-components';
-import useHasMounted from '../../components/hooks/UseHasMounted';
 import ContentContainer from '../../components/base/layout/ContentContainer';
-import {
-  endDateProps,
-  startDateProps,
-  checkFiltersData as CheckFilters,
-} from '../../data/input';
+import { endDateProps, startDateProps } from '../../data/input';
 import {
   getInitialCheckFilters,
   prepValues,
@@ -36,12 +28,12 @@ const Search = ({ response }) => {
   const initialParamValues = { ...blankParams, ...parsedParams };
   console.log('🚀 ~ file: search.js ~ line 6 ~ Search ~ response', response);
 
-  // const { message } = response;
+  const { message } = response;
   const { results, error } = response;
   console.log('🚀 ~ file: search.js ~ line 54 ~ Search ~ results', results);
 
-  const message =
-    'No results found in the destination provided. Here are some available listings in other locations.';
+  // const message =
+  //   'No results found in the destination provided. Here are some available listings in other locations.';
 
   return (
     <>

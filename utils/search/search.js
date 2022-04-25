@@ -208,17 +208,12 @@ function getGeoFilter(geo) {
   return geo ? `${geo.lat},${geo.lon},100` : '';
 }
 
-function getPriceSort(sortBy, isLocationSearch) {
-  if (isLocationSearch) {
-    return sortBy;
-  }
-  // sort by price if not destination search
-  return { displayPrice: -1 };
-}
-
 function getMessage(results, ignoredLocation) {
   if (!hasContents(results)) {
-    return { message: 'No results found.' };
+    return {
+      message:
+        'No properties availabile matching the search provided. Try changing the search filters.',
+    };
   }
   if (ignoredLocation) {
     return {
@@ -228,29 +223,35 @@ function getMessage(results, ignoredLocation) {
   }
 }
 
-// @param params <object>: key pair object of search parameters
-// @param sortBy <object>: key = price or destination, value = -1 (desc) || 1 (asc)
-export async function search(params) {
+function getCombinedResults({ cmsResults, dbResults, searchObj }) {
+  const { isCmsSearch, priceSort } = searchObj;
+
+  if (hasContents(dbResults) && hasContents(cmsResults)) {
+    return createCombinedProperties(
+      filterCmsByID(cmsResults, getCmsIDs({ dbResults })),
+      isCmsSearch
+        ? filterDbByID(dbResults, getCmsIDs({ cmsResults }))
+        : dbResults,
+      priceSort ? 'db' : 'cms'
+    );
+  }
+}
+
+async function searchDBFirst(searchObj) {
+  const {
+    cmsParams,
+    CMSParamsExclDest,
+    dbParams,
+    sortBy,
+    isDestSearch,
+    setIgnoredLocation,
+  } = searchObj;
   let dbResults = [];
   let cmsResults = [];
-  let locationIDs = [];
+  let locationIDs;
   let geoFilter = '';
 
-  const { sortBy, ...cleanParams } = parseParams(params);
-
-  // validate data, return error
-  try {
-    await SearchSchema.validate(cleanParams);
-  } catch (error) {
-    return { error: error.message };
-  }
-
-  const { cmsParams, dbParams } = splitParamsBySource(cleanParams);
-  const { destination, ...CMSParamsExclDest } = cmsParams || {};
-  const isCmsSearch = hasContents(CMSParamsExclDest);
-  const isDestSearch = cmsParams && cmsParams.destination && true;
-  const priceSort = getPriceSort(sortBy, isDestSearch);
-  let ignoredLocation = false;
+  const priceSort = sortBy && sortBy.displayPrice ? sortBy : undefined;
 
   if (isDestSearch) {
     const geo = await geocode(cmsParams.destination);
@@ -263,7 +264,7 @@ export async function search(params) {
     locationIDs = locationResults
       ? getCmsIDs({ cmsResults: locationResults })
       : [];
-    ignoredLocation = !hasContents(locationIDs);
+    setIgnoredLocation(!hasContents(locationIDs));
   }
 
   // search
@@ -271,9 +272,14 @@ export async function search(params) {
     await dbSearch(dbParams, locationIDs, priceSort)
   );
 
-  if (hasContents(dbResults)) {
-    // further refine search with cms filters
-    cmsResults = await cmsSearch(CMSParamsExclDest, getCmsIDs({ dbResults }));
+  if (!hasContents(dbResults)) {
+    return [];
+  }
+  cmsResults = await cmsSearch(CMSParamsExclDest, getCmsIDs({ dbResults }));
+
+  // if No results return
+  if (!hasContents(cmsResults)) {
+    return [];
   }
 
   const sortedCMSResults =
@@ -281,18 +287,94 @@ export async function search(params) {
       ? cmsResults
       : sortCMSByIDList(cmsResults, locationIDs);
 
-  let combinedResults = [];
-  if (hasContents(dbResults) && hasContents(cmsResults)) {
-    combinedResults = createCombinedProperties(
-      filterCmsByID(sortedCMSResults, getCmsIDs({ dbResults })),
-      isCmsSearch
-        ? filterDbByID(dbResults, getCmsIDs({ cmsResults: sortedCMSResults }))
-        : dbResults,
-      priceSort ? 'db' : 'cms'
-    );
+  return getCombinedResults({
+    cmsResults: sortedCMSResults,
+    dbResults,
+    searchObj,
+  });
+}
+
+async function searchCMSOnly(searchObj) {
+  const {
+    cmsParams,
+    CMSParamsExclDest,
+    dbParams,
+    sortBy,
+    isDestSearch,
+    setIgnoredLocation,
+  } = searchObj;
+  let dbResults = [];
+  let cmsResults = [];
+  let geoFilter = '';
+
+  const priceSort = sortBy && sortBy.displayPrice ? sortBy : undefined;
+
+  if (isDestSearch) {
+    const geo = await geocode(cmsParams.destination);
+    geoFilter = getGeoFilter(geo);
+    // get property list for geolocation
+    cmsResults = await cmsSearch({
+      ...cmsParams,
+      destination: geoFilter,
+    });
+    if (!hasContents(cmsResults)) {
+      cmsResults = await cmsSearch({ CMSParamsExclDest });
+      setIgnoredLocation(true);
+    }
+  } else {
+    cmsResults = await cmsSearch(cmsParams);
   }
+  // search criteria failed to return results
+  if (!hasContents(cmsResults)) {
+    return [];
+  }
+
+  const locationIDs = cmsResults ? getCmsIDs({ cmsResults }) : [];
+  // search
+  dbResults = postDBProcessing(
+    await dbSearch(dbParams, locationIDs, priceSort)
+  );
+
+  return getCombinedResults({ cmsResults, dbResults, searchObj });
+}
+
+// @param params <object>: key pair object of search parameters
+// @param sortBy <object>: key = price or destination, value = -1 (desc) || 1 (asc)
+export async function search(params) {
+  const { sortBy, ...cleanParams } = parseParams(params);
+  const { cmsParams, dbParams } = splitParamsBySource(cleanParams);
+  const { destination, ...CMSParamsExclDest } = cmsParams || {};
+  let _ignoredLocation = false;
+
+  const searchObj = {
+    cmsParams,
+    CMSParamsExclDest,
+    dbParams,
+    sortBy,
+    ignoredLocation: _ignoredLocation,
+    setIgnoredLocation: function _setIgnoredLocation(val) {
+      _ignoredLocation = val;
+    },
+    isCmsSearch: hasContents(CMSParamsExclDest),
+    isDestSearch: cmsParams && cmsParams.destination && true,
+  };
+
+  // validate data, return error
+  try {
+    await SearchSchema.validate(cleanParams);
+  } catch (error) {
+    return { error: error.message };
+  }
+
+  let combinedResults = [];
+  if (hasContents(dbParams)) {
+    combinedResults = await searchDBFirst(searchObj);
+  } else if (hasContents(cmsParams)) {
+    combinedResults = await searchCMSOnly(searchObj);
+  }
+
   return {
     results: combinedResults,
-    ...getMessage(combinedResults, ignoredLocation),
+    ...getMessage(combinedResults, _ignoredLocation),
   };
 }

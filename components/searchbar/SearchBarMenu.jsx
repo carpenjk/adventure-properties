@@ -36,14 +36,13 @@ const SearchBarMenu = (props) => {
   //* context *********************************************************
 
   const { control, searchState } = useContext(SearchBarContext);
-  const { open, close } = control;
+  const { open } = control;
   const {
     allOpenMode,
     isOpen,
     isHidden,
     isStarted,
     isSecondaryOpen,
-    setIsSecondaryOpen,
     isFiltersOpen,
     setIsFiltersOpen,
     isSearchBarFocused,
@@ -68,10 +67,6 @@ const SearchBarMenu = (props) => {
   const searchBarOffsetTop = offsetTop || DEFAULT_OFFSET_TOP_PX;
 
   useEffect(() => {
-    console.log('searchbar menu mounted');
-  }, []);
-
-  useEffect(() => {
     if (allOpenMode) {
       open();
     }
@@ -90,12 +85,6 @@ const SearchBarMenu = (props) => {
 
   const onClickOutsideEffect = () => {
     setIsSearchBarFocused(false);
-
-    // if (br.current.width < br.br[1]) {
-    //   close({ filters: true, secondary: true });
-    // } else {
-    //   close({ filters: true });
-    // }
     if (onExit) {
       onExit();
       return;
