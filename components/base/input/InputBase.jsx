@@ -18,7 +18,9 @@ import InputWrapper from './InputWrapper';
 import InsetPlaceholder from './InsetPlaceholder';
 import AutoCompleteSelector from './AutoCompleteSelector';
 
-const StyledEventWrapper = styled.div``;
+const StyledEventWrapper = styled.div`
+  position: relative;
+`;
 
 const StyledInput = styled.input`
   display: block;

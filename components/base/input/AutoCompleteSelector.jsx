@@ -20,6 +20,7 @@ const StyledContainer = styled.div`
   box-sizing: border-box;
   width: ${getProp('width')};
   border-radius: ${getBorderRadius({}, '5px')};
+  outline: solid 1px ${getColor({}, '#b3b3a3')};
 
   color: ${getColor({}, 'initial')};
   font-family: ${getFontFamily({}, 'inherit')};
@@ -91,15 +92,16 @@ const StyledContainer = styled.div`
 const AutoCompleteSelector = ({ autoComplete, ...props }) => {
   const { keyboardIndex, isOpen } = autoComplete.acState;
   const { onClick, getSuggestions } = autoComplete.acControl;
+  const suggestions = getSuggestions();
   return (
     <StyledContainer
       {...props}
-      isOpen={isOpen}
+      isOpen={isOpen && suggestions.length > 0}
       hightlightItem={keyboardIndex + 1}
       onClick={onClick}
     >
       <ul>
-        {getSuggestions().map((item) => (
+        {suggestions.map((item) => (
           <li key={item}>{item}</li>
         ))}
       </ul>
