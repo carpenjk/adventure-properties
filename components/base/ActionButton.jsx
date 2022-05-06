@@ -48,6 +48,14 @@ const StyledButton = styled.button`
     transform: ${getTransform({ suffix: '_hover' }, 'none')};
   }
 
+  ${condition('disabled')`
+    opacity: 50%;
+    color: ${getColor({ suffix: '_isDisabled' }, '#E5707A')};
+    background-color: ${getBackgroundColor({ suffix: '_isDisabled' }, 'white')};
+    border: ${getBorder({ suffix: '_isDisabled' }, '2px solid #cdf7f6')};
+    transform: ${getTransform({ suffix: '_isDisabled' }, 'none')};
+  `}
+
   ${breakpoint(1)`
     width: ${getWidth({}, 'auto')};
     height: ${getHeight({}, 'auto')};
@@ -78,7 +86,7 @@ const StyledButton = styled.button`
     transform: ${getTransform({ suffix: '_isActive' }, 'none')};
     `}
     
-    ${condition('isDisabled')`
+    ${condition('disabled')`
         opacity: 50%;
         color: ${getColor({ suffix: '_isDisabled' }, '#E5707A')};
         background-color: ${getBackgroundColor(

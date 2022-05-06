@@ -1,11 +1,32 @@
-import { useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
+import { SearchBarContext } from '../../searchbar/searchBarContext';
 import Dashboard from './Dashboard';
 import SearchResults from './SearchResults';
+import Pagination from './Pagination';
 
 const SearchDisplay = (props) => {
-  const { filtersMenu, DashboardMenuLayout, ...fwdProps } = props;
+  const { control, searchState } = useContext(SearchBarContext);
+  const [pageCount, setPageCount] = useState(0);
+  const {
+    filtersMenu,
+    DashboardMenuLayout,
+    page,
+    itemsPerPage,
+    ...fwdProps
+  } = props;
   const { results, message, error } = fwdProps;
   const [showSearchMenu, setShowSearchMenu] = useState(false);
+
+  useEffect(() => {
+    setPageCount(Math.ceil(results.count / itemsPerPage));
+  }, [results, itemsPerPage]);
+
+  // Invoke when user click to request another page.
+  const handlePageClick = (event) => {
+    const { selected } = event;
+    control.search(searchState.values, selected + 1);
+  };
+
   return (
     <>
       {filtersMenu}
@@ -16,7 +37,8 @@ const SearchDisplay = (props) => {
       >
         <DashboardMenuLayout {...fwdProps} />
       </Dashboard>
-      <SearchResults results={results || []} />
+      <SearchResults items={results.items || []} />
+      <Pagination onPageChange={handlePageClick} pageCount={pageCount} />
     </>
   );
 };

@@ -1,50 +1,95 @@
 import { diffDays } from '../dates';
-import {
-  pMap,
-  hasContents,
-  parseParams,
-  splitParamsBySource,
-  filterCmsByID,
-  filterDbByID,
-  sortCMSByIDList,
-  removeUndefined,
-} from './params';
+import { pMap, hasContents, processParams, removeUndefined } from './params';
 import clientPromise from '../mongodb';
-import cmsClient from '../../Contentful';
-import {
-  getPriceDescriptors,
-  createCombinedProperties,
-} from '../../components/adapters/property/property';
 import { SearchSchema } from '../../data/validation/search';
 
 const DEFAULT_SEARCH_DAYS = 365;
+const DEFAULT_LIMIT = 3;
 
-function getCMSQuery(params) {
-  const pNames = Object.keys(params);
-  const pQuery = pNames.reduce((obj, p) => {
-    const value = Array.isArray(params[p]) ? params[p].join(',') : params[p];
-    return { ...obj, [pMap[p].qKey]: value };
-  }, {});
-  return pQuery;
+async function geocode(q) {
+  try {
+    const data = await fetch(
+      `https://us1.locationiq.com/v1/search.php?key=${process.env.LOCATIONIQ_API_ACCESS_TOKEN}&q=${q}&limit=1&format=json`
+    );
+    const geoAry = await data.json();
+    return geoAry.length > 0 ? geoAry[0] : '';
+  } catch (e) {
+    console.log(e);
+  }
 }
 
-function postDBProcessing(results) {
-  // workaround for mongodb _id does not serialize in nextjs server side props
-  const reparsed = JSON.parse(JSON.stringify(results));
-  return reparsed.map((r) => ({
-    ...r,
-    ...getPriceDescriptors(),
-  }));
+function getMappedFilters(params) {
+  const fieldKeys = params
+    ? Object.keys(params).filter((key) => pMap[key])
+    : [];
+
+  return fieldKeys.map((key) => {
+    if (!pMap[key]) return undefined;
+    const { qKey } = pMap[key];
+    const { op } = pMap[key];
+    return op ? { [qKey]: { [op]: params[key] } } : { [qKey]: params[key] };
+  });
 }
 
 // stage one filters based on availability
 // @param cmsIDs = array of CMS_IDs which are used to filter results (i.e. properties in a location)
 // uses a global static variable for non-dated search range
-function createStage1Match(params, cmsIDs) {
-  const { arriveDate, departDate, nearbyActivities } = params || {};
+function createGeoNear(params) {
+  const {
+    arriveDate,
+    departDate,
+    // nearbyActivities,
+    // availability,
+    destination,
+    minPrice,
+    maxPrice,
+    ...mappedParams
+  } = params || {};
+
+  function getQuery(flterAry) {
+    if (!hasContents(flterAry)) {
+      return {};
+    }
+
+    if (flterAry.length > 1) {
+      return { query: { $and: flterAry } };
+    }
+    return { query: flterAry[0] };
+  }
+
+  const fieldFilters = mappedParams
+    ? getMappedFilters(mappedParams)
+    : undefined;
+  const query = getQuery(fieldFilters);
+
+  if (destination) {
+    return {
+      $geoNear: {
+        ...query,
+        near: { type: 'Point', coordinates: destination },
+        distanceField: 'distance',
+        maxDistance: 100 * 1609.344,
+        // includeLocs: 'distance.location',
+        distanceMultiplier: 0.000621371,
+        spherical: true,
+      },
+    };
+  }
+}
+
+// tests for availability
+function createMatch1(params) {
+  const {
+    arriveDate,
+    departDate,
+    minPrice,
+    maxPrice,
+    destination,
+    ...mappedParams
+  } = params || {};
   const dt = new Date();
   const today = new Date(dt.getFullYear(), dt.getMonth(), dt.getDate());
-
+  const fieldFilters = !destination ? getMappedFilters(mappedParams) : [];
   function addDays(d, days) {
     return new Date(d.getFullYear(), d.getMonth(), d.getDate() + days);
   }
@@ -55,32 +100,22 @@ function createStage1Match(params, cmsIDs) {
     : { $lt: addDays(startDate, 1) };
 
   // filter by availability on arrive date or constant number of days from today
-  const dateMatch = arriveDate
+  const filters = arriveDate
     ? removeUndefined([
         arriveDate && { 'availability.date': { $gte: arriveDate } },
         { 'availability.date': departFilter },
         { 'availability.booked': false },
+        ...fieldFilters,
       ])
-    : [
+    : removeUndefined([
         { 'availability.date': { $gte: today } },
         { 'availability.date': { $lte: addDays(today, DEFAULT_SEARCH_DAYS) } },
         { 'availability.booked': false },
-      ];
-
-  const aryActivities = Array.isArray(nearbyActivities)
-    ? nearbyActivities
-    : [nearbyActivities];
-  const aryMatch = removeUndefined([
-    hasContents(cmsIDs) && { cmsID: { $in: cmsIDs } },
-    ...dateMatch,
-    hasContents(nearbyActivities) && {
-      nearbyActivities: { $in: aryActivities },
-    },
-  ]);
-
+        ...fieldFilters,
+      ]);
   return {
     $match: {
-      $and: aryMatch,
+      $and: filters,
     },
   };
 }
@@ -98,16 +133,15 @@ function createGroup(params) {
   return {
     $group: {
       _id: '$_id',
-      cmsID: { $first: '$cmsID' },
       displayPrice: { [fnPrice]: '$availability.price' },
-      nearbyActivities: { $first: '$nearbyActivities' },
+      doc: { $first: '$$ROOT' },
       availCount: { $count: {} },
     },
   };
 }
 
 // Further refines based on price filters and availability over entire date range (if applicable)
-function createStage2Match(params) {
+function createStage3Match(params) {
   const { arriveDate, departDate, minPrice, maxPrice } = params || {};
 
   if (!((arriveDate && departDate) || minPrice || maxPrice)) {
@@ -133,81 +167,6 @@ function createStage2Match(params) {
   };
 }
 
-// Performs Mongo search
-// @param params: list of search params
-// @param cmsIDs: list of cmsIDs to filter search
-// @param sort: {<sortKey>: 1 || -1, ...}
-async function dbSearch(params, cmsIDs, sort) {
-  // get filtered properties from db along with price;
-  const dbClient = await clientPromise;
-
-  const match1 = createStage1Match(params, cmsIDs);
-  const group = createGroup(params);
-  const match2 = createStage2Match(params);
-  const _sort = hasContents(sort) ? { $sort: sort } : undefined;
-
-  const pipelines = removeUndefined([match1, group, match2, _sort]);
-
-  const results = await dbClient
-    .db()
-    .collection('properties')
-    .aggregate([
-      { $unwind: '$availability' },
-      ...pipelines,
-      { $unset: ['_id'] },
-    ])
-    .toArray();
-
-  return results;
-}
-
-async function geocode(q) {
-  try {
-    const data = await fetch(
-      `https://us1.locationiq.com/v1/search.php?key=${process.env.LOCATIONIQ_API_ACCESS_TOKEN}&q=${q}&limit=1&format=json`
-    );
-    const geoAry = await data.json();
-    return geoAry.length > 0 ? geoAry[0] : '';
-  } catch (e) {
-    console.log(e);
-  }
-}
-
-async function cmsSearch(params, cmsIDs) {
-  if (!hasContents(params) && !hasContents(cmsIDs)) {
-    return undefined;
-  }
-  // search something
-  let idFilter = {};
-  if (hasContents(cmsIDs)) {
-    const isMoreThanOneID = cmsIDs.length > 1;
-    const pathOp = isMoreThanOneID ? 'sys.id[in]' : 'sys.id';
-    const criteria = isMoreThanOneID ? cmsIDs.join(',') : cmsIDs[0];
-    idFilter = { [pathOp]: criteria };
-  }
-
-  const pQuery = getCMSQuery(params);
-  const results = await cmsClient.getEntries({
-    content_type: 'property',
-    ...pQuery,
-    ...idFilter,
-  });
-  return results.items;
-}
-function getCmsIDs({ cmsResults, dbResults }) {
-  if (hasContents(cmsResults)) {
-    return cmsResults.map((item) => item.sys.id);
-  }
-  if (hasContents(dbResults)) {
-    return dbResults.map((item) => item.cmsID);
-  }
-  return [];
-}
-
-function getGeoFilter(geo) {
-  return geo ? `${geo.lat},${geo.lon},100` : '';
-}
-
 function getMessage(results, ignoredLocation) {
   if (!hasContents(results)) {
     return {
@@ -222,159 +181,138 @@ function getMessage(results, ignoredLocation) {
     };
   }
 }
+6;
+// Performs Mongo search
+// @param params: list of search params
+// @param sortBy: {<sortKey>: 1 || -1, ...}
+async function searchDB({ limit, skip, sortBy, ...searchParams }, blnCount) {
+  let results;
+  const priceSort =
+    sortBy && sortBy.displayPrice !== undefined ? sortBy : undefined;
+  const dbClient = await clientPromise;
 
-function getCombinedResults({ cmsResults, dbResults, searchObj }) {
-  const { isCmsSearch, priceSort } = searchObj;
+  // all filters (excl price and availability) applied in geoNear
+  const geoNear = searchParams.destination
+    ? createGeoNear(searchParams)
+    : undefined;
+  // match1 filters availability for destination searches
+  // if no destination match1 filters all (excl price)
+  const match1 = createMatch1(searchParams);
+  const group = createGroup(searchParams);
+  const replaceRoot = {
+    $replaceRoot: {
+      newRoot: {
+        $mergeObjects: [
+          '$doc',
+          { availCount: '$availCount' },
+          { displayPrice: '$displayPrice' },
+        ],
+      },
+    },
+  };
 
-  if (hasContents(dbResults) && hasContents(cmsResults)) {
-    return createCombinedProperties(
-      filterCmsByID(cmsResults, getCmsIDs({ dbResults })),
-      isCmsSearch
-        ? filterDbByID(dbResults, getCmsIDs({ cmsResults }))
-        : dbResults,
-      priceSort ? 'db' : 'cms'
-    );
+  const match3 = createStage3Match(searchParams);
+  const countStages = blnCount
+    ? [{ $group: { _id: null, count: { $sum: 1 } } }, { $project: { _id: 0 } }]
+    : [];
+  const _sort =
+    !blnCount && hasContents(priceSort)
+      ? { $sort: priceSort }
+      : { $sort: { distance: 1 } };
+
+  const pipelines = removeUndefined([
+    geoNear,
+    { $unwind: '$availability' },
+    match1,
+    group,
+    replaceRoot,
+    match3,
+    ...countStages,
+    _sort,
+  ]);
+
+  if (!blnCount) {
+    results = await dbClient
+      .db()
+      .collection('properties')
+      .aggregate([...pipelines, { $unset: ['_id'] }])
+      .skip(skip || 0)
+      .limit(limit || DEFAULT_LIMIT)
+      .toArray();
+    return { items: results, query: pipelines };
   }
+  results = await dbClient
+    .db()
+    .collection('properties')
+    .aggregate([...pipelines, { $unset: ['_id'] }])
+    .next();
+  return results.count;
 }
 
-async function searchDBFirst(searchObj) {
+async function createSearchParams(params) {
   const {
-    cmsParams,
-    CMSParamsExclDest,
-    dbParams,
-    sortBy,
-    isDestSearch,
-    setIgnoredLocation,
-  } = searchObj;
-  let dbResults = [];
-  let cmsResults = [];
-  let locationIDs;
-  let geoFilter = '';
-
-  const priceSort = sortBy && sortBy.displayPrice ? sortBy : undefined;
-
-  if (isDestSearch) {
-    const geo = await geocode(cmsParams.destination);
-    geoFilter = getGeoFilter(geo);
-    // get property list for geolocation
-    const locationResults = geoFilter
-      ? await cmsSearch({ destination: geoFilter })
-      : undefined;
-
-    locationIDs = locationResults
-      ? getCmsIDs({ cmsResults: locationResults })
-      : [];
-    setIgnoredLocation(!hasContents(locationIDs));
+    destination,
+    page,
+    numResults = DEFAULT_LIMIT,
+    ...queryParams
+  } = params;
+  let pagination = {};
+  if (page >= 0) {
+    pagination = { limit: numResults, skip: (page - 1) * numResults };
   }
-
-  // search
-  dbResults = postDBProcessing(
-    await dbSearch(dbParams, locationIDs, priceSort)
-  );
-
-  if (!hasContents(dbResults)) {
-    return [];
+  if (destination) {
+    const geo = await geocode(destination);
+    return {
+      ...queryParams,
+      ...pagination,
+      destination: [Number(geo.lon), Number(geo.lat)],
+    };
   }
-  cmsResults = await cmsSearch(CMSParamsExclDest, getCmsIDs({ dbResults }));
-
-  // if No results return
-  if (!hasContents(cmsResults)) {
-    return [];
-  }
-
-  const sortedCMSResults =
-    priceSort || !hasContents(locationIDs)
-      ? cmsResults
-      : sortCMSByIDList(cmsResults, locationIDs);
-
-  return getCombinedResults({
-    cmsResults: sortedCMSResults,
-    dbResults,
-    searchObj,
-  });
-}
-
-async function searchCMSOnly(searchObj) {
-  const {
-    cmsParams,
-    CMSParamsExclDest,
-    dbParams,
-    sortBy,
-    isDestSearch,
-    setIgnoredLocation,
-  } = searchObj;
-  let dbResults = [];
-  let cmsResults = [];
-  let geoFilter = '';
-
-  const priceSort = sortBy && sortBy.displayPrice ? sortBy : undefined;
-
-  if (isDestSearch) {
-    const geo = await geocode(cmsParams.destination);
-    geoFilter = getGeoFilter(geo);
-    // get property list for geolocation
-    cmsResults = await cmsSearch({
-      ...cmsParams,
-      destination: geoFilter,
-    });
-    if (!hasContents(cmsResults)) {
-      cmsResults = await cmsSearch({ CMSParamsExclDest });
-      setIgnoredLocation(true);
-    }
-  } else {
-    cmsResults = await cmsSearch(cmsParams);
-  }
-  // search criteria failed to return results
-  if (!hasContents(cmsResults)) {
-    return [];
-  }
-
-  const locationIDs = cmsResults ? getCmsIDs({ cmsResults }) : [];
-  // search
-  dbResults = postDBProcessing(
-    await dbSearch(dbParams, locationIDs, priceSort)
-  );
-
-  return getCombinedResults({ cmsResults, dbResults, searchObj });
+  return { ...queryParams, ...pagination };
 }
 
 // @param params <object>: key pair object of search parameters
 // @param sortBy <object>: key = price or destination, value = -1 (desc) || 1 (asc)
 export async function search(params) {
-  const { sortBy, ...cleanParams } = parseParams(params);
-  const { cmsParams, dbParams } = splitParamsBySource(cleanParams);
-  const { destination, ...CMSParamsExclDest } = cmsParams || {};
-  let _ignoredLocation = false;
+  let results = [];
+  let count;
+  const cleanParams = processParams(params);
+  const { sortBy } = cleanParams;
+  let sortByUsed = sortBy;
+  let ignoredLocation = false;
 
-  const searchObj = {
-    cmsParams,
-    CMSParamsExclDest,
-    dbParams,
-    sortBy,
-    ignoredLocation: _ignoredLocation,
-    setIgnoredLocation: function _setIgnoredLocation(val) {
-      _ignoredLocation = val;
-    },
-    isCmsSearch: hasContents(CMSParamsExclDest),
-    isDestSearch: cmsParams && cmsParams.destination && true,
-  };
-
-  // validate data, return error
   try {
     await SearchSchema.validate(cleanParams);
   } catch (error) {
     return { error: error.message };
   }
 
-  let combinedResults = [];
-  if (hasContents(dbParams)) {
-    combinedResults = await searchDBFirst(searchObj);
-  } else if (hasContents(cmsParams)) {
-    combinedResults = await searchCMSOnly(searchObj);
+  const searchParams = await createSearchParams(cleanParams);
+  if (hasContents(searchParams)) {
+    results = await searchDB(searchParams);
+    count = hasContents(results.items) ? await searchDB(searchParams, true) : 0;
+    if (cleanParams.destination && !hasContents(results.items)) {
+      sortByUsed =
+        sortBy && sortBy.displayPrice !== undefined
+          ? sortBy
+          : { displayPrice: -1 };
+      const { destination, ...paramsExclDestination } = searchParams;
+      results = await searchDB({
+        paramsExclDestination,
+        sortBy: sortByUsed,
+      });
+      ignoredLocation = true;
+      count = hasContents(results.items)
+        ? await searchDB({ paramsExclDestination }, true)
+        : 0;
+    }
+  } else {
+    // ? return all properties?
   }
 
   return {
-    results: combinedResults,
-    ...getMessage(combinedResults, _ignoredLocation),
+    results: { ...results, count },
+    ...getMessage(results, ignoredLocation),
+    ignoredLocation,
   };
 }

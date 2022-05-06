@@ -1,20 +1,24 @@
 import { dateReviver } from '../dates';
 
 export const pMap = {
-  destination: { qKey: 'fields.location[near]', source: 'cms' },
-  guests: { qKey: 'fields.guests[gte]', source: 'cms' },
-  arriveDate: { source: 'db' },
-  departDate: { source: 'db' },
-  experience: { qKey: 'fields.experience[all]', source: 'cms' },
-  nearbyActivities: { source: 'db' },
-  propertyType: { qKey: 'fields.propertyType[all]', source: 'cms' },
-  availability: { qKey: 'fields.availability[all]', source: 'cms' },
-  access: { qKey: 'fields.access[all]', source: 'cms' },
-  amenities: { qKey: 'fields.amenities[all]', source: 'cms' },
+  destination: { qKey: 'location', source: 'db' },
+  guests: { qKey: 'guests', op: '$gte', source: 'db', fnParse: Number },
+  arriveDate: { source: 'db', fnParse: dateReviver },
+  departDate: { source: 'db', fnParse: dateReviver },
+  experience: { qKey: 'experience', op: '$all', source: 'db' },
+  nearbyActivities: { qKey: 'nearbyActivities', op: '$all', source: 'db' },
+  propertyType: { qKey: 'propertyType', op: '$all', source: 'db' },
+  availability: { qKey: 'availability', op: '$all', source: 'db' },
+  access: { qKey: 'access', op: '$all', source: 'db' },
+  amenities: { qKey: 'amenities', op: '$all', source: 'db' },
   minPrice: { source: 'db' },
   maxPrice: { source: 'db' },
-  beds: { qKey: 'fields.beds[gte]', source: 'cms' },
-  baths: { qKey: 'fields.baths[gte]', source: 'cms' },
+  beds: { qKey: 'beds', op: '$gte', source: 'db' },
+  baths: { qKey: 'baths', op: '$gte', source: 'db' },
+  feature: { qKey: 'feature' },
+  cmsID: { qKey: 'cmsID' },
+  page: { test: 'test' },
+  sortBy: '',
 };
 
 export function hasContents(params) {
@@ -69,22 +73,25 @@ export function splitParamsBySource(params) {
 export function cleanseParams(params) {
   const pNames = Object.keys(params);
   const cleansed = pNames.reduce((obj, p) => {
-    if (params[p] === '') {
-      return obj;
-    }
-    if (
-      Array.isArray(params[p]) &&
-      (params[p].length < 1 || params[p].every((val) => val === ''))
-    ) {
-      return obj;
-    }
+    // drop invalid param
+    if (params[p] === '' || pMap[p] === undefined) return obj;
+    // valid unmapped param
+    if (pMap[p].qKey === undefined) return { ...obj, [p]: params[p] };
+    // drop empty array searches?
+    // if (
+    //   Array.isArray(params[p]) &&
+    //   (params[p].length < 1 || params[p].every((val) => val === ''))
+    // ) {
+    //   return obj;
+    // }
+    // add param with query mapping to valid params
     return { ...obj, [p]: params[p] };
   }, {});
   return cleansed;
 }
 
 // parse and revive date params
-export function parseParams(params) {
+export function processParams(params) {
   const pNames = Object.keys(params);
   const parsed = pNames.reduce(
     (obj, p) => ({

@@ -2,14 +2,30 @@ import { Formik } from 'formik';
 import { SearchBarInnerProvider } from './searchBarContext';
 
 const SearchBarProvider = (props) => {
-  const { initialValues, schema, onSubmit, children, ...options } = props;
+  const {
+    initialValues,
+    schema,
+    search,
+    onSubmit,
+    children,
+    ...options
+  } = props;
+  function handleSubmit(data) {
+    if (onSubmit) {
+      onSubmit(data);
+    } else {
+      search(data);
+    }
+  }
   return (
     <Formik
       initialValues={initialValues}
       validationSchema={schema}
-      onSubmit={onSubmit}
+      onSubmit={handleSubmit}
     >
-      <SearchBarInnerProvider {...options}>{children}</SearchBarInnerProvider>
+      <SearchBarInnerProvider search={search} {...options}>
+        {children}
+      </SearchBarInnerProvider>
     </Formik>
   );
 };

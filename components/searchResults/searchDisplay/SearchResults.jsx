@@ -28,10 +28,10 @@ const StyledListItem = styled.li`
 `;
 
 const SearchResults = (props) => {
-  const { results } = props;
+  const { items } = props;
   return (
     <StyledContainer>
-      {results.map((item) => (
+      {items.map((item) => (
         <StyledListItem key={item.cmsID}>
           <PropertyCard
             property={item}

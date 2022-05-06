@@ -4,13 +4,14 @@ import Header from './base/semantic/Header';
 import Section from './base/semantic/Section';
 import PageFooter from './footer/PageFooter';
 import { footerNavData } from '../data/data';
+import Skeleton from './skeleton';
 
 const Layout = ({ children }) => (
   <>
     <Header position="fixed">
       <Navbar />
     </Header>
-    {children}
+    <Skeleton>{children}</Skeleton>
     <Section semKey="footer" position="relative">
       <PageFooter navData={footerNavData} />
     </Section>

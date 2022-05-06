@@ -19,7 +19,7 @@ const StyledHeader = styled.h3`
 `;
 
 const Location = ({ location, locationName }) => {
-  const position = [location.lat, location.lon];
+  const position = [location[1], location[0]];
   return (
     <StyledLocation>
       <StyledHeader>{locationName}</StyledHeader>

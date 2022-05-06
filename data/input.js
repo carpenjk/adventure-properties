@@ -24,52 +24,52 @@ export const endDateProps = {
 
 export const guestOptions = [
   {
-    value: '1',
+    value: 1,
     label: '1',
     selectedLabel: '1 Guest',
   },
   {
-    value: '2',
+    value: 2,
     label: '2',
     selectedLabel: '2 Guests',
   },
   {
-    value: '3',
-    label: '3',
+    value: 3,
+    label: 3,
     selectedLabel: '3 Guests',
   },
   {
-    value: '4',
+    value: 4,
     label: '4',
     selectedLabel: '4 Guests',
   },
   {
-    value: '5',
+    value: 5,
     label: '5',
     selectedLabel: '5 Guests',
   },
   {
-    value: '6',
+    value: 6,
     label: '6',
     selectedLabel: '6 Guests',
   },
   {
-    value: '7',
+    value: 7,
     label: '7',
     selectedLabel: '7 Guests',
   },
   {
-    value: '8',
+    value: 8,
     label: '8',
     selectedLabel: '8 Guests',
   },
   {
-    value: '9',
+    value: 9,
     label: '9',
     selectedLabel: '9 Guests',
   },
   {
-    value: '10',
+    value: 10,
     label: '10+',
     selectedLabel: '10+ Guests',
   },
@@ -445,27 +445,27 @@ export const roomsFilters = {
     width: ['100%', '135px'],
     options: [
       {
-        value: '1',
+        value: 1,
         label: '1',
         selectedLabel: '1',
       },
       {
-        value: '2',
+        value: 2,
         label: '2',
         selectedLabel: '2',
       },
       {
-        value: '3',
+        value: 3,
         label: '3',
         selectedLabel: '3',
       },
       {
-        value: '4',
+        value: 4,
         label: '4',
         selectedLabel: '4',
       },
       {
-        value: '5',
+        value: 5,
         label: '5+',
         selectedLabel: '5+',
       },
@@ -484,27 +484,27 @@ export const roomsFilters = {
     width: ['100%', '135px'],
     options: [
       {
-        value: '1',
+        value: 1,
         label: '1',
         selectedLabel: '1',
       },
       {
-        value: '2',
+        value: 2,
         label: '2',
         selectedLabel: '2',
       },
       {
-        value: '3',
+        value: 3,
         label: '3',
         selectedLabel: '3',
       },
       {
-        value: '4',
+        value: 4,
         label: '4',
         selectedLabel: '4',
       },
       {
-        value: '5',
+        value: 5,
         label: '5+',
         selectedLabel: '5+',
       },

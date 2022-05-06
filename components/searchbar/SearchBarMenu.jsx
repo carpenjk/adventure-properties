@@ -79,7 +79,7 @@ const SearchBarMenu = (props) => {
     open({ secondary: true });
   };
 
-  const handleSearch = (data) => {
+  const close = () => {
     control.hide();
   };
 
@@ -172,7 +172,7 @@ const SearchBarMenu = (props) => {
               />
             )}
             {allOpenMode && <div />}
-            <SearchButton type="submit" onClick={handleSearch} />
+            <SearchButton type="submit" onClick={close} />
           </ButtonContainer>
         </SearchBarContainer>
       </Form>

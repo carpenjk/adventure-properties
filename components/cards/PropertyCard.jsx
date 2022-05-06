@@ -12,7 +12,6 @@ const PropertyCard = (props) => {
     showDescription,
     layoutDirection,
   } = props;
-
   const { url } = property;
 
   return (

@@ -81,7 +81,7 @@ const PropertyContent = (props) => {
             <AttributeList>{getNearbyActivities()}</AttributeList>
           </PropertyDetailCategory>
           <PropertyDetailCategory title="Availability">
-            <AttributeList>{getAttributeList('availability')}</AttributeList>
+            <AttributeList>{getAttributeList('seasonality')}</AttributeList>
           </PropertyDetailCategory>
           <PropertyDetailCategory title="Access">
             <AttributeList>{getAttributeList('access')}</AttributeList>

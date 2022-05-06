@@ -46,7 +46,7 @@ export async function getStaticProps(context) {
   const property = await fetchProperty(context.params.propID);
   return {
     props: {
-      property,
+      property: JSON.parse(JSON.stringify(property)),
     },
   };
 }

@@ -8,12 +8,21 @@ import Filters from '../searchbar/Filters';
 import SearchBarMenu from '../searchbar/SearchBarMenu';
 import { checkFiltersData as checkFilters } from '../../data/input';
 
-const SearchResultLayout = ({ results, message, error }) => {
+const SearchResultLayout = ({
+  results,
+  message,
+  error,
+  page,
+  itemsPerPage,
+  ignoredLocation,
+}) => {
   const { control } = useContext(SearchBarContext);
 
   return (
     <>
       <SearchDisplay
+        itemsPerPage={itemsPerPage}
+        page={page}
         filtersMenu={
           <SearchBarMenu
             onExit={() => control.hide()}
@@ -28,6 +37,7 @@ const SearchResultLayout = ({ results, message, error }) => {
         results={results}
         message={message}
         error={error}
+        ignoredLocation={ignoredLocation}
       />
     </>
   );

@@ -18,6 +18,7 @@ const SearchBarInnerProvider = ({
   allOpenMode,
   hideOnOpen,
   onExit,
+  search,
 }) => {
   const { values } = useFormikContext();
   const [isStarted, setIsStarted] = useState(false);
@@ -150,6 +151,7 @@ const SearchBarInnerProvider = ({
           close,
           hide,
           unHide,
+          search,
         },
         searchState: {
           allOpenMode,

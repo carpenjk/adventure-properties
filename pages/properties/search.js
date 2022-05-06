@@ -9,7 +9,8 @@ import {
 } from '../../data/validation/search';
 import { mediaStyles } from '../../Media';
 import { search } from '../../utils/search/search';
-import { parseParams } from '../../utils/search/params';
+import { getSortBy } from '../../utils/search/utils';
+import { processParams } from '../../utils/search/params';
 import SearchBarProvider from '../../components/searchbar/SearchBarProvider';
 import SearchResultLayout from '../../components/searchResults/SearchResultLayout';
 
@@ -24,13 +25,22 @@ const blankParams = {
 
 const Search = ({ response }) => {
   const router = useRouter();
-  const parsedParams = parseParams(router.query);
+  const { page: pageParam, ...parsedParams } = processParams(router.query);
+  const page = pageParam || 1;
   const initialParamValues = { ...blankParams, ...parsedParams };
+
   console.log('🚀 ~ file: search.js ~ line 6 ~ Search ~ response', response);
 
-  const { message } = response;
-  const { results, error } = response;
-  console.log('🚀 ~ file: search.js ~ line 54 ~ Search ~ results', results);
+  const { message, ignoredLocation, results, error } = response;
+
+  async function handleSearch(values, pg = 1) {
+    router.push({
+      pathname: '/properties/search',
+      query: {
+        ...prepValues({ ...values, ...getSortBy(values), page: pg }),
+      },
+    });
+  }
 
   // const message =
   //   'No results found in the destination provided. Here are some available listings in other locations.';
@@ -52,16 +62,22 @@ const Search = ({ response }) => {
             hideOnOpen
             initialValues={initialParamValues}
             schema={SearchSchema}
+            search={handleSearch}
             onSubmit={async (values) => {
               router.push({
                 pathname: '/properties/search',
-                query: { ...prepValues(values) },
+                query: {
+                  ...prepValues({ ...values, ...getSortBy(values) }),
+                },
               });
             }}
           >
             <SearchResultLayout
+              page={page}
+              itemsPerPage={3}
               results={results}
               message={message}
+              ignoredLocation={ignoredLocation}
               error={error}
             />
           </SearchBarProvider>
@@ -71,16 +87,13 @@ const Search = ({ response }) => {
   );
 };
 
-// const search = async (url) => fetch(url).then((res) => res.json());
-
 export async function getServerSideProps(context) {
   const { query } = context;
   const response = await search(query);
 
   return {
     props: {
-      test: 'test',
-      response,
+      response: JSON.parse(JSON.stringify(response)),
     },
   };
 }

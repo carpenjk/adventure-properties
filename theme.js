@@ -204,7 +204,7 @@ export const theme = withThemeweaver(
         fontFamily: 'poppins',
       }),
       ...variant('reservation', {
-        height: value('40px'),
+        height: value('60px'),
         color: 'primary',
         fontSize: 2,
         fontFamily: 'poppins',
@@ -225,7 +225,7 @@ export const theme = withThemeweaver(
         fontFamily: 'poppins',
       }),
       ...variant('reservation', {
-        height: value('4rem'),
+        height: value('60px'),
         minWidth: [value('0'), value('108px')],
         color: 'primary',
         fontSize: 2,

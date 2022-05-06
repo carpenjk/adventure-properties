@@ -131,7 +131,7 @@ const FullScreenReservation = (props) => {
           <InputGroup heading="Dates">
             <StyledDateRangeWrapper>
               <DateRange
-                variant="reservation"
+                tw={{ variant: 'reservation' }}
                 endProps={endDateProps}
                 startProps={startDateProps}
                 displayVertical={false}
@@ -150,6 +150,7 @@ const FullScreenReservation = (props) => {
         <InputSlide slideState={slideState} index={1}>
           <InputGroup heading="Guests">
             <CustomSelect
+              tw={{ variant: 'reservation' }}
               theme={theme}
               variant="searchBar"
               value={guestOptions[selectedGuestOptionIndex]}

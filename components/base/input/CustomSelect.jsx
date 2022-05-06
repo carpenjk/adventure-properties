@@ -74,6 +74,24 @@ const StyledSelect = styled.div`
   ${breakpoint(1)`
     width: 100%;
     background-color: ${getBackgroundColor({}, 'white')};
+    border-radius: ${getBorderRadius({}, '5px')};
+
+    
+    & > .customSelect {
+      color: ${getColor({}, 'inherit')};
+
+      height: ${getHeight({}, '0')};
+      box-shadow: ${getBoxShadow({}, '0px 0px 8px rgba(192, 192, 192, 0.52)')};
+      border-radius: ${getBorderRadius({}, '5px')};
+      padding-top: ${getPaddingTop({}, '0')};
+      padding-right: ${getPaddingRight({}, '0')};
+      padding-bottom: ${getPaddingBottom({}, '0')};
+      border-style: none;
+    }
+
+    & input {
+      height: ${getHeight({}, '0')};
+    }
 
     & > * {
       font-family: ${getFontFamily({}, 'inherit')};
@@ -110,7 +128,7 @@ class CustomSelect extends Component {
       padding: `0 0 0 ${getProp('textOffset')(this.props)}`,
       border: 'none',
       boxShadow: 'none',
-      maxHeight: this.props.height, // max height must be set to match input styling
+      // maxHeight: this.props.height, // max height must be set to match input styling
     }),
     input: (defaultStyles) => ({
       ...defaultStyles,

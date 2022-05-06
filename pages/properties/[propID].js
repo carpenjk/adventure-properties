@@ -36,9 +36,13 @@ export async function getStaticPaths() {
 //* *********** data fetchers ****************************/
 export async function getStaticProps(context) {
   const property = await fetchProperty(context.params.propID);
+  console.log(
+    '🚀 ~ file: [propID].js ~ line 39 ~ getStaticProps ~ property',
+    property
+  );
   return {
     props: {
-      property,
+      property: JSON.parse(JSON.stringify(property)),
     },
   };
 }

@@ -1,13 +1,12 @@
 import { getSession } from 'next-auth/client';
 import * as yup from 'yup';
-import cmsClient from '../../../../../../Contentful';
+import { fetchProperty } from '../../../../../../components/adapters/property/property';
 import {
   checkSession,
   isValidDeparture,
   isAvail,
 } from '../../../../../../data/validation/reservation';
 import saveReservation from '../../../../../../utils/adapters/reserve';
-import fetchAvailability from '../../../../../../utils/adapters/availability';
 
 import { dateReviver } from '../../../../../../utils/dates';
 
@@ -22,13 +21,15 @@ export default async function handler(req, res) {
       .json({ error: 'Reservation user does not match logged in user' });
   }
 
-  //* retrieve availability data ****************************************
-  let availability = {};
+  //* Retrieve Property data from cms ********************************
+  let property = {};
   try {
-    availability = await fetchAvailability(propID);
-  } catch (e) {
-    return res.status(500).json({ error: 'Property availability not found' });
+    // property = await cmsClient.getEntry(propID);
+    property = await fetchProperty(propID, true);
+  } catch (error) {
+    return res.status(500).json({ error: 'Property not found' });
   }
+  const { availability, guests } = property;
 
   //* helper functions **************************************************
   function checkPrice(p) {
@@ -41,16 +42,7 @@ export default async function handler(req, res) {
     return p === priceSum;
   }
 
-  //* Retrieve Property data from cms ********************************
-  let property = {};
-  try {
-    property = await cmsClient.getEntry(propID);
-  } catch (error) {
-    return res.status(500).json({ error: 'Property not found' });
-  }
-
   //* Validation schema **********************************************
-  const { guests } = property.fields;
   const resSchema = yup.object().shape({
     cmsID: yup.string().required().length(22),
     guests: yup

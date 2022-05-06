@@ -1,31 +1,12 @@
-import cmsClient from '../../../Contentful';
 import clientPromise from '../../../utils/mongodb';
+import { search } from '../../../utils/search/search';
 
-const fetchCMSAttributes = async (id) => {
-  const property = await cmsClient.getEntry(id);
-  return property;
-};
-
-const fetchManyCMSAttributes = async (ids) => {
-  const properties = await cmsClient.getEntries({
-    content_type: 'property',
-    'sys.id[in]': ids.toString(),
-  });
-  return properties;
-};
-
-const fetchDBAttributes = async (id) => {
-  const dbClient = await clientPromise;
-  const property = await dbClient
-    .db()
-    .collection('properties')
-    .findOne({ cmsID: id }, { projection: { nearbyActivities: 1, _id: 0 } });
-  return property;
-};
-
+export function withPropertyUrl(property) {
+  return { ...property, url: `/properties/${property.cmsID}` };
+}
 export const getPriceDescriptors = () => ({ unit: 'night', currSymbol: '$' });
 
-const addDisplayPrice = (props) =>
+export const addDisplayPrice = (props) =>
   props.map((p) => {
     const { availability, ...remProps } = p;
     return {
@@ -35,74 +16,31 @@ const addDisplayPrice = (props) =>
     };
   });
 
-const fetchManyDBAttributes = async (ids, includeDisplayPrice) => {
-  const baseProjection = { cmsID: 1, nearbyActivities: 1, _id: 0 };
-  const projectionObj = includeDisplayPrice
-    ? { ...baseProjection, availability: { $slice: 1 } }
-    : baseProjection;
+export async function fetchProperty(id, includeAvailability) {
+  const projAvail = !includeAvailability ? { availability: 0 } : {};
+  const dbClient = await clientPromise;
+  const property = await dbClient
+    .db()
+    .collection('properties')
+    .findOne({ cmsID: id }, { projection: { _id: 0, ...projAvail } });
+  return property;
+}
+
+export async function fetchProperties(propIDs) {
+  const projectionObj = { _id: 0 };
+
   const dbClient = await clientPromise;
   const properties = await dbClient
     .db()
     .collection('properties')
-    .find({ cmsID: { $in: ids } }, { projection: projectionObj })
+    .find({ cmsID: { $in: propIDs } }, { projection: projectionObj })
     .toArray();
-
-  // price used for feature listing
-  const propertiesWithPrice = includeDisplayPrice
-    ? addDisplayPrice(properties)
-    : properties;
-  return propertiesWithPrice;
-};
-
-function createProperty(cmsProps, dbProps) {
-  const { sys, fields } = cmsProps || {};
-  const cmsID = sys ? sys.id : dbProps.cmsID;
-  return {
-    cmsID,
-    ...fields,
-    ...dbProps,
-    url: `/properties/${cmsID}`,
-  };
-}
-// @param sortSet: value of 'cms' or 'db' determines which set to maintain order
-export const createCombinedProperties = (cms, db, sortSet) => {
-  const isCms = cms && cms.length > 0;
-  const isDb = db && db.length > 0;
-  if (!isCms && !isDb) {
-    return undefined;
-  }
-  if (sortSet && sortSet === 'db') {
-    return db.map((dbItem) => {
-      const cmsFields = cms.find((cmsItem) => cmsItem.sys.id === dbItem.cmsID);
-      return createProperty(cmsFields, dbItem);
-    });
-  }
-  return cms.map((cmsItem) => {
-    const dbFields = db.find((dbItem) => dbItem.cmsID === cmsItem.sys.id);
-    return createProperty(cmsItem, dbFields);
-  });
-};
-
-export async function fetchProperty(id) {
-  const cmsProps = await fetchCMSAttributes(id);
-  const dbProps = await fetchDBAttributes(id);
-  return createProperty(cmsProps, dbProps);
-}
-
-export async function fetchProperties(propIDs) {
-  const cmsProps = await fetchManyCMSAttributes(propIDs);
-  const dbProps = await fetchManyDBAttributes(propIDs);
-  return createCombinedProperties(cmsProps.items, dbProps);
+  return properties;
 }
 
 export async function fetchFeaturedProperties() {
-  const cmsProps = await cmsClient.getEntries({
-    content_type: 'property',
-    'fields.feature': true,
+  const results = await search({
+    feature: true,
   });
-
-  const propIDs = cmsProps.items.map((p) => p.sys.id);
-
-  const dbProps = await fetchManyDBAttributes(propIDs, true);
-  return createCombinedProperties(cmsProps.items, dbProps);
+  return results.results.items;
 }

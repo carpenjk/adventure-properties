@@ -17,16 +17,10 @@ import {
   startDateProps,
 } from '../data/input';
 import { getInitialCheckFilters, prepValues } from '../data/validation/search';
+import { getSortBy } from '../utils/search/utils';
 
 // static variables
 const HERO_IMAGE = '/static/assets/lofoten-2220461.png';
-
-function getSortBy(values) {
-  if (values && values.destination) {
-    return { sortBy: JSON.stringify({ destination: -1 }) };
-  }
-  return { sortBy: JSON.stringify({ displayPrice: -1 }) };
-}
 
 export async function getServerSideProps() {
   const features = await fetchFeaturedProperties();
@@ -69,7 +63,7 @@ const Index = (props) => {
           onSubmit={async (values) => {
             router.push({
               pathname: '/properties/search',
-              query: { ...prepValues(values), ...getSortBy(values) },
+              query: prepValues({ ...values, ...getSortBy(values) }),
             });
           }}
         />
