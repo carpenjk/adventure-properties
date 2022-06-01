@@ -10,7 +10,11 @@ const StyledList = styled.ul`
   width: 100%;
   flex-direction: column;
   margin: 0;
-  padding: ${({ theme }) => theme.space[2]}px;
+  padding-top: ${({ theme }) => theme.space[2]}px;
+  padding-bottom: ${({ theme }) => theme.space[3]}px;
+  ${breakpoint(1)`
+    width: unset;
+  `}
 `;
 const StyledItem = styled.li`
   padding-top: ${({ theme }) => theme.space[1]}px;

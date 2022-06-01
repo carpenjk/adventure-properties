@@ -60,6 +60,10 @@ const StyledSelect = styled.div`
     border-style: none;
   }
 
+  & .customSelect__input {
+    color: ${getColor({})};
+  }
+
   & input {
     height: ${getHeight({}, '0')};
   }
@@ -87,6 +91,9 @@ const StyledSelect = styled.div`
       padding-right: ${getPaddingRight({}, '0')};
       padding-bottom: ${getPaddingBottom({}, '0')};
       border-style: none;
+    }
+    & .customSelect__input {
+      color: ${getColor({})};
     }
 
     & input {
@@ -185,20 +192,20 @@ class CustomSelect extends Component {
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
-      maxHeight: '4rem',
-
+      minHeight: '2.5em',
       borderBottom: '1px dotted var(--secondary)',
       color: isSelected
         ? this.props.theme.colors.white
         : isFocused
-        ? this.props.theme.colors.primary
+        ? this.props.theme.colors.white
         : this.props.theme.colors.lightText,
       backgroundColor: isSelected
-        ? this.props.theme.colors.primary
+        ? this.props.theme.colors.primary[0]
         : isFocused
-        ? this.props.theme.colors.secondary
+        ? this.props.theme.colors.primary[0]
         : this.props.theme.colors.white,
       fontWeight: isSelected ? 'bold' : 'normal',
+      cursor: 'pointer',
     }),
   };
 
@@ -215,9 +222,6 @@ class CustomSelect extends Component {
 
   componentDidMount() {
     const { value } = this.props;
-    if (this.inputRef) {
-      this.inputRef.current.value = '';
-    }
     if (value) {
       this.setState({ isActive: true });
     }
@@ -244,16 +248,20 @@ class CustomSelect extends Component {
   }
 
   handleBlur(option) {
-    const { onBlur, innerRef } = this.props || false;
-    if (innerRef && innerRef.current && !innerRef.current.state.value) {
+    const { onBlur } = this.props || false;
+    const { inputRef } = this;
+
+    if (!inputRef || !inputRef.current || !inputRef.current.state.value) {
+      this.setState({ isActive: false });
+    } else if (!inputRef.current.state.value.value) {
       this.setState({ isActive: false });
     }
     if (onBlur) onBlur(option);
   }
 
   focus = () => {
-    const { innerRef } = this.props || false;
-    if (innerRef && innerRef.current) innerRef.current.select.focus();
+    const { inputRef } = this;
+    if (inputRef && inputRef.current) inputRef.current.select.focus();
   };
 
   icon = () => ({
@@ -278,7 +286,6 @@ class CustomSelect extends Component {
     const {
       id,
       instanceId,
-      innerRef,
       name,
       placeholder,
       width,
@@ -288,6 +295,7 @@ class CustomSelect extends Component {
       tw,
       variant,
       value,
+      ...fwdProps
     } = this.props;
     const { inputRef } = this;
 
@@ -310,6 +318,7 @@ class CustomSelect extends Component {
           )}
 
           <Select
+            {...fwdProps}
             id={id}
             instanceId={instanceId}
             name={name}

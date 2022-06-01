@@ -1,8 +1,11 @@
+import { condition } from 'dataweaver';
 import styled from 'styled-components';
 
 const StyledErrorWrapper = styled.div`
   display: flex;
   justify-content: center;
+  align-items: center;
+  min-height: 80px;
   padding: ${({ theme }) => theme.space[3]}px;
   font-family: ${({ theme }) => theme.fonts.OpenSans};
   font-style: normal;
@@ -11,8 +14,8 @@ const StyledErrorWrapper = styled.div`
   color: ${({ theme }) => theme.colors.action[1]};
 `;
 
-const ErrorContainer = ({ error }) => (
-  <StyledErrorWrapper>{error}</StyledErrorWrapper>
+const ErrorContainer = ({ error, showError }) => (
+  <StyledErrorWrapper>{showError ? error : ''}</StyledErrorWrapper>
 );
 
 export default ErrorContainer;

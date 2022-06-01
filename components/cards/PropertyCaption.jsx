@@ -36,7 +36,7 @@ const StyledTags = styled.ul`
   list-style: none;
 `;
 const StyledTag = styled.li`
-  color: ${({ theme }) => theme.colors.action[1]};
+  color: ${({ theme }) => theme.colors.secondaryText};
   font-family: ${({ theme }) => theme.fonts.poppins};
   font-style: normal;
   font-weight: 500;
@@ -53,7 +53,7 @@ const StyledLocation = styled.div`
   font-weight: normal;
   font-size: 17px;
   line-height: 24px;
-  color: ${({ theme }) => theme.colors.primary};
+  color: ${({ theme }) => theme.colors.primary[0]};
   text-transform: uppercase;
 `;
 

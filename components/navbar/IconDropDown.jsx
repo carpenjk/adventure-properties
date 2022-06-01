@@ -11,7 +11,7 @@ const StyledContainer = styled.div`
   justify-content: flex-start;
 
   ${condition('isOpen')`
-      background-color: ${({ theme }) => theme.colors.primary};
+      background-color: ${({ theme }) => theme.colors.primary[0]};
   `}
 `;
 const StyledIconContainer = styled.div`
@@ -25,13 +25,13 @@ const StyledIconContainer = styled.div`
   z-index: 999;
 
   & svg path {
-    fill: ${({ theme }) => theme.colors.primary};
+    fill: ${({ theme }) => theme.colors.primary[0]};
   }
 
   ${condition('isOpen')`
-  background-color: ${({ theme }) => theme.colors.primary};
+  background-color: ${({ theme }) => theme.colors.primary[0]};
   & svg path {
-    fill: ${({ theme }) => theme.colors.secondary};
+    fill: ${({ theme }) => theme.colors.primary[1]};
   }
   `}
 `;
@@ -41,7 +41,7 @@ const StyledList = styled.ul`
   top: -5000px;
   width: 200px;
   right: 0;
-  background-color: ${({ theme }) => theme.colors.primary};
+  background-color: ${({ theme }) => theme.colors.primary[0]};
   z-index: 998;
 
   > li {
@@ -61,8 +61,6 @@ const StyledList = styled.ul`
 
   > li > * {
     color: ${({ theme }) => theme.colors.white};
-    /* text/menu sub */
-
     font-weight: bold;
     font-size: 16px;
     line-height: 250%;
@@ -70,11 +68,6 @@ const StyledList = styled.ul`
 
     display: flex;
     align-items: center;
-  }
-  > li > *:hover {
-    background-color: ${({ theme }) => theme.colors.secondary};
-    color: ${({ theme }) => theme.colors.primary};
-    cursor: pointer;
   }
 
   ${condition('isOpen')`

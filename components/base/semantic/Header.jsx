@@ -1,14 +1,15 @@
 import styled from 'styled-components';
 import { useRef } from 'react';
 import { getProp } from 'dataweaver';
-import { getMaxHeight, getMinHeight } from 'themeweaver';
+import { getBackgroundColor, getMaxHeight, getMinHeight } from 'themeweaver';
 import useIsoLayoutEffect from '../../hooks/UseIsoLayoutEffect';
 
 const StyledHeader = styled.header`
   position: ${getProp('position')};
-  width: 100%;
-  min-height: ${getMinHeight('header', '0')};
-  max-height: ${getMaxHeight('header', 'none')};
+  width: 100vw;
+  min-height: ${getMinHeight({}, '0')};
+  max-height: ${getMaxHeight({}, 'none')};
+  background-color: ${getBackgroundColor({}, 'transparent')};
   z-index: 9999999;
 `;
 const StyledFiller = styled.div`
@@ -17,22 +18,26 @@ const StyledFiller = styled.div`
 StyledHeader.defaultProps = {
   position: 'relative',
 };
+const DEFAULT_TW = { semKey: 'header' };
 const Header = (props) => {
-  const { position, children } = props;
+  const { position, tw, children } = props;
+  const mergedTW = { ...DEFAULT_TW, ...tw };
   const headerRef = useRef(null);
   const fillerRef = useRef(null);
 
-  useIsoLayoutEffect((props) => {
-    if (fillerRef.current && headerRef.current) {
-      fillerRef.current.style.height = window.getComputedStyle(
-        headerRef.current
-      ).height;
+  useIsoLayoutEffect(() => {
+    if (headerRef.current) {
+      if (fillerRef.current) {
+        fillerRef.current.style.height = window.getComputedStyle(
+          headerRef.current
+        ).height;
+      }
     }
-  }, []);
+  }, [headerRef.current, fillerRef.current]);
 
   return (
     <>
-      <StyledHeader position={position} ref={headerRef}>
+      <StyledHeader tw={mergedTW} position={position} ref={headerRef}>
         {children}
       </StyledHeader>
       {(position === 'fixed' || position === 'absolute') && (

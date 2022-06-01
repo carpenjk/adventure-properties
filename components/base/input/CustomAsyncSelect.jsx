@@ -53,6 +53,9 @@ const StyledSelect = styled.div`
     padding-bottom: ${getPaddingBottom({}, '0')};
     border-style: none;
   }
+  & .customSelect__input {
+    color: ${getColor({})};
+  }
 
   & input {
     height: ${getHeight({}, '0')};
@@ -69,6 +72,25 @@ const StyledSelect = styled.div`
   ${breakpoint(1)`
     width: 100%;
     background-color: ${getBackgroundColor({}, 'white')};
+
+    & > .customSelect {
+      color: ${getColor({}, 'inherit')};
+  
+      height: ${getHeight({}, '0')};
+      box-shadow: ${getBoxShadow({}, '0px 0px 8px rgba(192, 192, 192, 0.52)')};
+      border-radius: ${getBorderRadius({}, '5px')};
+      padding-top: ${getPaddingTop({}, '0')};
+      padding-right: ${getPaddingRight({}, '0')};
+      padding-bottom: ${getPaddingBottom({}, '0')};
+      border-style: none;
+    }
+    & .customSelect__input {
+      color: ${getColor({})};
+    }
+  
+    & input {
+      height: ${getHeight({}, '0')};
+    }
 
     & > * {
       font-family: ${getFontFamily({}, 'inherit')};
@@ -156,12 +178,12 @@ class CustomAsyncSelect extends Component {
       color: isSelected
         ? this.props.theme.colors.white
         : isFocused
-        ? this.props.theme.colors.primary
+        ? this.props.theme.colors.white
         : this.props.theme.colors.lightText,
       backgroundColor: isSelected
-        ? this.props.theme.colors.primary
+        ? this.props.theme.colors.primary[0]
         : isFocused
-        ? this.props.theme.colors.secondary
+        ? this.props.theme.colors.primary[0]
         : this.props.theme.colors.white,
       fontWeight: isSelected ? 'bold' : 'normal',
     }),
@@ -169,7 +191,7 @@ class CustomAsyncSelect extends Component {
 
   constructor(props) {
     super(props);
-    this.styleRef = createRef();
+    this.inputRef = createRef();
     this.handleSelectChange = this.handleSelectChange.bind(this);
     this.handleBlur = this.handleBlur.bind(this);
     this.handleFocus = this.handleFocus.bind(this);
@@ -199,16 +221,18 @@ class CustomAsyncSelect extends Component {
   }
 
   handleBlur(option) {
-    const { onBlur, innerRef } = this.props || false;
-    if (innerRef && !innerRef.current.select.state.value) {
+    const { onBlur } = this.props || false;
+    const { inputRef } = this;
+    console.log('blur', inputRef);
+    if (inputRef && !inputRef.current.select.state.value) {
       this.setState({ isActive: false });
     }
     if (onBlur) onBlur(option);
   }
 
   focus = () => {
-    const { innerRef } = this.props || false;
-    if (innerRef && innerRef.current) innerRef.current.select.focus();
+    const { inputRef } = this;
+    if (inputRef && inputRef.current) inputRef.current.select.focus();
   };
 
   icon = () => ({
@@ -233,7 +257,6 @@ class CustomAsyncSelect extends Component {
     const {
       id,
       instanceId,
-      innerRef,
       name,
       placeholder,
       width,
@@ -247,7 +270,7 @@ class CustomAsyncSelect extends Component {
       getOptionValue,
       isMulti,
     } = this.props;
-
+    const { inputRef } = this;
     const { isActive } = this.state;
     const mergedTW = { ...DEFAULT_TW, ...tw };
 
@@ -295,7 +318,7 @@ class CustomAsyncSelect extends Component {
             onChange={this.handleSelectChange}
             onBlur={this.handleBlur}
             onFocus={this.handleFocus}
-            ref={innerRef}
+            ref={inputRef}
           />
         </StyledSelect>
       </InputWrapper>

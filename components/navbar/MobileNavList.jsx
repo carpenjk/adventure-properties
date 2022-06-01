@@ -1,6 +1,4 @@
 import styled from 'styled-components';
-import { signIn, signOut, useSession } from 'next-auth/client';
-import { navData } from '../../data/data';
 import NavLink from './NavLink';
 
 const StyledNav = styled.nav`
@@ -17,42 +15,16 @@ const StyledNav = styled.nav`
 `;
 
 const MobileNavList = ({ data }) => {
-  const [session, loading] = useSession();
   const { items } = data.nav;
 
   return (
     <StyledNav>
       <ul>
-        <li>
-          <NavLink href="/about">About</NavLink>
-        </li>
-        {!session && (
-          <>
-            <li>
-              <NavLink href="/" onClick={signIn} externalLink>
-                Log In
-              </NavLink>
-            </li>
-            <li>
-              <NavLink href="/signUp">Sign Up</NavLink>
-            </li>
-          </>
-        )}
-        {session && (
-          <>
-            <li>
-              <NavLink href="/reservations">My Adventures</NavLink>
-            </li>
-            <li>
-              <NavLink href="/">Favorites</NavLink>
-            </li>
-            <li>
-              <NavLink href="/" onClick={signOut} externalLink>
-                Log Out
-              </NavLink>
-            </li>
-          </>
-        )}
+        {items.map((item) => (
+          <li key={item.key}>
+            <NavLink href={item.link}>{item.text}</NavLink>
+          </li>
+        ))}
       </ul>
     </StyledNav>
   );

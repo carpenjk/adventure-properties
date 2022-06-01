@@ -1,21 +1,26 @@
 import { withThemeweaver, variant, value } from 'themeweaver';
 import { breakpoints } from './Media';
+import buttons from './theme/buttons';
+import inputs from './theme/inputs';
 
 export const theme = withThemeweaver(
   {
     colors: {
-      primary: '#7789C8',
-      secondary: '#C6D8FF',
-      tertiary: '#CDF7f6',
+      primary: ['#696f92', '#C6D8FF'],
+      _secondary: '#C6D8FF',
+      secondary: '#047F5E',
+      tertiary: '#FEFDEC',
       action: ['#FCEEEF', '#E5707A', '#F3B9BD'],
-      link: ['#6074BE', '#344783'],
-      lightText: '#979797',
+      link: ['#5D71BA', '#344783'],
+      lightText: '#767676',
       mainText: '#444649',
-      secondaryText: '#E5707A',
-      heading: ['#444649', '#6074BE', '#344783'],
+      bannerText: '#047F5E',
+      secondaryText: '#D53D5A',
+      // secondaryText: '#E5707A',
+      heading: ['#444649', '#696f92', '#344783'],
       lightButton: '#F8F8F8',
       lightBackground: '#F6FEFF',
-      disabledBackground: '#E2E2E2',
+      disabledBackground: '#909090',
       white: '#ffffff',
     },
     fonts: {
@@ -55,109 +60,11 @@ export const theme = withThemeweaver(
         minWidth: ['', value('800px')],
         maxWidth: value('1200px'),
       }),
-    },
-    button: {
-      ...variant('nav', {
-        backgroundColor: 'secondary',
-        color: 'action[1]',
-        fontFamily: 'poppins',
-        fontSize: 3,
-        fontWeight: 'bold',
-        minWidth: value('60px'),
-        marginLeft: [0, 0],
-        marginRight: [0, 0],
-        marginTop: 0,
-        marginBottom: 0,
-        paddingTop: [4, 0],
-        paddingLeft: [4, 4],
-        paddingBottom: [4, 0],
-        paddingRight: [4, 4],
-      }),
-      ...variant('menu', {
-        color: 'action[1]',
-        fontFamily: 'poppins',
-        fontSize: 3,
-        fontWeight: 'bold',
-        height: value('50px'),
-        width: value('50px'),
-      }),
-      ...variant('expander', {
-        color: 'lightText',
-        fontFamily: 'poppins',
-        fontSize: 2,
-        paddingTop: 2,
-        paddingRight: 2,
-        paddingBottom: 2,
-        paddingLeft: 2,
-      }),
       ...variant('reserve', {
-        backgroundColor: 'action[1]',
-        color: 'lightBackground',
-        fontFamily: 'roboto',
-        fontSize: [value('16px'), 3],
-        paddingLeft: [value('1em'), value('2em')],
-        paddingRight: [value('1em'), value('2em')],
-      }),
-      ...variant('login', {
-        backgroundColor: 'action[1]',
-        color: 'lightBackground',
-        fontFamily: 'roboto',
-        fontSize: [3, 3],
-        paddingLeft: [value('1.5em', value('2em'))],
-        paddingRight: [value('1.5em', value('2em'))],
-      }),
-      ...variant('reserve_hover', {
-        backgroundColor: 'action[0]',
-        color: 'action[1]',
-      }),
-      ...variant('search', {
-        backgroundColor: 'action[1]',
-        color: 'lightBackground',
-        fontFamily: 'roboto',
-        fontSize: 2,
-      }),
-      ...variant('search_hover', {
-        backgroundColor: 'action[1]',
-        color: 'lightBackground',
-        transform: value('scale(1.04)'),
-      }),
-      ...variant('signUp', {
-        backgroundColor: 'tertiary',
-        color: 'primary',
-        fontFamily: 'roboto',
-        fontSize: 3,
-        lineHeight: value('21px'),
-      }),
-      ...variant('results', {
-        backgroundColor: 'white',
-        border: value('2px solid #cdf7f6'),
-        color: 'lightText',
-        fontFamily: 'poppins',
-        fontSize: 3,
-        fontWeight: 'bold',
-        lineHeight: value('150%'),
-        letterSpacing: value('0.025em'),
-        paddingTop: [2, 2],
-        paddingLeft: [2, 2],
-        paddingBottom: [2, 2],
-        paddingRight: [2, 2],
-      }),
-      ...variant('results_hover', {
-        color: 'action[0]',
-        backgroundColor: 'action[1]',
-        border: value('2px solid #F3B9BD'),
-      }),
-      ...variant('results_isActive', {
-        backgroundColor: 'action[0]',
-        color: 'action[1]',
-        border: value('2px solid #F3B9BD'),
-      }),
-      ...variant('results_isDisabled', {
-        backgroundColor: 'white',
-        border: value('2px solid #cdf7f6'),
-        color: 'lightText',
+        maxWidth: [value('532px'), value('532px')],
       }),
     },
+    ...buttons,
     h1: {
       ...variant('searchBar', {
         color: 'mainText',
@@ -169,69 +76,7 @@ export const theme = withThemeweaver(
         marginBottom: 3,
       }),
     },
-    input: {
-      ...variant('default', {
-        height: value('60px'),
-        marginTop: 0,
-        marginRight: [0, 0],
-        marginBottom: [0, 0],
-        marginLeft: 0,
-        color: 'primary',
-        fontSize: 2,
-        fontFamily: 'poppins',
-      }),
-      ...variant('searchBar', {
-        height: value('60px'),
-        marginTop: 0,
-        marginRight: [0, 0],
-        marginBottom: [0, 0],
-        marginLeft: 0,
-        color: 'primary',
-        fontSize: 2,
-        fontFamily: 'poppins',
-      }),
-    },
-    inputGroup: {
-      ...variant('searchBar', {
-        paddingTop: value('8px'),
-      }),
-    },
-    select: {
-      ...variant('default', {
-        height: value('60px'),
-        color: 'primary',
-        fontSize: 2,
-        fontFamily: 'poppins',
-      }),
-      ...variant('reservation', {
-        height: value('60px'),
-        color: 'primary',
-        fontSize: 2,
-        fontFamily: 'poppins',
-      }),
-    },
-    checkbox: {
-      ...variant('searchBar', {
-        color: 'lightText',
-        fontSize: 2,
-        fontFamily: 'poppins',
-      }),
-    },
-    date: {
-      ...variant('searchBar', {
-        height: value('60px'),
-        color: 'primary',
-        fontSize: 2,
-        fontFamily: 'poppins',
-      }),
-      ...variant('reservation', {
-        height: value('60px'),
-        minWidth: [value('0'), value('108px')],
-        color: 'primary',
-        fontSize: 2,
-        fontFamily: 'poppins',
-      }),
-    },
+    ...inputs,
     nav: {
       ...variant('main', {
         backgroundColor: 'white',
@@ -243,17 +88,36 @@ export const theme = withThemeweaver(
         paddingLeft: [0, 2],
         paddingRight: 0,
       }),
-      ...variant('hover', {
-        color: 'action[0]',
-        backgroundColor: 'action[0]',
-        fontFamily: 'poppins',
-        fontSize: 3,
-        fontWeight: 'bold',
-        padding: 6,
+    },
+    section: {
+      ...variant('hero', {
+        borderRadius: 2,
       }),
+      ...variant('footer', {
+        width: value('100vw'),
+        backgroundColor: 'primary[0]',
+      }),
+      ...variant('features', {
+        paddingTop: 3,
+        paddingRight: 5,
+        paddingBottom: 3,
+        paddingLeft: 5,
+        backgroundColor: 'white',
+      }),
+      ...variant('reservations', {
+        paddingTop: 3,
+        paddingRight: [3, 5],
+        paddingBottom: 3,
+        paddingLeft: [3, 5],
+      }),
+      ...variant('property_images', {}),
+      ...variant('property_details', {}),
+    },
+    header: {
+      backgroundColor: 'white',
     },
     hero: {
-      height: value('81.5vh'),
+      height: [value('68.5vh'), value('76vh')],
       borderRadius: 2,
     },
     searchBar: {
@@ -288,15 +152,15 @@ export const theme = withThemeweaver(
         paddingRight: 5,
         paddingBottom: 3,
         paddingLeft: 5,
-        backgroundColor: 'lightBackground',
+        backgroundColor: 'white',
       }),
     },
     reservations: {
       ...variant('default', {
         paddingTop: 3,
-        paddingRight: 5,
+        paddingRight: [3, 5],
         paddingBottom: 3,
-        paddingLeft: 5,
+        paddingLeft: [3, 5],
         backgroundColor: 'lightBackground',
       }),
     },
@@ -310,7 +174,7 @@ export const theme = withThemeweaver(
       maxWidth: value('466px'),
     },
     results_footer: {
-      color: 'primary',
+      color: 'primary[0]',
       fontFamily: 'raleway',
       fontSize: 3,
       fontWeight: 'bold',
@@ -325,7 +189,7 @@ export const theme = withThemeweaver(
       paddingBottom: 3,
     },
     results_topic: {
-      color: 'primary',
+      color: 'primary[0]',
     },
     property_description: {
       color: 'mainText',
@@ -339,30 +203,11 @@ export const theme = withThemeweaver(
       paddingLeft: 5,
     },
     footer: {
-      backgroundColor: 'primary',
-    },
-    CTA: {
-      ...variant('signUp', {
-        paddingTop: 4,
-        paddingRight: 4,
-        paddingBottom: 4,
-        paddingLeft: 4,
-        border: value('1px solid'),
-        borderColor: 'tertiary',
-        color: 'tertiary',
-        fontFamily: 'poppins',
-        lineHeight: value('30px'),
-        letterSpacing: value('0.05em'),
-      }),
-    },
-    copyright: {
-      fontFamily: 'poppins',
-      fontSize: 2,
-      lineHeight: value('24px'),
-      letterSpacing: value('0.025em'),
-      color: 'secondary',
-      border: value('1px solid'),
-      borderColor: 'secondary',
+      paddingTop: 2,
+      paddingRight: 3,
+      paddingBottom: 2,
+      paddingLeft: 3,
+      backgroundColor: 'primary[0]',
     },
     footerNav: {
       fontFamily: 'poppins',
@@ -381,18 +226,18 @@ export const theme = withThemeweaver(
       fontSize: 4,
       lineHeight: value('32px'),
       letterSpacing: value('0.025em'),
-      color: 'tertiary',
+      color: 'primary'[0],
     },
     footerNav_item: {
       ...variant('default', {
         fontSize: 2,
         lineHeight: value('40px'),
         letterSpacing: value('0.025em'),
-        color: 'tertiary',
+        color: 'primary[0]',
       }),
       ...variant('hover', {
         backgroundColor: 'tertiary',
-        color: 'primary',
+        color: 'primary[0]',
       }),
     },
   }

@@ -66,7 +66,7 @@ const StyledWrapper = styled.div`
   > h2 {
     margin: 0;
     font-size: ${({ theme }) => theme.fontSizes[3]}px;
-    color: ${({ theme }) => theme.colors.secondaryText};
+    color: ${({ theme }) => theme.colors.bannerText};
     letter-spacing: 0.05em;
   }
 `;
@@ -78,9 +78,9 @@ const HeroBanner = (props) => {
   useIsoLayoutEffect(() => {
     if (bannerRef)
       bannerRef.current.style.top = `${
-        100 + 100 * Math.min(Math.pow(1850 / windowSize.width, 40), 1)
+        100 + 100 * Math.min((1850 / windowSize.width) ** 40, 1)
       }px`;
-  });
+  }, [windowSize.width]);
 
   return (
     <StyledBanner className="heroBanner" {...props} ref={bannerRef}>
@@ -88,9 +88,8 @@ const HeroBanner = (props) => {
       <StyledWrapper>
         <h1>Live, Work, Play. Build Your Dream Adventure Today!</h1>
         <h2>
-          We are a real estate company for people that love adventure and the
-          outdoors. Buy or rent a new home for your adventure or creative
-          studio.
+          Find rental properties near the things that make living most
+          enjoyable.
         </h2>
       </StyledWrapper>
     </StyledBanner>

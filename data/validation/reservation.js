@@ -2,14 +2,6 @@ import * as yup from 'yup';
 import { dates, findDate } from '../../utils/dates';
 
 export function checkSession(session, user) {
-  console.log(
-    '🚀 ~ file: dataValidation.js ~ line 5 ~ checkSession ~ user',
-    user
-  );
-  console.log(
-    '🚀 ~ file: dataValidation.js ~ line 5 ~ checkSession ~ session',
-    session
-  );
   if (!session) {
     return false;
   }
@@ -54,22 +46,6 @@ export function isValidDeparture(date, arDate, availability) {
 
 export function filterGuestOptions(options, maxGuests) {
   return options.filter((guest) => guest.value <= maxGuests);
-}
-
-function getTemplate(maxGuests) {
-  return {
-    userID: yup.string().required(),
-    cmsID: yup.string().required().length(22),
-    arriveDate: yup.date().required('Arrival date must be selected'),
-    departDate: yup.date().required('Departure date must be selected'),
-    guests: yup
-      .number('Number of guests must be selected')
-      .required('Number of guests must be selected')
-      .positive('Number of guests must be greater than 0')
-      .integer('Number of guests must be a whole number')
-      .max(maxGuests, `Number of guests must be below ${maxGuests}`),
-    price: yup.number().required().positive(),
-  };
 }
 
 export async function validateReservation(resObj, maxGuests) {

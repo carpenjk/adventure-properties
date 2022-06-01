@@ -2,9 +2,9 @@ import styled from 'styled-components';
 import { useState, useEffect, useCallback } from 'react';
 import useWindowSize from '../hooks/UseWindowSize';
 import useIsoOnClickOutside from '../hooks/UseIsoOnClickOutside';
-import useLockBodyScroll from '../hooks/UseLockBodyScroll';
 import Hamburger from './Hamburger';
 import CloseButton from '../CloseButton';
+import ScrollLock from '../scrollLock/ScrollLock';
 
 const StyledHamburgerMenu = styled.div`
   display: ${(props) => (props.isOpen ? 'flex' : 'none')};
@@ -37,12 +37,11 @@ const HamburgerMenu = (props) => {
   const [selectedIndex, setSelectedIndex] = useState(-1);
   // hooks
   const windowSize = useWindowSize();
-  useLockBodyScroll();
 
   const [menuElement, setMenuElement] = useState(false);
   const setCallbackRef = useCallback((node) => {
     setMenuElement(node);
-  });
+  }, []);
 
   // handlers and helpers
 
@@ -81,6 +80,7 @@ const HamburgerMenu = (props) => {
         // navigation on link and buttons occurs and menu state closes
         closeMenu();
         break;
+      Default:
     }
   };
 
@@ -103,6 +103,7 @@ const HamburgerMenu = (props) => {
   // render
   return (
     <>
+      {isOpen && <ScrollLock scrollNode={menuElement} reserveScrollBarGap={}/>}
       <Hamburger
         onClick={openMenu}
         wrapperClass={buttonClass}

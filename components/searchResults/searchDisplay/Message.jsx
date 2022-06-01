@@ -2,8 +2,8 @@ import styled from 'styled-components';
 
 const StyledContainer = styled.div`
   display: flex;
-  padding-top: 16px;
-  padding-bottom: 16px;
+  padding-top: ${({ theme }) => theme.space[3]}px;
+  padding-bottom: ${({ theme }) => theme.space[3]}px;
   flex: none;
   width: 100%;
 

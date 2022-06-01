@@ -8,17 +8,17 @@ const StyledContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: stretch;
-  width: 100%;
   flex: none;
+  width: 100%;
   padding: ${({ theme }) => theme.space[2]}px;
   border-radius: 5px;
 
   ${breakpoint(1)`
+    width: auto;
     height: 80em;
     flex-direction: row;
     align-items: flex-start;
     height: auto;
-    min-width: 600px;
   `}
 `;
 

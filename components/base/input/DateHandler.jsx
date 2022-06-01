@@ -137,6 +137,7 @@ class DateHandler extends Component {
 
   componentDidMount() {
     const { selected, inputRef } = this.props;
+    console.log('datehandler mounted');
     if (inputRef) {
       inputRef.current.setPreSelection('');
     }
@@ -169,13 +170,7 @@ class DateHandler extends Component {
   }
 
   handleBlur(e) {
-    const { selected, onBlur, inputRef } = this.props;
-    if (inputRef) {
-      console.log(
-        '🚀 ~ file: DateHandler.jsx ~ line 161 ~ DateHandler ~ handleBlur ~ inputRef',
-        inputRef
-      );
-    }
+    const { selected, onBlur } = this.props;
     if (!selected) {
       this.setState({ isActive: false });
     }
@@ -185,7 +180,7 @@ class DateHandler extends Component {
   }
 
   handleKeyDown = (e) => {
-    const { inputRef, onChange } = this.props;
+    const { inputRef } = this.props;
     if (inputRef && inputRef.current) {
       if (e.key === 'Tab') {
         inputRef.current.setOpen(false);
@@ -253,7 +248,6 @@ class DateHandler extends Component {
                 onBlur={(e) => this.handleBlur(e)}
                 onKeyDown={(e) => this.handleKeyDown(e)}
                 placeholderText={!showInsetPlaceholder ? placeholder.value : ''}
-                // popperContainer={this.PopperContainer}
                 popperPlacement="bottom"
                 popperModifiers={{
                   offset: {

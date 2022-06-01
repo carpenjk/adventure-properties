@@ -57,6 +57,27 @@ export function gtDateOnly(dt1, dt2) {
   return dt1Date > dt2Date;
 }
 
+export function gteDateOnly(dt1, dt2) {
+  const { date: dt1Date, month: dt1Month, year: dt1Year } = _splitDate(dt1);
+  const { date: dt2Date, month: dt2Month, year: dt2Year } = _splitDate(dt2);
+  if (dt1Year >= dt2Year) {
+    return true;
+  }
+  if (dt1Month >= dt2Month) {
+    return true;
+  }
+  return dt1Date >= dt2Date;
+}
+
+export function isNotPast(dt) {
+  const fullDate = new Date();
+  function removeTime(d) {
+    return new Date(d.getFullYear(), d.getMonth(), d.getDate());
+  }
+  const today = removeTime(fullDate);
+  return gteDateOnly(dt, today);
+}
+
 export function dateReviver(key, value) {
   function isDate() {
     const regDate = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/;

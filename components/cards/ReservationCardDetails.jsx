@@ -7,9 +7,6 @@ const StyledDetails = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: stretch;
-  padding: ${({ theme }) => theme.space[2]}px;
-  padding-top: 0;
-  padding-bottom: 0;
   ${breakpoint(1)`
     flex-direction: column;
     align-items: flex-start;

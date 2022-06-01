@@ -1,5 +1,5 @@
 import styled, { ThemeContext } from 'styled-components';
-import { useState, useRef, useContext } from 'react';
+import { useState, useRef, useContext, useEffect } from 'react';
 import { breakpoint } from 'themeweaver';
 import {
   filterGuestOptions,
@@ -71,7 +71,6 @@ const ReservationForm = (props) => {
   const {
     getDate,
     setDate,
-    getNumGuests,
     setNumGuests,
     startDateProps,
     endDateProps,
@@ -91,7 +90,9 @@ const ReservationForm = (props) => {
   const guestRef = useRef();
 
   function handleReview() {
-    setShowError(true);
+    if (error) {
+      setShowError(true);
+    }
     if (onReview) {
       onReview();
       return;
@@ -159,11 +160,9 @@ const ReservationForm = (props) => {
         unitAmount={unitAmount}
         total={price.total}
       />
-      <Spacer vertical space={FORM_SPACING} />
-      {showError && <ErrorContainer error={error} />}
-      <Spacer vertical space={FORM_SPACING} />
+      <ErrorContainer showError={showError} error={error} />
       <StyledButtonWrapper>
-        <ActionButton variant="reserve" onClick={handleReview}>
+        <ActionButton tw={{ variant: 'reserve' }} onClick={handleReview}>
           Reserve
         </ActionButton>
       </StyledButtonWrapper>

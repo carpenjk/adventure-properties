@@ -1,6 +1,8 @@
 import styled from 'styled-components';
 import { breakpoint } from 'themeweaver';
 import { condition } from 'dataweaver';
+import { useRef } from 'react';
+import ScrollLock from '../scrollLock/ScrollLock';
 
 const StyledPopupModal = styled.div` 
   content: ' ';
@@ -33,15 +35,20 @@ const StyledPopupModal = styled.div`
 `;
 
 const PopupModal = (props) => {
-  const { isOpen, children } = props;
-  console.log('render popup');
+  const { isOpen, lockScroll, children } = props;
+  const modalRef = useRef();
+  const _lockScroll = isOpen && lockScroll;
   return (
-    <StyledPopupModal
-      isOpen={isOpen}
-      className={isOpen ? 'popup-isConditionallyOpen' : ''}
-    >
-      {children}
-    </StyledPopupModal>
+    <>
+      {_lockScroll && <ScrollLock scrollNode={modalRef} reserveScrollBarGap />}
+      <StyledPopupModal
+        isOpen={isOpen}
+        className={isOpen ? 'popup-isConditionallyOpen' : ''}
+        ref={modalRef}
+      >
+        {children}
+      </StyledPopupModal>
+    </>
   );
 };
 

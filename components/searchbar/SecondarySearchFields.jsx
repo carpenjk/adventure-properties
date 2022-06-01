@@ -4,7 +4,7 @@ import { ThemeContext } from 'styled-components';
 import { startDateProps, endDateProps, guestOptions } from '../../data/input';
 import FormikDateRange from '../base/input/FormikDateRange';
 import FormikSelect from '../base/input/FormikSelect';
-import { gtDateOnly } from '../../utils/dates';
+import { gtDateOnly, isNotPast } from '../../utils/dates';
 
 const SecondarySearchFields = (props) => {
   const {
@@ -23,6 +23,7 @@ const SecondarySearchFields = (props) => {
         tw={{ variant: 'searchBar' }}
         key="dateRange"
         values={values}
+        filterStartDate={(dt) => isNotPast(dt)}
         filterEndDate={(dt) => gtDateOnly(dt, values[startDateProps.id])}
         startProps={startDateProps}
         endProps={endDateProps}

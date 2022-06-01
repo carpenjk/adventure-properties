@@ -24,7 +24,7 @@ const ActivitiesFilter = () => {
         translateY: '-18px',
       }}
       width={['100%', '457px']}
-      textOffset="5px"
+      textOffset="13px"
       getOptionLabel={(val) => val}
       getOptionValue={(val) => val}
       loadOptions={fetchData}

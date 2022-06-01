@@ -1,8 +1,7 @@
-import styled from 'styled-components';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
-import { useEffect } from 'react';
+import { useContext, useEffect } from 'react';
 import { fetchProperty } from '../../../components/adapters/property/property';
 import cmsClient from '../../../Contentful';
 import { mediaStyles } from '../../../Media';
@@ -14,18 +13,9 @@ import ReservationResponse from '../../../components/reservationForm/Reservation
 import ReservationError from '../../../components/reservationForm/ReservationError';
 import Spacer from '../../../components/base/Spacer';
 import ReservationPicture from '../../../components/reservation/ReservationPicture';
-
-const StyledContent = styled.div`
-  padding-top: ${({ theme }) => theme.space[3]}px;
-  padding-bottom: ${({ theme }) => theme.space[3]}px;
-  margin: auto;
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  max-width: 500px;
-  align-items: center;
-  justify-content: center;
-`;
+import { SpinnerContext } from '../../../components/base/spinner/SpinnerContext';
+import ContentContainer from '../../../components/base/layout/ContentContainer';
+import CenterWithContent from '../../../components/base/layout/CenterWithContent';
 
 //* *********** static data ****************************/
 export async function getStaticPaths() {
@@ -54,6 +44,7 @@ export async function getStaticProps(context) {
 const Reserve = ({ property }) => {
   const router = useRouter();
   const { propID } = router.query;
+  const { setLoadingMessage } = useContext(SpinnerContext);
   const { reservation, reservationControl } = useReservation();
   const { error, response, isBlank } = reservation;
   const { reserve, setIsInEditMode, validate } = reservationControl;
@@ -66,6 +57,7 @@ const Reserve = ({ property }) => {
   const mainUrl = `http:${property.mainPhoto.fields.file.url}`;
 
   function handleReserve() {
+    setLoadingMessage('Completing Reservation');
     reserve(maxGuests);
   }
 
@@ -96,39 +88,41 @@ const Reserve = ({ property }) => {
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
       <main style={{ width: '100%' }}>
-        <StyledContent>
-          <ReservationPicture url={mainUrl} alt={title} />
-          <Spacer vertical space="8px" />
-          <Link href={`/properties/${propID}`} passHref>
-            <a>
-              <PropertyTitle title={title} variant="review" asLink />
-            </a>
-          </Link>
-          {/* reservation being reviewed */}
-          {!response && !error && (
-            <ReservationReview
-              reservation={reservation}
-              control={reservationControl}
-              maxGuests={maxGuests}
-              title={title}
+        <ContentContainer tw={{ variant: 'reserve' }}>
+          <CenterWithContent>
+            <ReservationPicture url={mainUrl} alt={title} />
+            <Spacer vertical space="8px" />
+            <Link href={`/properties/${propID}`} passHref>
+              <a>
+                <PropertyTitle title={title} variant="review" asLink />
+              </a>
+            </Link>
+            {/* reservation being reviewed */}
+            {!response && !error && (
+              <ReservationReview
+                reservation={reservation}
+                control={reservationControl}
+                maxGuests={maxGuests}
+                title={title}
+              />
+            )}
+            {/* reservation attempted */}
+            {response && <ReservationResponse response={response} />}
+            {/* reservation refreshed */}
+            {!response && error && (
+              <ReservationError error={error} userRefresh={isBlank} />
+            )}
+            <ReserveButtons
+              reserveDisabled={isReservationError}
+              showEdit={!isComplete}
+              showReserve={!isComplete}
+              isError={isReservationError}
+              onEdit={handleEdit}
+              onReserve={handleReserve}
+              onBack={handleGoBack}
             />
-          )}
-          {/* reservation attempted */}
-          {response && <ReservationResponse response={response} />}
-          {/* reservation refreshed */}
-          {!response && error && (
-            <ReservationError error={error} userRefresh={isBlank} />
-          )}
-          <ReserveButtons
-            reserveDisabled={isReservationError}
-            showEdit={!isComplete}
-            showReserve={!isComplete}
-            isError={isReservationError}
-            onEdit={handleEdit}
-            onReserve={handleReserve}
-            onBack={handleGoBack}
-          />
-        </StyledContent>
+          </CenterWithContent>
+        </ContentContainer>
       </main>
     </>
   );

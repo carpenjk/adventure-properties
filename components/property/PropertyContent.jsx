@@ -56,6 +56,12 @@ const PropertyContent = (props) => {
     ));
   };
 
+  const amenities = getAttributeList('amenities');
+  const experiences = getAttributeList('experience');
+  const nearbyActivities = getNearbyActivities();
+  const availabilities = getAttributeList('seasonality');
+  const accesses = getAttributeList('access');
+
   return (
     <ContentContainer tw={{ variant: 'property' }}>
       <PropertyLayout>
@@ -71,21 +77,34 @@ const PropertyContent = (props) => {
           <PropertyDetailCategory title="Location">
             <Location location={location} locationName={`${city}, ${state}`} />
           </PropertyDetailCategory>
-          <PropertyDetailCategory title="Amenities">
-            <AttributeList>{getAttributeList('amenities')}</AttributeList>
-          </PropertyDetailCategory>
-          <PropertyDetailCategory title="Experience">
-            <AttributeList>{getAttributeList('experience')}</AttributeList>
-          </PropertyDetailCategory>
-          <PropertyDetailCategory title="Nearby Activities">
-            <AttributeList>{getNearbyActivities()}</AttributeList>
-          </PropertyDetailCategory>
-          <PropertyDetailCategory title="Availability">
-            <AttributeList>{getAttributeList('seasonality')}</AttributeList>
-          </PropertyDetailCategory>
-          <PropertyDetailCategory title="Access">
-            <AttributeList>{getAttributeList('access')}</AttributeList>
-          </PropertyDetailCategory>
+          {amenities.length > 0 && (
+            <PropertyDetailCategory title="Amenities">
+              <AttributeList>{amenities}</AttributeList>
+            </PropertyDetailCategory>
+          )}
+          {experiences.length > 0 && (
+            <PropertyDetailCategory title="Experience">
+              <AttributeList>{experiences}</AttributeList>
+            </PropertyDetailCategory>
+          )}
+
+          {nearbyActivities.length > 0 && (
+            <PropertyDetailCategory title="Nearby Activities">
+              <AttributeList>{nearbyActivities}</AttributeList>
+            </PropertyDetailCategory>
+          )}
+
+          {availabilities.length > 0 && (
+            <PropertyDetailCategory title="Availability">
+              <AttributeList>{availabilities}</AttributeList>
+            </PropertyDetailCategory>
+          )}
+
+          {accesses.length > 0 && (
+            <PropertyDetailCategory title="Access">
+              <AttributeList>{accesses}</AttributeList>
+            </PropertyDetailCategory>
+          )}
         </PropertyDetails>
         <Media greaterThanOrEqual="1">
           <ReservationForm

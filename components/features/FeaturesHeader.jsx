@@ -17,7 +17,7 @@ const StyledHeader = styled.div`
   }
 `;
 const StyledTopic = styled.span`
-  color: ${({ theme }) => theme.colors.primary};
+  color: ${({ theme }) => theme.colors.primary[0]};
 `;
 const FeaturesHeader = (props) => {
   const { prefix, topic } = props;

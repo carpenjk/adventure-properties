@@ -1,6 +1,5 @@
-import 'react-loader-spinner/dist/loader/css/react-spinner-loader.css';
 import Head from 'next/head';
-import { useState } from 'react';
+import { useContext } from 'react';
 import { fetchProperty } from '../../components/adapters/property/property';
 import useLightbox from '../../components/hooks/UseLightbox';
 import useReservation from '../../components/reservationForm/UseReservation';
@@ -17,7 +16,7 @@ import ReserveCTA from '../../components/reservationForm/ReserveCTA';
 import Fixed from '../../components/base/layout/Fixed';
 import FullScreenReservation from '../../components/reservationForm/FullScreenReservation';
 import PropertyContent from '../../components/property/PropertyContent';
-import Spinner from '../../components/base/Spinner';
+import { SpinnerContext } from '../../components/base/spinner/SpinnerContext';
 
 export async function getStaticPaths() {
   const properties = await cmsClient.getEntries({
@@ -36,10 +35,6 @@ export async function getStaticPaths() {
 //* *********** data fetchers ****************************/
 export async function getStaticProps(context) {
   const property = await fetchProperty(context.params.propID);
-  console.log(
-    '🚀 ~ file: [propID].js ~ line 39 ~ getStaticProps ~ property',
-    property
-  );
   return {
     props: {
       property: JSON.parse(JSON.stringify(property)),
@@ -61,10 +56,9 @@ const Property = ({ property }) => {
   // property data
   const { title, guests } = property || {};
   // reservation objects
+  const { setLoadingMessage } = useContext(SpinnerContext);
   const { availability, reservation, reservationControl } = useReservation();
-  const { error } = reservation;
   const { isInEditMode, setIsInEditMode, reserveReview } = reservationControl;
-  const [showSpinner, setShowSpinner] = useState(false);
 
   // build array of lightbox images
   const getImgUrls = () => {
@@ -100,12 +94,9 @@ const Property = ({ property }) => {
   });
 
   function handleReservationReview() {
-    setShowSpinner(true);
     setIsInEditMode(false);
+    setLoadingMessage('Preparing Reservation');
     reserveReview();
-    if (error) {
-      setShowSpinner(false);
-    }
   }
 
   return (
@@ -119,10 +110,10 @@ const Property = ({ property }) => {
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
       <>
-        <BackButton path="/" />
-        <Spacer vertical space="70px" />
+        <BackButton />
+        <Spacer vertical space="60px" />
         <Section
-          semKey="property_images"
+          tw={{ variant: 'property_images' }}
           position="relative"
           offsetTop={POSITION_OFFSET}
         >
@@ -134,7 +125,7 @@ const Property = ({ property }) => {
                 images={images || []}
                 imgCount={images.length}
                 preloadCount={LIGHTBOX_PRELOAD_COUNT}
-                showNavArrows={false}
+                showNavArrows="hover"
                 onOpen={handleLightboxOpen}
                 onClose={handleLightboxClose}
                 onMoveNext={handleMoveNext}
@@ -159,7 +150,7 @@ const Property = ({ property }) => {
           </Media>
         </Section>
         <Section
-          semKey="property_details"
+          tw={{ variant: 'property_details' }}
           position="relative"
           offsetTop={POSITION_OFFSET}
         >
@@ -185,7 +176,7 @@ const Property = ({ property }) => {
           />
         )}
         <Media lessThan="1">
-          <Fixed bottom width="100%">
+          <Fixed bottom offset="55px" useFillerElement width="100%">
             <ReserveCTA
               title={title}
               maxGuests={guests}
@@ -194,7 +185,6 @@ const Property = ({ property }) => {
           </Fixed>
         </Media>
       </>
-      {showSpinner && <Spinner message="Preparing Reservation" />}
     </>
   );
 };

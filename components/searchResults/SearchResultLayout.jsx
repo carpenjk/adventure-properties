@@ -7,6 +7,7 @@ import SearchDisplay from './searchDisplay/SearchDisplay';
 import Filters from '../searchbar/Filters';
 import SearchBarMenu from '../searchbar/SearchBarMenu';
 import { checkFiltersData as checkFilters } from '../../data/input';
+import PageHeader from '../base/PageHeader';
 
 const SearchResultLayout = ({
   results,
@@ -20,6 +21,7 @@ const SearchResultLayout = ({
 
   return (
     <>
+      <PageHeader title="Search Results" />
       <SearchDisplay
         itemsPerPage={itemsPerPage}
         page={page}

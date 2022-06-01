@@ -98,6 +98,37 @@ export const SearchSchema = yup.object().shape({
     .max(Number(bathroom.options[bathroom.options.length - 1].value))
     .transform((_, val) => (val === Number(val) ? val : null)),
   ...getCheckFiltersSchema(),
+  nearbyActivities: yup.lazy((val) =>
+    Array.isArray(val)
+      ? yup.array().of(yup.string().max(50))
+      : yup.string().max(50)
+  ),
+  experience: yup.lazy((val) =>
+    Array.isArray(val)
+      ? yup.array().of(yup.string().max(50))
+      : yup.string().max(50)
+  ),
+  propertyType: yup.lazy((val) =>
+    Array.isArray(val)
+      ? yup.array().of(yup.string().max(50))
+      : yup.string().max(50)
+  ),
+  availability: yup.lazy((val) =>
+    Array.isArray(val)
+      ? yup.array().of(yup.string().max(50))
+      : yup.string().max(50)
+  ),
+  amenities: yup.lazy((val) =>
+    Array.isArray(val)
+      ? yup.array().of(yup.string().max(50))
+      : yup.string().max(50)
+  ),
+  access: yup.lazy((val) =>
+    Array.isArray(val)
+      ? yup.array().of(yup.string().max(50))
+      : yup.string().max(50)
+  ),
+
   features: yup.boolean(),
   cmsID: yup.string().length(22),
   page: yup
@@ -106,4 +137,5 @@ export const SearchSchema = yup.object().shape({
     .integer()
     .transform((_, val) => (val === Number(val) ? val : null)),
   sortBy: yup.object().test('is_sortBy_valid', (val) => isValidSort(val)),
+  limit: yup.number().integer().max(50),
 });

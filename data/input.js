@@ -24,6 +24,10 @@ export const endDateProps = {
 
 export const guestOptions = [
   {
+    value: undefined,
+    label: '',
+  },
+  {
     value: 1,
     label: '1',
     selectedLabel: '1 Guest',
@@ -310,7 +314,7 @@ export const priceFilters = {
       translateX: '0px',
       translateY: '-18px',
     },
-    textOffset: '5px',
+    textOffset: '13px',
     width: ['100%', '135px'],
     options: [
       {
@@ -374,9 +378,14 @@ export const priceFilters = {
       translateX: '0px',
       translateY: '-18px',
     },
-    textOffset: '5px',
+    textOffset: '13px',
     width: ['100%', '135px'],
     options: [
+      {
+        value: undefined,
+        label: '',
+        selectedLabel: '',
+      },
       {
         value: '0',
         label: '$0',
@@ -441,9 +450,14 @@ export const roomsFilters = {
       translateY: '-18px',
     },
     type: 'CustomSelect',
-    textOffset: '5px',
+    textOffset: '13px',
     width: ['100%', '135px'],
     options: [
+      {
+        value: undefined,
+        label: '',
+        selectedLabel: '',
+      },
       {
         value: 1,
         label: '1',
@@ -480,18 +494,23 @@ export const roomsFilters = {
       translateY: '-18px',
     },
     type: 'CustomSelect',
-    textOffset: '5px',
+    textOffset: '13px',
     width: ['100%', '135px'],
     options: [
       {
+        value: undefined,
+        label: '',
+        selectedLabel: '',
+      },
+      {
         value: 1,
         label: '1',
-        selectedLabel: '1',
+        selectedLabel: '1 bath',
       },
       {
         value: 2,
         label: '2',
-        selectedLabel: '2',
+        selectedLabel: '2 baths',
       },
       {
         value: 3,

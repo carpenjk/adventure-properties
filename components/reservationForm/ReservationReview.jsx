@@ -16,11 +16,11 @@ const ReservationReview = ({ reservation }) => {
     <ReviewContainer>
       <ParamDisplay title="Dates" displayString={reviewDateRangeString} />
       <Spacer vertical space="8px" />
-      <Spacer vertical space="4px" background={theme.colors.tertiary} />
+      <Spacer vertical space="4px" background="#eaeaeac7" />
       <Spacer vertical space="8px" />
       <ParamDisplay title="Guests" displayString={`${reviewGuests} Guests`} />
       <Spacer vertical space="8px" />
-      <Spacer vertical space="4px" background={theme.colors.tertiary} />
+      <Spacer vertical space="4px" background="#eaeaeac7" />
       <Spacer vertical space="8px" />
       <InvoiceContent
         price={reviewAvgPrice}

@@ -14,10 +14,9 @@ const SearchBar = ({
   <Formik
     initialValues={initialValues}
     validationSchema={SearchSchema}
-    onSubmit={onSubmit}
-    search={search}
+    onSubmit={search}
   >
-    <SearchBarInnerProvider allOpenMode={allOpenMode}>
+    <SearchBarInnerProvider allOpenMode={allOpenMode} search={search}>
       <SearchBarMenu {...props} />
     </SearchBarInnerProvider>
   </Formik>

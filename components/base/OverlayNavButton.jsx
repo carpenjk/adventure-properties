@@ -1,8 +1,6 @@
 import styled from 'styled-components';
 
 const StyledButton = styled.button`
-  z-index: 999999;
-
   display: flex;
   align-items: center;
   text-align: center;
@@ -14,9 +12,17 @@ const StyledButton = styled.button`
   font-weight: bold;
   letter-spacing: 0.025em;
   color: ${({ theme }) => theme.colors.lightText};
-  background-color: ${({ theme }) => theme.colors.lightBackground};
+  background-color: ${({ theme }) => theme.colors.white};
   box-shadow: 0px 1px 2px rgba(116, 108, 108, 0.25);
+  outline: 1px solid ${({ theme }) => theme.colors.action[2]};
   border-radius: 5px;
+  cursor: pointer;
+  z-index: 999999;
+
+  &:hover {
+    color: ${({ theme }) => theme.colors.secondaryText};
+    outline: 1px solid ${({ theme }) => theme.colors.action[1]};
+  }
 `;
 const OverlayNavButton = ({ children, onClick }) => (
   <StyledButton onClick={onClick}>{children}</StyledButton>

@@ -38,9 +38,28 @@ export async function fetchProperties(propIDs) {
   return properties;
 }
 
-export async function fetchFeaturedProperties() {
-  const results = await search({
-    feature: true,
-  });
-  return results.results.items;
+export async function fetchFeaturedProperties(topics, limit = 3) {
+  let results;
+  if (!topics) {
+    results = await search({
+      feature: true,
+    });
+    return results.results.items;
+  }
+
+  const promises = topics.map((topic) =>
+    search({
+      nearbyActivities: JSON.stringify([topic]),
+      feature: true,
+      limit,
+    })
+  );
+
+  results = Promise.all([
+    search({
+      feature: true,
+    }),
+    ...promises,
+  ]).catch((e) => console.log({ error: e }));
+  return results;
 }

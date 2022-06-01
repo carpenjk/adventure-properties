@@ -13,7 +13,7 @@ const StyledLocation = styled.div`
 `;
 
 const StyledHeader = styled.h3`
-  color: ${({ theme }) => theme.colors.action[1]};
+  color: ${({ theme }) => theme.colors.secondaryText};
   line-height: 200%;
   margin: 0;
 `;

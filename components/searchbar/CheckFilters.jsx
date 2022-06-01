@@ -30,10 +30,10 @@ const CheckFilters = (props) => {
             value={filter.label}
             label={filter.label}
             input={filter}
-            fg={theme.colors.primary}
+            fg={theme.colors.primary[0]}
             bg={theme.colors.white}
             fgChecked={theme.colors.white}
-            bgChecked={theme.colors.primary}
+            bgChecked={theme.colors.primary[0]}
           />
         </li>
       ))}

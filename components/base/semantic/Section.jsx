@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { getProp } from 'dataweaver';
+import { condition, getProp } from 'dataweaver';
 import {
   getMaxHeight,
   getMinHeight,
@@ -13,7 +13,11 @@ import {
   getMarginLeft,
   breakpoint,
   getBackgroundColor,
+  getWidth,
+  getHeight,
 } from 'themeweaver';
+import { useRef } from 'react';
+import useAdjustForScrollBar from '../../hooks/UseAdjustForScrollBar';
 
 const StyledSection = styled.section`
   position: ${getProp('position')};
@@ -24,45 +28,60 @@ const StyledSection = styled.section`
   align-items: center;
   align-content: center;
 
-  width: 100%;
-  padding-top: ${(props) => getPaddingTop(props.semKey, '0')(props)};
-  padding-right: ${(props) => getPaddingRight(props.semKey, '0')(props)};
-  padding-bottom: ${(props) => getPaddingBottom(props.semKey, '0')(props)};
-  padding-left: ${(props) => getPaddingLeft(props.semKey, '0')(props)};
-  margin-top: ${(props) => getMarginTop(props.semKey, '0')(props)};
-  margin-right: ${(props) => getMarginRight(props.semKey, '0')(props)};
-  margin-bottom: ${(props) => getMarginBottom(props.semKey, '0')(props)};
-  margin-left: ${(props) => getMarginLeft(props.semKey, '0')(props)};
-  min-height: ${(props) => getMinHeight(props.semKey, '0')(props)};
-  max-height: ${(props) => getMaxHeight(props.semKey, 'none')(props)};
-  background-color: ${(props) =>
-    getBackgroundColor(props.semKey, 'none')(props)};
+  width: ${getWidth({}, '100%')};
+  height: ${getHeight({}, '')};
+  padding-top: ${getPaddingTop({}, '0')};
+  padding-right: ${getPaddingRight({}, '0')};
+  padding-bottom: ${getPaddingBottom({}, '0')};
+  padding-left: ${getPaddingLeft({}, '0')};
+  margin-top: ${getMarginTop({}, '0')};
+  margin-right: ${getMarginRight({}, '0')};
+  margin-bottom: ${getMarginBottom({}, '0')};
+  margin-left: ${getMarginLeft({}, '0')};
+  min-height: ${getMinHeight({}, '0')};
+  max-height: ${getMaxHeight({}, 'none')};
+  background-color: ${getBackgroundColor({}, 'none')};
 
   ${breakpoint(1)`
     position: ${getProp('position')};
     top: ${getProp('offsetTop')}px;
-    padding-top: ${(props) => getPaddingTop(props.semKey, '0')(props)};
-    padding-right: ${(props) => getPaddingRight(props.semKey, '0')(props)};
-    padding-bottom: ${(props) => getPaddingBottom(props.semKey, '0')(props)};
-    padding-left: ${(props) => getPaddingLeft(props.semKey, '0')(props)};
-    margin-top: ${(props) => getMarginTop(props.semKey, '0')(props)};
-    margin-right: ${(props) => getMarginRight(props.semKey, '0')(props)};
-    margin-bottom: ${(props) => getMarginBottom(props.semKey, '0')(props)};
-    margin-left: ${(props) => getMarginLeft(props.semKey, '0')(props)};
-    min-height: ${(props) => getMinHeight(props.semKey, '0')(props)};
-    max-height: ${(props) => getMaxHeight(props.semKey, 'none')(props)};
-    background-color: ${(props) =>
-      getBackgroundColor(props.semKey, 'none')(props)};
+    width: ${getWidth({}, '100%')};
+    height: ${getHeight({}, '')};
+    padding-top: ${getPaddingTop({}, '0')};
+    padding-right: ${getPaddingRight({}, '0')};
+    padding-bottom: ${getPaddingBottom({}, '0')};
+    padding-left: ${getPaddingLeft({}, '0')};
+    margin-top: ${getMarginTop({}, '0')};
+    margin-right: ${getMarginRight({}, '0')};
+    margin-bottom: ${getMarginBottom({}, '0')};
+    margin-left: ${getMarginLeft({}, '0')};
+    min-height: ${getMinHeight({}, '0')};
+    max-height: ${getMaxHeight({}, 'none')};
+    background-color: ${getBackgroundColor({}, 'none')};
   `}
 `;
 StyledSection.defaultProps = {
   position: 'relative',
   offsetTop: 0,
 };
+const DEFAULT_TW = { semKey: 'section' };
 const Section = (props) => {
-  const { semKey, position, offsetTop, children } = props;
+  const { tw, position, offsetTop, children, adjustForScrollBar } = props;
+  const mergedTW = { ...DEFAULT_TW, ...tw };
+  const sectionRef = useRef();
+  const _useAdjustForScrollBar = adjustForScrollBar
+    ? useAdjustForScrollBar
+    : () => undefined;
+  _useAdjustForScrollBar(sectionRef);
+
   return (
-    <StyledSection semKey={semKey} position={position} offsetTop={offsetTop}>
+    <StyledSection
+      adjustForScrollBar
+      tw={mergedTW}
+      position={position}
+      offsetTop={offsetTop}
+      ref={sectionRef}
+    >
       {children}
     </StyledSection>
   );

@@ -62,25 +62,37 @@ const StyledListItem = styled.li`
   `}
 `;
 
-const TOPIC = 'skiing';
-const FeaturesContainer = ({ items }) => (
-  <StyledContainer>
-    <FeaturesHeader prefix="Because you like" topic={TOPIC} />
-    <StyledContent>
-      {items.map((item) => (
-        <StyledListItem key={item.cmsID}>
-          <PropertyCard
-            property={item}
-            scale={1.02}
-            scaleOnHover={[true, true, true]}
-            scaleOnFocus={[true, true, true]}
-            showDescription={[false, true, false]}
-          />
-        </StyledListItem>
-      ))}
-    </StyledContent>
-    <FeaturesFooter href="/property" topic={TOPIC} />
-  </StyledContainer>
-);
+const FeaturesContainer = ({ items, topic, isPersonalized, query }) => {
+  const headerPrefix = isPersonalized
+    ? 'Because you like'
+    : 'Favorite properties for';
+  const headerTopic = topic.header || topic;
+  const footerTopic = topic.footer || topic;
+  return (
+    <StyledContainer>
+      <FeaturesHeader prefix={headerPrefix} topic={headerTopic} />
+      <StyledContent>
+        {items.map((item) => (
+          <StyledListItem key={item.cmsID}>
+            <PropertyCard
+              property={item}
+              scale={1.02}
+              scaleOnHover={[true, true, true]}
+              scaleOnFocus={[true, true, true]}
+              showDescription={[false, true, false]}
+            />
+          </StyledListItem>
+        ))}
+      </StyledContent>
+      <FeaturesFooter
+        href={{
+          pathname: '/properties/search',
+          query,
+        }}
+        topic={footerTopic}
+      />
+    </StyledContainer>
+  );
+};
 
 export default FeaturesContainer;

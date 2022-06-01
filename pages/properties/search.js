@@ -13,6 +13,8 @@ import { getSortBy } from '../../utils/search/utils';
 import { processParams } from '../../utils/search/params';
 import SearchBarProvider from '../../components/searchbar/SearchBarProvider';
 import SearchResultLayout from '../../components/searchResults/SearchResultLayout';
+import BackButton from '../../components/base/BackButton';
+import Spacer from '../../components/base/Spacer';
 
 const blankParams = {
   destination: '',
@@ -28,9 +30,6 @@ const Search = ({ response }) => {
   const { page: pageParam, ...parsedParams } = processParams(router.query);
   const page = pageParam || 1;
   const initialParamValues = { ...blankParams, ...parsedParams };
-
-  console.log('🚀 ~ file: search.js ~ line 6 ~ Search ~ response', response);
-
   const { message, ignoredLocation, results, error } = response;
 
   async function handleSearch(values, pg = 1) {
@@ -55,6 +54,8 @@ const Search = ({ response }) => {
         />
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
+      <BackButton />
+      <Spacer vertical space="60px" />
       <main style={{ position: 'relative' }}>
         <ContentContainer>
           <SearchBarProvider

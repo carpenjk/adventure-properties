@@ -1,7 +1,8 @@
 import styled from 'styled-components';
 import { getProp } from 'dataweaver';
-import { useContext, useEffect, useState } from 'react';
+import { useContext } from 'react';
 import { useRouter } from 'next/router';
+import { breakpoint } from 'themeweaver';
 import ActionButton from '../base/ActionButton';
 import Spacer from '../base/Spacer';
 import { SearchBarContext } from '../searchbar/searchBarContext';
@@ -10,6 +11,10 @@ const StyledMenuGroup = styled.div`
   display: flex;
   justify-content: ${getProp('justifyContent')};
   align-items: ${getProp('alignContent')};
+  padding-left: ${({ theme }) => theme.space[1]}px;
+  ${breakpoint(1)`
+  padding-left:${({ theme }) => theme.space[2]}px;
+  `}
 `;
 
 function toggleSort(obj) {
@@ -20,7 +25,6 @@ function toggleSort(obj) {
 const ResultMenuLayout = ({ ignoredLocation }) => {
   const { control } = useContext(SearchBarContext);
   const router = useRouter();
-  const [isLoading, setIsLoading] = useState(false);
 
   const { query } = router;
   const { sortBy } = query;
@@ -31,44 +35,18 @@ const ResultMenuLayout = ({ ignoredLocation }) => {
   const isdestinationSearch = query.destination && true;
   const isDestinationSorted = currentSort.destination && !ignoredLocation;
 
-  // const priceTransform =  isPriceSorted && currentSort.displayPrice ? transform: 'scaleY(-1)';
-
-  useEffect(() => {
-    setIsLoading(false);
-  }, []);
-
   async function handlePriceSort() {
     // if price is current sort, toggle sort
 
     const isExplicitSort =
       currentSort && currentSort.displayPrice !== undefined;
-    console.log(
-      '🚀 ~ file: ResultMenuLayout.jsx ~ line 45 ~ handlePriceSort ~ isExplicitSort',
-      isExplicitSort
-    );
     const implicitSort =
       !isExplicitSort && isPriceSorted ? { displayPrice: -1 } : undefined;
-    console.log(
-      '🚀 ~ file: ResultMenuLayout.jsx ~ line 48 ~ handlePriceSort ~ implicitSort',
-      implicitSort
-    );
-
     const currPriceSort = isExplicitSort ? currentSort : implicitSort;
-
-    console.log(
-      '🚀 ~ file: ResultMenuLayout.jsx ~ line 51 ~ handlePriceSort ~ currPriceSort',
-      currPriceSort
-    );
-
     // if price is already sorted then toggle
     const newSort = currPriceSort
       ? toggleSort(currPriceSort)
       : { displayPrice: -1 };
-    // const currKey = Object.keys(currentSort)[0];
-    // const newSort =
-    //   currKey === 'displayPrice'
-    //     ? toggleSort(currentSort)
-    //     : { displayPrice: -1 };
     router.push({
       pathname: '/properties/search',
       query: { ...query, sortBy: JSON.stringify(newSort) },
@@ -92,17 +70,13 @@ const ResultMenuLayout = ({ ignoredLocation }) => {
         ? { transform: 'scaleY(-1)' }
         : undefined;
     }
-    // not active or defaulted from ignoring destination
-  }
-  function getCurrentSortVal() {
-    return currentSort[Object.keys(currentSort)[0]];
   }
   return (
     <>
       <StyledMenuGroup justifyContent="flex-start" alignItems="center">
         <ActionButton
           tw={{
-            variant: 'results',
+            variant: 'contentNav',
           }}
           onClick={() => control.unHide()}
         >
@@ -114,7 +88,7 @@ const ResultMenuLayout = ({ ignoredLocation }) => {
       <StyledMenuGroup justifyContent="flex-end" alignItems="center">
         <ActionButton
           tw={{
-            variant: 'results',
+            variant: 'contentNav',
           }}
           isActive={isPriceSorted}
           onClick={handlePriceSort}
@@ -127,9 +101,9 @@ const ResultMenuLayout = ({ ignoredLocation }) => {
           <Spacer space="4px" />
           <span>Price</span>
         </ActionButton>
-        <Spacer space="8px" />
+        <Spacer space={['4px', '8px']} />
         <ActionButton
-          tw={{ variant: 'results' }}
+          tw={{ variant: 'contentNav' }}
           isActive={isDestinationSorted && !ignoredLocation}
           disabled={!isdestinationSearch || ignoredLocation}
           onClick={handleDestinationSort}

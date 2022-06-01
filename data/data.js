@@ -1,4 +1,5 @@
 import MobileNavList from '../components/navbar/MobileNavList';
+import AccountMenuItems from '../components/navbar/AccountMenuItems';
 import HeroBanner from '../components/hero/HeroBanner';
 import SearchBar from '../components/searchbar/SearchBar';
 import HeroContainer from '../components/hero/HeroContainer';
@@ -20,22 +21,11 @@ export const navData = {
             text: 'About',
             link: './about',
           },
-          {
-            key: 'owner',
-            text: 'Owner',
-            link: './owner',
-          },
-          {
-            key: 'logIn',
-            text: 'Log In',
-            link: './logIn',
-          },
-          {
-            key: 'signUp',
-            text: 'Sign Up',
-            link: './signUp',
-          },
         ],
+      },
+      {
+        Component: AccountMenuItems,
+        key: 'accountMenuItems',
       },
     ],
   },

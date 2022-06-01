@@ -18,6 +18,9 @@ import {
   getPaddingBottom,
   getPaddingLeft,
   breakpoint,
+  getBackgroundColor,
+  getBorder,
+  getBorderColor,
 } from 'themeweaver';
 import styled from 'styled-components';
 
@@ -30,48 +33,79 @@ const StyledLink = styled.a`
   text-align: center;
 
   text-decoration: none;
-  color: ${getColor('button.nav', 'black')};
-  font-family: ${getFontFamily('button.nav', 'inherit')};
-  font-size: ${getFontSize('button.nav', 'inherit')};
-  font-weight: ${getFontWeight('button.nav', 'inherit')};
-  margin-top: ${getMarginTop('button.nav', '10px')};
-  margin-right: ${getMarginRight('button.nav', '10px')};
-  margin-bottom: ${getMarginBottom('button.nav', '10px')};
-  margin-left: ${getMarginLeft('button.nav', '10px')};
-  padding-top: ${getPaddingTop('button.nav', '8px')};
-  padding-right: ${getPaddingRight('button.nav', '8px')};
-  padding-bottom: ${getPaddingBottom('button.nav', '8px')};
-  padding-left: ${getPaddingLeft('button.nav', '8px')};
-  min-width: ${getMinWidth('button.nav', '75px')};
-  max-width: ${getMaxWidth('button.nav', 'none')};
-  min-height: ${getMinHeight('button.nav', '0')};
-  max-height: ${getMaxHeight('button.nav', 'none')};
+  background-color: ${getBackgroundColor({}, '')};
+  color: ${getColor({}, 'black')};
+  font-family: ${getFontFamily({}, 'inherit')};
+  font-size: ${getFontSize({}, 'inherit')};
+  font-weight: ${getFontWeight({}, 'inherit')};
+  margin-top: ${getMarginTop({}, '10px')};
+  margin-right: ${getMarginRight({}, '10px')};
+  margin-bottom: ${getMarginBottom({}, '10px')};
+  margin-left: ${getMarginLeft({}, '10px')};
+  padding-top: ${getPaddingTop({}, '8px')};
+  padding-right: ${getPaddingRight({}, '8px')};
+  padding-bottom: ${getPaddingBottom({}, '8px')};
+  padding-left: ${getPaddingLeft({}, '8px')};
+  min-width: ${getMinWidth({}, '75px')};
+  max-width: ${getMaxWidth({}, 'none')};
+  min-height: ${getMinHeight({}, '0')};
+  max-height: ${getMaxHeight({}, 'none')};
+  border: ${getBorder({}, 'none')};
+  border-color: ${getBorderColor({}, 'none')};
+
   &:hover {
-    background: ${getColor('nav.hover')};
+    color: ${getColor({ suffix: '_hover' }, '')};
+    background-color: ${getBackgroundColor({ suffix: '_hover' }, '')};
+    border: ${(getBorder({ suffix: '_hover' }), '')};
+    border-color: ${getBorderColor({ suffix: '_hover' }, '')};
+  }
+  &:focus {
+    color: ${getColor({ suffix: '_focus' }, '')};
+    background-color: ${getBackgroundColor({ suffix: '_focus' }, '')};
+    border: ${(getBorder({ suffix: '_focus' }), '')};
+    border-color: ${getBorderColor({ suffix: '_focus' }, '')};
   }
 
   ${breakpoint(1)`
-    color: ${getColor('button.nav', 'black')};
-    font-family: ${getFontFamily('button.nav', 'inherit')};
-    font-size: ${getFontSize('button.nav', 'inherit')};
-    font-weight: ${getFontWeight('button.nav', 'inherit')};
-    margin-top: ${getMarginTop('button.nav', '10px')};
-    margin-right: ${getMarginRight('button.nav', '10px')};
-    margin-bottom: ${getMarginBottom('button.nav', '10px')};
-    margin-left: ${getMarginLeft('button.nav', '10px')};
-    padding-top: ${getPaddingTop('button.nav', '8px')};
-    padding-right: ${getPaddingRight('button.nav', '8px')};
-    padding-bottom: ${getPaddingBottom('button.nav', '8px')};
-    padding-left: ${getPaddingLeft('button.nav', '8px')};
-    min-width: ${getMinWidth('button.nav', '50px')};
-    max-width: ${getMaxWidth('button.nav', 'none')};
-    min-height: ${getMinHeight('button.nav', '0')};
-    max-height: ${getMaxHeight('button.nav', 'none')};
+    color: ${getColor({}, 'black')};
+    font-family: ${getFontFamily({}, 'inherit')};
+    font-size: ${getFontSize({}, 'inherit')};
+    font-weight: ${getFontWeight({}, 'inherit')};
+    margin-top: ${getMarginTop({}, '8px')};
+    margin-right: ${getMarginRight({}, '8px')};
+    margin-bottom: ${getMarginBottom({}, '8px')};
+    margin-left: ${getMarginLeft({}, '8px')};
+    padding-top: ${getPaddingTop({}, '8px')};
+    padding-right: ${getPaddingRight({}, '8px')};
+    padding-bottom: ${getPaddingBottom({}, '8px')};
+    padding-left: ${getPaddingLeft({}, '8px')};
+    min-width: ${getMinWidth({}, '50px')};
+    max-width: ${getMaxWidth({}, 'none')};
+    min-height: ${getMinHeight({}, '0')};
+    max-height: ${getMaxHeight({}, 'none')};
+    border: ${getBorder({}, '')};
+    border-color: ${getBorderColor({}, '')};
+    
+    &:hover {
+      color: ${getColor({ suffix: '_hover' }, '')};
+      background-color: ${getBackgroundColor({ suffix: '_hover' }, '')};
+      border: ${getBorder({ suffix: '_hover' }, '')};
+      border-color: ${getBorderColor({ suffix: '_hover' }, '')};
+    }
+    &:focus {
+      color: ${getColor({ suffix: '_focus' }, '')};
+      background-color: ${getBackgroundColor({ suffix: '_focus' }, '')};
+      border: ${getBorder({ suffix: '_focus' }, '')};
+      border-color: ${getBorderColor({ suffix: '_focus' }, '')};
+    }
   `}
 `;
 
+const DEFAULT_TW = { semKey: 'button', variant: 'nav' };
+
 const NavLink = (props) => {
   const {
+    tw,
     href, // start of next/link props
     as,
     passHref,
@@ -87,10 +121,11 @@ const NavLink = (props) => {
     externalLink,
     ...restProps // inner coponent props
   } = props;
+  const mergedTW = { ...DEFAULT_TW, ...tw };
 
   if (externalLink) {
     return (
-      <StyledLink tabIndex="0" {...restProps}>
+      <StyledLink tw={mergedTW} tabIndex="0" {...restProps}>
         {children}
       </StyledLink>
     );
@@ -106,7 +141,7 @@ const NavLink = (props) => {
       scroll={scroll}
       shallow={shallow}
     >
-      <StyledLink tabIndex="0" {...restProps}>
+      <StyledLink tw={mergedTW} tabIndex="0" {...restProps}>
         {children}
       </StyledLink>
     </Link>

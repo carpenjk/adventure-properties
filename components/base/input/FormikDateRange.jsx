@@ -19,18 +19,48 @@ class FormikDateRange extends Component {
     };
   }
 
+  componentWillUnmount() {
+    this.cancelFocus();
+  }
+
   //* event handlers *********************************************************
   handleStartSelect = () => {
     const {
       endDate: { ref: endDateRef },
     } = this.state;
     // move focus to end date component
+    console.log('focus end');
     if (endDateRef && endDateRef.current) endDateRef.current.input.focus();
   };
 
   handleEndSelect = () => {
     const { nextFocusRef, focusNext } = this.props;
-    if (focusNext && nextFocusRef) nextFocusRef.focus();
+    const isFocusNext = focusNext && nextFocusRef;
+
+    //* react-datepicker sets preventFocus state to true for 50 ms on select
+    //* to fix calendar not closing when using macbook pro
+    //* this delay waits for that timeout to finish in order to refocus
+
+    if (!isFocusNext) {
+      this.focusSelfTimeout();
+      return;
+    }
+    if (isFocusNext) nextFocusRef.focus();
+  };
+
+  focusSelfTimeout = () => {
+    const {
+      endDate: { ref: endDateRef },
+    } = this.state;
+    setTimeout(function () {
+      if (endDateRef && endDateRef.current) {
+        endDateRef.current.input.focus();
+      }
+    }, 5);
+  };
+
+  cancelFocus = () => {
+    clearTimeout(this.focusSelfTimeout);
   };
 
   //* external methods*******************************************************
@@ -112,7 +142,6 @@ class FormikDateRange extends Component {
                 onFocus={onFocus}
                 inputRef={startDate.ref}
                 allowSameDay
-                // popperParent={popperParent}
                 forceClose={forceClose}
               />
             );
@@ -155,9 +184,9 @@ class FormikDateRange extends Component {
                 openToDate={startDateVal}
                 onSelect={this.handleEndSelect}
                 onChange={handleEndChange}
+                onBlur={this.cancelFocus}
                 onFocus={onFocus}
                 inputRef={endDate.ref}
-                // popperParent={popperParent}
                 forceClose={forceClose}
               />
             );

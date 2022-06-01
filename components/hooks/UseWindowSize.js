@@ -7,7 +7,7 @@ function useWindowSize() {
     return {
       width: isClient ? window.innerWidth : undefined,
       height: isClient ? window.innerHeight : undefined,
-      forceUpdate: getSize,
+      // forceUpdate: getSize,
     };
   }
   const [windowSize, setWindowSize] = useState(getSize);

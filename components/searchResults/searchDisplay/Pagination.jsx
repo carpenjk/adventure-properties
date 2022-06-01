@@ -36,7 +36,7 @@ const StyledPaginateWrapper = styled.div`
     z-index: 3;
     color: #fff;
     border-color: ${({ theme }) => `${theme.colors.link[0]}8A`};
-    background-color: ${({ theme }) => theme.colors.primary};
+    background-color: ${({ theme }) => theme.colors.primary[0]};
   }
 
   > ul > li:not(:first-child) > a {

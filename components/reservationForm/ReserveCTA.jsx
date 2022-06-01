@@ -1,12 +1,12 @@
 import styled from 'styled-components';
-import { useState, useEffect } from 'react';
+import { useState, useRef } from 'react';
 import { breakpoint } from 'themeweaver';
-import { validate } from 'schema-utils';
-import useLockBodyScroll from '../hooks/UseLockBodyScroll';
 import ActionButton from '../base/ActionButton';
 import useReservation from './UseReservation';
 import FullScreenReservation from './FullScreenReservation';
 import OverviewButton from './OverviewButton';
+import Spacer from '../base/Spacer';
+import ScrollLock from '../scrollLock/ScrollLock';
 
 const StyledWrapper = styled.div`
   display: flex;
@@ -15,8 +15,12 @@ const StyledWrapper = styled.div`
   background-color: ${({ theme }) => theme.colors.white};
   width: 100%;
   padding: 20px;
-  border: 4px solid ${({ theme }) => theme.colors.secondaryText};
-  border-radius: 3px;
+  padding-top: 16px;
+  padding-right: 8px;
+  padding-bottom: 16px;
+  padding-left: 8px;
+  border: 2px solid ${({ theme }) => theme.colors.secondaryText};
+  border-radius: 3px 3px 1px 1px;
 
   font-family: ${({ theme }) => theme.fonts.openSans};
   font-style: normal;
@@ -56,24 +60,13 @@ const StyledInnerWrapper = styled.div`
 
 const ReserveCTA = ({ maxGuests, title, openInitialRender, onReview }) => {
   const { availability, reservation, reservationControl } = useReservation();
+  const fullScreenRef = useRef();
 
   // reservation properties
   const { price, unit, unitLabel, unitAmount, isValid } = reservation;
-
   // passed in props
   const [isInputOpen, setIsInputOpen] = useState(openInitialRender);
   const isAmount = unitAmount > 0;
-
-  const bodyLock = useLockBodyScroll(true, setIsInputOpen);
-
-  // Lock and unlock scrolling
-  useEffect(() => {
-    if (isInputOpen) {
-      bodyLock.lock();
-    } else {
-      bodyLock.unlock();
-    }
-  }, [isInputOpen, bodyLock]);
 
   function handleInputOpen() {
     setIsInputOpen(true);
@@ -95,30 +88,34 @@ const ReserveCTA = ({ maxGuests, title, openInitialRender, onReview }) => {
             className="link"
             onClick={handleInputOpen}
           />
+          <Spacer space="4px" />
           {!isValid && (
-            <ActionButton variant="reserve" onClick={handleInputOpen}>
+            <ActionButton tw={{ variant: 'reserve' }} onClick={handleInputOpen}>
               Check Availability
             </ActionButton>
           )}
           {isValid && (
-            <ActionButton variant="reserve" onClick={onReview}>
+            <ActionButton tw={{ variant: 'reserve' }} onClick={onReview}>
               Reserve
             </ActionButton>
           )}
         </StyledInnerWrapper>
       </StyledWrapper>
       {isInputOpen && (
-        <FullScreenReservation
-          availability={availability}
-          reservation={reservation}
-          maxGuests={maxGuests}
-          control={reservationControl}
-          title={title}
-          showTitle
-          isOpen={isInputOpen}
-          onClose={handlePortalClose}
-          onReview={onReview}
-        />
+        <>
+          <ScrollLock scrollNode={fullScreenRef} reserveScrollBarGap />
+          <FullScreenReservation
+            availability={availability}
+            reservation={reservation}
+            maxGuests={maxGuests}
+            control={reservationControl}
+            title={title}
+            showTitle
+            isOpen={isInputOpen}
+            onClose={handlePortalClose}
+            onReview={onReview}
+          />
+        </>
       )}
     </>
   );

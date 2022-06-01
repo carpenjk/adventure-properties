@@ -19,6 +19,7 @@ export const pMap = {
   cmsID: { qKey: 'cmsID' },
   page: { test: 'test' },
   sortBy: '',
+  limit: '',
 };
 
 export function hasContents(params) {
@@ -77,13 +78,6 @@ export function cleanseParams(params) {
     if (params[p] === '' || pMap[p] === undefined) return obj;
     // valid unmapped param
     if (pMap[p].qKey === undefined) return { ...obj, [p]: params[p] };
-    // drop empty array searches?
-    // if (
-    //   Array.isArray(params[p]) &&
-    //   (params[p].length < 1 || params[p].every((val) => val === ''))
-    // ) {
-    //   return obj;
-    // }
     // add param with query mapping to valid params
     return { ...obj, [p]: params[p] };
   }, {});

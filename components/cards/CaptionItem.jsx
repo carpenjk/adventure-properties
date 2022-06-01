@@ -5,14 +5,13 @@ const StyledCaptionItem = styled.span`
   justify-content: center;
   align-items: center;
   text-align: center;
-  /* text/small2 */
   padding-left: 0.4rem;
   padding-right: 0.4rem;
-  font-family: Poppins;
+  font-family: ${({ theme }) => theme.fonts.poppins};
   font-style: normal;
-  font-weight: 500;
-  font-size: 12px;
-  color: var(--lightText);
+  font-weight: normal;
+  font-size: ${({ theme }) => theme.fontSizes[1]}px;
+  color: ${({ theme }) => theme.colors.lightText};
 `;
 
 const CaptionItem = ({ caption }) => (

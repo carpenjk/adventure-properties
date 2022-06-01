@@ -44,7 +44,7 @@ const ReservePreview = (props) => {
         total={total}
       />
       <StyledEditWrapper>
-        <LinkButton onClick={onEdit} color={theme.colors.primary}>
+        <LinkButton onClick={onEdit} color={theme.colors.primary[0]}>
           edit reservation
         </LinkButton>
       </StyledEditWrapper>

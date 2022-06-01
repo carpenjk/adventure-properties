@@ -15,7 +15,7 @@ const StyledResponse = styled.div`
 
   font-family: ${({ theme }) => theme.fonts.openSans};
   color: ${({ theme, isError }) =>
-    !isError ? theme.colors.primary : theme.colors.action[1]};
+    !isError ? theme.colors.primary[0] : theme.colors.action[1]};
   font-size: ${({ theme }) => theme.fontSizes[3]}px;
   font-weight: bold;
 `;

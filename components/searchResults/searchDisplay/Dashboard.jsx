@@ -12,8 +12,8 @@ const Dashboard = (props) => {
   const { message, error, children } = props;
   return (
     <StyledDashboard>
-      <Message message={message} />
       <MenuContainer>{children}</MenuContainer>
+      <Message message={message} />
     </StyledDashboard>
   );
 };

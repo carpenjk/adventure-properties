@@ -1,9 +1,10 @@
+import { useRouter } from 'next/router';
 import styled from 'styled-components';
-import OverlayNavLink from './OverlayNavLink';
+import OverlayNavButton from './OverlayNavButton';
 
 const StyledContainer = styled.div`
   position: fixed;
-  top: 95px;
+  top: 90px;
   left: 10px;
   z-index: 10001;
 
@@ -12,13 +13,16 @@ const StyledContainer = styled.div`
   }
 `;
 
-const BackButton = ({ path }) => (
-  <StyledContainer>
-    <OverlayNavLink href={path}>
-      <img src="../static/assets/misc/back arrow.svg" alt="back arrow" />
-      back
-    </OverlayNavLink>
-  </StyledContainer>
-);
+const BackButton = () => {
+  const router = useRouter();
+  return (
+    <StyledContainer>
+      <OverlayNavButton onClick={router.back}>
+        <img src="../static/assets/misc/back arrow.svg" alt="back arrow" />
+        back
+      </OverlayNavButton>
+    </StyledContainer>
+  );
+};
 
 export default BackButton;

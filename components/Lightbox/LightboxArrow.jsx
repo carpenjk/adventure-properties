@@ -1,6 +1,5 @@
 import styled from 'styled-components';
 import { condition } from 'dataweaver';
-import { useEffect } from 'react';
 
 const StyledArrowContainer = styled.button`
   display: flex;
@@ -12,9 +11,14 @@ const StyledArrowContainer = styled.button`
   border: 2px solid white;
   background: transparent;
   color: inherit;
+  ${condition('hide')`
+    opacity: 0;
+  `}
 
   &:hover {
     background: rgb(74, 74, 74);
+    opacity: 100%;
+    transition: opacity .5s ease-in;
   }
 
   ${condition('disabled')`
@@ -25,7 +29,7 @@ const StyledArrowContainer = styled.button`
     }
   `}
 `;
-const LightboxArrow = ({ direction, onClick, disabled, buttonRef }) => {
+const LightboxArrow = ({ direction, onClick, disabled, hide, buttonRef }) => {
   function handleClick(e) {
     onClick(e);
     e.stopPropagation();
@@ -36,6 +40,7 @@ const LightboxArrow = ({ direction, onClick, disabled, buttonRef }) => {
       onClick={handleClick}
       disabled={disabled}
       ref={buttonRef}
+      hide={hide}
     >
       {direction === 'left' && '<'}
       {direction === 'right' && '>'}

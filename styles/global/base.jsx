@@ -30,7 +30,7 @@ export const GlobalStyles = () => (
         --menu-color__main: #e5707a;
         --header-height: 3rem;
         --breakpoint1: 900px;
-        --primary: ${theme.colors.primary};
+        --primary: ${theme.colors.primary[0]};
         --secondary: ${theme.colors.secondary};
         --action: ${theme.colors.action[1]};
         --lightText: ${theme.colors.lightText};
@@ -100,7 +100,7 @@ export const GlobalStyles = () => (
         font-family: ${theme.fonts.poppins};
         font-size: 1.6rem;
         letter-spacing: 0.025em;
-        color: ${theme.colors.primary};
+        color: ${theme.colors.primary[0]};
       }
       .smallText1 {
         font-family: ${theme.fonts.poppins};

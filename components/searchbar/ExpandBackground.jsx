@@ -14,6 +14,7 @@ const StyledBackground = styled.div`
   background-color: transparent;
   ${condition('isExpanded')`
     background-color: ${getBackgroundColor('searchBar', 'none')};
+    border: 1px solid #e1e1e1;
   `}
   border-radius: ${getBorderRadius('searchBar', '8px')};
   position: absolute;
@@ -21,6 +22,7 @@ const StyledBackground = styled.div`
   right: -${getPaddingRight('searchBar', '1rem')};
   bottom: -${getPaddingBottom('searchBar', '1rem')};
   left: -${getPaddingLeft('searchBar', '1rem')};
+
   ${condition('hideRight')`
     right: 0;
   `}

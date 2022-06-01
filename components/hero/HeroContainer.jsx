@@ -5,8 +5,11 @@ import { getProp } from 'dataweaver';
 import HeroBanner from './HeroBanner';
 
 const StyledHeroContainer = styled.div`
-  overflow: hidden;
   position: ${getProp('position')};
+  left: 0;
+  right: 0;
+  overflow-y: hidden;
+  overflow-x: hidden;
   top: ${getProp('offsetTop', '0')};
   width: ${getWidth('hero', '100%')};
   height: ${getHeight('hero', '100%')};
@@ -23,8 +26,9 @@ const StyledHero = styled.div`
   position: absolute;
   top: 0;
   left: 0;
+  right: 0;
   bottom: 0;
-  width: calc(100vw + 17px);
+  width: ${getWidth('hero', '100%')};
   background-image: url(${getProp('backgroundImage')});
   background-position: center;
   background-size: cover;

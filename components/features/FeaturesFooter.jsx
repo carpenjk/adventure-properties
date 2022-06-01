@@ -28,7 +28,7 @@ const StyledFooter = styled.div`
 const FeaturesFooter = ({ href, topic }) => (
   <StyledFooter>
     <Link href={href}>
-      <a>More Properties based on {topic}</a>
+      <a>More properties based on {topic}</a>
     </Link>
   </StyledFooter>
 );

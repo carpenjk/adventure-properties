@@ -13,12 +13,14 @@ import {
   getPaddingLeft,
 } from 'themeweaver';
 import { TwMobileMenu } from 'tw-mobile-menu';
+import { useEffect, useRef } from 'react';
 import { Media } from '../../Media';
 // components
 import WideNavbarLayout from './WideNavbarLayout';
 
 // data
 import { navData } from '../../data/data';
+import useScrollBarWidth from '../hooks/UseScrollBarWidth';
 
 // assets
 const LOGO = '/static/assets/LogoMain.svg';
@@ -26,7 +28,6 @@ const LOGO = '/static/assets/LogoMain.svg';
 const StyledNavbar = styled.div`
   height: ${getHeight('nav.main', 'auto')};
   max-height: ${getMaxHeight('nav.main', 'none')};
-  width: 100%;
   display: flex;
   background-color: ${getBackgroundColor('nav.main', 'none')};
   margin-top: ${getMarginTop('nav.main', '0')};
@@ -38,24 +39,34 @@ const StyledNavbar = styled.div`
   padding-bottom: ${getPaddingBottom('nav.main', '0')};
   padding-left: ${getPaddingLeft('nav.main', '20px')};
   box-shadow: 0px 4px 2px -2px rgba(0, 0, 0, 0.15);
-
   > * {
     width: 100%;
   }
 `;
-const Navbar = (props) => (
-  <StyledNavbar>
-    <Media lessThan="1">
-      <TwMobileMenu
-        data={{ nav: navData.nav }}
-        focusOnOpen
-        key="twMobileMenu"
-      />
-    </Media>
-    <Media greaterThanOrEqual="1">
-      <WideNavbarLayout data={navData} logo={LOGO} />
-    </Media>
-  </StyledNavbar>
-);
+const DEFAULT_TW = { semKey: 'nav', variant: 'main' };
+const Navbar = () => {
+  const scrollBarWidth = useScrollBarWidth();
+  const navbarRef = useRef();
+  useEffect(() => {
+    if (navbarRef && navbarRef.current) {
+      navbarRef.current.style.paddingRight = `${scrollBarWidth}px`;
+    }
+  }, [scrollBarWidth]);
+
+  return (
+    <StyledNavbar tw={DEFAULT_TW} ref={navbarRef}>
+      <Media lessThan="1">
+        <TwMobileMenu
+          data={{ nav: navData.nav }}
+          focusOnOpen
+          key="twMobileMenu"
+        />
+      </Media>
+      <Media greaterThanOrEqual="1">
+        <WideNavbarLayout data={navData} logo={LOGO} />
+      </Media>
+    </StyledNavbar>
+  );
+};
 
 export default Navbar;

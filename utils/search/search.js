@@ -168,7 +168,7 @@ function createStage3Match(params) {
 }
 
 function getMessage(results, ignoredLocation) {
-  if (!hasContents(results)) {
+  if (!hasContents(results.items)) {
     return {
       message:
         'No properties availabile matching the search provided. Try changing the search filters.',
@@ -181,15 +181,19 @@ function getMessage(results, ignoredLocation) {
     };
   }
 }
-6;
 // Performs Mongo search
 // @param params: list of search params
 // @param sortBy: {<sortKey>: 1 || -1, ...}
 async function searchDB({ limit, skip, sortBy, ...searchParams }, blnCount) {
+  let dbClient;
   let results;
   const priceSort =
     sortBy && sortBy.displayPrice !== undefined ? sortBy : undefined;
-  const dbClient = await clientPromise;
+  try {
+    dbClient = await clientPromise;
+  } catch (e) {
+    console.log({ error: { type: 'mongodb connection', error: e } });
+  }
 
   // all filters (excl price and availability) applied in geoNear
   const geoNear = searchParams.destination
@@ -250,30 +254,34 @@ async function searchDB({ limit, skip, sortBy, ...searchParams }, blnCount) {
 }
 
 async function createSearchParams(params) {
-  const {
-    destination,
-    page,
-    numResults = DEFAULT_LIMIT,
-    ...queryParams
-  } = params;
-  let pagination = {};
+  const { destination, page, limit, itemsPerPage, ...queryParams } = params;
+  let constraints = {};
+
   if (page >= 0) {
-    pagination = { limit: numResults, skip: (page - 1) * numResults };
+    constraints = {
+      limit: itemsPerPage || DEFAULT_LIMIT,
+      skip: (page - 1) * itemsPerPage,
+    };
+  } else {
+    constraints = {
+      limit: limit || DEFAULT_LIMIT,
+    };
   }
   if (destination) {
     const geo = await geocode(destination);
     return {
       ...queryParams,
-      ...pagination,
+      ...constraints,
       destination: [Number(geo.lon), Number(geo.lat)],
     };
   }
-  return { ...queryParams, ...pagination };
+  return { ...queryParams, ...constraints };
 }
 
 // @param params <object>: key pair object of search parameters
 // @param sortBy <object>: key = price or destination, value = -1 (desc) || 1 (asc)
 export async function search(params) {
+  console.log('searching');
   let results = [];
   let count;
   const cleanParams = processParams(params);
@@ -298,7 +306,7 @@ export async function search(params) {
           : { displayPrice: -1 };
       const { destination, ...paramsExclDestination } = searchParams;
       results = await searchDB({
-        paramsExclDestination,
+        ...paramsExclDestination,
         sortBy: sortByUsed,
       });
       ignoredLocation = true;

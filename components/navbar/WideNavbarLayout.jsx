@@ -2,7 +2,6 @@ import styled from 'styled-components';
 import { getMaxHeight } from 'themeweaver';
 // components
 import Link from 'next/link';
-import NavToggle from './NavToggle';
 import NavList from './NavList';
 
 const StyledWideNavbar = styled.div`
@@ -51,7 +50,6 @@ const WideNavbarLayout = (props) => {
         </a>
       </Link>
       <div />
-      {/* <NavToggle key="navToggle" displayVertical={false} /> */}
       <NavList />
     </StyledWideNavbar>
   );

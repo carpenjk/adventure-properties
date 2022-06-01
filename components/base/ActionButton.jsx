@@ -10,6 +10,7 @@ import {
   getPaddingBottom,
   getPaddingLeft,
   getBorder,
+  getBorderColor,
   getBorderRadius,
   getFontFamily,
   getFontWeight,
@@ -36,24 +37,44 @@ const StyledButton = styled.button`
   padding-bottom: ${getPaddingBottom({}, '1em')};
   padding-left: ${getPaddingLeft({}, '2em')};
   border: ${getBorder({}, '2px solid #cdf7f6')};
+  border-color: ${getBorderColor({})};
   border-radius: ${getBorderRadius({}, '10px')};
   font-family: ${getFontFamily({}, 'inherit')};
   font-weight: ${getFontWeight({}, 'bold')};
   font-size: ${getFontSize({}, '18px')};
   line-height: ${getLineHeight({}, '21px')};
 
+  &.isActive {
+    color: ${getColor({ suffix: '_isActive' }, '#E5707A')};
+    background-color: ${getBackgroundColor({ suffix: '_isActive' }, 'white')};
+    border: ${getBorder({ suffix: '_isActive' }, '2px solid #cdf7f6')};
+    border-color: ${getBorderColor({ suffix: '_isActive' })};
+    transform: ${getTransform({ suffix: '_isActive' }, 'none')};
+    text-decoration: underline;
+    transition: all 0.35s linear;
+  }
+
   &:hover {
+    ${condition('hover')`
     color: ${getColor({ suffix: '_hover' }, '#E5707A')};
     background-color: ${getBackgroundColor({ suffix: '_hover' }, 'white')};
+    border: ${getBorder({ suffix: '_hover' }, '2px solid #cdf7f6')};
+    border-color: ${getBorderColor({ suffix: '_hover' })};
     transform: ${getTransform({ suffix: '_hover' }, 'none')};
+    transition: all 0.35s linear;
+    `}
   }
 
   ${condition('disabled')`
-    opacity: 50%;
-    color: ${getColor({ suffix: '_isDisabled' }, '#E5707A')};
-    background-color: ${getBackgroundColor({ suffix: '_isDisabled' }, 'white')};
-    border: ${getBorder({ suffix: '_isDisabled' }, '2px solid #cdf7f6')};
-    transform: ${getTransform({ suffix: '_isDisabled' }, 'none')};
+      opacity: 50%;
+      color: ${getColor({ suffix: '_isDisabled' }, '#E5707A')};
+      background-color: ${getBackgroundColor(
+        { suffix: '_isDisabled' },
+        'white'
+      )};
+      border: ${getBorder({ suffix: '_isDisabled' }, '2px solid #cdf7f6')};
+      border-color: ${getBorderColor({ suffix: '_isDisabled' })};
+      transform: ${getTransform({ suffix: '_isDisabled' }, 'none')};
   `}
 
   ${breakpoint(1)`
@@ -66,25 +87,34 @@ const StyledButton = styled.button`
     padding-bottom: ${getPaddingBottom({}, '1em')};
     padding-left: ${getPaddingLeft({}, '2em')};
     border: ${getBorder({}, '2px solid #cdf7f6')};
+    border-color: ${getBorderColor({})};
     border-radius: ${getBorderRadius({}, '10px')};
     font-family: ${getFontFamily({}, 'inherit')};
     font-weight: ${getFontWeight({}, 'bold')};
     font-size: ${getFontSize({}, '18px')};
     line-height: ${getLineHeight({}, '21px')};
 
+    &.isActive {
+      color: ${getColor({ suffix: '_isActive' }, '#E5707A')};
+      background-color: ${getBackgroundColor({ suffix: '_isActive' }, 'white')};
+      border: ${getBorder({ suffix: '_isActive' }, '2px solid #cdf7f6')};
+      border-color: ${getBorderColor({ suffix: '_isActive' })};
+      transform: ${getTransform({ suffix: '_isActive' }, 'none')};
+      text-decoration: underline;
+      transition: all 0.35s linear;
+    }
+
     &:hover {
+      ${condition('hover')`
       color: ${getColor({ suffix: '_hover' }, '#E5707A')};
       background-color: ${getBackgroundColor({ suffix: '_hover' }, 'white')};
       border: ${getBorder({ suffix: '_hover' }, '2px solid #cdf7f6')};
+      border-color: ${getBorderColor({ suffix: '_hover' })};
       transform: ${getTransform({ suffix: '_hover' }, 'none')};
+      transition: all 0.35s linear;
+      `}
+      
     }
-
-    ${condition('isActive')`
-    color: ${getColor({ suffix: '_isActive' }, '#E5707A')};
-    background-color: ${getBackgroundColor({ suffix: '_isActive' }, 'white')};
-    border: ${getBorder({ suffix: '_isActive' }, '2px solid #cdf7f6')};
-    transform: ${getTransform({ suffix: '_isActive' }, 'none')};
-    `}
     
     ${condition('disabled')`
         opacity: 50%;
@@ -94,6 +124,7 @@ const StyledButton = styled.button`
           'white'
         )};
         border: ${getBorder({ suffix: '_isDisabled' }, '2px solid #cdf7f6')};
+        border-color: ${getBorderColor({ suffix: '_isDisabled' })};
         transform: ${getTransform({ suffix: '_isDisabled' }, 'none')};
     `}
   
@@ -104,10 +135,16 @@ const DEFAULT_TW = {
   semKey: 'button',
 };
 
-const ActionButton = ({ tw, variant, children, ...rest }) => {
+const ActionButton = ({ tw, variant, children, isActive, ...rest }) => {
   const mergedTw = { ...DEFAULT_TW, ...tw };
   return (
-    <StyledButton tw={mergedTw} {...rest} semKey={`button.${variant}`}>
+    <StyledButton
+      className={isActive ? 'isActive' : ''}
+      tw={mergedTw}
+      hover={!isActive}
+      {...rest}
+      semKey={`button.${variant}`}
+    >
       {children}
     </StyledButton>
   );

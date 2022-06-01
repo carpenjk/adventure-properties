@@ -1,6 +1,5 @@
 import styled from 'styled-components';
 import { signIn, signOut, useSession } from 'next-auth/client';
-import { useEffect } from 'react';
 import { getMaxWidth, breakpoint } from 'themeweaver';
 import { getProp } from 'dataweaver';
 import NavLink from './NavLink';
@@ -45,7 +44,6 @@ const StyledUl = styled.ul`
   `}
 `;
 
-const ACCOUNT_IMG = '/static/assets/navbar/account_circle.svg';
 const NavList = () => {
   const [session, loading] = useSession();
 
@@ -62,17 +60,23 @@ const NavList = () => {
                 Log In
               </NavLink>
             </li>
-            <li>
-              <NavLink href="/signUp">Sign Up</NavLink>
-            </li>
           </>
         )}
         {session && (
           <li>
             <IconDropDown icon={AccountIcon}>
-              <NavLink href="/reservations">My Adventures</NavLink>
-              <NavLink href="/">Favorites</NavLink>
-              <NavLink href="/" onClick={signOut} externalLink>
+              <NavLink tw={{ variant: 'user' }} href="/reservations">
+                My Adventures
+              </NavLink>
+              <NavLink tw={{ variant: 'user' }} href="/">
+                Favorites
+              </NavLink>
+              <NavLink
+                tw={{ variant: 'user' }}
+                href="/"
+                onClick={signOut}
+                externalLink
+              >
                 Log Out
               </NavLink>
             </IconDropDown>

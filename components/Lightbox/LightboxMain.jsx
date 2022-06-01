@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { condition } from 'dataweaver';
 import { breakpoint } from 'themeweaver';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import LightboxArrow from './LightboxArrow';
 import LightboxHeader from './LightboxHeader';
 import LightboxCounter from './LightboxCounter';
@@ -144,6 +144,8 @@ const LightBoxMain = (props) => {
     onTouchEnd,
     onTouchStart,
   } = props;
+
+  const [isHovered, setIsHovered] = useState(false);
   const leftButtonRef = useRef(null);
   const rightButtonRef = useRef(null);
 
@@ -164,6 +166,13 @@ const LightBoxMain = (props) => {
     return <PictureTile />;
   }
 
+  function handleMouseEnter() {
+    setIsHovered(true);
+  }
+  function handleMouseLeave() {
+    setIsHovered(false);
+  }
+
   return (
     <StyledLightboxMain
       isOpen={isOpen}
@@ -173,6 +182,8 @@ const LightBoxMain = (props) => {
       onTouchStart={onTouchStart}
       onTouchEnd={onTouchEnd}
       tabIndex="0"
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
     >
       <StyledOuterContainer>
         {isOpen && (
@@ -211,6 +222,10 @@ const LightBoxMain = (props) => {
                 onClick={onMovePrev}
                 disabled={isLeftButtonDisabled}
                 buttonRef={leftButtonRef}
+                hide={
+                  (!isHovered && showNavArrows === 'hover') ||
+                  showNavArrows === false
+                }
               />
             </StyledArrowWrapper>
             <StyledArrowWrapper right="calc(0.5% + 10px)">
@@ -219,6 +234,10 @@ const LightBoxMain = (props) => {
                 onClick={onMoveNext}
                 disabled={isRightButtonDisabled}
                 buttonRef={rightButtonRef}
+                hide={
+                  (!isHovered && showNavArrows === 'hover') ||
+                  showNavArrows === false
+                }
               />
             </StyledArrowWrapper>
           </>

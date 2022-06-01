@@ -3,6 +3,7 @@ import { getProp } from 'dataweaver';
 
 const StyledButton = styled.button`
   display: flex;
+  align-items: center;
   background: none;
   padding: 0;
   margin: 0;

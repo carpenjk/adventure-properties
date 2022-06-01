@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef, useLayoutEffect } from 'react';
 import { Portal } from 'react-portal';
-
-import useLockBodyScroll from '../hooks/UseLockBodyScroll';
+import ScrollLock from '../scrollLock/ScrollLock';
 import useTouch from '../hooks/UseTouch';
 import LightBoxMain from './LightboxMain';
 
@@ -23,7 +22,6 @@ const Lightbox = (props) => {
 
   const lightboxRef = useRef(null);
   const touch = useTouch({ onTouchLeft: onMoveNext, onTouchRight: onMovePrev });
-  const bodyLock = useLockBodyScroll(true, isOpen);
   const [loadedImages, setLoadedImages] = useState(
     images ? images.slice(0, currIndex + preloadCount) : null
   );
@@ -65,15 +63,6 @@ const Lightbox = (props) => {
     }
   };
 
-  // Lock and unlock scrolling
-  useEffect(() => {
-    if (isOpen) {
-      bodyLock.lock();
-    } else {
-      bodyLock.unlock();
-    }
-  }, [isOpen, bodyLock]);
-
   useEffect(() => {
     if (lightboxRef.current) {
       lightboxRef.current.focus();
@@ -90,6 +79,7 @@ const Lightbox = (props) => {
   if (isOpen) {
     return (
       <Portal isOpen={isOpen}>
+        <ScrollLock scrollNode={lightboxRef} reserveScrollBarGap />
         <LightBoxMain
           currIndex={currIndex}
           isOpen={isOpen}

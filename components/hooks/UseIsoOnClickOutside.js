@@ -4,7 +4,7 @@ const useIsoOnClickOutside = (ref, handler, deps) => {
   const useIsoLayoutEffect =
     typeof window !== 'undefined' ? useLayoutEffect : useEffect;
   useIsoLayoutEffect(() => {
-    const domRef = ref.current || ref;
+    const domRef = ref ? ref.current || ref : undefined;
     const listener = (event) => {
       // Do nothing if clicking ref's element or descendent elements
       if (!domRef || domRef.contains(event.target)) {

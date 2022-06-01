@@ -25,13 +25,9 @@ const StyledPictures = styled.div`
     height: 500px;
     max-width: 1300px;
 
-
   > *:first-child {
     grid-row: 1 / span 2;
     grid-column: 1 / span 2;
-  }
-  > *:not(:first-child){
-    
   }
   `}
 `;

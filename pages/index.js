@@ -18,12 +18,13 @@ import {
 } from '../data/input';
 import { getInitialCheckFilters, prepValues } from '../data/validation/search';
 import { getSortBy } from '../utils/search/utils';
+import useSearch from '../utils/search/useSearch';
 
 // static variables
 const HERO_IMAGE = '/static/assets/lofoten-2220461.png';
 
 export async function getServerSideProps() {
-  const features = await fetchFeaturedProperties();
+  const features = await fetchFeaturedProperties(['skiing'], 3);
   return {
     props: {
       features: JSON.parse(JSON.stringify(features)),
@@ -34,6 +35,7 @@ export async function getServerSideProps() {
 const Index = (props) => {
   const { features } = props;
   const router = useRouter();
+  const search = useSearch();
   return (
     <>
       <Head>
@@ -44,7 +46,7 @@ const Index = (props) => {
         />
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
-      <Section semKey="hero" position="relative">
+      <Section tw={{ variant: 'hero' }} position="relative">
         <HeroContainer backgroundImage={HERO_IMAGE} />
         <SearchBar
           PrimarySearchFields={PrimarySearchFields}
@@ -60,17 +62,24 @@ const Index = (props) => {
             nearbyActivities: '',
             ...getInitialCheckFilters(),
           }}
-          onSubmit={async (values) => {
-            router.push({
-              pathname: '/properties/search',
-              query: prepValues({ ...values, ...getSortBy(values) }),
-            });
-          }}
+          search={search}
         />
       </Section>
-      <Section semKey="features" className="features">
-        <FeaturesContainer items={features} />
-        <FeaturesContainer items={features} />
+      <Section tw={{ variant: 'features' }}>
+        <FeaturesContainer
+          items={features[0].results.items}
+          topic={{ header: 'being awesome', footer: 'popularity' }}
+        />
+        <FeaturesContainer
+          items={features[1].results.items}
+          topic="skiing"
+          isPersonalized
+          query={prepValues({
+            feature: true,
+            nearbyActivities: ['skiing'],
+            ...getSortBy(),
+          })}
+        />
       </Section>
     </>
   );

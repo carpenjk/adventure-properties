@@ -59,7 +59,6 @@ const SearchBarMenu = (props) => {
   //* Dom References ***********************************************
   const searchBarRef = useRef(null);
   const searchBarBgRef = useRef(null);
-  // const scrollContainerRef = useRef(null);
   const visibleInputRefs = useRef([]);
   const secondaryInputRefs = useRef([]);
 
@@ -112,7 +111,8 @@ const SearchBarMenu = (props) => {
   //* component rendering ********************************************************
   return (
     <>
-      {isOpen && !isHidden && <PopupModal isOpen={isOpen} />}
+      {isOpen && !isHidden && <PopupModal isOpen={isOpen} lockScroll />}
+      {/* <PopupModal isOpen={isOpen} lockScroll /> */}
       <Form autoComplete="off">
         <SearchBarContainer
           isHidden={isHidden}

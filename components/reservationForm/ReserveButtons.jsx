@@ -5,9 +5,11 @@ import Spacer from '../base/Spacer';
 
 const StyledEditWrapper = styled.div`
   display: ${({ display }) => display};
+  display: flex;
   justify-content: flex-end;
   text-decoration: underline;
   width: 100%;
+  height: 20px;
 
   > button {
     font-family: ${({ theme }) => theme.fonts.openSans};
@@ -36,14 +38,14 @@ const ReserveButtons = ({
   showReserve,
 }) => (
   <>
-    <StyledEditWrapper display={showEdit ? 'flex' : 'none'}>
+    <StyledEditWrapper>
       <LinkButton onClick={onEdit}>edit reservation</LinkButton>
     </StyledEditWrapper>
     <Spacer vertical space="20px" />
     <StyledButtonWrapper display={showReserve ? 'flex' : 'none'}>
       <ActionButton
         type="submit"
-        variant="reserve"
+        tw={{ variant: 'reserve' }}
         onClick={onReserve}
         disabled={reserveDisabled}
       >

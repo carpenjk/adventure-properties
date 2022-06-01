@@ -3,6 +3,7 @@ import { SearchBarContext } from '../../searchbar/searchBarContext';
 import Dashboard from './Dashboard';
 import SearchResults from './SearchResults';
 import Pagination from './Pagination';
+import CenterWithContent from '../../base/layout/CenterWithContent';
 
 const SearchDisplay = (props) => {
   const { control, searchState } = useContext(SearchBarContext);
@@ -28,7 +29,7 @@ const SearchDisplay = (props) => {
   };
 
   return (
-    <>
+    <CenterWithContent>
       {filtersMenu}
       <Dashboard
         message={message || ''}
@@ -39,7 +40,7 @@ const SearchDisplay = (props) => {
       </Dashboard>
       <SearchResults items={results.items || []} />
       <Pagination onPageChange={handlePageClick} pageCount={pageCount} />
-    </>
+    </CenterWithContent>
   );
 };
 

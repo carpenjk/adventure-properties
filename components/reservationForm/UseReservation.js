@@ -31,6 +31,8 @@ const useReservation = () => {
     guestOptions,
     setSessionData,
     clearSessionData,
+    sessionData,
+    hydrate,
     selectedGuestOptionIndex,
     isInEditMode,
     setIsInEditMode,
@@ -200,6 +202,28 @@ const useReservation = () => {
     [validateAll, validateFields]
   );
 
+  //* utility functions
+  const hydrateWithSession = useCallback(() => {
+    let reservationCopy = {
+      numGuests: '',
+      resStartDate: null,
+      resEndDate: null,
+    };
+    if (sessionData) {
+      const parsedCookie = JSON.parse(JSON.stringify(sessionData), dateReviver);
+      const { resStartDate, resEndDate, numGuests: guests } = parsedCookie;
+      const { maxGuests } = availability || {};
+      reservationCopy = {
+        numGuests: guests <= maxGuests ? guests : '',
+        resStartDate: isAvail(resStartDate, availability) ? resStartDate : '',
+        resEndDate: isValidDeparture(resEndDate, resStartDate, availability)
+          ? resEndDate
+          : '',
+      };
+    }
+    hydrate(reservationCopy);
+  }, [sessionData, availability, hydrate]);
+
   //* validation effects ************************************ */
   // validate on change to inputs
   useEffect(() => {
@@ -217,6 +241,10 @@ const useReservation = () => {
     }
     setError('');
   }, [isValid]);
+
+  useEffect(() => {
+    hydrateWithSession();
+  }, [hydrateWithSession]);
 
   const reservation = {
     arriveDate: arriveDateVal,
@@ -258,7 +286,11 @@ const useReservation = () => {
   //* handlers****************************************** */
   async function reserveReview() {
     if (!session) {
-      setSessionData();
+      setSessionData({
+        numGuests,
+        resStartDate: arriveDateVal,
+        resEndDate: departDateVal,
+      });
       signIn();
       return;
     }
@@ -267,7 +299,11 @@ const useReservation = () => {
       // setIsResAttempted(true);
       return;
     }
-    setSessionData();
+    setSessionData({
+      numGuests,
+      resStartDate: arriveDateVal,
+      resEndDate: departDateVal,
+    });
     router.push({
       pathname: '/properties/[propID]/reserve',
       query: { propID },
@@ -298,7 +334,11 @@ const useReservation = () => {
 
     // persist reservation parameters in a cookie
     if (!session) {
-      setSessionData();
+      setSessionData({
+        numGuests,
+        resStartDate: arriveDateVal,
+        resEndDate: departDateVal,
+      });
       signIn();
     }
     try {
@@ -313,7 +353,6 @@ const useReservation = () => {
   const reservationControl = {
     getDate,
     setDate,
-    // getDateRangeString,
     getNumGuests,
     setNumGuests,
     isInEditMode,

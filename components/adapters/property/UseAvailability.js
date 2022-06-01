@@ -8,7 +8,6 @@ const useAvailability = (propID) => {
     `/api/properties/${propID}/availability`,
     fetchClientSideData
   );
-
   const getDateArray = (ary) => {
     if (ary) {
       return ary.map((date) => date.date);
@@ -16,7 +15,7 @@ const useAvailability = (propID) => {
   };
 
   const getAvailWithDates = useCallback(
-    () => avail.map((dt) => ({ ...dt, date: new Date(dt.date) })),
+    () => avail.availability.map((dt) => ({ ...dt, date: new Date(dt.date) })),
     [avail]
   );
 
@@ -28,6 +27,7 @@ const useAvailability = (propID) => {
         avail: availWithDates,
         start: availWithDates[0],
         end: availWithDates[avail.length - 1],
+        maxGuests: avail.guests,
       };
     }
   }, [avail, getAvailWithDates]);
@@ -35,7 +35,6 @@ const useAvailability = (propID) => {
   const [availability, setAvailability] = useState(createAvailability);
 
   useEffect(() => {
-    // const availWithDates = getAvailWithDates();
     setAvailability(createAvailability);
   }, [createAvailability]);
 
