@@ -4,6 +4,7 @@ import FormikAsyncSelect from '../base/input/FormikAsyncSelect';
 
 const ActivitiesFilter = () => {
   const theme = useContext(ThemeContext);
+  const name = 'nearbyActivities';
 
   async function fetchData(q) {
     const data = await fetch(`/api/activities?q=${q}`);
@@ -13,11 +14,11 @@ const ActivitiesFilter = () => {
 
   return (
     <FormikAsyncSelect
-      id="nearbyActivities"
-      instanceId="nearbyActivities"
-      name="nearbyActivities"
+      id={name}
+      name={name}
+      instanceId={name}
       theme={theme}
-      key="nearbyActivities"
+      key={name}
       placeholder={{
         value: 'Activities',
         translateX: '0px',

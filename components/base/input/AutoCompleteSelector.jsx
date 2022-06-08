@@ -27,7 +27,6 @@ const StyledContainer = styled.div`
   font-weight: ${getFontWeight({}, 'normal')};
   font-size: ${getFontSize({}, '1.6rem')};
   letter-spacing: ${getLetterSpacing({}, '0.025em')};
-  padding-left: calc(${getProp('paddingLeft')} - 8px);
   background-color: ${getBackgroundColor({}, 'white')};
   line-height: 250%;
   cursor: pointer;
@@ -35,12 +34,10 @@ const StyledContainer = styled.div`
 
   ul {
     margin: 0;
-    padding: 0 ${getProp('paddingLeft')} 0 0;
     width: 100%;
   }
   li {
     margin: 0;
-    padding: 0 8px 0 8px;
     list-style: none;
     width: 100%;
     border-radius: ${getBorderRadius({}, '5px')};
@@ -67,14 +64,12 @@ const StyledContainer = styled.div`
   font-weight: ${getFontWeight({}, 'normal')};
   font-size: ${getFontSize({}, '1.6rem')};
   letter-spacing: ${getLetterSpacing({}, '0.025em')};
-  padding-left: calc(${getProp('paddingLeft')} - 8px);
   background-color: ${getBackgroundColor({}, 'white')};
   width: ${getProp('width')};
 
-  ul {
-    padding: 0 ${getProp('paddingLeft')} 0 0;
-  }
   li {
+    padding-right: ${getProp('paddingLeft')};
+    padding-left: ${getProp('paddingLeft')};
     border-radius: ${getBorderRadius({}, '5px')};
     font-size: 0.8em;
   }

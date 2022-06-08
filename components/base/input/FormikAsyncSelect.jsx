@@ -1,17 +1,25 @@
-import { useField } from 'formik';
+import { FastField } from 'formik';
 import CustomAsyncSelect from './CustomAsyncSelect';
 
 const FormikAsyncSelect = (props) => {
-  const [field, meta, { setValue }] = useField(props);
-  const { value } = field;
+  // const [field, meta, { setValue }] = useField(props);
+  // const { value } = field;
+  const { name, ...remProps } = props;
 
   return (
-    // Picker for start of range
-    <CustomAsyncSelect
-      {...props}
-      onChange={(val) => setValue(val)}
-      value={value}
-    />
+    <FastField name={name}>
+      {({ field, form }) => {
+        const { setFieldValue } = form;
+        const { value } = field;
+        return (
+          <CustomAsyncSelect
+            {...remProps}
+            onChange={(val) => setFieldValue(name, val)}
+            value={value}
+          />
+        );
+      }}
+    </FastField>
   );
 };
 

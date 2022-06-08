@@ -37,7 +37,7 @@ export const theme = withThemeweaver(
     sizes: [0, '100%', 80],
     space: [0, 4, 8, 16, 20, 32, 64],
     transitions: {
-      down: 'top 500ms ease-in-out',
+      down: 'transform 0.5s ease-in',
       left: 'left 500ms ease',
       right: 'right 500ms ease',
       colorBig: 'color 500ms ease',
@@ -62,6 +62,13 @@ export const theme = withThemeweaver(
       }),
       ...variant('reserve', {
         maxWidth: [value('532px'), value('532px')],
+      }),
+      ...variant('about', {
+        maxWidth: value('1920px'),
+        paddingTop: 0,
+        paddingRight: 0,
+        paddingBottom: 0,
+        paddingLeft: 0,
       }),
     },
     ...buttons,
@@ -117,8 +124,19 @@ export const theme = withThemeweaver(
       backgroundColor: 'white',
     },
     hero: {
-      height: [value('68.5vh'), value('76vh')],
-      borderRadius: 2,
+      ...variant('home', {
+        height: [value('68.5vh'), value('76vh')],
+        borderRadius: 2,
+      }),
+      ...variant('about', {
+        height: value('calc(100vh - 135px)'),
+      }),
+    },
+    heroBanner: {
+      ...variant('home', {
+        // width: value('90%'),
+        maxWidth: [value('500px'), value('21em')],
+      }),
     },
     searchBar: {
       backgroundColor: 'lightBackground',

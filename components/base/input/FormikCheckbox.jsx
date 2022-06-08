@@ -1,30 +1,35 @@
-import { useField } from 'formik';
+import { FastField } from 'formik';
 import Checkbox from './Checkbox';
 
 const FormikCheckbox = (props) => {
-  const { value: checkVal, ...remProps } = props;
-  const [field, meta, { setValue }] = useField({
-    ...remProps,
-    type: 'checkbox',
-  });
-  const { value } = field;
-
-  const handleChange = () => {
-    const i = value.indexOf(checkVal);
-    if (i === -1) {
-      setValue([...value, checkVal]);
-    } else {
-      setValue([...value.slice(0, i), ...value.slice(i + 1)]);
-    }
-  };
+  const { name, value: checkVal } = props;
 
   return (
-    <Checkbox
-      {...props}
-      value={checkVal}
-      onChange={handleChange}
-      checked={value ? value.includes(checkVal) : false}
-    />
+    <FastField name={name}>
+      {({ field, form }) => {
+        const { setFieldValue } = form;
+        const { value } = field;
+
+        const handleChange = () => {
+          const i = value.indexOf(checkVal);
+          if (i === -1) {
+            setFieldValue(name, [...value, checkVal]);
+          } else {
+            setFieldValue(name, [...value.slice(0, i), ...value.slice(i + 1)]);
+          }
+        };
+        return (
+          <Checkbox
+            {...field}
+            {...props}
+            type="checkbox"
+            value={checkVal}
+            onChange={handleChange}
+            checked={value ? value.includes(checkVal) : false}
+          />
+        );
+      }}
+    </FastField>
   );
 };
 

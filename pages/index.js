@@ -1,5 +1,4 @@
 import Head from 'next/head';
-import { useRouter } from 'next/router';
 import { mediaStyles } from '../Media';
 import Section from '../components/base/semantic/Section';
 import SearchBar from '../components/searchbar/SearchBar';
@@ -18,10 +17,19 @@ import {
 } from '../data/input';
 import { getInitialCheckFilters, prepValues } from '../data/validation/search';
 import { getSortBy } from '../utils/search/utils';
-import useSearch from '../utils/search/useSearch';
+import useSearch from '../utils/search/UseSearch';
+import HomeBannerLayout from '../components/hero/heroBanner/HomeBannerLayout';
+import HeroImage from '../components/hero/BackgroundImage';
 
 // static variables
 const HERO_IMAGE = '/static/assets/lofoten-2220461.png';
+
+const Hero = (
+  <HeroImage
+    src="/static/assets/lofoten-2220461.png"
+    alt="Mountain lake house"
+  />
+);
 
 export async function getServerSideProps() {
   const features = await fetchFeaturedProperties(['skiing'], 3);
@@ -32,9 +40,12 @@ export async function getServerSideProps() {
   };
 }
 
+function bannerTop({ windowWidth }) {
+  return 100 + 100 * Math.min((1850 / windowWidth) ** 40, 1);
+}
+
 const Index = (props) => {
   const { features } = props;
-  const router = useRouter();
   const search = useSearch();
   return (
     <>
@@ -47,7 +58,13 @@ const Index = (props) => {
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
       <Section tw={{ variant: 'hero' }} position="relative">
-        <HeroContainer backgroundImage={HERO_IMAGE} />
+        <HeroContainer
+          tw={{ variant: 'home' }}
+          image={Hero}
+          bannerPos={{ top: bannerTop }}
+          bannerLayout={<HomeBannerLayout />}
+          backgroundImage={HERO_IMAGE}
+        />
         <SearchBar
           PrimarySearchFields={PrimarySearchFields}
           SecondarySearchFields={SecondarySearchFields}
@@ -57,6 +74,10 @@ const Index = (props) => {
           initialValues={{
             destination: '',
             guests: '',
+            minPrice: '',
+            maxPrice: '',
+            beds: '',
+            baths: '',
             [startDateProps.id]: '',
             [endDateProps.id]: '',
             nearbyActivities: '',

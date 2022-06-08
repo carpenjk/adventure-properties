@@ -29,7 +29,6 @@ class FormikDateRange extends Component {
       endDate: { ref: endDateRef },
     } = this.state;
     // move focus to end date component
-    console.log('focus end');
     if (endDateRef && endDateRef.current) endDateRef.current.input.focus();
   };
 
@@ -107,7 +106,6 @@ class FormikDateRange extends Component {
           {({ form, field }) => {
             const { setFieldValue } = form;
             const { value } = field;
-
             const handleStartChange = (val) => {
               const dt = val
                 ? new Date(val.getFullYear(), val.getMonth(), val.getDate())

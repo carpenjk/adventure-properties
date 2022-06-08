@@ -1,5 +1,5 @@
 import Head from 'next/head';
-import { useContext } from 'react';
+import { useCallback, useContext } from 'react';
 import { fetchProperty } from '../../components/adapters/property/property';
 import useLightbox from '../../components/hooks/UseLightbox';
 import useReservation from '../../components/reservationForm/UseReservation';

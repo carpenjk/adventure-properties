@@ -1,6 +1,6 @@
 import MobileNavList from '../components/navbar/MobileNavList';
 import AccountMenuItems from '../components/navbar/AccountMenuItems';
-import HeroBanner from '../components/hero/HeroBanner';
+// import HeroBanner from '../components/hero/HeroBanner';
 import SearchBar from '../components/searchbar/SearchBar';
 import HeroContainer from '../components/hero/HeroContainer';
 
@@ -31,29 +31,29 @@ export const navData = {
   },
 };
 
-export const heroData = {
-  hero: {
-    Component: HeroContainer,
-    props: {
-      offsetTop: '80px',
-      backgroundImage: '/static/assets/lofoten-2220461.png',
-    },
-    items: [
-      {
-        Component: HeroBanner,
-        key: 'herobanner',
-        Layout: undefined,
-        props: { prop1: 'value' },
-      },
-      {
-        Component: SearchBar,
-        key: 'searchbar',
-        Layout: undefined,
-        props: { prop1: 'value' },
-      },
-    ],
-  },
-};
+// export const heroData = {
+//   hero: {
+//     Component: HeroContainer,
+//     props: {
+//       offsetTop: '80px',
+//       backgroundImage: '/static/assets/lofoten-2220461.png',
+//     },
+//     items: [
+//       {
+//         Component: HeroBanner,
+//         key: 'herobanner',
+//         Layout: undefined,
+//         props: { prop1: 'value' },
+//       },
+//       {
+//         Component: SearchBar,
+//         key: 'searchbar',
+//         Layout: undefined,
+//         props: { prop1: 'value' },
+//       },
+//     ],
+//   },
+// };
 
 export const slider1Data = {
   items: [

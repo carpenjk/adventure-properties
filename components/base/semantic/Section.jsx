@@ -16,7 +16,7 @@ import {
   getWidth,
   getHeight,
 } from 'themeweaver';
-import { useRef } from 'react';
+import { useMemo, useRef } from 'react';
 import useAdjustForScrollBar from '../../hooks/UseAdjustForScrollBar';
 
 const StyledSection = styled.section`
@@ -67,7 +67,7 @@ StyledSection.defaultProps = {
 const DEFAULT_TW = { semKey: 'section' };
 const Section = (props) => {
   const { tw, position, offsetTop, children, adjustForScrollBar } = props;
-  const mergedTW = { ...DEFAULT_TW, ...tw };
+  const mergedTW = useMemo(() => ({ ...DEFAULT_TW, ...tw }), []);
   const sectionRef = useRef();
   const _useAdjustForScrollBar = adjustForScrollBar
     ? useAdjustForScrollBar

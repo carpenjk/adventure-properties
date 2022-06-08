@@ -281,7 +281,6 @@ async function createSearchParams(params) {
 // @param params <object>: key pair object of search parameters
 // @param sortBy <object>: key = price or destination, value = -1 (desc) || 1 (asc)
 export async function search(params) {
-  console.log('searching');
   let results = [];
   let count;
   const cleanParams = processParams(params);

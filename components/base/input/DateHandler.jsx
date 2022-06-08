@@ -137,7 +137,6 @@ class DateHandler extends Component {
 
   componentDidMount() {
     const { selected, inputRef } = this.props;
-    console.log('datehandler mounted');
     if (inputRef) {
       inputRef.current.setPreSelection('');
     }

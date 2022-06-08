@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import styled from 'styled-components';
 import {
   breakpoint,
@@ -46,7 +47,8 @@ const DEFAULT_TW = {
 };
 
 const ContentContainer = ({ children, tw }) => {
-  const mergedTw = { ...DEFAULT_TW, ...tw };
+  const mergedTw = useMemo(() => ({ ...DEFAULT_TW, ...tw }), [tw]);
+
   return <StyledContent tw={mergedTw}>{children}</StyledContent>;
 };
 

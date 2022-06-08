@@ -2,7 +2,7 @@ import styled from 'styled-components';
 
 const StyledWrapper = styled.div`
   .react-datepicker {
-    border: 10px solid #f8f8f8;
+    border: 8px solid #c7c7c7;
   }
   .react-datepicker * {
     color: ${({ theme }) => theme.colors.lightText};

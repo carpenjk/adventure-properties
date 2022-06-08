@@ -1,13 +1,13 @@
 import { signIn, signOut, useSession } from 'next-auth/client';
 import NavLink from './NavLink';
 
-const AccountMenuItems = () => {
+const AccountMenuItems = ({}) => {
   const [session, loading] = useSession();
 
   return (
-    <>
+    <ul>
       {!session && (
-        <li>
+        <li key="login">
           <NavLink href="/" onClick={signIn} externalLink>
             Log In
           </NavLink>
@@ -15,17 +15,17 @@ const AccountMenuItems = () => {
       )}
       {session && (
         <>
-          <li>
+          <li key="reservations">
             <NavLink href="/reservations">My Adventures</NavLink>
           </li>
-          <li>
+          <li key="signout">
             <NavLink href="/" onClick={signOut} externalLink>
               Log Out
             </NavLink>
           </li>
         </>
       )}
-    </>
+    </ul>
   );
 };
 
