@@ -38,7 +38,7 @@ const StyledUnit = styled.span`
 
 const ReservationPrice = ({ price, unit, variant }) => (
   <StyledPrice variant={variant}>
-    <StyledAmount>${price}</StyledAmount>
+    <StyledAmount>${price.toLocaleString('en-US')}</StyledAmount>
     <StyledUnit> / {unit}</StyledUnit>
   </StyledPrice>
 );

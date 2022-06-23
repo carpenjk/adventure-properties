@@ -1,23 +1,28 @@
 // pages/api/auth/[...nextauth].js
 import NextAuth from 'next-auth';
-import Providers from 'next-auth/providers';
+import Auth0Provider from 'next-auth/providers/auth0';
+import { MongoDBAdapter } from '@next-auth/mongodb-adapter';
+import clientPromise from '../../../utils/mongodb';
 
-const options = {
+export default NextAuth({
   site: process.env.NEXTAUTH_URL,
   debug: true,
+  theme: {
+    colorScheme: 'dark',
+    brandColor: '#696f92', // Hex color code
+    logo: '/static/assets/LogoMain.svg', // Absolute URL to image
+  },
   session: {
-    jwt: true,
+    strategy: 'jwt',
     // maxAge: 30 * 24 * 60 * 60, // the session will last 30 days
     maxAge: 1 * 60 * 60, // the session will last 30 days
   },
   providers: [
-    Providers.Auth0({
+    Auth0Provider({
       clientId: process.env.AUTH0_CLIENT_ID,
       clientSecret: process.env.AUTH0_CLIENT_SECRET,
-      domain: process.env.AUTH0_DOMAIN,
+      issuer: process.env.AUTH0_DOMAIN,
     }),
   ],
-  database: process.env.DATABASE_URI,
-};
-
-export default (req, res) => NextAuth(req, res, options);
+  adapter: MongoDBAdapter(clientPromise),
+});

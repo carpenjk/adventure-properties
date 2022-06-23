@@ -94,6 +94,8 @@ const buttons = {
       color: 'white',
       fontFamily: 'roboto',
       fontSize: [value('16px'), 3],
+      paddingLeft: [value('1.5em'), value('2em')],
+      paddingRight: [value('1.5em'), value('2em')],
     }),
     ...variant('reserve_hover', {
       backgroundColor: 'white',

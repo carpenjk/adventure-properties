@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import CaptionItem from './CaptionItem';
+import CardActivities from './CardActivities';
 
 const StyledAttributes = styled.div`
   display: flex;
@@ -29,22 +30,6 @@ const Price = styled.span`
   }
 `;
 
-const StyledTags = styled.ul`
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  list-style: none;
-`;
-const StyledTag = styled.li`
-  color: ${({ theme }) => theme.colors.secondaryText};
-  font-family: ${({ theme }) => theme.fonts.poppins};
-  font-style: normal;
-  font-weight: 500;
-  font-size: 12px;
-  line-height: 18px;
-  letter-spacing: 0.02em;
-`;
-
 const StyledLocation = styled.div`
   display: flex;
   justify-content: flex-end;
@@ -66,14 +51,14 @@ const PropertyCaption = (props) => {
     price,
     location,
     propertyType,
-    tags,
+    nearbyActivities,
     unit,
   } = props;
   return (
     <>
       <StyledAttributes>
         <Price>
-          {`${currSymbol}${price}`}
+          {`${currSymbol}${price.toLocaleString('en-US')}`}
           <CaptionItem caption={` /${unit}`} />
         </Price>
         <CaptionItem
@@ -83,22 +68,7 @@ const PropertyCaption = (props) => {
         <CaptionItem caption={`${baths} Bath${baths > 1 ? 's' : ''}`} />
         <CaptionItem caption={propertyType} />
       </StyledAttributes>
-      <StyledTags>
-        {/* {tags.reduce((result, tag, index) => {
-            const suffix = index === tags.length - 1 ? '...' : ', ';
-            return result + tag + suffix;
-          }, [])} */}
-        {tags.map((tag, index) => {
-          const isLast = index === tags.length - 1;
-          const suffix = isLast ? '...' : ', ';
-          return (
-            <StyledTag key={tag}>
-              <span>{`${tag}${suffix}`}</span>
-              {!isLast && <span>&nbsp;</span>}
-            </StyledTag>
-          );
-        })}
-      </StyledTags>
+      <CardActivities activities={nearbyActivities} />
       <StyledLocation>{location}</StyledLocation>
     </>
   );

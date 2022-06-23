@@ -1,5 +1,5 @@
 import Head from 'next/head';
-import { useCallback, useContext } from 'react';
+import { useContext, useMemo } from 'react';
 import { fetchProperty } from '../../components/adapters/property/property';
 import useLightbox from '../../components/hooks/UseLightbox';
 import useReservation from '../../components/reservationForm/UseReservation';
@@ -10,7 +10,7 @@ import Lightbox from '../../components/lightbox/Lightbox';
 import Section from '../../components/base/semantic/Section';
 import BackButton from '../../components/base/BackButton';
 import ClientOnly from '../../components/ClientOnly';
-import usePictureTiles from '../../components/hooks/UsePictureTiles';
+import PictureTiles from '../../components/pictureTiles/PictureTiles';
 import Spacer from '../../components/base/Spacer';
 import ReserveCTA from '../../components/reservationForm/ReserveCTA';
 import Fixed from '../../components/base/layout/Fixed';
@@ -51,6 +51,22 @@ const SRC_SET_PARAMS = [
 const LIGHTBOX_PRELOAD_COUNT = 3;
 const POSITION_OFFSET = 0;
 
+const getImgUrls = (property) => {
+  let urls = [];
+  const mainUrl = `http:${property.mainPhoto.fields.file.url}`;
+  const addUrls = property.additionalPhotos.map(
+    (photo) => `http:${photo.fields.file.url}`
+  );
+  urls = [mainUrl, ...addUrls];
+  return urls;
+};
+
+// build array of lightbox images
+const getImgProps = (urls) =>
+  urls.map((url) => ({
+    src: url,
+  }));
+
 //* ********* Component *********************************/
 const Property = ({ property }) => {
   // property data
@@ -60,19 +76,10 @@ const Property = ({ property }) => {
   const { availability, reservation, reservationControl } = useReservation();
   const { isInEditMode, setIsInEditMode, reserveReview } = reservationControl;
 
-  // build array of lightbox images
-  const getImgUrls = () => {
-    let urls = [];
-    const mainUrl = `http:${property.mainPhoto.fields.file.url}`;
-    const addUrls = property.additionalPhotos.map(
-      (photo) => `http:${photo.fields.file.url}`
-    );
-    urls = [mainUrl, ...addUrls];
-    return urls;
-  };
-
+  const imgUrls = useMemo(() => getImgUrls(property), [property]);
+  const lightboxImages = useMemo(() => getImgProps(imgUrls), [imgUrls]);
   const { lightbox, lightboxControl } = useLightbox({
-    images: getImgUrls(),
+    images: lightboxImages,
     srcSetParams: SRC_SET_PARAMS,
     photoIndex: 0,
     isOpen: false,
@@ -87,11 +94,11 @@ const Property = ({ property }) => {
     handlePhotoClick,
   } = lightboxControl;
 
-  const PictureTiles = usePictureTiles({
-    images: getImgUrls(),
-    onOverlayClick: handleLightboxOpen,
-    onPhotoClick: handlePhotoClick,
-  });
+  // const PictureTiles = PictureTiles({
+  //   images: imgUrls,
+  //   onOverlayClick: handleLightboxOpen,
+  //   onPhotoClick: handlePhotoClick,
+  // });
 
   function handleReservationReview() {
     setIsInEditMode(false);
@@ -141,7 +148,13 @@ const Property = ({ property }) => {
                 images={images || []}
                 imgCount={images.length}
                 preloadCount={LIGHTBOX_PRELOAD_COUNT}
-                PictureTile={PictureTiles}
+                pictureTile={
+                  <PictureTiles
+                    images={imgUrls}
+                    onOverlayClick={handleLightboxOpen}
+                    onPhotoClick={handlePhotoClick}
+                  />
+                }
                 onClose={handleLightboxClose}
                 onMovePrev={handleMovePrev}
                 onMoveNext={handleMoveNext}

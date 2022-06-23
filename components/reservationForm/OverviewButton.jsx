@@ -59,7 +59,9 @@ const OverviewButton = ({
         </>
       )}
     </StyledButtonLayout>
-    {isAmount && <StyledTotal>${price.total} Total</StyledTotal>}
+    {isAmount && (
+      <StyledTotal>${price.total.toLocaleString('en-US')} Total</StyledTotal>
+    )}
   </LinkButton>
 );
 

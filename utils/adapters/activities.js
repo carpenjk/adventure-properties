@@ -1,6 +1,7 @@
 import clientPromise from '../mongodb';
 
 export async function fetchActivities(q) {
+  console.log('🚀 ~ file: activities.js ~ line 4 ~ fetchActivities ~ q', q);
   const client = await clientPromise;
   const activities = await client
     .db()
@@ -15,8 +16,14 @@ export async function fetchActivities(q) {
         },
       },
       {
-        $unwind: {
-          path: '$nearbyActivities',
+        $project: {
+          nearbyActivities: {
+            $reduce: {
+              input: '$nearbyActivities',
+              initialValue: [],
+              in: { $setUnion: ['$$this', '$$value'] },
+            },
+          },
         },
       },
       {
@@ -29,7 +36,7 @@ export async function fetchActivities(q) {
               cond: {
                 $regexMatch: {
                   input: '$$nearbyActivities',
-                  regex: q,
+                  regex: new RegExp(q, 'i'),
                 },
               },
             },

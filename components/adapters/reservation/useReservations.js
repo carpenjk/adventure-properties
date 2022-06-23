@@ -1,6 +1,6 @@
 import useSWR from 'swr';
 import { useState, useEffect } from 'react';
-import { useSession } from 'next-auth/client';
+import { useSession } from 'next-auth/react';
 import { dateReviver } from '../../../utils/dates';
 
 const fetchReservations = (url) =>
@@ -9,7 +9,7 @@ const fetchReservations = (url) =>
     .then((t) => JSON.parse(t, dateReviver));
 
 const useReservations = () => {
-  const [session, loading] = useSession();
+  const { data: session, status } = useSession();
   const userID = session ? session.user.email : '';
   const [reservations, setReservations] = useState([]);
 

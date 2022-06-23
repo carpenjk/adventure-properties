@@ -58,6 +58,7 @@ export async function fetchFeaturedProperties(topics, limit = 3) {
   results = Promise.all([
     search({
       feature: true,
+      limit,
     }),
     ...promises,
   ]).catch((e) => console.log({ error: e }));

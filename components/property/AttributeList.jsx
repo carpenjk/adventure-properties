@@ -1,13 +1,18 @@
 import styled from 'styled-components';
+import { breakpoint } from 'themeweaver';
 
 const StyledList = styled.ul`
   margin: 0;
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   grid-template-rows: auto;
   grid-gap: ${({ theme }) => theme.space[4]}px;
   justify-items: flex-start;
   align-items: stretch;
+
+  ${breakpoint(1)`
+  grid-template-columns: repeat(4, 1fr);
+  `}
 
   > li {
     display: flex;

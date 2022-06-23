@@ -7,11 +7,24 @@ const { bedroom, bathroom } = roomsFilters;
 export const getInitialCheckFilters = () =>
   checkFiltersData.reduce((obj, filter) => ({ ...obj, [filter.name]: [] }), {});
 
+export const transformActivity = (a) =>
+  `${a.slice(0, 1).toUpperCase()}${a.slice(1)}`;
+
+export const transformNearbyActivities = (ary) => {
+  const val = ary.map((a) => transformActivity(a));
+  return val;
+};
 export const prepValues = (values) => {
   const keys = Object.keys(values);
+  const tValues = values.nearbyActivities
+    ? {
+        ...values,
+        nearbyActivities: transformNearbyActivities(values.nearbyActivities),
+      }
+    : values;
 
   const cleaned = keys.reduce((obj, p) => {
-    const strVal = JSON.stringify(values[p]);
+    const strVal = JSON.stringify(tValues[p]);
     // remove blank stringified parameters
     if (strVal === '""' || strVal === '[]' || strVal === '{}') {
       return obj;

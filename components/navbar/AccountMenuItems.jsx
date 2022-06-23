@@ -1,9 +1,8 @@
-import { signIn, signOut, useSession } from 'next-auth/client';
+import { signIn, signOut, useSession } from 'next-auth/react';
 import NavLink from './NavLink';
 
-const AccountMenuItems = ({}) => {
-  const [session, loading] = useSession();
-
+const AccountMenuItems = () => {
+  const { data: session, status } = useSession();
   return (
     <ul>
       {!session && (

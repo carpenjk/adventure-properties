@@ -68,16 +68,15 @@ const StyledPaginateWrapper = styled.div`
   }
 `;
 
-const Pagination = ({ onPageChange, pageCount }) => (
+const Pagination = (props) => (
   <StyledPaginateWrapper>
     <ReactPaginate
       breakLabel="..."
       nextLabel="next >"
-      onPageChange={onPageChange}
       pageRangeDisplayed={5}
-      pageCount={pageCount}
       previousLabel="< previous"
       renderOnZeroPageCount={null}
+      {...props}
     />
   </StyledPaginateWrapper>
 );

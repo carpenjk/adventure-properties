@@ -10,6 +10,5 @@ export default async function fetchAvailability(id) {
       { projection: { _id: 0, availability: 1, guests: 1 } }
     );
 
-  // const { availability } = dbProperty;
   return availability;
 }

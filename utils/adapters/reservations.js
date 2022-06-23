@@ -4,17 +4,18 @@ import { fetchProperties } from '../../components/adapters/property/property';
 const DEFAULT_PER_PAGE = 5;
 export async function fetchReservations(params) {
   const { user, filter, page, itemsPerPage = DEFAULT_PER_PAGE } = params;
+  const isPast = filter === 'past';
   const dt = new Date();
   const today = new Date(dt.getFullYear(), dt.getMonth(), dt.getDate());
-  const dateFilter = filter === 'past' ? { $lt: today } : { $gte: today };
-  const skip = page > 1 ? page * DEFAULT_PER_PAGE : 0;
+  const dateFilter = isPast ? { $lt: today } : { $gte: today };
+  const skip = page > 1 ? (page - 1) * DEFAULT_PER_PAGE : 0;
   const query = { userID: user, arriveDate: dateFilter };
   const client = await clientPromise;
   const reservations = await client
     .db()
     .collection('reservations')
     .find(query)
-    .sort({ arriveDate: 1 })
+    .sort({ arriveDate: isPast ? -1 : 1 })
     .skip(skip)
     .limit(Number(itemsPerPage))
     .toArray();

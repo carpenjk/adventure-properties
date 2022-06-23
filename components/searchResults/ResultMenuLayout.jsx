@@ -37,7 +37,6 @@ const ResultMenuLayout = ({ ignoredLocation }) => {
 
   async function handlePriceSort() {
     // if price is current sort, toggle sort
-
     const isExplicitSort =
       currentSort && currentSort.displayPrice !== undefined;
     const implicitSort =
@@ -47,9 +46,14 @@ const ResultMenuLayout = ({ ignoredLocation }) => {
     const newSort = currPriceSort
       ? toggleSort(currPriceSort)
       : { displayPrice: -1 };
+    console.log(JSON.stringify(1));
     router.push({
       pathname: '/properties/search',
-      query: { ...query, sortBy: JSON.stringify(newSort) },
+      query: {
+        ...query,
+        page: 1,
+        sortBy: JSON.stringify(newSort),
+      },
     });
   }
 
@@ -58,7 +62,11 @@ const ResultMenuLayout = ({ ignoredLocation }) => {
     if (!isDestinationSorted) {
       router.push({
         pathname: '/properties/search',
-        query: { ...remQuery, sortBy: JSON.stringify({ destination: 1 }) },
+        query: {
+          ...remQuery,
+          page: 1,
+          sortBy: JSON.stringify({ destination: 1 }),
+        },
       });
     }
   }

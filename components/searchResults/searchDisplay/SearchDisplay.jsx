@@ -7,7 +7,7 @@ import CenterWithContent from '../../base/layout/CenterWithContent';
 
 const SearchDisplay = (props) => {
   const { control, searchState } = useContext(SearchBarContext);
-  const [pageCount, setPageCount] = useState(0);
+  const [pageCount, setPageCount] = useState(1);
   const {
     filtersMenu,
     DashboardMenuLayout,
@@ -39,7 +39,11 @@ const SearchDisplay = (props) => {
         <DashboardMenuLayout {...fwdProps} />
       </Dashboard>
       <SearchResults items={results.items || []} />
-      <Pagination onPageChange={handlePageClick} pageCount={pageCount} />
+      <Pagination
+        onPageChange={handlePageClick}
+        forcePage={page ? Number(page) - 1 : 0}
+        pageCount={pageCount}
+      />
     </CenterWithContent>
   );
 };

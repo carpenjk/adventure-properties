@@ -1,6 +1,8 @@
 import styled from 'styled-components';
+import { forwardRef } from 'react';
 
 const StyledButton = styled.button`
+  position: relative;
   display: flex;
   align-items: center;
   text-align: center;
@@ -24,8 +26,11 @@ const StyledButton = styled.button`
     outline: 1px solid ${({ theme }) => theme.colors.action[1]};
   }
 `;
-const OverlayNavButton = ({ children, onClick }) => (
-  <StyledButton onClick={onClick}>{children}</StyledButton>
-);
+const OverlayNavButton = forwardRef(({ children, ...props }, ref) => (
+  <StyledButton ref={ref} {...props}>
+    {children}
+  </StyledButton>
+));
+OverlayNavButton.displayName = 'OverlayNavButton';
 
 export default OverlayNavButton;

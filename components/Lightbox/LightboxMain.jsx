@@ -91,10 +91,8 @@ const StyledTrack = styled.div`
     height: 100%;
     width: ${({ count }) => (1 / count) * 100}%;
   }
-  > div > picture {
-    width: 100%;
-  }
-  > div > picture > img {
+
+  > div > img {
     touch-action: pinch-zoom;
     width: 100%;
     height: 100%;
@@ -135,7 +133,7 @@ const LightBoxMain = (props) => {
     loadedImages,
     showNavArrows,
     lightboxRef,
-    PictureTile,
+    pictureTile,
     onClick,
     onClose,
     onKeyDown,
@@ -162,15 +160,15 @@ const LightBoxMain = (props) => {
     }
   }, [isLeftButtonDisabled, isRightButtonDisabled]);
 
-  if (!isOpen && PictureTile) {
-    return <PictureTile />;
-  }
-
   function handleMouseEnter() {
     setIsHovered(true);
   }
   function handleMouseLeave() {
     setIsHovered(false);
+  }
+
+  if (!isOpen && pictureTile) {
+    return <>{pictureTile}</>;
   }
 
   return (
@@ -206,10 +204,14 @@ const LightBoxMain = (props) => {
             {loadedImages &&
               loadedImages.map((img) => (
                 <div key={img.src}>
-                  <picture>
-                    <source srcSet={img.srcSet} />
-                    <img src={img.src} alt="description" />
-                  </picture>
+                  <img
+                    src={img.src}
+                    srcSet={img.srcSet}
+                    sizes={img.sizes}
+                    width={img.width}
+                    height={img.height}
+                    alt="description"
+                  />
                 </div>
               ))}
           </StyledTrack>

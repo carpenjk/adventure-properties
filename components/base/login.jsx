@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { signIn } from 'next-auth/client';
+import { signIn } from 'next-auth/react';
 import ActionButton from './ActionButton';
 
 const StyledLogin = styled.div`

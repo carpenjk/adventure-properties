@@ -6,7 +6,7 @@ import LightBoxMain from './LightboxMain';
 
 const Lightbox = (props) => {
   const {
-    PictureTile,
+    pictureTile,
     images,
     isOpen,
     onClose,
@@ -109,7 +109,7 @@ const Lightbox = (props) => {
       imgCount={imgCount}
       loadedImages={loadedImages}
       showNavArrows={showNavArrows}
-      PictureTile={PictureTile}
+      pictureTile={pictureTile}
       lightboxRef={lightboxRef}
       onClick={onOpen}
       onClose={onClose}

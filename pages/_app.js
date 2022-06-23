@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Router } from 'next/router';
-import { Provider } from 'next-auth/client';
+import { SessionProvider } from 'next-auth/react';
 import { ThemeProvider } from 'styled-components';
 import { CookiesProvider } from 'react-cookie';
 import { ConfigProvider } from '../contexts/context';
@@ -33,7 +33,7 @@ export default function MyApp({ Component, pageProps }) {
 
   return (
     <CookiesProvider>
-      <Provider session={pageProps.session}>
+      <SessionProvider session={pageProps.session} refetchInterval={5 * 60}>
         <ThemeProvider theme={theme}>
           <MediaContextProvider>
             <ConfigProvider>
@@ -48,7 +48,7 @@ export default function MyApp({ Component, pageProps }) {
             </ConfigProvider>
           </MediaContextProvider>
         </ThemeProvider>
-      </Provider>
+      </SessionProvider>
     </CookiesProvider>
   );
 }

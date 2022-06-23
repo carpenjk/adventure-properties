@@ -1,4 +1,4 @@
-import { getSession } from 'next-auth/client';
+import { getSession } from 'next-auth/react';
 import { fetchReservationsWithProperty } from '../../../../utils/adapters/reservations';
 import { checkSession } from '../../../../utils/dataValidation';
 

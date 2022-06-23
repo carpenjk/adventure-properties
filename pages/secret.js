@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
-import { useSession } from 'next-auth/client';
+import { useSession } from 'next-auth/react';
 
 export default function Secret() {
-  const [session, loading] = useSession();
+  const { data: session, status } = useSession();
   const [content, setContent] = useState();
 
   useEffect(() => {
@@ -17,7 +17,7 @@ export default function Secret() {
     fetchData();
   }, [session]);
 
-  if (typeof window !== 'undefined' && loading) return null;
+  if (typeof window !== 'undefined' && status === 'loading') return null;
 
   if (!session) {
     return (

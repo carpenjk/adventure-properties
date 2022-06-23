@@ -1,5 +1,5 @@
 import Head from 'next/head';
-import { getSession } from 'next-auth/client';
+import { getSession } from 'next-auth/react';
 import styled from 'styled-components';
 import { mediaStyles } from '../Media';
 import ReservationsContent from '../components/reservations/ReservationsContent';
@@ -23,6 +23,7 @@ export async function getServerSideProps(context) {
   const session = await getSession(context);
   const { user } = session || {};
   const { query = {} } = context;
+
   if (user) {
     const resWithPropeties = await fetchReservationsWithProperty({
       ...query,
@@ -44,7 +45,6 @@ export async function getServerSideProps(context) {
 
 const Reservations = ({ reservations, session }) => {
   const res = reservations ? withDates(reservations) : undefined;
-  console.log('🚀 ~ file: reservations.js ~ line 47 ~ Reservations ~ res', res);
   return (
     <>
       <Head>

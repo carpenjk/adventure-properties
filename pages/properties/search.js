@@ -75,7 +75,7 @@ const Search = ({ response }) => {
           >
             <SearchResultLayout
               page={page}
-              itemsPerPage={3}
+              itemsPerPage={10}
               results={results}
               message={message}
               ignoredLocation={ignoredLocation}

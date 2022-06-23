@@ -4,7 +4,8 @@ import clientPromise from '../mongodb';
 import { SearchSchema } from '../../data/validation/search';
 
 const DEFAULT_SEARCH_DAYS = 365;
-const DEFAULT_LIMIT = 3;
+const DEFAULT_LIMIT = 10;
+const DEFAULT_MAX_DISTANCE = 275;
 
 async function geocode(q) {
   try {
@@ -68,7 +69,7 @@ function createGeoNear(params) {
         ...query,
         near: { type: 'Point', coordinates: destination },
         distanceField: 'distance',
-        maxDistance: 100 * 1609.344,
+        maxDistance: DEFAULT_MAX_DISTANCE * 1609.344,
         // includeLocs: 'distance.location',
         distanceMultiplier: 0.000621371,
         spherical: true,
@@ -184,7 +185,10 @@ function getMessage(results, ignoredLocation) {
 // Performs Mongo search
 // @param params: list of search params
 // @param sortBy: {<sortKey>: 1 || -1, ...}
-async function searchDB({ limit, skip, sortBy, ...searchParams }, blnCount) {
+async function searchDB(
+  { limit = DEFAULT_LIMIT, skip, sortBy, ...searchParams },
+  blnCount
+) {
   let dbClient;
   let results;
   const priceSort =
@@ -241,7 +245,7 @@ async function searchDB({ limit, skip, sortBy, ...searchParams }, blnCount) {
       .collection('properties')
       .aggregate([...pipelines, { $unset: ['_id'] }])
       .skip(skip || 0)
-      .limit(limit || DEFAULT_LIMIT)
+      .limit(limit)
       .toArray();
     return { items: results, query: pipelines };
   }
@@ -254,17 +258,17 @@ async function searchDB({ limit, skip, sortBy, ...searchParams }, blnCount) {
 }
 
 async function createSearchParams(params) {
-  const { destination, page, limit, itemsPerPage, ...queryParams } = params;
+  const { destination, page, limit = DEFAULT_LIMIT, ...queryParams } = params;
   let constraints = {};
 
   if (page >= 0) {
     constraints = {
-      limit: itemsPerPage || DEFAULT_LIMIT,
-      skip: (page - 1) * itemsPerPage,
+      limit,
+      skip: (page - 1) * limit,
     };
   } else {
     constraints = {
-      limit: limit || DEFAULT_LIMIT,
+      limit,
     };
   }
   if (destination) {
@@ -294,6 +298,7 @@ export async function search(params) {
     return { error: error.message };
   }
 
+  // gets geocode and adds pagination params if necessary
   const searchParams = await createSearchParams(cleanParams);
   if (hasContents(searchParams)) {
     results = await searchDB(searchParams);
@@ -304,10 +309,13 @@ export async function search(params) {
           ? sortBy
           : { displayPrice: -1 };
       const { destination, ...paramsExclDestination } = searchParams;
+
+      // Search provided destination first
       results = await searchDB({
         ...paramsExclDestination,
         sortBy: sortByUsed,
       });
+      // no results for provided destination, search more broadly
       ignoredLocation = true;
       count = hasContents(results.items)
         ? await searchDB({ paramsExclDestination }, true)

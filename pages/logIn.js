@@ -1,9 +1,9 @@
-import { signIn, signOut, useSession } from 'next-auth/client';
+import { signIn, signOut, useSession } from 'next-auth/react';
 
 const LogIn = () => {
-  const [session, loading] = useSession();
+  const { data: session, status } = useSession();
 
-  if (loading) {
+  if (status === 'loading') {
     return <p>Loading...</p>;
   }
 

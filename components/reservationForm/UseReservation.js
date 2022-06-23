@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router';
-import { signIn, useSession } from 'next-auth/client';
+import { signIn, useSession } from 'next-auth/react';
 import { useState, useContext, useEffect, useCallback } from 'react';
 import {
   dateReviver,
@@ -37,8 +37,7 @@ const useReservation = () => {
     isInEditMode,
     setIsInEditMode,
   } = useContext(ReservationContext);
-  const [session, loading] = useSession();
-
+  const { data: session, status } = useSession();
   const router = useRouter();
   const [validateOnChange, setValidateOnChange] = useState(false);
   const [isValid, setIsValid] = useState(false);
@@ -46,7 +45,6 @@ const useReservation = () => {
   const [response, setResponse] = useState();
 
   const { propID } = router.query;
-
   const availability = useAvailability(propID);
 
   // * Price functions ************************************************

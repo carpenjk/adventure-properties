@@ -1,4 +1,4 @@
-import { getSession } from 'next-auth/client';
+import { getSession } from 'next-auth/react';
 import * as yup from 'yup';
 import { fetchProperty } from '../../../../../../components/adapters/property/property';
 import {

@@ -32,7 +32,7 @@ const Hero = (
 );
 
 export async function getServerSideProps() {
-  const features = await fetchFeaturedProperties(['skiing'], 3);
+  const features = await fetchFeaturedProperties(['Skiing'], 3);
   return {
     props: {
       features: JSON.parse(JSON.stringify(features)),
@@ -98,6 +98,7 @@ const Index = (props) => {
           query={prepValues({
             feature: true,
             nearbyActivities: ['skiing'],
+            page: 1,
             ...getSortBy(),
           })}
         />

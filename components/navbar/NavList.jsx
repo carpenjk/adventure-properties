@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import Link from 'next/link';
-import { signIn, signOut, useSession } from 'next-auth/client';
+import { signIn, signOut, useSession } from 'next-auth/react';
 import { getMaxWidth, breakpoint } from 'themeweaver';
 import { getProp } from 'dataweaver';
 import NavLink from './NavLink';
@@ -46,7 +46,7 @@ const StyledUl = styled.ul`
 `;
 
 const NavList = () => {
-  const [session, loading] = useSession();
+  const { data: session, status } = useSession();
 
   return (
     <StyledNav className="navlist">

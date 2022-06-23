@@ -44,6 +44,10 @@ const StyledContainer = styled.div`
     object-fit: cover;
   }
 `;
+
+const IMG_WIDTH = 325;
+const IMG_HEIGHT = 217;
+
 const buildPicUrl = (property) => {
   if (property && property.mainPhoto) {
     return `http:${property.mainPhoto.fields.file.url}?fit=fill&w=325&h=217&q=80`;
@@ -72,7 +76,7 @@ const PhotoLayout = ({ property, price, unit, currSymbol }) => {
       </div>
       <figure>
         <div className="image">
-          <img src={url} alt={title} />
+          <img src={url} alt={title} width={IMG_WIDTH} height={IMG_HEIGHT} />
         </div>
         <figcaption>
           <PropertyCaption
@@ -84,7 +88,7 @@ const PhotoLayout = ({ property, price, unit, currSymbol }) => {
             currSymbol={currSymbol}
             location={cityState}
             propertyType={propertyType}
-            tags={nearbyActivities}
+            nearbyActivities={nearbyActivities}
           />
         </figcaption>
       </figure>
