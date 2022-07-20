@@ -61,5 +61,17 @@ const PictureTiles = ({ images, onOverlayClick, onPhotoClick, options }) => {
     </ImageLoader>
   );
 };
+console.log(
+  '🚀 ~ file: PictureTiles.js ~ line 64 ~ PictureTiles ~ PictureTiles',
+  PictureTiles
+);
+console.log(
+  '🚀 ~ file: PictureTiles.js ~ line 64 ~ PictureTiles ~ PictureTiles',
+  PictureTiles
+);
+console.log(
+  '🚀 ~ file: PictureTiles.js ~ line 64 ~ PictureTiles ~ PictureTiles',
+  PictureTiles
+);
 
 export default PictureTiles;

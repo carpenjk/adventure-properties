@@ -1,8 +1,8 @@
 import styled from 'styled-components';
-import { condition } from 'dataweaver';
+import { condition, unwindProps } from 'dataweaver';
 import { breakpoint } from 'themeweaver';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useMemo } from 'react';
 import LightboxArrow from './LightboxArrow';
 import LightboxHeader from './LightboxHeader';
 import LightboxCounter from './LightboxCounter';
@@ -133,7 +133,6 @@ const LightBoxMain = (props) => {
     loadedImages,
     showNavArrows,
     lightboxRef,
-    pictureTile,
     onClick,
     onClose,
     onKeyDown,
@@ -166,10 +165,15 @@ const LightBoxMain = (props) => {
   function handleMouseLeave() {
     setIsHovered(false);
   }
-
-  if (!isOpen && pictureTile) {
-    return <>{pictureTile}</>;
-  }
+  const hideArrows = useMemo(
+    () =>
+      unwindProps({ showNavArrows }).map(
+        (v) =>
+          (!isHovered && v.showNavArrows === 'hover') ||
+          v.showNavArrows === false
+      ),
+    [showNavArrows, isHovered]
+  );
 
   return (
     <StyledLightboxMain
@@ -204,14 +208,7 @@ const LightBoxMain = (props) => {
             {loadedImages &&
               loadedImages.map((img) => (
                 <div key={img.src}>
-                  <img
-                    src={img.src}
-                    srcSet={img.srcSet}
-                    sizes={img.sizes}
-                    width={img.width}
-                    height={img.height}
-                    alt="description"
-                  />
+                  <img alt="test" {...img} />
                 </div>
               ))}
           </StyledTrack>
@@ -224,10 +221,7 @@ const LightBoxMain = (props) => {
                 onClick={onMovePrev}
                 disabled={isLeftButtonDisabled}
                 buttonRef={leftButtonRef}
-                hide={
-                  (!isHovered && showNavArrows === 'hover') ||
-                  showNavArrows === false
-                }
+                hide={hideArrows}
               />
             </StyledArrowWrapper>
             <StyledArrowWrapper right="calc(0.5% + 10px)">
@@ -236,10 +230,7 @@ const LightBoxMain = (props) => {
                 onClick={onMoveNext}
                 disabled={isRightButtonDisabled}
                 buttonRef={rightButtonRef}
-                hide={
-                  (!isHovered && showNavArrows === 'hover') ||
-                  showNavArrows === false
-                }
+                hide={hideArrows}
               />
             </StyledArrowWrapper>
           </>

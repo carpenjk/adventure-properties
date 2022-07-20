@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useRef, forwardRef } from 'react';
 
 const withUseRef = (Component) => {
   function WithUseRef(props) {
@@ -9,7 +9,7 @@ const withUseRef = (Component) => {
   }
   WithUseRef.displayName = `withUseRef(${Component.displayName})`;
 
-  return React.forwardRef((props, ref) => (
+  return forwardRef((props, ref) => (
     <WithUseRef forwardedRef={ref} {...props} />
   ));
 };

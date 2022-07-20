@@ -44,7 +44,7 @@ export default async function handler(req, res) {
 
   //* Validation schema **********************************************
   const resSchema = yup.object().shape({
-    cmsID: yup.string().required().length(22),
+    cmsID: yup.string().required().max(22),
     guests: yup
       .number()
       .required('Number of guests must be selected')

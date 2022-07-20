@@ -1,4 +1,4 @@
-import React, { Component, createRef } from 'react';
+import { Component, createRef } from 'react';
 import Select, { components } from 'react-select';
 import styled from 'styled-components';
 import {

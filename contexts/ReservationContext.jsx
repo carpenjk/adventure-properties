@@ -1,4 +1,5 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useMemo } from 'react';
+
 import useReservationSession from '../components/reservationForm/UseReservationSession';
 
 import { startDateProps, endDateProps, guestOptions } from '../data/input';
@@ -13,17 +14,14 @@ const ReservationProvider = ({ children }) => {
   const [numGuests, setNumGuests] = useState('');
   const [isInEditMode, setIsInEditMode] = useState(false);
 
-  const numGuestID = numGuests ? Object.keys(numGuests)[0] : undefined;
   const { reservation: rsvCookie } = cookie;
-
-  const getNumGuests = () => numGuests;
 
   const getNumGuestOption = (val) =>
     guestOptions.find((option) => option.value === val);
   const getNumGuestOptionIndex = (val) =>
     guestOptions.findIndex((option) => option.value === val);
 
-  const selectedGuestOption = getNumGuestOption(getNumGuests(numGuestID));
+  const selectedGuestOption = getNumGuestOption(numGuests);
 
   // obj returned from input component
   const setDate = (obj) => {
@@ -35,14 +33,17 @@ const ReservationProvider = ({ children }) => {
       setResEndDate(val);
     }
   };
-  const getDate = (id) => {
-    if (id === startDateProps.id) {
-      return resStartDate;
-    }
-    if (id === endDateProps.id) {
-      return resEndDate;
-    }
-  };
+  const getDate = useCallback(
+    (id) => {
+      if (id === startDateProps.id) {
+        return resStartDate;
+      }
+      if (id === endDateProps.id) {
+        return resEndDate;
+      }
+    },
+    [resStartDate, resEndDate]
+  );
 
   // CustomSelect component returns object with id as key
   const _setNumGuest = (obj) => {
@@ -59,38 +60,41 @@ const ReservationProvider = ({ children }) => {
     setResEndDate(data.resEndDate);
   }, []);
 
-  const clearSession = () => {
-    setNumGuests('');
-    setResStartDate(null);
-    setResEndDate(null);
-    clearSessionData();
-  };
-
+  const value = useMemo(
+    () => ({
+      arriveDateVal,
+      departDateVal,
+      numGuests,
+      getDate,
+      setDate,
+      setNumGuests: _setNumGuest,
+      isInEditMode,
+      setIsInEditMode,
+      startDateProps,
+      endDateProps,
+      guestOptions,
+      setSessionData,
+      hydrate,
+      clearSessionData,
+      selectedGuestOption,
+      selectedGuestOptionIndex: getNumGuestOptionIndex(numGuests),
+      sessionData: rsvCookie,
+    }),
+    [
+      arriveDateVal,
+      clearSessionData,
+      departDateVal,
+      getDate,
+      hydrate,
+      isInEditMode,
+      numGuests,
+      rsvCookie,
+      selectedGuestOption,
+      setSessionData,
+    ]
+  );
   return (
-    <ReservationContext.Provider
-      value={{
-        arriveDateVal,
-        departDateVal,
-        numGuests,
-        getDate,
-        setDate,
-        getNumGuests,
-        setNumGuests: _setNumGuest,
-        isInEditMode,
-        setIsInEditMode,
-        startDateProps,
-        endDateProps,
-        guestOptions,
-        setSessionData,
-        hydrate,
-        clearSessionData,
-        selectedGuestOption,
-        selectedGuestOptionIndex: getNumGuestOptionIndex(
-          getNumGuests(numGuestID)
-        ),
-        sessionData: rsvCookie,
-      }}
-    >
+    <ReservationContext.Provider value={value}>
       {children}
     </ReservationContext.Provider>
   );

@@ -6,7 +6,6 @@ import LightBoxMain from './LightboxMain';
 
 const Lightbox = (props) => {
   const {
-    pictureTile,
     images,
     isOpen,
     onClose,
@@ -100,27 +99,7 @@ const Lightbox = (props) => {
       </Portal>
     );
   }
-
-  return (
-    <LightBoxMain
-      currIndex={currIndex}
-      isOpen={isOpen}
-      isOpening={isOpening}
-      imgCount={imgCount}
-      loadedImages={loadedImages}
-      showNavArrows={showNavArrows}
-      pictureTile={pictureTile}
-      lightboxRef={lightboxRef}
-      onClick={onOpen}
-      onClose={onClose}
-      onKeyDown={isOpen ? handleKeyDown : undefined}
-      onMoveNext={onMoveNext}
-      onMovePrev={onMovePrev}
-      onTouchEnd={isOpen || openInPlace ? touch.onTouchEnd : undefined}
-      onTouchStart={isOpen || openInPlace ? touch.onTouchStart : undefined}
-      tabIndex="0"
-    />
-  );
+  return null;
 };
 
 Lightbox.defaultProps = {

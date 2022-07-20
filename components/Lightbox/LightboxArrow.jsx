@@ -1,5 +1,6 @@
 import styled from 'styled-components';
-import { condition } from 'dataweaver';
+import { condition, unwindProps, getProp } from 'dataweaver';
+import { breakpoint } from 'themeweaver';
 
 const StyledArrowContainer = styled.button`
   display: flex;
@@ -11,9 +12,7 @@ const StyledArrowContainer = styled.button`
   border: 2px solid white;
   background: transparent;
   color: inherit;
-  ${condition('hide')`
-    opacity: 0;
-  `}
+  opacity: ${getProp('opacity')};
 
   &:hover {
     background: rgb(74, 74, 74);
@@ -28,6 +27,9 @@ const StyledArrowContainer = styled.button`
       background: transparent;  
     }
   `}
+  ${breakpoint(1)`
+    opacity: ${getProp('opacity')};
+  `}
 `;
 const LightboxArrow = ({ direction, onClick, disabled, hide, buttonRef }) => {
   function handleClick(e) {
@@ -35,12 +37,13 @@ const LightboxArrow = ({ direction, onClick, disabled, hide, buttonRef }) => {
     e.stopPropagation();
   }
 
+  const opacity = unwindProps({ hide }).map((v) => (!v.hide ? '100%' : '0'));
   return (
     <StyledArrowContainer
       onClick={handleClick}
       disabled={disabled}
       ref={buttonRef}
-      hide={hide}
+      opacity={opacity}
     >
       {direction === 'left' && '<'}
       {direction === 'right' && '>'}

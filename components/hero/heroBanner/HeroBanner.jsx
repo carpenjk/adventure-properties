@@ -1,11 +1,6 @@
 import { useMemo, useRef } from 'react';
 import styled from 'styled-components';
-import {
-  unflattenProps,
-  getProp,
-  mapFlatProp,
-  getNonStaticPosProps,
-} from 'dataweaver';
+import { getProp, getNonStaticPosProps, unwindProps } from 'dataweaver';
 
 import {
   breakpoint,
@@ -82,9 +77,8 @@ const DEFAULT_TW = {
 const HeroBanner = (props) => {
   const { tw, children, backgroundComponent, bannerPos, ...remProps } = props;
   const mergedTw = useMemo(() => ({ ...DEFAULT_TW, ...tw }), [tw]);
-  const staticPosProps = unflattenProps(
-    mapFlatProp(getNonStaticPosProps, bannerPos),
-    StyledBanner.defaultProps
+  const staticPosProps = unwindProps({ bannerPos }).map((val) =>
+    getNonStaticPosProps(val.bannerPos)
   );
 
   const windowSize = useWindowSize();

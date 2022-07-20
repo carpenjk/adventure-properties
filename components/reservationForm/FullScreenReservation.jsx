@@ -58,7 +58,6 @@ const FullScreenReservation = (props) => {
   const {
     getDate,
     setDate,
-    getNumGuests,
     setNumGuests,
     startDateProps,
     endDateProps,

@@ -1,7 +1,7 @@
-import { useRef, useContext } from 'react';
+import { useRef } from 'react';
 
 import styled from 'styled-components';
-import { ImageLoaderContext } from './ImageLoader';
+import { useImageLoader } from './ImageLoader';
 
 const StyledLoadBackground = styled.div`
   position: absolute;
@@ -22,7 +22,7 @@ const StyledLoadBackground = styled.div`
 `;
 
 const ImageWrapper = ({ children, id }) => {
-  const { images } = useContext(ImageLoaderContext);
+  const { images } = useImageLoader();
   const elemRef = useRef();
   const isLoaded = images[id];
   const handleTransitionEnd = () => {

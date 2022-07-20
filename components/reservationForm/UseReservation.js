@@ -1,11 +1,7 @@
 import { useRouter } from 'next/router';
 import { signIn, useSession } from 'next-auth/react';
-import { useState, useContext, useEffect, useCallback } from 'react';
-import {
-  dateReviver,
-  getDateRangeString,
-  compareDateOnly,
-} from '../../utils/dates';
+import { useState, useContext, useEffect, useCallback, useMemo } from 'react';
+import { dateReviver, getDateRangeString } from '../../utils/dates';
 import {
   validateReservation,
   isValidDeparture,
@@ -14,6 +10,15 @@ import {
 
 import { ReservationContext } from '../../contexts/ReservationContext';
 import useAvailability from '../adapters/property/UseAvailability';
+import {
+  calcTotalPrice,
+  calcUnitAmount,
+  getAvgDailyPrice,
+  getDailyPrices,
+  getDescription,
+  getTodayPrice,
+  getUnit,
+} from '../../utils/reservation/reservation';
 
 const CURR_SYMBOL = '$';
 
@@ -24,7 +29,6 @@ const useReservation = () => {
     numGuests,
     getDate,
     setDate,
-    getNumGuests,
     setNumGuests,
     startDateProps,
     endDateProps,
@@ -37,7 +41,7 @@ const useReservation = () => {
     isInEditMode,
     setIsInEditMode,
   } = useContext(ReservationContext);
-  const { data: session, status } = useSession();
+  const { data: session } = useSession();
   const router = useRouter();
   const [validateOnChange, setValidateOnChange] = useState(false);
   const [isValid, setIsValid] = useState(false);
@@ -46,57 +50,6 @@ const useReservation = () => {
 
   const { propID } = router.query;
   const availability = useAvailability(propID);
-
-  // * Price functions ************************************************
-  const getDailyPrices = () => {
-    // no user input to lookup
-    if (!availability || !arriveDateVal || !departDateVal) {
-      return undefined;
-    }
-    const dates = availability.avail.filter(
-      (dt) => dt.date >= arriveDateVal && dt.date < departDateVal
-    );
-    return dates;
-  };
-
-  const calcTotalPrice = () => {
-    const dailyPrices = getDailyPrices();
-
-    if (!dailyPrices || dailyPrices.length === 0) {
-      return undefined;
-    }
-    return dailyPrices.reduce((sum, currDate) => currDate.price + sum, 0);
-  };
-
-  const getAvgDailyPrice = () => {
-    const dailyPrices = getDailyPrices();
-    if (!dailyPrices || dailyPrices.length === 0) {
-      return 0;
-    }
-    const total = calcTotalPrice() || 0;
-    return total / dailyPrices.length;
-  };
-
-  const getTodayPrice = () => {
-    if (!availability) {
-      return 0;
-    }
-    return availability.avail.find((a) => compareDateOnly(a.date, new Date()))
-      .price;
-  };
-
-  // * Unit functions *****************************************
-  const calcUnitAmount = () => {
-    const dailyPrices = getDailyPrices();
-    return !dailyPrices ? 0 : dailyPrices.length;
-  };
-
-  const getUnit = () => {
-    if (calcUnitAmount() === 1) {
-      return 'night';
-    }
-    return 'nights';
-  };
 
   // * Reservation Validation functions *******************
   const isSelected = useCallback(
@@ -114,10 +67,13 @@ const useReservation = () => {
     [arriveDateVal, departDateVal, numGuests]
   );
 
-  const isBlank = () =>
-    !isSelected('arriveDate') &&
-    !isSelected('departDate') &&
-    !isSelected('guests');
+  const isBlank = useCallback(
+    () =>
+      !isSelected('arriveDate') &&
+      !isSelected('departDate') &&
+      !isSelected('guests'),
+    [isSelected]
+  );
 
   const validateArrival = useCallback(() => {
     if (!isSelected('arriveDate')) {
@@ -244,42 +200,57 @@ const useReservation = () => {
     hydrateWithSession();
   }, [hydrateWithSession]);
 
-  const reservation = {
-    arriveDate: arriveDateVal,
-    departDate: departDateVal,
-    dateRangeString: getDateRangeString(arriveDateVal, departDateVal),
-    error,
-    price: {
-      prices: getDailyPrices(),
-      avg: getAvgDailyPrice(),
-      total: calcTotalPrice(),
-      today: getTodayPrice(),
-    },
-    guests: numGuests,
-    unit: 'night',
-    unitLabel: getUnit(),
-    unitAmount: calcUnitAmount(),
-    currSymbol: CURR_SYMBOL,
-    isBlank: isBlank(),
-    isSelected,
-    isValid,
-    response,
-    object: {
-      userID: session ? session.user.email : undefined,
-      cmsID: propID,
+  const reservation = useMemo(
+    () => ({
       arriveDate: arriveDateVal,
       departDate: departDateVal,
+      dateRangeString: getDateRangeString(arriveDateVal, departDateVal),
+      error,
+      price: {
+        prices: getDailyPrices(availability, arriveDateVal, departDateVal),
+        avg: getAvgDailyPrice(availability, arriveDateVal, departDateVal),
+        total: calcTotalPrice(availability, arriveDateVal, departDateVal),
+        today: getTodayPrice(availability),
+      },
       guests: numGuests,
-      avgPrice: getAvgDailyPrice(),
-      price: calcTotalPrice(),
       unit: 'night',
-      unitAmount: calcUnitAmount(),
+      unitLabel: getUnit(availability, arriveDateVal, departDateVal),
+      unitAmount: calcUnitAmount(availability, arriveDateVal, departDateVal),
       currSymbol: CURR_SYMBOL,
-    },
-    display: {
-      description: `${getAvgDailyPrice()} x ${calcUnitAmount()}${getUnit()}`,
-    },
-  };
+      isBlank: isBlank(),
+      isSelected,
+      isValid,
+      response,
+      object: {
+        userID: session ? session.user.email : undefined,
+        cmsID: propID,
+        arriveDate: arriveDateVal,
+        departDate: departDateVal,
+        guests: numGuests,
+        avgPrice: getAvgDailyPrice(availability, arriveDateVal, departDateVal),
+        price: calcTotalPrice(availability, arriveDateVal, departDateVal),
+        unit: 'night',
+        unitAmount: calcUnitAmount(availability, arriveDateVal, departDateVal),
+        currSymbol: CURR_SYMBOL,
+      },
+      display: {
+        description: getDescription(availability, arriveDateVal, departDateVal),
+      },
+    }),
+    [
+      arriveDateVal,
+      availability,
+      departDateVal,
+      error,
+      isBlank,
+      isSelected,
+      isValid,
+      numGuests,
+      propID,
+      response,
+      session,
+    ]
+  );
 
   //* handlers****************************************** */
   async function reserveReview() {
@@ -351,7 +322,7 @@ const useReservation = () => {
   const reservationControl = {
     getDate,
     setDate,
-    getNumGuests,
+    getNumGuests: numGuests,
     setNumGuests,
     isInEditMode,
     setIsInEditMode,

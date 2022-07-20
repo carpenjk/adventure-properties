@@ -5,7 +5,7 @@ export function dates(availability) {
 }
 
 export function findDate(date, availability) {
-  if (!availability) {
+  if (!availability || !date) {
     return false;
   }
   return dates(availability).find((dt) => dt.date.getTime() === date.getTime());

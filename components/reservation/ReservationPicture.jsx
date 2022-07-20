@@ -37,6 +37,8 @@ const ReservationPicture = ({ url, alt }) => {
         src={mediumSrc}
         srcSet={`${url}${smallModifiers} ${PHOTO_WIDTH_SMALL}w, ${mediumSrc} ${PHOTO_WIDTH_MEDIUM}w`}
         sizes={`(min-width: 500px) ${PHOTO_WIDTH_MEDIUM}px, 100vw`}
+        width={PHOTO_WIDTH_MEDIUM}
+        height={PHOTO_HEIGHT_MEDIUM}
         alt={alt}
       />
     </StyledImgWrapper>

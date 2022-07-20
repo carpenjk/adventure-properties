@@ -1,27 +1,8 @@
-import { useCallback, useMemo, useState, useRef } from 'react';
+import { useCallback, useState, useRef } from 'react';
 
-const useLightbox = ({ images, photoIndex, isOpen, srcSetParams }) => {
-  const imgObjs = useMemo(
-    () =>
-      images.map((img) => ({
-        srcSet: `${srcSetParams.reduce((srcSet, param) => {
-          if (srcSet) {
-            return `${srcSet},
-                ${img.src}${param.suffix} ${param.size}`;
-          }
-          return `${img.src}${param.suffix} ${param.size}`;
-        }, '')}
-            `,
-        src: img.src,
-        sizes: img.sizes,
-        width: img.width,
-        height: img.height,
-      })),
-    [images, srcSetParams]
-  );
-
+const useLightbox = ({ images, photoIndex, isOpen }) => {
   const [lightbox, setLightbox] = useState({
-    images: imgObjs,
+    images,
     photoIndex,
     isOpen,
   });
