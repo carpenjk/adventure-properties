@@ -1,9 +1,9 @@
 import styled from 'styled-components';
 import { Portal } from 'react-portal';
-import ClientOnly from '../ClientOnly';
-import ActionButton from '../base/ActionButton';
+import { ActionButton } from '@carpenjk/base/button';
+import { Spacer } from '@carpenjk/base/layout';
+import ClientOnly from '@carpenjk/client-only';
 import FullScreenOverlay from '../FullScreenOverlay';
-import Spacer from '../base/Spacer';
 
 const StyledWrapper = styled.div`
   display: flex;

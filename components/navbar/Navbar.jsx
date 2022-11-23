@@ -11,16 +11,16 @@ import {
   getPaddingRight,
   getPaddingBottom,
   getPaddingLeft,
-} from 'themeweaver';
+} from '@carpenjk/themeweaver';
 import { TwMobileMenu } from 'tw-mobile-menu';
 import { useEffect, useRef } from 'react';
+import { useScrollBarWidth } from '@carpenjk/hooks';
 import { Media } from '../../Media';
 // components
 import WideNavbarLayout from './WideNavbarLayout';
 
 // data
 import { navData } from '../../data/data';
-import useScrollBarWidth from '../hooks/UseScrollBarWidth';
 
 // assets
 const LOGO = '/static/assets/LogoMain.svg';

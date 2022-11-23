@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { useState } from 'react';
-import { condition } from 'dataweaver';
+import { condition } from '@carpenjk/prop-x/css';
 
 const StyledContainer = styled.div`
   position: relative;

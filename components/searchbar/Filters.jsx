@@ -3,8 +3,9 @@ import RoomsFilters from './RoomsFilters';
 import CheckFilters from './CheckFilters';
 import FilterGroup from './FilterGroup';
 import ActivitiesFilter from './ActivitiesFilter';
+import { checkFiltersData as checkFilters } from '../../data/input';
 
-const Filters = ({ checkFilters }) => (
+const Filters = () => (
   <>
     <li key="priceFilter">
       <FilterGroup title="Price">

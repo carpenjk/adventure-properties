@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { getMaxHeight } from 'themeweaver';
+import { getMaxHeight } from '@carpenjk/themeweaver';
 // components
 import Link from 'next/link';
 import NavList from './NavList';

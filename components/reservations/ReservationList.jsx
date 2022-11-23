@@ -1,6 +1,6 @@
 import styled from 'styled-components';
-import { breakpoint } from 'themeweaver';
-import ReservationCard from '../cards/ReservationCard';
+import { breakpoint } from '@carpenjk/prop-x/css';
+import ReservationCard from '../reservation/cardLayouts/ReservationCard';
 
 const StyledList = styled.ul`
   min-height: 300px;

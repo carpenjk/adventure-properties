@@ -1,14 +1,9 @@
 import { useState } from 'react';
 import * as yup from 'yup';
-import ActionButton from '../base/ActionButton';
+import { ActionButton } from '@carpenjk/base/button';
 
-const HiddenReservationForm = ({
-  maxGuests,
-  reservation,
-  onSubmit,
-  propID,
-}) => {
-  const { arriveDate, departDate, guests, userName, price } = reservation;
+const HiddenReservationForm = ({ maxGuests, reservation, propID }) => {
+  const { arriveDate, departDate, guests, price } = reservation;
 
   const [error, setError] = useState(false);
   const resObject = {

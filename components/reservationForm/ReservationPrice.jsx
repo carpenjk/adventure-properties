@@ -1,6 +1,5 @@
-import { condition } from 'dataweaver';
 import styled from 'styled-components';
-import { breakpoint } from 'themeweaver';
+import { breakpoint, condition } from '@carpenjk/prop-x/css';
 
 const StyledPrice = styled.div`
   display: block;

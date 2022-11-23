@@ -1,35 +1,31 @@
 import Head from 'next/head';
+import ClientOnly from '@carpenjk/client-only';
+import { Hero } from '@carpenjk/hero';
+import { SearchBar } from '@carpenjk/searchbar';
+import { Section } from '@carpenjk/base/semantic';
+import { theme } from '../theme';
 import { mediaStyles } from '../Media';
-import Section from '../components/base/semantic/Section';
-import SearchBar from '../components/searchbar/SearchBar';
-import HeroContainer from '../components/hero/HeroContainer';
 import FeaturesContainer from '../components/features/FeaturesContainer';
 import Filters from '../components/searchbar/Filters';
+import {
+  SearchSchema,
+  getInitialCheckFilters,
+  prepValues,
+} from '../data/validation/search';
 
 //* configs
 import { fetchFeaturedProperties } from '../components/adapters/property/property';
 import PrimarySearchFields from '../components/searchbar/PrimarySearchFields';
 import SecondarySearchFields from '../components/searchbar/SecondarySearchFields';
-import {
-  checkFiltersData as checkFilters,
-  endDateProps,
-  startDateProps,
-} from '../data/input';
-import { getInitialCheckFilters, prepValues } from '../data/validation/search';
+import { endDateProps, startDateProps } from '../data/input';
+
 import { getSortBy } from '../utils/search/utils';
 import useSearch from '../utils/search/UseSearch';
-import HomeBannerLayout from '../components/hero/heroBanner/HomeBannerLayout';
-import HeroImage from '../components/hero/BackgroundImage';
+import HomeBannerLayout from '../components/hero/HomeBannerLayout';
 
 // static variables
-const HERO_IMAGE = '/static/assets/lofoten-2220461.png';
-
-const Hero = (
-  <HeroImage
-    src="/static/assets/lofoten-2220461.png"
-    alt="Mountain lake house"
-  />
-);
+const HERO_IMAGE =
+  'https://images.ctfassets.net/dvpo5m3mti9a/lU3zhGUMwsEutCPROotKc/33aff93cfa0ec5387c3b2ce240e6a48a/andreea-chidu-VKPcxvSdvVs-unsplash.jpg';
 
 export async function getServerSideProps() {
   const features = await fetchFeaturedProperties(['Skiing'], 3);
@@ -58,33 +54,46 @@ const Index = (props) => {
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
       <Section tw={{ variant: 'hero' }} position="relative">
-        <HeroContainer
+        <Hero
           tw={{ variant: 'home' }}
-          image={Hero}
+          image={{
+            src: `${HERO_IMAGE}?w=2048&fit=fill`,
+            srcSet: `${HERO_IMAGE}?w=380&fit=fill 380w, https:${HERO_IMAGE}?w=460&fit=fill 460w, ${HERO_IMAGE}?w=560&fit=fill 560w, ${HERO_IMAGE}?w=640&fit=fill 640w, ${HERO_IMAGE}?w=1000&fit=fill 1000w, ${HERO_IMAGE}?w=2048&fit=fill 2048w`,
+            alt: 'Mountain lake house',
+          }}
           bannerPos={{ top: bannerTop }}
           bannerLayout={<HomeBannerLayout />}
           backgroundImage={HERO_IMAGE}
         />
-        <SearchBar
-          PrimarySearchFields={PrimarySearchFields}
-          SecondarySearchFields={SecondarySearchFields}
-          FilterFields={Filters}
-          checkFilters={checkFilters}
-          openMaxWidth={['none', '1000px']}
-          initialValues={{
-            destination: '',
-            guests: '',
-            minPrice: '',
-            maxPrice: '',
-            beds: '',
-            baths: '',
-            [startDateProps.id]: '',
-            [endDateProps.id]: '',
-            nearbyActivities: '',
-            ...getInitialCheckFilters(),
-          }}
-          search={search}
-        />
+        <ClientOnly>
+          <SearchBar
+            PrimarySearchFields={PrimarySearchFields}
+            SecondarySearchFields={SecondarySearchFields}
+            FilterFields={Filters}
+            // checkFilters={checkFilters}
+            openMaxWidth={['none', '1000px']}
+            initialValues={{
+              destination: '',
+              guests: '',
+              minPrice: '',
+              maxPrice: '',
+              beds: '',
+              baths: '',
+              [startDateProps.id]: '',
+              [endDateProps.id]: '',
+              nearbyActivities: '',
+              ...getInitialCheckFilters(),
+            }}
+            search={search}
+            validationSchema={SearchSchema}
+            options={{
+              secondaryOpenBreakpoint: 1,
+              alwaysShowButtons: [false, true],
+              useIsStartedState: true,
+            }}
+            theme={theme}
+          />
+        </ClientOnly>
       </Section>
       <Section tw={{ variant: 'features' }}>
         <FeaturesContainer

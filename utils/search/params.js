@@ -1,4 +1,4 @@
-import { dateReviver } from '../dates';
+import { dateReviver } from '@carpenjk/date-utils';
 
 export const pMap = {
   destination: { qKey: 'location', source: 'db' },

@@ -1,4 +1,4 @@
-import Spacer from '../base/Spacer';
+import { Spacer } from '@carpenjk/base/layout';
 import LineItem from './LineItem';
 import InvoiceTotal from './InvoiceTotal';
 

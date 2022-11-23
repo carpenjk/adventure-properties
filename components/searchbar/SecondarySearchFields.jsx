@@ -1,18 +1,16 @@
 import { useContext } from 'react';
 import { ThemeContext } from 'styled-components';
-
+import { FormikDateRange, FormikSelect } from '@carpenjk/base/input';
+import { gtDateOnly, isNotPast } from '@carpenjk/date-utils';
 import { startDateProps, endDateProps, guestOptions } from '../../data/input';
-import FormikDateRange from '../base/input/FormikDateRange';
-import FormikSelect from '../base/input/FormikSelect';
-import { gtDateOnly, isNotPast } from '../../utils/dates';
+import 'react-datepicker/dist/react-datepicker.css';
 
 const SecondarySearchFields = (props) => {
   const {
     onInputFocus,
     inputRefs,
     searchBarRef,
-    isSearchBarFocused,
-    values,
+    searchState: { isSearchBarFocused, values },
   } = props;
 
   const theme = useContext(ThemeContext);

@@ -1,8 +1,7 @@
 import { useContext } from 'react';
 import { ThemeContext } from 'styled-components';
-
+import { FormikSelect } from '@carpenjk/base/input';
 import { priceFilters } from '../../data/input';
-import FormikSelect from '../base/input/FormikSelect';
 
 const PriceFilters = () => {
   const theme = useContext(ThemeContext);

@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { breakpoint } from 'themeweaver';
+import { breakpoint } from '@carpenjk/prop-x/css';
 
 const StyledAttributesSummary = styled.ul`
   width: 100%;

@@ -1,8 +1,9 @@
 import styled from 'styled-components';
-import Link from 'next/link';
 import { signIn, signOut, useSession } from 'next-auth/react';
-import { getMaxWidth, breakpoint } from 'themeweaver';
-import { getProp } from 'dataweaver';
+import { getMaxWidth } from '@carpenjk/themeweaver';
+import { breakpoint } from '@carpenjk/prop-x/css';
+import { getProp } from '@carpenjk/prop-x/lib/css/getProp';
+// import { getProp } from '@carpenjk/prop-x/css';
 import NavLink from './NavLink';
 import IconDropDown from './IconDropDown';
 import AccountIcon from './AccountIcon';

@@ -1,12 +1,12 @@
 import Head from 'next/head';
 import { getSession } from 'next-auth/react';
 import styled from 'styled-components';
+import { withDates } from '@carpenjk/date-utils';
+import { Section } from '@carpenjk/base/semantic';
 import { mediaStyles } from '../Media';
 import ReservationsContent from '../components/reservations/ReservationsContent';
-import Login from '../components/base/login';
-import { withDates } from '../utils/dates';
+import Login from '../components/Login';
 import { fetchReservationsWithProperty } from '../utils/adapters/reservations';
-import Section from '../components/base/semantic/Section';
 
 const StyledContent = styled.div`
   padding: ${({ theme }) => theme.space[2]}px;

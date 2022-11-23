@@ -1,7 +1,6 @@
 import styled from 'styled-components';
-import ActionButton from '../base/ActionButton';
-import LinkButton from '../base/LinkButton';
-import Spacer from '../base/Spacer';
+import { ActionButton, LinkButton } from '@carpenjk/base/button';
+import { Spacer } from '@carpenjk/base/layout';
 
 const StyledEditWrapper = styled.div`
   display: ${({ display }) => display};

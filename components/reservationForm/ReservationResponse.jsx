@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { getDateRangeString } from '../../utils/dates';
+import { getDateRangeString } from '@carpenjk/date-utils';
 import ReservationReview from './ReservationReview';
 
 const StyledResponse = styled.div`

@@ -1,6 +1,8 @@
+import 'react-datepicker/dist/react-datepicker.css';
 import styled, { ThemeContext } from 'styled-components';
 import { useRef, useContext, useState, useEffect } from 'react';
-import { breakpoint } from 'themeweaver';
+import { breakpoint } from '@carpenjk/prop-x/css';
+import { CustomSelect, DateRange } from '@carpenjk/base/input';
 import {
   filterGuestOptions,
   isAvail,
@@ -8,11 +10,9 @@ import {
 } from '../../data/validation/reservation';
 import useFullScreenInputSlide from './UseFullScreenInputSlide';
 import InputSlide from './InputSlide';
-import CustomSelect from '../base/input/CustomSelect';
 import FullScreenInputContainer from './FullScreenInputContainer';
 import InvoiceHeader from './InvoiceHeader';
 import InputGroup from './InputGroup';
-import DateRange from '../searchbar/DateRange';
 import ErrorContainer from './ErrorContainer';
 
 const StyledWrapper = styled.div`

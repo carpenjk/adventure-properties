@@ -1,6 +1,8 @@
 import clientPromise from '../../../utils/mongodb';
 import { search } from '../../../utils/search/search';
 
+const cmsClient = require('../../../utils/_contentful');
+
 export function withPropertyUrl(property) {
   return { ...property, url: `/properties/${property.cmsID}` };
 }
@@ -63,4 +65,10 @@ export async function fetchFeaturedProperties(topics, limit = 3) {
     ...promises,
   ]).catch((e) => console.log({ error: e }));
   return results;
+}
+
+// this is just for development to retriev asset url for hard coded image sources
+export async function fetchAsset(id) {
+  const asset = await cmsClient.getAsset(id);
+  return asset;
 }

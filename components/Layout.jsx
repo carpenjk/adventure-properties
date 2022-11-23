@@ -1,10 +1,9 @@
+import { Header, Section } from '@carpenjk/base/semantic';
+import { Fixed } from '@carpenjk/base/layout';
 import { GlobalStyles } from '../styles/global/base';
 import Navbar from './navbar/Navbar';
-import Header from './base/semantic/Header';
-import Section from './base/semantic/Section';
 import PageFooter from './footer/PageFooter';
 import { footerNavData } from '../data/data';
-import Fixed from './base/layout/Fixed';
 
 const Layout = ({ children }) => (
   <>

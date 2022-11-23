@@ -1,6 +1,5 @@
-import { theme } from '../../theme';
+import { Spacer } from '@carpenjk/base/layout';
 import InvoiceContent from './InvoiceContent';
-import Spacer from '../base/Spacer';
 import ParamDisplay from './ParamDisplay';
 import ReviewContainer from './ReviewContainer';
 

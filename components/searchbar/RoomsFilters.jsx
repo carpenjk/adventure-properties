@@ -1,7 +1,7 @@
 import { useContext } from 'react';
 import { ThemeContext } from 'styled-components';
+import { FormikSelect } from '@carpenjk/base/input';
 import { roomsFilters } from '../../data/input';
-import FormikSelect from '../base/input/FormikSelect';
 
 const RoomsFilters = (props) => {
   const theme = useContext(ThemeContext);

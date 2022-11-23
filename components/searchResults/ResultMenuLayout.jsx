@@ -1,11 +1,10 @@
 import styled from 'styled-components';
-import { getProp } from 'dataweaver';
 import { useContext } from 'react';
 import { useRouter } from 'next/router';
-import { breakpoint } from 'themeweaver';
-import ActionButton from '../base/ActionButton';
-import Spacer from '../base/Spacer';
-import { SearchBarContext } from '../searchbar/searchBarContext';
+import { breakpoint, getProp } from '@carpenjk/prop-x/css';
+import { SearchBarContext } from '@carpenjk/searchbar';
+import { ActionButton } from '@carpenjk/base/button';
+import { Spacer } from '@carpenjk/base/layout';
 
 const StyledMenuGroup = styled.div`
   display: flex;
@@ -23,7 +22,7 @@ function toggleSort(obj) {
 }
 
 const ResultMenuLayout = ({ ignoredLocation }) => {
-  const { control } = useContext(SearchBarContext);
+  const { searchState } = useContext(SearchBarContext);
   const router = useRouter();
 
   const { query } = router;
@@ -86,7 +85,7 @@ const ResultMenuLayout = ({ ignoredLocation }) => {
           tw={{
             variant: 'contentNav',
           }}
-          onClick={() => control.unHide()}
+          onClick={() => searchState.setIsHidden(false)}
         >
           <img src="/static/assets/searchResults/filter.svg" alt="filter" />
           <Spacer space="4px" />

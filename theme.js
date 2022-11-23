@@ -1,4 +1,4 @@
-import { withThemeweaver, variant, value } from 'themeweaver';
+import { withThemeweaver, variant, value } from '@carpenjk/themeweaver';
 import { breakpoints } from './Media';
 import buttons from './theme/buttons';
 import inputs from './theme/inputs';
@@ -148,13 +148,13 @@ export const theme = withThemeweaver(
       paddingBottom: [2, 2],
       paddingLeft: [2, 2],
     },
+    searchBar__buttonContainer: {
+      paddingTop: 4,
+      paddingRight: 2,
+      paddingBottom: 4,
+      paddingLeft: 2,
+    },
     searchBar_container: {
-      ...variant('buttons', {
-        paddingTop: 4,
-        paddingRight: 2,
-        paddingBottom: 4,
-        paddingLeft: 2,
-      }),
       ...variant('filterGroup', {
         marginTop: 5,
         paddingBottom: 3,

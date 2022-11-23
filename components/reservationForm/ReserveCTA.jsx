@@ -1,12 +1,12 @@
 import styled from 'styled-components';
 import { useState, useRef } from 'react';
-import { breakpoint } from 'themeweaver';
-import ActionButton from '../base/ActionButton';
+import { breakpoint } from '@carpenjk/prop-x/css';
+import { ScrollLock } from '@carpenjk/scroll-lock';
+import { ActionButton } from '@carpenjk/base/button';
+import { Spacer } from '@carpenjk/base/layout';
 import useReservation from './UseReservation';
 import FullScreenReservation from './FullScreenReservation';
 import OverviewButton from './OverviewButton';
-import Spacer from '../base/Spacer';
-import ScrollLock from '../scrollLock/ScrollLock';
 
 const StyledWrapper = styled.div`
   display: flex;

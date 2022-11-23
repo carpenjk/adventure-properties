@@ -1,9 +1,10 @@
 import { useContext, useEffect, useState } from 'react';
-import { SearchBarContext } from '../../searchbar/searchBarContext';
+import ClientOnly from '@carpenjk/client-only';
+import { SearchBarContext } from '@carpenjk/searchbar';
+import { CenterWithContent } from '@carpenjk/base/layout';
 import Dashboard from './Dashboard';
 import SearchResults from './SearchResults';
 import Pagination from './Pagination';
-import CenterWithContent from '../../base/layout/CenterWithContent';
 
 const SearchDisplay = (props) => {
   const { control, searchState } = useContext(SearchBarContext);
@@ -30,7 +31,7 @@ const SearchDisplay = (props) => {
 
   return (
     <CenterWithContent>
-      {filtersMenu}
+      <ClientOnly>{filtersMenu}</ClientOnly>
       <Dashboard
         message={message || ''}
         isSearchMenuOpen={showSearchMenu}

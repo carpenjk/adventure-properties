@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { getMaxWidth } from 'themeweaver';
+import { getMaxWidth } from '@carpenjk/themeweaver';
 
 const StyledLayout = styled.nav`
   display: flex;

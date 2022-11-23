@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { condition, getProp } from 'dataweaver';
+import { getProp, condition } from '@carpenjk/prop-x/css';
 
 const StyledOverlay = styled.div`
   display: none;

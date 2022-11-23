@@ -1,23 +1,19 @@
 import Head from 'next/head';
 import { useContext, useMemo } from 'react';
 import { PictureTiles } from 'picture-tiles';
+import { Lightbox, useLightbox } from '@carpenjk/lightbox';
+import { Section } from '@carpenjk/base/semantic';
+import { NXBackButton, OverlayNavButton } from '@carpenjk/base/button';
+import { Spacer, Fixed } from '@carpenjk/base/layout';
+import ClientOnly from '@carpenjk/client-only';
+import { SpinnerContext } from '../../components/spinner/SpinnerContext';
 import { fetchProperty } from '../../components/adapters/property/property';
-import useLightbox from '../../components/hooks/useLightbox';
 import useReservation from '../../components/reservationForm/UseReservation';
 import { Media, mediaStyles } from '../../Media';
 import cmsClient from '../../Contentful';
-
-import Lightbox from '../../components/lightbox/Lightbox';
-import Section from '../../components/base/semantic/Section';
-import BackButton from '../../components/base/BackButton';
-import ClientOnly from '../../components/ClientOnly';
-import Spacer from '../../components/base/Spacer';
 import ReserveCTA from '../../components/reservationForm/ReserveCTA';
-import Fixed from '../../components/base/layout/Fixed';
 import FullScreenReservation from '../../components/reservationForm/FullScreenReservation';
 import PropertyContent from '../../components/property/PropertyContent';
-import { SpinnerContext } from '../../components/base/spinner/SpinnerContext';
-import OverlayNavButton from '../../components/base/OverlayNavButton';
 import createPictureTileImageProps from '../../utils/pictureTiles';
 import { getImages } from '../../utils/property/property';
 import { createImageSrcProps } from '../../utils/images/images';
@@ -73,28 +69,16 @@ const Property = ({ property }) => {
     }),
   }));
 
-  const { lightbox, lightboxControl } = useLightbox({
+  const { lightboxState, lightboxControl } = useLightbox({
     images: ltboxImgs,
-    // srcSetParams: SRC_SET_PARAMS,
-    photoIndex: 0,
-    isOpen: false,
+    preloadCount: LIGHTBOX_PRELOAD_COUNT,
   });
-
-  const { images, photoIndex, isOpen: isLightboxOpen } = lightbox;
-  const {
-    handleLightboxClose,
-    handleLightboxOpen,
-    handleMoveNext,
-    handleMovePrev,
-    handlePhotoClick,
-  } = lightboxControl;
 
   function handleReservationReview() {
     setIsInEditMode(false);
     setLoadingMessage('Preparing Reservation');
     reserveReview();
   }
-
   return (
     <>
       <Head>
@@ -106,7 +90,7 @@ const Property = ({ property }) => {
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
       <>
-        <BackButton />
+        <NXBackButton />
         <Spacer vertical space="60px" />
         <Section
           tw={{ variant: 'property_images' }}
@@ -122,10 +106,10 @@ const Property = ({ property }) => {
             gridWidth={['100%']}
             maxGridWidth={['1300px']}
             imageFit={['contain', 'cover']}
-            onPhotoClick={handlePhotoClick}
+            onPhotoClick={(i) => lightboxControl.open(i)}
             overlayButton={{
               OverlayButton: (
-                <OverlayNavButton onClick={handleLightboxOpen}>
+                <OverlayNavButton onClick={lightboxControl.open}>
                   More Photos
                 </OverlayNavButton>
               ),
@@ -133,15 +117,9 @@ const Property = ({ property }) => {
           />
           <ClientOnly>
             <Lightbox
-              currIndex={photoIndex}
-              isOpen={isLightboxOpen}
-              images={images || []}
-              imgCount={images.length}
+              lightboxState={lightboxState}
+              lightboxControl={lightboxControl}
               showNavArrows={SHOW_NAV_ARROWS}
-              preloadCount={LIGHTBOX_PRELOAD_COUNT}
-              onClose={handleLightboxClose}
-              onMovePrev={handleMovePrev}
-              onMoveNext={handleMoveNext}
             />
           </ClientOnly>
         </Section>

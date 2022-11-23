@@ -3,14 +3,14 @@ import { Router } from 'next/router';
 import { SessionProvider } from 'next-auth/react';
 import { ThemeProvider } from 'styled-components';
 import { CookiesProvider } from 'react-cookie';
+import Spinner from '../components/spinner/Spinner';
+import { SpinnerProvider } from '../components/spinner/SpinnerContext';
 import { ConfigProvider } from '../contexts/context';
 import { MediaContextProvider } from '../Media';
 import Layout from '../components/Layout';
 import { theme } from '../theme';
 import '../styles/global/datepicker.css';
 import { ReservationProvider } from '../contexts/ReservationContext';
-import Spinner from '../components/base/spinner/Spinner';
-import { SpinnerProvider } from '../components/base/spinner/SpinnerContext';
 
 export default function MyApp({ Component, pageProps }) {
   const [loading, setLoading] = useState(false);

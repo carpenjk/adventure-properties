@@ -1,11 +1,10 @@
-import LocationInput from '../base/input/LocationInput';
+import { LocationInput } from '@carpenjk/base/input';
 
 const PrimarySearchFields = (props) => {
   const {
     onInputFocus,
     inputRefs,
-    isSearchBarFocused,
-    currentInputElement,
+    searchState: { isSearchBarFocused, currentInputElement },
   } = props;
 
   function getInputRef() {

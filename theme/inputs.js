@@ -1,4 +1,4 @@
-import { value, variant } from 'themeweaver';
+import { value, variant } from '@carpenjk/themeweaver';
 
 const inputs = {
   input: {

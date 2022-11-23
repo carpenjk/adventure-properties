@@ -1,4 +1,4 @@
-import { getIndexedPropValue } from 'dataweaver';
+import { getIndexedPropValue } from '@carpenjk/prop-x';
 import { createImageSrcProps } from './images/images';
 
 const DEFAULT_OPTIONS = {

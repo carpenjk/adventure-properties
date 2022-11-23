@@ -1,4 +1,4 @@
-import { compareDateOnly } from '../dates';
+import { compareDateOnly } from '@carpenjk/date-utils';
 
 // * Price functions ************************************************
 export function getDailyPrices(availability, arriveDateVal, departDateVal) {

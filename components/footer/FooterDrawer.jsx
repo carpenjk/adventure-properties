@@ -1,7 +1,7 @@
 import { useRef } from 'react';
 import styled from 'styled-components';
-import PopupModal from '../base/PopupModal';
-import useIsoOnClickOutside from '../hooks/UseIsoOnClickOutside';
+import { useIsoOnClickOutside } from '@carpenjk/hooks';
+import PopupModal from '@carpenjk/popup-modal';
 
 const StyledFooterDrawer = styled.div`
   display: block;

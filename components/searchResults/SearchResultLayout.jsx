@@ -1,13 +1,11 @@
-import { useContext } from 'react';
+import { SearchBarMenu, useSearchBar } from '@carpenjk/searchbar';
 import PrimarySearchFields from '../searchbar/PrimarySearchFields';
-import { SearchBarContext } from '../searchbar/searchBarContext';
 import SecondarySearchFields from '../searchbar/SecondarySearchFields';
 import ResultMenuLayout from './ResultMenuLayout';
 import SearchDisplay from './searchDisplay/SearchDisplay';
 import Filters from '../searchbar/Filters';
-import SearchBarMenu from '../searchbar/SearchBarMenu';
 import { checkFiltersData as checkFilters } from '../../data/input';
-import PageHeader from '../base/PageHeader';
+import PageHeader from '../PageHeader';
 
 const SearchResultLayout = ({
   results,
@@ -17,7 +15,7 @@ const SearchResultLayout = ({
   itemsPerPage,
   ignoredLocation,
 }) => {
-  const { control } = useContext(SearchBarContext);
+  const { searchState } = useSearchBar();
 
   return (
     <>
@@ -27,7 +25,10 @@ const SearchResultLayout = ({
         page={page}
         filtersMenu={
           <SearchBarMenu
-            onExit={() => control.hide()}
+            onExit={() => {
+              searchState.setIsOpen(false);
+              console.log('closing');
+            }}
             PrimarySearchFields={PrimarySearchFields}
             SecondarySearchFields={SecondarySearchFields}
             FilterFields={Filters}

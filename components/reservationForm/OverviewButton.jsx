@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import LinkButton from '../base/LinkButton';
+import { LinkButton } from '@carpenjk/base/button';
 import ReservationPrice from './ReservationPrice';
 
 const StyledButtonLayout = styled.div`

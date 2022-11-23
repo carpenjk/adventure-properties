@@ -1,6 +1,5 @@
 import styled from 'styled-components';
 import {
-  breakpoint,
   getMarginTop,
   getMarginRight,
   getMarginBottom,
@@ -9,7 +8,8 @@ import {
   getPaddingRight,
   getPaddingBottom,
   getPaddingLeft,
-} from 'themeweaver';
+} from '@carpenjk/themeweaver';
+import { breakpoint } from '@carpenjk/prop-x/css';
 import FilterHeader from './FilterHeader';
 
 const StyledFilterGroup = styled.div`

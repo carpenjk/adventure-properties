@@ -2,6 +2,12 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
 import { useContext, useEffect } from 'react';
+import {
+  Spacer,
+  ContentContainer,
+  CenterWithContent,
+} from '@carpenjk/base/layout';
+import { SpinnerContext } from '../../../components/spinner/SpinnerContext';
 import { fetchProperty } from '../../../components/adapters/property/property';
 import cmsClient from '../../../Contentful';
 import { mediaStyles } from '../../../Media';
@@ -11,11 +17,7 @@ import ReserveButtons from '../../../components/reservationForm/ReserveButtons';
 import ReservationReview from '../../../components/reservationForm/ReservationReview';
 import ReservationResponse from '../../../components/reservationForm/ReservationResponse';
 import ReservationError from '../../../components/reservationForm/ReservationError';
-import Spacer from '../../../components/base/Spacer';
 import ReservationPicture from '../../../components/reservation/ReservationPicture';
-import { SpinnerContext } from '../../../components/base/spinner/SpinnerContext';
-import ContentContainer from '../../../components/base/layout/ContentContainer';
-import CenterWithContent from '../../../components/base/layout/CenterWithContent';
 
 //* *********** static data ****************************/
 export async function getStaticPaths() {

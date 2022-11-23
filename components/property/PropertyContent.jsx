@@ -1,6 +1,6 @@
 import dynamic from 'next/dynamic';
+import { ContentContainer } from '@carpenjk/base/layout';
 import { Media } from '../../Media';
-import ContentContainer from '../base/layout/ContentContainer';
 import AttributeList from './AttributeList';
 import AttributesSummary from './AttributesSummary';
 import ReservationForm from '../reservationForm/ReservationForm';

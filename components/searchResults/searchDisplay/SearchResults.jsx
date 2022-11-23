@@ -1,6 +1,6 @@
 import styled from 'styled-components';
-import { breakpoint } from 'themeweaver';
-import PropertyCard from '../../cards/PropertyCard';
+import { breakpoint } from '@carpenjk/prop-x/css';
+import PropertyCard from '../../property/cardLayouts/PropertyCard';
 
 const StyledContainer = styled.ul`
   display: flex;

@@ -1,6 +1,9 @@
 import Head from 'next/head';
 import { useRouter } from 'next/router';
-import ContentContainer from '../../components/base/layout/ContentContainer';
+import { SearchBarProvider } from '@carpenjk/searchbar';
+import { ContentContainer, Spacer } from '@carpenjk/base/layout';
+import { NXBackButton } from '@carpenjk/base/button';
+import { theme } from '../../theme';
 import { endDateProps, startDateProps } from '../../data/input';
 import {
   getInitialCheckFilters,
@@ -11,10 +14,7 @@ import { mediaStyles } from '../../Media';
 import { search } from '../../utils/search/search';
 import { getSortBy } from '../../utils/search/utils';
 import { processParams } from '../../utils/search/params';
-import SearchBarProvider from '../../components/searchbar/SearchBarProvider';
 import SearchResultLayout from '../../components/searchResults/SearchResultLayout';
-import BackButton from '../../components/base/BackButton';
-import Spacer from '../../components/base/Spacer';
 
 const blankParams = {
   destination: '',
@@ -54,24 +54,28 @@ const Search = ({ response }) => {
         />
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
-      <BackButton />
+      <NXBackButton />
       <Spacer vertical space="60px" />
       <main style={{ position: 'relative' }}>
         <ContentContainer>
           <SearchBarProvider
-            allOpenMode
-            hideOnOpen
-            initialValues={initialParamValues}
-            schema={SearchSchema}
-            search={handleSearch}
-            onSubmit={async (values) => {
-              router.push({
-                pathname: '/properties/search',
-                query: {
-                  ...prepValues({ ...values, ...getSortBy(values) }),
-                },
-              });
+            options={{
+              allOpenMode: true,
+              hideOnMount: true,
+              searchOnExit: true,
             }}
+            initialValues={initialParamValues}
+            validationSchema={SearchSchema}
+            search={handleSearch}
+            theme={theme}
+            // onSubmit={async (values) => {
+            //   router.push({
+            //     pathname: '/properties/search',
+            //     query: {
+            //       ...prepValues({ ...values, ...getSortBy(values) }),
+            //     },
+            //   });
+            // }}
           >
             <SearchResultLayout
               page={page}

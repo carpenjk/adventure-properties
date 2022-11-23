@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router';
 import { signIn, useSession } from 'next-auth/react';
 import { useState, useContext, useEffect, useCallback, useMemo } from 'react';
-import { dateReviver, getDateRangeString } from '../../utils/dates';
+import { dateReviver, getDateRangeString } from '@carpenjk/date-utils';
 import {
   validateReservation,
   isValidDeparture,

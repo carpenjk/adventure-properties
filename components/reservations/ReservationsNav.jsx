@@ -1,8 +1,8 @@
 import { useRouter } from 'next/router';
 import styled from 'styled-components';
-import { breakpoint } from 'themeweaver';
-import ActionButton from '../base/ActionButton';
-import Spacer from '../base/Spacer';
+import { breakpoint } from '@carpenjk/prop-x/css';
+import { ActionButton } from '@carpenjk/base/button';
+import { Spacer } from '@carpenjk/base/layout';
 
 const StyledContainer = styled.div`
   display: flex;

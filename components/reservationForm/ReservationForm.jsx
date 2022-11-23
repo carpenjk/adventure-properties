@@ -1,18 +1,18 @@
+import 'react-datepicker/dist/react-datepicker.css';
 import styled, { ThemeContext } from 'styled-components';
-import { useState, useRef, useContext, useEffect } from 'react';
-import { breakpoint } from 'themeweaver';
+import { useState, useRef, useContext } from 'react';
+import { breakpoint } from '@carpenjk/prop-x/css';
+import { DateRange, CustomSelect } from '@carpenjk/base/input';
+import { Spacer } from '@carpenjk/base/layout';
+import { ActionButton } from '@carpenjk/base/button';
 import {
   filterGuestOptions,
   isAvail,
   isValidDeparture,
 } from '../../data/validation/reservation';
-import DateRange from '../searchbar/DateRange';
-import CustomSelect from '../base/input/CustomSelect';
 import ErrorContainer from './ErrorContainer';
-import Spacer from '../base/Spacer';
 import InputGroup from './InputGroup';
 import InvoiceContent from './InvoiceContent';
-import ActionButton from '../base/ActionButton';
 import InvoiceHeader from './InvoiceHeader';
 
 const StyledReserveWrapper = styled.div`

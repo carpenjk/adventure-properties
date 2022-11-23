@@ -1,4 +1,4 @@
-import { value, variant } from 'themeweaver';
+import { value, variant } from '@carpenjk/themeweaver';
 
 const buttons = {
   button: {
@@ -116,7 +116,7 @@ const buttons = {
       fontFamily: 'roboto',
       fontSize: 2,
     }),
-    ...variant('search_hover', {
+    ...variant('search-hover', {
       backgroundColor: 'action[1]',
       color: 'lightBackground',
       transform: value('scale(1.04)'),

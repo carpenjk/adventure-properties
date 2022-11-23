@@ -1,6 +1,7 @@
 import { useContext } from 'react';
-import { breakpoint, getMaxWidth } from 'themeweaver';
-import { condition, getProp, inverseProps } from 'dataweaver';
+import { getMaxWidth } from '@carpenjk/themeweaver';
+import { breakpoint, condition } from '@carpenjk/prop-x/css';
+import { getProp, inverseProps } from '@carpenjk/prop-x';
 
 import styled from 'styled-components';
 import { GlobalContext } from '../../contexts/context';

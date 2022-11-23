@@ -1,9 +1,10 @@
 import styled from 'styled-components';
 import React from 'react';
-import { breakpoint, getMaxWidth } from 'themeweaver';
+import { getMaxWidth } from '@carpenjk/themeweaver';
+import { breakpoint } from '@carpenjk/prop-x/css';
 
 import FeaturesHeader from './FeaturesHeader';
-import PropertyCard from '../cards/PropertyCard';
+import PropertyCard from '../property/cardLayouts/PropertyCard';
 import FeaturesFooter from './FeaturesFooter';
 
 const StyledContainer = styled.div`

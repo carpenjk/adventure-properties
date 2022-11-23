@@ -14,7 +14,7 @@ import {
   getPaddingRight,
   getPaddingBottom,
   getPaddingLeft,
-} from 'themeweaver';
+} from '@carpenjk/themeweaver';
 
 const StyledFilterHeader = styled.h1`
   display: block;
@@ -35,8 +35,8 @@ const StyledFilterHeader = styled.h1`
   padding-left: ${getPaddingLeft('h1.searchBar', '0')};
 `;
 
-const FilterHeader = (props) => {
-  return <StyledFilterHeader>{props.headerText}</StyledFilterHeader>;
-};
+const FilterHeader = (props) => (
+  <StyledFilterHeader>{props.headerText}</StyledFilterHeader>
+);
 
 export default FilterHeader;

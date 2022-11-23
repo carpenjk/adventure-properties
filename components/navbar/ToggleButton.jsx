@@ -1,6 +1,4 @@
-// import { colors } from '../static/global/base';
 import styled from 'styled-components';
-import { condition } from 'dataweaver';
 import {
   getColor,
   getFontFamily,
@@ -18,9 +16,9 @@ import {
   getPaddingRight,
   getPaddingBottom,
   getPaddingLeft,
-  breakpoint,
-} from 'themeweaver';
-// const selectIcon = '../public/menu-selected.svg';
+} from '@carpenjk/themeweaver';
+import { breakpoint, condition } from '@carpenjk/prop-x/css';
+
 const selectIcon = '../static/assets/ToggleButton/menu-selected.svg';
 
 const StyledButton = styled.button`

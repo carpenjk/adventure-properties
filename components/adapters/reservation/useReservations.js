@@ -1,7 +1,7 @@
 import useSWR from 'swr';
 import { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
-import { dateReviver } from '../../../utils/dates';
+import { dateReviver } from '@carpenjk/date-utils';
 
 const fetchReservations = (url) =>
   fetch(url)

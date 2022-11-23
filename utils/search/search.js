@@ -1,4 +1,4 @@
-import { diffDays } from '../dates';
+import { diffDays } from '@carpenjk/date-utils';
 import { pMap, hasContents, processParams, removeUndefined } from './params';
 import clientPromise from '../mongodb';
 import { SearchSchema } from '../../data/validation/search';

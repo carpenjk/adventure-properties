@@ -1,6 +1,5 @@
 import styled from 'styled-components';
-import { condition } from 'dataweaver';
-import { breakpoint } from 'themeweaver';
+import { breakpoint, condition } from '@carpenjk/prop-x/css';
 
 const StyledWrapper = styled.div`
   display: flex;

@@ -1,4 +1,4 @@
-import { condition } from 'dataweaver';
+import { condition } from '@carpenjk/prop-x';
 import styled from 'styled-components';
 
 const StyledErrorWrapper = styled.div`

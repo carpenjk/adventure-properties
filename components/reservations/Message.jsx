@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { breakpoint } from 'themeweaver';
+import { breakpoint } from '@carpenjk/prop-x/css';
 
 const StyledMessage = styled.div`
   display: flex;

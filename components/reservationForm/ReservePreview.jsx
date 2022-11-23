@@ -1,6 +1,6 @@
 import styled from 'styled-components';
-import { breakpoint } from 'themeweaver';
-import LinkButton from '../base/LinkButton';
+import { breakpoint } from '@carpenjk/prop-x/css';
+import { LinkButton } from '@carpenjk/base/button';
 import InvoiceContent from './InvoiceContent';
 import InvoiceHeader from './InvoiceHeader';
 import { theme } from '../../theme';

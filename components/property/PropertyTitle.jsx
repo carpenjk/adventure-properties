@@ -1,6 +1,5 @@
 import styled from 'styled-components';
-import { breakpoint } from 'themeweaver';
-import { condition } from 'dataweaver';
+import { breakpoint, condition } from '@carpenjk/prop-x/css';
 
 const StyledTitle = styled.h1`
   margin: 0;

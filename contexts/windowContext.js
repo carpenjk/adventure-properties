@@ -1,4 +1,4 @@
-import useWindowSize from '../components/hooks/UseWindowSize';
+import { useWindowSize } from '@carpenjk/hooks';
 import { useState } from 'react';
 
 const WindowContext = React.createContext();

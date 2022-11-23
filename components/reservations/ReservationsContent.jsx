@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router';
 import styled from 'styled-components';
-import { breakpoint } from 'themeweaver';
-import PageHeader from '../base/PageHeader';
+import { breakpoint } from '@carpenjk/prop-x/css';
+import PageHeader from '../PageHeader';
 import Pagination from '../searchResults/searchDisplay/Pagination';
 import Message from './Message';
 import ReservationList from './ReservationList';
@@ -24,10 +24,6 @@ const ReservationsContent = ({ reservations, itemsPerPage }) => {
   const router = useRouter();
   const { query } = router;
   const { page } = query;
-  console.log(
-    '🚀 ~ file: ReservationsContent.jsx ~ line 27 ~ ReservationsContent ~ page',
-    page
-  );
   const hasResults = items && items.length > 0;
 
   const handlePageClick = (event) => {

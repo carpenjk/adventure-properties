@@ -1,8 +1,7 @@
 import { useContext } from 'react';
 import styled, { ThemeContext } from 'styled-components';
-
-import { breakpoint } from 'themeweaver';
-import FormikCheckbox from '../base/input/FormikCheckbox';
+import { breakpoint } from '@carpenjk/prop-x/css';
+import { FormikCheckbox } from '@carpenjk/base/input';
 
 const StyledList = styled.ul`
   margin-left: 10px;

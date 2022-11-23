@@ -1,5 +1,6 @@
 import { getSession } from 'next-auth/react';
 import * as yup from 'yup';
+import { dateReviver } from '@carpenjk/date-utils';
 import { fetchProperty } from '../../../../../../components/adapters/property/property';
 import {
   checkSession,
@@ -7,8 +8,6 @@ import {
   isAvail,
 } from '../../../../../../data/validation/reservation';
 import saveReservation from '../../../../../../utils/adapters/reserve';
-
-import { dateReviver } from '../../../../../../utils/dates';
 
 export default async function handler(req, res) {
   const { propID, userID } = req.query;

@@ -1,39 +1,15 @@
 import styled from 'styled-components';
-import { useState } from 'react';
-import withFilterGroup from './searchbar/WithFilterGroup';
+import { breakpoint, getProp } from '@carpenjk/prop-x/css';
 
-const Button = styled.button`
-  flex: none;
-  background: var(--action);
-  box-shadow: 0px 1px 2px rgba(116, 108, 108, 0.25);
-  border-radius: 10px;
+const Container = styled.div`
+  height: 50px;
+  width: ${getProp('width')};
+  background: blue;
 
-  color: var(--lightBackground);
-  font-family: Roboto;
-  font-style: normal;
-  font-weight: bold;
-  font-size: 1.8rem;
-
-  display: flex;
-  align-items: center;
-  text-align: center;
-  padding: 1.2rem;
-
-  border: none;
-  cursor: pointer;
+  ${breakpoint(['1', '2'])`
+    width: ${getProp('width')};
+  `}
 `;
-const SearchButton = () => {
-  const [label, setLabel] = useState('Hello');
+const TestComponent = ({ width }) => <Container width={width} />;
 
-  const handleClick = (e) => {
-    setLabel('World');
-  };
-
-  return (
-    <Button key="btn" onClick={handleClick} className="search">
-      {label}
-    </Button>
-  );
-};
-
-export default withFilterGroup(SearchButton);
+export default TestComponent;

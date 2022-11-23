@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { condition } from 'dataweaver';
+import { condition } from '@carpenjk/prop-x/css';
 
 const StyledInputSlide = styled.div`
   ${condition('hide')`

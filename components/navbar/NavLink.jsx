@@ -17,11 +17,11 @@ import {
   getPaddingRight,
   getPaddingBottom,
   getPaddingLeft,
-  breakpoint,
   getBackgroundColor,
   getBorder,
   getBorderColor,
-} from 'themeweaver';
+} from '@carpenjk/themeweaver';
+import { breakpoint } from '@carpenjk/prop-x/css';
 import styled from 'styled-components';
 
 const StyledLink = styled.a`

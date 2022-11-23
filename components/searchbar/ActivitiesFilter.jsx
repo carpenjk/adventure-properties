@@ -1,6 +1,6 @@
 import { useContext } from 'react';
 import { ThemeContext } from 'styled-components';
-import FormikAsyncSelect from '../base/input/FormikAsyncSelect';
+import { FormikAsyncSelect } from '@carpenjk/base/input';
 
 const ActivitiesFilter = () => {
   const theme = useContext(ThemeContext);
