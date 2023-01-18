@@ -1,8 +1,7 @@
 import styled from 'styled-components';
-import { NavMenu_config } from '../../compConfig';
-import { NavToggle_config } from '../../compConfig';
+import { NavMenu_config, NavToggle_config } from '../../compConfig';
 
-//components
+// components
 import NavToggle from '../NavToggle';
 import NavMenu from '../NavMenu';
 

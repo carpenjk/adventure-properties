@@ -41,9 +41,6 @@ const Search = ({ response }) => {
     });
   }
 
-  // const message =
-  //   'No results found in the destination provided. Here are some available listings in other locations.';
-
   return (
     <>
       <Head>
@@ -62,20 +59,14 @@ const Search = ({ response }) => {
             options={{
               allOpenMode: true,
               hideOnMount: true,
+              hideOnSearch: true,
               searchOnExit: true,
             }}
             initialValues={initialParamValues}
             validationSchema={SearchSchema}
             search={handleSearch}
+            onExit={(searchbar) => searchbar.searchState.setIsHidden(true)}
             theme={theme}
-            // onSubmit={async (values) => {
-            //   router.push({
-            //     pathname: '/properties/search',
-            //     query: {
-            //       ...prepValues({ ...values, ...getSortBy(values) }),
-            //     },
-            //   });
-            // }}
           >
             <SearchResultLayout
               page={page}

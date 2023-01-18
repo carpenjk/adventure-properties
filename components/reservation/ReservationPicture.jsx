@@ -18,8 +18,6 @@ const StyledImgWrapper = styled.div`
   }
 `;
 
-// const PHOTO_WIDTH_SMALL = 350;
-// const PHOTO_HEIGHT_SMALL = 233;
 const PHOTO_WIDTH_SMALL = 380;
 const PHOTO_HEIGHT_SMALL = 253;
 

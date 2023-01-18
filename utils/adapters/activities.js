@@ -1,7 +1,6 @@
 import clientPromise from '../mongodb';
 
 export async function fetchActivities(q) {
-  console.log('🚀 ~ file: activities.js ~ line 4 ~ fetchActivities ~ q', q);
   const client = await clientPromise;
   const activities = await client
     .db()

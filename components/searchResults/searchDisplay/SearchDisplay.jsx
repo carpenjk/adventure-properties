@@ -7,7 +7,7 @@ import SearchResults from './SearchResults';
 import Pagination from './Pagination';
 
 const SearchDisplay = (props) => {
-  const { control, searchState } = useContext(SearchBarContext);
+  const { searchState } = useContext(SearchBarContext);
   const [pageCount, setPageCount] = useState(1);
   const {
     filtersMenu,
@@ -26,7 +26,7 @@ const SearchDisplay = (props) => {
   // Invoke when user click to request another page.
   const handlePageClick = (event) => {
     const { selected } = event;
-    control.search(searchState.values, selected + 1);
+    searchState.search(searchState.values, selected + 1);
   };
 
   return (

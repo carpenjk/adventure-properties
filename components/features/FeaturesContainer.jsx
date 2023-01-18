@@ -10,7 +10,7 @@ import FeaturesFooter from './FeaturesFooter';
 const StyledContainer = styled.div`
   display: flex;
   flex-direction: column;
-  justify- content: center;
+  justify-content: center;
   align-items: center;
   width: 100%;
   padding-top: ${({ theme }) => theme.space[5]}px;

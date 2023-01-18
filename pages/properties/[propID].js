@@ -1,6 +1,6 @@
 import Head from 'next/head';
 import { useContext, useMemo } from 'react';
-import { PictureTiles } from 'picture-tiles';
+import { PictureTiles } from '@carpenjk/picture-tiles';
 import { Lightbox, useLightbox } from '@carpenjk/lightbox';
 import { Section } from '@carpenjk/base/semantic';
 import { NXBackButton, OverlayNavButton } from '@carpenjk/base/button';
@@ -14,7 +14,7 @@ import cmsClient from '../../Contentful';
 import ReserveCTA from '../../components/reservationForm/ReserveCTA';
 import FullScreenReservation from '../../components/reservationForm/FullScreenReservation';
 import PropertyContent from '../../components/property/PropertyContent';
-import createPictureTileImageProps from '../../utils/pictureTiles';
+import { withPictureTileProps } from '../../utils/pictureTiles';
 import { getImages } from '../../utils/property/property';
 import { createImageSrcProps } from '../../utils/images/images';
 import {
@@ -79,6 +79,7 @@ const Property = ({ property }) => {
     setLoadingMessage('Preparing Reservation');
     reserveReview();
   }
+
   return (
     <>
       <Head>
@@ -99,7 +100,7 @@ const Property = ({ property }) => {
         >
           <PictureTiles
             // {...pictureTileImgProps}
-            {...createPictureTileImageProps(propertyImages)}
+            {...withPictureTileProps(propertyImages)}
             minColWidth={['320px', '150px']}
             maxColWidth={['100%', '1fr']}
             rowHeight={['auto', '250px']}

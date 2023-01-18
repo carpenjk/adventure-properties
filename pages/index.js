@@ -3,8 +3,9 @@ import ClientOnly from '@carpenjk/client-only';
 import { Hero } from '@carpenjk/hero';
 import { SearchBar } from '@carpenjk/searchbar';
 import { Section } from '@carpenjk/base/semantic';
-import { theme } from '../theme';
 import { mediaStyles } from '../Media';
+import { theme } from '../theme';
+
 import FeaturesContainer from '../components/features/FeaturesContainer';
 import Filters from '../components/searchbar/Filters';
 import {

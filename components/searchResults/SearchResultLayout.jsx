@@ -1,4 +1,4 @@
-import { SearchBarMenu, useSearchBar } from '@carpenjk/searchbar';
+import { SearchBarMenu } from '@carpenjk/searchbar';
 import PrimarySearchFields from '../searchbar/PrimarySearchFields';
 import SecondarySearchFields from '../searchbar/SecondarySearchFields';
 import ResultMenuLayout from './ResultMenuLayout';
@@ -14,36 +14,28 @@ const SearchResultLayout = ({
   page,
   itemsPerPage,
   ignoredLocation,
-}) => {
-  const { searchState } = useSearchBar();
-
-  return (
-    <>
-      <PageHeader title="Search Results" />
-      <SearchDisplay
-        itemsPerPage={itemsPerPage}
-        page={page}
-        filtersMenu={
-          <SearchBarMenu
-            onExit={() => {
-              searchState.setIsOpen(false);
-              console.log('closing');
-            }}
-            PrimarySearchFields={PrimarySearchFields}
-            SecondarySearchFields={SecondarySearchFields}
-            FilterFields={Filters}
-            checkFilters={checkFilters}
-            openMaxWidth={['none', '1000px']}
-          />
-        }
-        DashboardMenuLayout={ResultMenuLayout}
-        results={results}
-        message={message}
-        error={error}
-        ignoredLocation={ignoredLocation}
-      />
-    </>
-  );
-};
+}) => (
+  <>
+    <PageHeader title="Search Results" />
+    <SearchDisplay
+      itemsPerPage={itemsPerPage}
+      page={page}
+      filtersMenu={
+        <SearchBarMenu
+          PrimarySearchFields={PrimarySearchFields}
+          SecondarySearchFields={SecondarySearchFields}
+          FilterFields={Filters}
+          checkFilters={checkFilters}
+          openMaxWidth={['none', '1000px']}
+        />
+      }
+      DashboardMenuLayout={ResultMenuLayout}
+      results={results}
+      message={message}
+      error={error}
+      ignoredLocation={ignoredLocation}
+    />
+  </>
+);
 
 export default SearchResultLayout;

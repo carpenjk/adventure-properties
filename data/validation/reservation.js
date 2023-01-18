@@ -19,7 +19,7 @@ export function isAvail(date, availability) {
 // logic to determin valid departure date
 // valid if after start dt and <= next booked date
 export function isValidDeparture(date, arDate, availability) {
-  if (!availability || !arDate) {
+  if (!availability || !arDate || typeof date?.getMonth !== 'function') {
     return false;
   }
 

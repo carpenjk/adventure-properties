@@ -45,7 +45,6 @@ const ResultMenuLayout = ({ ignoredLocation }) => {
     const newSort = currPriceSort
       ? toggleSort(currPriceSort)
       : { displayPrice: -1 };
-    console.log(JSON.stringify(1));
     router.push({
       pathname: '/properties/search',
       query: {
@@ -85,7 +84,10 @@ const ResultMenuLayout = ({ ignoredLocation }) => {
           tw={{
             variant: 'contentNav',
           }}
-          onClick={() => searchState.setIsHidden(false)}
+          onClick={() => {
+            searchState.setIsOpen(true);
+            searchState.setIsHidden(false);
+          }}
         >
           <img src="/static/assets/searchResults/filter.svg" alt="filter" />
           <Spacer space="4px" />
