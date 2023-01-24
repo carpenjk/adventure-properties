@@ -37,11 +37,10 @@ const StyledProfile = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: stretch;
+  align-items: center;
   width: 300px;
   max-width: 300px;
-  padding: 16px;
-  font-family: ${({ theme }) => theme.fonts.poppins};
+  padding: ${(props) => props.theme.space[3]}px;
   white-space: pre-wrap;
   white-space: -moz-pre-wrap;
   white-space: -pre-wrap;
@@ -65,6 +64,11 @@ const StyledProfile = styled.div`
     display: flex;
     min-width: 0;
     max-width: 300px;
+    font-family: ${({ theme }) => theme.fonts.openSans};
+    font-size: ${({ theme }) => theme.fontSizes[2]}px;
+    line-height: 150%;
+    letter-spacing: 0.025em;
+    color: ${({ theme }) => theme.colors.mainText};
   }
 `;
 const ProfileNavLayout = () => (

@@ -1,7 +1,6 @@
-import { useRef } from 'react';
 import styled from 'styled-components';
 import { useIsoOnClickOutside } from '@carpenjk/hooks';
-import PopupModal from '@carpenjk/popup-modal';
+
 import { getProp } from '@carpenjk/prop-x/css';
 
 const StyledFooterDrawer = styled.div`
@@ -12,7 +11,7 @@ const StyledFooterDrawer = styled.div`
   bottom: 0px;
   transform: translateY(100%);
   transition: transform 0.5s ease-in;
-  z-index: 1000002;
+  z-index: 1000001;
 
   &.isOpen {
     transform: translateY(${getProp('bottomOffset')});
@@ -24,23 +23,16 @@ StyledFooterDrawer.defaultProps = {
   bottomOffset: '0px',
 };
 
-const FooterDrawer = ({ Menu, control, isOpen, bottomOffset }) => {
-  const drawerRef = useRef();
-
+const FooterDrawer = ({ Menu, control, isOpen, bottomOffset, drawerRef }) => {
   useIsoOnClickOutside(drawerRef, control.close, []);
   return (
-    <>
-      {isOpen && (
-        <PopupModal isOpen={isOpen} scrollNode={drawerRef} lockScroll />
-      )}
-      <StyledFooterDrawer
-        ref={drawerRef}
-        className={isOpen ? 'isOpen' : ''}
-        bottomOffset={bottomOffset}
-      >
-        <Menu />
-      </StyledFooterDrawer>
-    </>
+    <StyledFooterDrawer
+      ref={drawerRef}
+      className={isOpen ? 'isOpen' : ''}
+      bottomOffset={bottomOffset}
+    >
+      <Menu />
+    </StyledFooterDrawer>
   );
 };
 
