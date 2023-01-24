@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import { ActionButton, LinkButton } from '@carpenjk/base/button';
 import { Spacer } from '@carpenjk/base/layout';
+import Link from 'next/link';
 
 const StyledEditWrapper = styled.div`
   display: ${({ display }) => display};
@@ -10,14 +11,16 @@ const StyledEditWrapper = styled.div`
   width: 100%;
   height: 20px;
 
-  > button {
+  > button,
+  a {
     font-family: ${({ theme }) => theme.fonts.openSans};
     letter-spacing: 0.08em;
     font-size: ${({ theme }) => theme.fontSizes[2]}px;
     font-weight: normal;
     color: ${({ theme }) => theme.colors.link[0]};
   }
-  > button:hover {
+  > button:hover,
+  a:hover {
     color: ${({ theme }) => theme.colors.link[1]};
   }
 `;
@@ -38,7 +41,12 @@ const ReserveButtons = ({
 }) => (
   <>
     <StyledEditWrapper>
-      <LinkButton onClick={onEdit}>edit reservation</LinkButton>
+      {showEdit && <LinkButton onClick={onEdit}>edit reservation</LinkButton>}
+      {!showEdit && (
+        <LinkButton as={Link} href="/reservations" onClick={onEdit}>
+          go to my reservations
+        </LinkButton>
+      )}
     </StyledEditWrapper>
     <Spacer vertical space="20px" />
     <StyledButtonWrapper display={showReserve ? 'flex' : 'none'}>

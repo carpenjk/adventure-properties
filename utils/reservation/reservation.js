@@ -34,7 +34,7 @@ export function getAvgDailyPrice(availability, arriveDateVal, departDateVal) {
   if (!dailyPrices || dailyPrices.length === 0) {
     return 0;
   }
-  const total = calcTotalPrice() || 0;
+  const total = calcTotalPrice(availability, arriveDateVal, departDateVal) || 0;
   return total / dailyPrices.length;
 }
 

@@ -3,7 +3,6 @@ import { Fixed } from '@carpenjk/base/layout';
 import { GlobalStyles } from '../styles/global/base';
 import Navbar from './navbar/Navbar';
 import PageFooter from './footer/PageFooter';
-import { footerNavData } from '../data/data';
 
 const Layout = ({ children }) => (
   <>
@@ -18,7 +17,7 @@ const Layout = ({ children }) => (
         position="relative"
         adjustForScrollBar
       >
-        <PageFooter navData={footerNavData} />
+        <PageFooter />
       </Section>
     </Fixed>
     <GlobalStyles />

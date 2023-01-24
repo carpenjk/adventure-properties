@@ -1,9 +1,13 @@
 import styled from 'styled-components';
-import { getMaxWidth } from '@carpenjk/themeweaver';
+import { breakpoint } from '@carpenjk/prop-x/css';
+import ProfileLinks from './links/ProfileLinks';
+import ProfilePicture from './profile/ProfilePicture';
 
-const StyledLayout = styled.nav`
+const StyledOuterContainer = styled.div`
+  position: relative;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  justify-content: flex-start;
   align-items: flex-start;
   width: 100%;
   padding-top: ${({ theme }) => theme.space[2]}px;
@@ -16,31 +20,68 @@ const StyledLayout = styled.nav`
   box-shadow: 0px 8px 28px ${({ theme }) => theme.colors.primary[0]}80;
 `;
 const StyledInnerContainer = styled.div`
+  position: relative;
   display: flex;
   flex-direction: column;
-  font-family: ${({ theme }) => theme.fonts.poppins};
-  color: ${({ theme }) => theme.colors.primary[0]};
-  font-size: ${({ theme }) => theme.fontSizes[2]}px;
+  justify-content: space-evenly;
+  align-items: center;
   width: 100%;
-  max-width: ${getMaxWidth('content')}px;
+  max-width: 750px;
+
+  ${breakpoint(1)`
+    flex-direction: row;
+  `}
 `;
 const StyledProfile = styled.div`
+  position: relative;
   display: flex;
-  width: 150px;
-  height 150px;
-  background: grey;
+  flex-direction: column;
+  justify-content: center;
+  align-items: stretch;
+  width: 300px;
+  max-width: 300px;
+  padding: 16px;
+  font-family: ${({ theme }) => theme.fonts.poppins};
+  white-space: pre-wrap;
+  white-space: -moz-pre-wrap;
+  white-space: -pre-wrap;
+  white-space: -o-pre-wrap;
+  word-wrap: break-word;
+  > h2 {
+    flex: 1;
+    min-width: 0;
+    min-height: 0;
+    width: 100%;
+    font-family: ${({ theme }) => theme.fonts.poppins};
+    font-weight: 700;
+    font-size: ${({ theme }) => theme.fontSizes[3]}px;
+    -webkit-letter-spacing: 0.05em;
+    -moz-letter-spacing: 0.05em;
+    -ms-letter-spacing: 0.05em;
+    letter-spacing: 0.05em;
+    color: ${(props) => props.theme.colors.primary[0]};
+  }
+  > p {
+    display: flex;
+    min-width: 0;
+    max-width: 300px;
+  }
 `;
 const ProfileNavLayout = () => (
-  <StyledLayout>
+  <StyledOuterContainer>
     <StyledInnerContainer>
-      <StyledProfile />
-      <ul>
-        <li>demo 1</li>
-        <li>demo 2</li>
-        <li>demo 3</li>
-      </ul>
+      <StyledProfile>
+        <h2>Thank you for viewing my demo!</h2>
+        <ProfilePicture />
+        <p>
+          I would love to hear from you about opportunities to work together.
+          Please contact me via email or find out more about me from these
+          links!
+        </p>
+      </StyledProfile>
+      <ProfileLinks />
     </StyledInnerContainer>
-  </StyledLayout>
+  </StyledOuterContainer>
 );
 
 export default ProfileNavLayout;

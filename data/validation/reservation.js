@@ -28,17 +28,20 @@ export function isValidDeparture(date, arDate, availability) {
   const arDateTime = arDate.getTime();
 
   // index of booked date
-  const i = !availability
+  const arDateIndex = !availability
     ? 0
     : availableDates.findIndex((dt) => dt.date.getTime() === arDateTime);
 
   // first booked date after res start date
-  const nextBookedDateObj = availableDates.slice(i).find((dt) => dt.booked);
+  const nextBookedDateObj = availableDates
+    .slice(arDateIndex)
+    .find((dt) => dt.booked);
   const nextBookedDate = nextBookedDateObj ? nextBookedDateObj.date : false;
+  const lastAvailbleDate = availableDates[availableDates.length - 1].date;
 
   // all dates available
   if (!nextBookedDate) {
-    return dateTime > arDateTime;
+    return dateTime > arDateTime && dateTime < lastAvailbleDate.getTime();
   }
   // dates after res start up to next booked date are available for departure
   return dateTime > arDateTime && dateTime <= nextBookedDate.getTime();
