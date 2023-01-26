@@ -23,21 +23,19 @@ const About = () => (
       />
       <meta name="viewport" content="initial-scale=1.0, width=device-width" />
     </Head>
-    <main>
-      <ContentContainer tw={{ variant: 'about' }}>
-        <Section tw={{ variant: 'about' }} position="relative">
-          <Hero
-            tw={{ variant: 'about' }}
-            image={heroImgProps}
-            bannerLayout={<AboutBannerLayout />}
-            bannerPos={[
-              { vertical: 'center', horizontal: 'center', test: 'hello' },
-              { top: '150px' },
-            ]}
-          />
-        </Section>
-      </ContentContainer>
-    </main>
+    <ContentContainer tw={{ variant: 'about' }}>
+      <Section tw={{ variant: 'about' }} position="relative">
+        <Hero
+          tw={{ variant: 'about' }}
+          image={heroImgProps}
+          bannerLayout={<AboutBannerLayout />}
+          bannerPos={[
+            { vertical: 'center', horizontal: 'center', test: 'hello' },
+            { top: '150px' },
+          ]}
+        />
+      </Section>
+    </ContentContainer>
   </>
 );
 

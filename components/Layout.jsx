@@ -1,3 +1,4 @@
+import Head from 'next/head';
 import { Header, Section } from '@carpenjk/base/semantic';
 import { Fixed } from '@carpenjk/base/layout';
 import { GlobalStyles } from '../styles/global/base';
@@ -9,6 +10,26 @@ const Layout = ({ children }) => (
     <Header position="fixed" adjustForScrollBar>
       <Navbar />
     </Header>
+    <Head>
+      <link
+        rel="apple-touch-icon"
+        sizes="180x180"
+        href="/apple-touch-icon.png"
+      />
+      <link
+        rel="icon"
+        type="image/png"
+        sizes="32x32"
+        href="/favicon-32x32.png"
+      />
+      <link
+        rel="icon"
+        type="image/png"
+        sizes="16x16"
+        href="/favicon-16x16.png"
+      />
+      <link rel="manifest" href="/site.webmanifest" />
+    </Head>
     <main style={{ position: 'relative', paddingBottom: '55px' }}>
       {/* <Skeleton>{children}</Skeleton> */}
       {children}
