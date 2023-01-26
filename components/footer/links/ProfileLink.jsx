@@ -8,7 +8,7 @@ const ProfileLink = ({ children, href, icon }) => (
     <a target="_blank">
       <StyledProfileLink>
         <LinkIcon width="24px" height="24px" icon={icon} />
-        <LinkText>{children}</LinkText>
+        <LinkText hide={[true, false]}>{children}</LinkText>
       </StyledProfileLink>
     </a>
   </Link>

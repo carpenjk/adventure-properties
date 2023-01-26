@@ -26,7 +26,7 @@ const SearchResultLayout = ({
           SecondarySearchFields={SecondarySearchFields}
           FilterFields={Filters}
           checkFilters={checkFilters}
-          openMaxWidth={['none', '1000px']}
+          openMaxWidth={['none', '833px']}
         />
       }
       DashboardMenuLayout={ResultMenuLayout}

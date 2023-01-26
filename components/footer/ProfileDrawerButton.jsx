@@ -10,13 +10,13 @@ const StyledButton = styled.button`
   line-height: 24px;
   letter-spacing: 0.025em;
   color: ${({ theme }) => theme.colors.tertiary};
-
-  &:hover {
-    text-decoration: underline;
-  }
 `;
-const ProfileDrawerButton = ({ onClick, children }) => (
-  <StyledButton onClick={onClick} type="button">
+const ProfileDrawerButton = ({ isOpen, onClick, children }) => (
+  <StyledButton
+    className={isOpen ? 'isOpen' : ''}
+    onClick={onClick}
+    type="button"
+  >
     {children}
   </StyledButton>
 );

@@ -21,6 +21,14 @@ const Socials = () => (
     </li>
     <li>
       <ProfileLink
+        icon="/linkIcons/webIcon.svg"
+        href="https://www.jeremycarpenter.dev"
+      >
+        www.jeremycarpenter.dev
+      </ProfileLink>
+    </li>
+    <li>
+      <ProfileLink
         icon="/linkIcons/emailIcon.svg"
         href="mailto:jcarpenterdev@gmail.com"
       >

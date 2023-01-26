@@ -4,7 +4,7 @@ import { Hero } from '@carpenjk/hero';
 import { SearchBar } from '@carpenjk/searchbar';
 import { Section } from '@carpenjk/base/semantic';
 import { mediaStyles } from '../Media';
-import { theme } from '../theme';
+import { theme } from '../theme/theme';
 
 import FeaturesContainer from '../components/features/FeaturesContainer';
 import Filters from '../components/searchbar/Filters';
@@ -71,8 +71,7 @@ const Index = (props) => {
             PrimarySearchFields={PrimarySearchFields}
             SecondarySearchFields={SecondarySearchFields}
             FilterFields={Filters}
-            // checkFilters={checkFilters}
-            openMaxWidth={['none', '1000px']}
+            openMaxWidth={['none', '833px']}
             initialValues={{
               destination: '',
               guests: '',

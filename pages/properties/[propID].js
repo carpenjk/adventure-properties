@@ -3,9 +3,10 @@ import { useContext, useMemo } from 'react';
 import { PictureTiles } from '@carpenjk/picture-tiles';
 import { Lightbox, useLightbox } from '@carpenjk/lightbox';
 import { Section } from '@carpenjk/base/semantic';
-import { NXBackButton, OverlayNavButton } from '@carpenjk/base/button';
 import { Spacer, Fixed } from '@carpenjk/base/layout';
 import ClientOnly from '@carpenjk/client-only';
+import NXBackButton from '../../components/buttons/NXBackButton';
+import OverlayButton from '../../components/buttons/OverlayButton';
 import { SpinnerContext } from '../../components/spinner/SpinnerContext';
 import { fetchProperty } from '../../components/adapters/property/property';
 import useReservation from '../../components/reservationForm/UseReservation';
@@ -110,9 +111,9 @@ const Property = ({ property }) => {
             onPhotoClick={(i) => lightboxControl.open(i)}
             overlayButton={{
               OverlayButton: (
-                <OverlayNavButton onClick={lightboxControl.open}>
+                <OverlayButton onClick={lightboxControl.open}>
                   More Photos
-                </OverlayNavButton>
+                </OverlayButton>
               ),
             }}
           />

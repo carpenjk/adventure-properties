@@ -2,8 +2,9 @@ import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { SearchBarProvider } from '@carpenjk/searchbar';
 import { ContentContainer, Spacer } from '@carpenjk/base/layout';
-import { NXBackButton } from '@carpenjk/base/button';
-import { theme } from '../../theme';
+import { Section } from '@carpenjk/base/semantic';
+import NXBackButton from '../../components/buttons/NXBackButton';
+import { theme } from '../../theme/theme';
 import { endDateProps, startDateProps } from '../../data/input';
 import {
   getInitialCheckFilters,
@@ -52,32 +53,34 @@ const Search = ({ response }) => {
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
       <NXBackButton />
-      <Spacer vertical space="60px" />
       <main style={{ position: 'relative' }}>
-        <ContentContainer>
-          <SearchBarProvider
-            options={{
-              allOpenMode: true,
-              hideOnMount: true,
-              hideOnSearch: true,
-              searchOnExit: true,
-            }}
-            initialValues={initialParamValues}
-            validationSchema={SearchSchema}
-            search={handleSearch}
-            onExit={(searchbar) => searchbar.searchState.setIsHidden(true)}
-            theme={theme}
-          >
-            <SearchResultLayout
-              page={page}
-              itemsPerPage={10}
-              results={results}
-              message={message}
-              ignoredLocation={ignoredLocation}
-              error={error}
-            />
-          </SearchBarProvider>
-        </ContentContainer>
+        <Spacer vertical space="60px" />
+        <Section tw={{ variant: 'search' }} position="relative">
+          <ContentContainer>
+            <SearchBarProvider
+              options={{
+                allOpenMode: true,
+                hideOnMount: true,
+                hideOnSearch: true,
+                searchOnExit: true,
+              }}
+              initialValues={initialParamValues}
+              validationSchema={SearchSchema}
+              search={handleSearch}
+              onExit={(searchbar) => searchbar.searchState.setIsHidden(true)}
+              theme={theme}
+            >
+              <SearchResultLayout
+                page={page}
+                itemsPerPage={10}
+                results={results}
+                message={message}
+                ignoredLocation={ignoredLocation}
+                error={error}
+              />
+            </SearchBarProvider>
+          </ContentContainer>
+        </Section>
       </main>
     </>
   );

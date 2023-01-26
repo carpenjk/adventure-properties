@@ -99,7 +99,6 @@ const ResultMenuLayout = ({ ignoredLocation }) => {
           tw={{
             variant: 'contentNav',
           }}
-          isActive={isPriceSorted}
           onClick={handlePriceSort}
         >
           <img

@@ -8,7 +8,7 @@ import { SpinnerProvider } from '../components/spinner/SpinnerContext';
 import { ConfigProvider } from '../contexts/context';
 import { MediaContextProvider } from '../Media';
 import Layout from '../components/Layout';
-import { theme } from '../theme';
+import { theme } from '../theme/theme';
 import '../styles/global/datepicker.css';
 import { ReservationProvider } from '../contexts/ReservationContext';
 

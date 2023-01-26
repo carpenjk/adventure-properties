@@ -2,25 +2,46 @@ import styled from 'styled-components';
 import { breakpoint } from '@carpenjk/prop-x/css';
 
 export default styled.div`
+  position: relative;
   display: flex;
-  justify-content: flex-start;
+  flex-direction: column;
+  justify-content: center;
   align-items: center;
+
+  padding: 4px;
+  border: 2px solid transparent;
   cursor: pointer;
+  text-decoration-color: #55b467;
 
-  > span:last-child {
-    margin-left: 12px;
-  }
-  &:hover > span:last-child > div {
-    color: ${(props) => props.theme.colors.grass11};
-    transition: color 450ms ease-in-out, text-decoration 300ms ease-in-out;
+  &::after {
+    content: ' ';
+    position: absolute;
+    margin: auto;
+    transform: translateX(-50%);
+    left: 50%;
+    bottom: -4px;
+    height: 2px;
+    width: 0;
+    background: transparent;
+    transition: width 450ms ease-in-out, background-color 450ms ease-in-out;
   }
 
-  &:hover {
-    transition: opacity 400ms ease-in-out;
+  &:hover::after {
+    content: ' ';
+    width: calc(100% - 4px);
+    background: #55b467;
+    transition: width 450ms ease-in-out, background-color 450ms ease-in-out;
   }
-  ${breakpoint('sm')`
-    > span:last-child {
-      margin-left: 24px;
+
+  ${breakpoint('1')`
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+
+    &:hover::after {
+      width: calc(100% - 4px);
+      background: #55b467;
+      transition: width 450ms ease-in-out, background-color 450ms ease-in-out;
     }
   `}
 `;

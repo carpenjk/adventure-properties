@@ -11,7 +11,7 @@ const Layout = ({ children }) => (
     </Header>
     {/* <Skeleton>{children}</Skeleton> */}
     {children}
-    <Fixed useFillerElement bottom width="100%">
+    <Fixed useFillerElement bottom width="100%" style={{ zIndex: 999999 }}>
       <Section
         tw={{ variant: 'footer' }}
         position="relative"

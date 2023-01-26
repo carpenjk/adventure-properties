@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import { getMaxWidth } from '@carpenjk/themeweaver';
 import ToggleFooterContent from './ToggleFooterContent';
 import ProfileDrawerButton from './ProfileDrawerButton';
 import ProfileNavLayout from './ProfileNavLayout';
@@ -10,8 +9,6 @@ const StyledFooter = styled.div`
   justify-content: flex-end;
   align-items: center;
   width: 100%;
-  height: 55px;
-  max-width: ${getMaxWidth('content')}px;
 `;
 
 const PageFooter = () => (

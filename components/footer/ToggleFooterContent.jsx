@@ -1,9 +1,19 @@
 import { useRef } from 'react';
 import PopupModal from '@carpenjk/popup-modal';
 import styled from 'styled-components';
+import { useIsoOnClickOutside } from '@carpenjk/hooks';
 import FooterDrawer from './FooterDrawer';
 import UpArrow from './UpArrow';
 import useOpenClose from './UseOpenClose';
+
+const StyledWrapper = styled.div`
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  height: 55px;
+  width: 100vw;
+  z-index: 1000000;
+`;
 
 const StyledFooterContent = styled.div`
   position: absolute;
@@ -42,6 +52,19 @@ const StyledFooterContent = styled.div`
   }
 `;
 
+const StyledToggleArrowWrapper = styled.div`
+  transform: scaleY(1);
+  transition: transform 0.5s ease-in;
+  &.isOpen {
+    transform: scaleY(-1);
+    transition: transform 0.5s ease-in;
+  }
+
+  &:hover {
+    text-decoration: underline;
+  }
+`;
+
 const ToggleFooterContent = ({
   ToggleButton,
   DrawerComponent,
@@ -49,27 +72,31 @@ const ToggleFooterContent = ({
 }) => {
   const { isOpen, control } = useOpenClose();
   const drawerRef = useRef();
+  useIsoOnClickOutside(drawerRef, control.close, []);
   return (
     <>
       {isOpen && (
         <PopupModal isOpen={isOpen} scrollNode={drawerRef} lockScroll />
       )}
-      <StyledFooterContent>
-        <span>&copy; 2021</span>
-        <span>
-          <ToggleButton onClick={control.toggle}>
-            Jeremy Carpenter
-            <UpArrow />
-          </ToggleButton>
-        </span>
-      </StyledFooterContent>
-      <FooterDrawer
-        drawerRef={drawerRef}
-        bottomOffset={bottomOffset}
-        control={control}
-        isOpen={isOpen}
-        Menu={DrawerComponent}
-      />
+      <StyledWrapper ref={drawerRef}>
+        <StyledFooterContent ref={drawerRef}>
+          <span>&copy; 2021</span>
+          <span>
+            <ToggleButton isOpen={isOpen} onClick={control.toggle}>
+              Jeremy Carpenter
+              <StyledToggleArrowWrapper className={isOpen ? 'isOpen' : ''}>
+                <UpArrow isOpen={isOpen} />
+              </StyledToggleArrowWrapper>
+            </ToggleButton>
+          </span>
+        </StyledFooterContent>
+        <FooterDrawer
+          bottomOffset={bottomOffset}
+          maxHeight="calc(100vh - 132px)"
+          isOpen={isOpen}
+          Menu={DrawerComponent}
+        />
+      </StyledWrapper>
     </>
   );
 };

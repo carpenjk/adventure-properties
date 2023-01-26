@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { useState, useRef } from 'react';
 import { breakpoint } from '@carpenjk/prop-x/css';
-import { ScrollLock } from '@carpenjk/scroll-lock';
+import ScrollLock from '@carpenjk/scroll-lock';
 import { ActionButton } from '@carpenjk/base/button';
 import { Spacer } from '@carpenjk/base/layout';
 import useReservation from './UseReservation';
