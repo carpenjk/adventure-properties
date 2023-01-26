@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+
 const StyledHamburger = styled.button`
   display: ${({ isOpen }) => (isOpen ? 'none' : 'block')};
   background: none;

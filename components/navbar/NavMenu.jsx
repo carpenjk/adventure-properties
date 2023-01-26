@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { getProp } from '@carpenjk/prop-x/css';
+import { condition, getProp } from '@carpenjk/prop-x/css';
 
 import NavLink from './NavLink';
 

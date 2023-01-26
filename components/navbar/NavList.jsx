@@ -3,7 +3,6 @@ import { signIn, signOut, useSession } from 'next-auth/react';
 import { getMaxWidth } from '@carpenjk/themeweaver';
 import { breakpoint } from '@carpenjk/prop-x/css';
 import { getProp } from '@carpenjk/prop-x/lib/css/getProp';
-// import { getProp } from '@carpenjk/prop-x/css';
 import NavLink from './NavLink';
 import IconDropDown from './IconDropDown';
 import AccountIcon from './AccountIcon';
@@ -47,7 +46,7 @@ const StyledUl = styled.ul`
 `;
 
 const NavList = () => {
-  const { data: session, status } = useSession();
+  const { data: session } = useSession();
 
   return (
     <StyledNav className="navlist">

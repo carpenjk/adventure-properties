@@ -1,6 +1,6 @@
-import React from 'react'
-import styled from 'styled-components'
-import { breakpoint } from '@carpenjk/prop-x/css'
+import React from 'react';
+import styled from 'styled-components';
+import { breakpoint } from '@carpenjk/prop-x/css';
 
 const StyledWrapper = styled.div`
   margin: 0;
@@ -29,7 +29,7 @@ const StyledWrapper = styled.div`
   ${breakpoint(1)`
     width: 90%;
   `}
-`
+`;
 
 const AboutBannerLayout = () => (
   <StyledWrapper>
@@ -39,6 +39,6 @@ const AboutBannerLayout = () => (
       more time living and less time searching.
     </p>
   </StyledWrapper>
-)
+);
 
-export default AboutBannerLayout
+export default AboutBannerLayout;

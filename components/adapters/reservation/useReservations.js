@@ -9,11 +9,11 @@ const fetchReservations = (url) =>
     .then((t) => JSON.parse(t, dateReviver));
 
 const useReservations = () => {
-  const { data: session, status } = useSession();
+  const { data: session } = useSession();
   const userID = session ? session.user.email : '';
   const [reservations, setReservations] = useState([]);
 
-  const { data, error } = useSWR(
+  const { data } = useSWR(
     userID ? `/api/users/${userID}/reservations` : null,
     fetchReservations
   );

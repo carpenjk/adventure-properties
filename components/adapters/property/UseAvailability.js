@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback } from 'react';
 const fetchClientSideData = (url) => fetch(url).then((r) => r.json());
 
 const useAvailability = (propID) => {
-  const { data: avail, error } = useSWR(
+  const { data: avail } = useSWR(
     `/api/properties/${propID}/availability`,
     fetchClientSideData
   );

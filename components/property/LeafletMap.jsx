@@ -4,15 +4,15 @@ import { Map, TileLayer, Marker, Popup } from 'react-leaflet';
 const LeafletMap = ({ position }) => {
   // workaround for marker error
   useEffect(() => {
+    /* eslint-disable global-require */
     const L = require('leaflet');
-
     delete L.Icon.Default.prototype._getIconUrl;
-
     L.Icon.Default.mergeOptions({
       iconRetinaUrl: require('leaflet/dist/images/marker-icon-2x.png'),
       iconUrl: require('leaflet/dist/images/marker-icon.png'),
       shadowUrl: require('leaflet/dist/images/marker-shadow.png'),
     });
+    /* eslint-enable global-require */
   }, []);
 
   return (

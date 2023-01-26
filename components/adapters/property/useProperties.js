@@ -8,7 +8,7 @@ const useProperties = (propertyIDs) => {
   const [properties, setProperties] = useState(null);
   const readyToFetch = propIDs && propIDs.length > 0;
 
-  const { data, error } = useSWR(
+  const { data } = useSWR(
     readyToFetch ? `/api/properties/${propIDs}` : null,
     fetchProperties
   );

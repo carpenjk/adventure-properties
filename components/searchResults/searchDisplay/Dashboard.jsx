@@ -9,7 +9,7 @@ const StyledDashboard = styled.div`
 `;
 
 const Dashboard = (props) => {
-  const { message, error, children } = props;
+  const { message, children } = props;
   return (
     <StyledDashboard>
       <MenuContainer>{children}</MenuContainer>

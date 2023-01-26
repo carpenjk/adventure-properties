@@ -16,7 +16,7 @@ const SearchDisplay = (props) => {
     itemsPerPage,
     ...fwdProps
   } = props;
-  const { results, message, error } = fwdProps;
+  const { results, message } = fwdProps;
   const [showSearchMenu, setShowSearchMenu] = useState(false);
 
   useEffect(() => {

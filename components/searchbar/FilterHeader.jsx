@@ -35,8 +35,8 @@ const StyledFilterHeader = styled.h1`
   padding-left: ${getPaddingLeft('h1.searchBar', '0')};
 `;
 
-const FilterHeader = (props) => (
-  <StyledFilterHeader>{props.headerText}</StyledFilterHeader>
+const FilterHeader = ({ headerText }) => (
+  <StyledFilterHeader>{headerText}</StyledFilterHeader>
 );
 
 export default FilterHeader;

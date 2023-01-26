@@ -115,7 +115,7 @@ const FullScreenReservation = (props) => {
       fields: SLIDE_FIELDS[slideState.currSlide],
       validateOnChange: false,
     });
-  }, [arriveDate, departDate, guests]);
+  }, [arriveDate, departDate, guests, slideState.currSlide, validate]);
 
   return (
     <FullScreenInputContainer

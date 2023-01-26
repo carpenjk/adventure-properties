@@ -3,7 +3,7 @@ import { ThemeContext } from 'styled-components';
 import { FormikSelect } from '@carpenjk/base/input';
 import { roomsFilters } from '../../data/input';
 
-const RoomsFilters = (props) => {
+const RoomsFilters = () => {
   const theme = useContext(ThemeContext);
   const { bedroom, bathroom } = roomsFilters;
 
