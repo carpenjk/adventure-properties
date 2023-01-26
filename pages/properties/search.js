@@ -53,35 +53,33 @@ const Search = ({ response }) => {
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
       <NXBackButton />
-      <main style={{ position: 'relative' }}>
-        <Spacer vertical space="60px" />
-        <Section tw={{ variant: 'search' }} position="relative">
-          <ContentContainer>
-            <SearchBarProvider
-              options={{
-                allOpenMode: true,
-                hideOnMount: true,
-                hideOnSearch: true,
-                searchOnExit: true,
-              }}
-              initialValues={initialParamValues}
-              validationSchema={SearchSchema}
-              search={handleSearch}
-              onExit={(searchbar) => searchbar.searchState.setIsHidden(true)}
-              theme={theme}
-            >
-              <SearchResultLayout
-                page={page}
-                itemsPerPage={10}
-                results={results}
-                message={message}
-                ignoredLocation={ignoredLocation}
-                error={error}
-              />
-            </SearchBarProvider>
-          </ContentContainer>
-        </Section>
-      </main>
+      <Spacer vertical space="60px" />
+      <Section tw={{ variant: 'search' }} position="relative">
+        <ContentContainer>
+          <SearchBarProvider
+            options={{
+              allOpenMode: true,
+              hideOnMount: true,
+              hideOnSearch: true,
+              searchOnExit: true,
+            }}
+            initialValues={initialParamValues}
+            validationSchema={SearchSchema}
+            search={handleSearch}
+            onExit={(searchbar) => searchbar.searchState.setIsHidden(true)}
+            theme={theme}
+          >
+            <SearchResultLayout
+              page={page}
+              itemsPerPage={10}
+              results={results}
+              message={message}
+              ignoredLocation={ignoredLocation}
+              error={error}
+            />
+          </SearchBarProvider>
+        </ContentContainer>
+      </Section>
     </>
   );
 };

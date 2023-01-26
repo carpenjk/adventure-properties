@@ -9,8 +9,10 @@ const Layout = ({ children }) => (
     <Header position="fixed" adjustForScrollBar>
       <Navbar />
     </Header>
-    {/* <Skeleton>{children}</Skeleton> */}
-    {children}
+    <main style={{ position: 'relative', paddingBottom: '55px' }}>
+      {/* <Skeleton>{children}</Skeleton> */}
+      {children}
+    </main>
     <Fixed useFillerElement bottom width="100%" style={{ zIndex: 999999 }}>
       <Section
         tw={{ variant: 'footer' }}

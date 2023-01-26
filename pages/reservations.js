@@ -55,16 +55,14 @@ const Reservations = ({ reservations, session }) => {
         />
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
-      <main style={{ width: '100%' }}>
-        <Section tw={{ variant: 'reservations' }} position="relative">
-          {!session && <Login />}
-          {session && (
-            <StyledContent>
-              <ReservationsContent reservations={res} itemsPerPage={5} />
-            </StyledContent>
-          )}
-        </Section>
-      </main>
+      <Section tw={{ variant: 'reservations' }} position="relative">
+        {!session && <Login />}
+        {session && (
+          <StyledContent>
+            <ReservationsContent reservations={res} itemsPerPage={5} />
+          </StyledContent>
+        )}
+      </Section>
     </>
   );
 };

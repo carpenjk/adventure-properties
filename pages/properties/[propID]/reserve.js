@@ -89,43 +89,41 @@ const Reserve = ({ property }) => {
         />
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
-      <main style={{ width: '100%' }}>
-        <ContentContainer tw={{ variant: 'reserve' }}>
-          <CenterWithContent>
-            <ReservationPicture url={mainUrl} alt={title} />
-            <Spacer vertical space="8px" />
-            <Link href={`/properties/${propID}`} passHref>
-              <a>
-                <PropertyTitle title={title} variant="review" asLink />
-              </a>
-            </Link>
-            {/* reservation being reviewed */}
-            {!response && !error && (
-              <ReservationReview
-                reservation={reservation}
-                control={reservationControl}
-                maxGuests={maxGuests}
-                title={title}
-              />
-            )}
-            {/* reservation attempted */}
-            {response && <ReservationResponse response={response} />}
-            {/* reservation refreshed */}
-            {!response && error && (
-              <ReservationError error={error} userRefresh={isBlank} />
-            )}
-            <ReserveButtons
-              reserveDisabled={isReservationError}
-              showEdit={!isComplete}
-              showReserve={!isComplete}
-              isError={isReservationError}
-              onEdit={handleEdit}
-              onReserve={handleReserve}
-              onBack={handleGoBack}
+      <ContentContainer tw={{ variant: 'reserve' }}>
+        <CenterWithContent>
+          <ReservationPicture url={mainUrl} alt={title} />
+          <Spacer vertical space="8px" />
+          <Link href={`/properties/${propID}`} passHref>
+            <a>
+              <PropertyTitle title={title} variant="review" asLink />
+            </a>
+          </Link>
+          {/* reservation being reviewed */}
+          {!response && !error && (
+            <ReservationReview
+              reservation={reservation}
+              control={reservationControl}
+              maxGuests={maxGuests}
+              title={title}
             />
-          </CenterWithContent>
-        </ContentContainer>
-      </main>
+          )}
+          {/* reservation attempted */}
+          {response && <ReservationResponse response={response} />}
+          {/* reservation refreshed */}
+          {!response && error && (
+            <ReservationError error={error} userRefresh={isBlank} />
+          )}
+          <ReserveButtons
+            reserveDisabled={isReservationError}
+            showEdit={!isComplete}
+            showReserve={!isComplete}
+            isError={isReservationError}
+            onEdit={handleEdit}
+            onReserve={handleReserve}
+            onBack={handleGoBack}
+          />
+        </CenterWithContent>
+      </ContentContainer>
     </>
   );
 };

@@ -19,11 +19,11 @@ export default {
     ...variant('reservations', {
       paddingTop: 3,
       paddingRight: [3, 5],
-      paddingBottom: value('87px'),
+      paddingBottom: 5,
       paddingLeft: [3, 5],
     }),
     ...variant('search', {
-      paddingBottom: value('87px'),
+      paddingBottom: 5,
     }),
   },
 };
