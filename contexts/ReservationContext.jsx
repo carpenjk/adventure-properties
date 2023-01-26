@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useMemo } from 'react';
 
-import useReservationSession from '../components/reservationForm/UseReservationSession';
+import useReservationSession from '../components/adapters/reservation/UseReservationSession';
 
 import { startDateProps, endDateProps, guestOptions } from '../data/input';
 

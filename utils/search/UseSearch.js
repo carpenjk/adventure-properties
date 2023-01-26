@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router';
-import useReservationSession from '../../components/reservationForm/UseReservationSession';
+import useReservationSession from '../../components/adapters/reservation/UseReservationSession';
 import { prepValues } from '../../data/validation/search';
 import { getSortBy } from './utils';
 
