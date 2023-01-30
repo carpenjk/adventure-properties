@@ -20,7 +20,7 @@ import PrimarySearchFields from '../components/searchbar/PrimarySearchFields';
 import SecondarySearchFields from '../components/searchbar/SecondarySearchFields';
 import { endDateProps, startDateProps } from '../data/input';
 
-import { getSortBy } from '../utils/search/utils';
+import { getSortByValue } from '../utils/search/utils';
 import useSearch from '../utils/search/UseSearch';
 import HomeBannerLayout from '../components/hero/HomeBannerLayout';
 
@@ -43,7 +43,7 @@ function bannerTop({ windowWidth }) {
 
 const Index = (props) => {
   const { features } = props;
-  const search = useSearch();
+  const searchAndSetSession = useSearch();
   return (
     <>
       <Head>
@@ -52,7 +52,10 @@ const Index = (props) => {
           type="text/css"
           dangerouslySetInnerHTML={{ __html: mediaStyles }}
         />
-        <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+        <meta
+          name="viewport"
+          content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+        />
       </Head>
       <Section tw={{ variant: 'hero' }} position="relative">
         <Hero
@@ -84,7 +87,7 @@ const Index = (props) => {
               nearbyActivities: '',
               ...getInitialCheckFilters(),
             }}
-            search={search}
+            search={searchAndSetSession}
             validationSchema={SearchSchema}
             options={{
               secondaryOpenBreakpoint: 1,
@@ -108,7 +111,7 @@ const Index = (props) => {
             feature: true,
             nearbyActivities: ['skiing'],
             page: 1,
-            ...getSortBy(),
+            sortBy: getSortByValue(),
           })}
         />
       </Section>

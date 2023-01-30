@@ -22,6 +22,7 @@ const SearchResultLayout = ({
       page={page}
       filtersMenu={
         <SearchBarMenu
+          offsetTop={-40}
           PrimarySearchFields={PrimarySearchFields}
           SecondarySearchFields={SecondarySearchFields}
           FilterFields={Filters}

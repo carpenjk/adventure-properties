@@ -53,7 +53,10 @@ const Reservations = ({ reservations, session }) => {
           type="text/css"
           dangerouslySetInnerHTML={{ __html: mediaStyles }}
         />
-        <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+        <meta
+          name="viewport"
+          content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+        />
       </Head>
       <Section tw={{ variant: 'reservations' }} position="relative">
         {!session && <Login />}

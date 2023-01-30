@@ -1,8 +1,7 @@
 import styled from 'styled-components';
-import { useContext } from 'react';
 import { useRouter } from 'next/router';
 import { breakpoint, getProp } from '@carpenjk/prop-x/css';
-import { SearchBarContext } from '@carpenjk/searchbar';
+import { useSearchBar } from '@carpenjk/searchbar';
 import { ActionButton } from '@carpenjk/base/button';
 import { Spacer } from '@carpenjk/base/layout';
 
@@ -22,7 +21,7 @@ function toggleSort(obj) {
 }
 
 const ResultMenuLayout = ({ ignoredLocation }) => {
-  const { searchState } = useContext(SearchBarContext);
+  const { searchState } = useSearchBar();
   const router = useRouter();
 
   const { query } = router;
@@ -45,26 +44,15 @@ const ResultMenuLayout = ({ ignoredLocation }) => {
     const newSort = currPriceSort
       ? toggleSort(currPriceSort)
       : { displayPrice: -1 };
-    router.push({
-      pathname: '/properties/search',
-      query: {
-        ...query,
-        page: 1,
-        sortBy: JSON.stringify(newSort),
-      },
-    });
+    searchState.search({ ...searchState.values, sortBy: newSort, page: 1 });
   }
 
   async function handleDestinationSort() {
-    const { sortBy: prevSort, ...remQuery } = query || {};
     if (!isDestinationSorted) {
-      router.push({
-        pathname: '/properties/search',
-        query: {
-          ...remQuery,
-          page: 1,
-          sortBy: JSON.stringify({ destination: 1 }),
-        },
+      searchState.search({
+        ...searchState.values,
+        sortBy: { destination: 1 },
+        page: 1,
       });
     }
   }

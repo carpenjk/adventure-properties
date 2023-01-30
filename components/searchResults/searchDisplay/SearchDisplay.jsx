@@ -1,13 +1,19 @@
-import { useContext, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import ClientOnly from '@carpenjk/client-only';
-import { SearchBarContext } from '@carpenjk/searchbar';
+import { useSearchBar } from '@carpenjk/searchbar';
 import { CenterWithContent } from '@carpenjk/base/layout';
+import { useRouter } from 'next/router';
 import Dashboard from './Dashboard';
 import SearchResults from './SearchResults';
 import Pagination from './Pagination';
 
 const SearchDisplay = (props) => {
-  const { searchState } = useContext(SearchBarContext);
+  const { searchState } = useSearchBar();
+  const router = useRouter();
+
+  const { query } = router;
+  const { sortBy } = query;
+  const currentSort = sortBy ? JSON.parse(sortBy) : {};
   const [pageCount, setPageCount] = useState(1);
   const {
     filtersMenu,
@@ -26,7 +32,11 @@ const SearchDisplay = (props) => {
   // Invoke when user click to request another page.
   const handlePageClick = (event) => {
     const { selected } = event;
-    searchState.search(searchState.values, selected + 1);
+    searchState.search({
+      ...searchState.values,
+      sortBy: currentSort,
+      page: selected + 1,
+    });
   };
 
   return (

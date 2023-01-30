@@ -2,7 +2,7 @@ import { value, variant } from '@carpenjk/themeweaver';
 
 export default {
   searchBar: {
-    backgroundColor: 'lightBackground',
+    backgroundColor: [value('transparent'), 'lightBackground'],
     width: [value('90vw'), value('90vw')],
     maxWidth: [value('500px'), value('fit-content')],
     maxHeight: value('calc(100vh - 224px)'),
@@ -11,6 +11,9 @@ export default {
     paddingRight: [2, 2],
     paddingBottom: [1, 1],
     paddingLeft: [2, 2],
+  },
+  'searchBar-isFiltersOpen': {
+    maxWidth: value('833px'),
   },
   searchBar__buttonContainer: {
     paddingTop: [1, 3],

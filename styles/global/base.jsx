@@ -47,6 +47,8 @@ export const GlobalStyles = () => (
         --menuFont: 'Poppins', sans-serif;
       }
       html {
+        padding: env(safe-area-inset-top) env(safe-area-inset-right)
+          env(safe-area-inset-bottom) env(safe-area-inset-left);
         height: 100%;
         width: 100%;
         min-width: 320px;

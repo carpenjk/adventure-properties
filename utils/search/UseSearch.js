@@ -1,13 +1,13 @@
 import { useRouter } from 'next/router';
 import useReservationSession from '../../components/adapters/reservation/UseReservationSession';
 import { prepValues } from '../../data/validation/search';
-import { getSortBy } from './utils';
+import { getSortByValue } from './utils';
 
 const useSearch = () => {
   const router = useRouter();
   const { setSessionData } = useReservationSession();
 
-  return async function search(values) {
+  return async function searchAndSetSession(values) {
     const { guests, arriveDate, departDate } = values;
     setSessionData({
       numGuests: guests,
@@ -17,7 +17,10 @@ const useSearch = () => {
     router.push({
       pathname: '/properties/search',
       query: {
-        ...prepValues({ ...values, ...getSortBy(values) }),
+        ...prepValues({
+          ...values,
+          sortBy: getSortByValue(values),
+        }),
       },
     });
   };

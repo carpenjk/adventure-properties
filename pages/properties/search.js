@@ -8,14 +8,13 @@ import { theme } from '../../theme/theme';
 import { endDateProps, startDateProps } from '../../data/input';
 import {
   getInitialCheckFilters,
-  prepValues,
   SearchSchema,
 } from '../../data/validation/search';
 import { mediaStyles } from '../../Media';
 import { search } from '../../utils/search/search';
-import { getSortBy } from '../../utils/search/utils';
 import { processParams } from '../../utils/search/params';
 import SearchResultLayout from '../../components/searchResults/SearchResultLayout';
+import useSearch from '../../utils/search/UseSearch';
 
 const blankParams = {
   destination: '',
@@ -28,19 +27,11 @@ const blankParams = {
 
 const Search = ({ response }) => {
   const router = useRouter();
+  const searchAndSetSession = useSearch();
   const { page: pageParam, ...parsedParams } = processParams(router.query);
   const page = pageParam || 1;
   const initialParamValues = { ...blankParams, ...parsedParams };
   const { message, ignoredLocation, results, error } = response;
-
-  async function handleSearch(values, pg = 1) {
-    router.push({
-      pathname: '/properties/search',
-      query: {
-        ...prepValues({ ...values, ...getSortBy(values), page: pg }),
-      },
-    });
-  }
 
   return (
     <>
@@ -50,7 +41,10 @@ const Search = ({ response }) => {
           type="text/css"
           dangerouslySetInnerHTML={{ __html: mediaStyles }}
         />
-        <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+        <meta
+          name="viewport"
+          content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+        />
       </Head>
       <NXBackButton />
       <Spacer vertical space="60px" />
@@ -65,7 +59,7 @@ const Search = ({ response }) => {
             }}
             initialValues={initialParamValues}
             validationSchema={SearchSchema}
-            search={handleSearch}
+            search={searchAndSetSession}
             onExit={(searchbar) => searchbar.searchState.setIsHidden(true)}
             theme={theme}
           >
