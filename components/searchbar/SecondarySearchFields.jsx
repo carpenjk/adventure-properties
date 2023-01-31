@@ -1,20 +1,31 @@
-import { useContext } from 'react';
-import { ThemeContext } from 'styled-components';
+import { useTheme } from 'styled-components';
 import { FormikDateRange, FormikSelect } from '@carpenjk/base/input';
 import { gtDateOnly, isNotPast } from '@carpenjk/date-utils';
 import { startDateProps, endDateProps, guestOptions } from '../../data/input';
 import 'react-datepicker/dist/react-datepicker.css';
+import { useBreakpoints } from '@carpenjk/use-breakpoints';
 
 const SecondarySearchFields = (props) => {
   const {
     onInputFocus,
     inputRefs,
-    searchBarRef,
     searchState: { isSearchBarFocused, values },
   } = props;
+  const handleDateFocus = (e) => {
+    e.target.blur();
+    onInputFocus(e);
+  };
 
-  const theme = useContext(ThemeContext);
+  const handleCalendarClose = () => {
+    if (inputRefs?.current && inputRefs.current[0]) {
+      inputRefs.current[0].state.startDate.ref.current.handleBlur();
+      inputRefs.current[0].state.endDate.ref.current.handleBlur();
+    }
+  };
 
+  const theme = useTheme();
+  const br = useBreakpoints(theme);
+  const isSmallScreen = br.indexOfLower < 1;
   return (
     <>
       <FormikDateRange
@@ -25,9 +36,10 @@ const SecondarySearchFields = (props) => {
         filterEndDate={(dt) => gtDateOnly(dt, values[startDateProps.id])}
         startProps={startDateProps}
         endProps={endDateProps}
-        onFocus={onInputFocus}
+        onFocus={isSmallScreen ? handleDateFocus : onInputFocus}
+        onCalendarClose={handleCalendarClose}
         ref={(el) => (inputRefs.current[0] = el)}
-        popperParent={searchBarRef}
+        portalId="searchbar"
         forceClose={!isSearchBarFocused}
         showInsetPlaceholder
       />

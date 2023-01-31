@@ -23,6 +23,7 @@ import { endDateProps, startDateProps } from '../data/input';
 import { getSortByValue } from '../utils/search/utils';
 import useSearch from '../utils/search/UseSearch';
 import HomeBannerLayout from '../components/hero/HomeBannerLayout';
+import CustomDatePickerStyles from '../components/datepicker/CustomDatePickerStyles';
 
 // static variables
 const HERO_IMAGE =
@@ -57,12 +58,12 @@ const Index = (props) => {
           content="width=device-width, initial-scale=1.0, viewport-fit=cover"
         />
       </Head>
-      <Section tw={{ variant: 'hero' }} position="relative">
+      <Section id="hero" tw={{ variant: 'hero' }} position="relative">
         <Hero
           tw={{ variant: 'home' }}
           image={{
             src: `${HERO_IMAGE}?w=2048&fit=fill`,
-            srcSet: `${HERO_IMAGE}?w=380&fit=fill 380w, https:${HERO_IMAGE}?w=460&fit=fill 460w, ${HERO_IMAGE}?w=560&fit=fill 560w, ${HERO_IMAGE}?w=640&fit=fill 640w, ${HERO_IMAGE}?w=1000&fit=fill 1000w, ${HERO_IMAGE}?w=2048&fit=fill 2048w`,
+            srcSet: `${HERO_IMAGE}?w=380&fit=fill 380w, ${HERO_IMAGE}?w=460&fit=fill 460w, ${HERO_IMAGE}?w=560&fit=fill 560w, ${HERO_IMAGE}?w=640&fit=fill 640w, ${HERO_IMAGE}?w=1000&fit=fill 1000w, ${HERO_IMAGE}?w=2048&fit=fill 2048w`,
             alt: 'Mountain lake house',
           }}
           bannerPos={{ top: bannerTop }}
@@ -70,32 +71,35 @@ const Index = (props) => {
           backgroundImage={HERO_IMAGE}
         />
         <ClientOnly>
-          <SearchBar
-            PrimarySearchFields={PrimarySearchFields}
-            SecondarySearchFields={SecondarySearchFields}
-            FilterFields={Filters}
-            openMaxWidth={['none', '833px']}
-            initialValues={{
-              destination: '',
-              guests: '',
-              minPrice: '',
-              maxPrice: '',
-              beds: '',
-              baths: '',
-              [startDateProps.id]: '',
-              [endDateProps.id]: '',
-              nearbyActivities: '',
-              ...getInitialCheckFilters(),
-            }}
-            search={searchAndSetSession}
-            validationSchema={SearchSchema}
-            options={{
-              secondaryOpenBreakpoint: 1,
-              alwaysShowButtons: [false, true],
-              useIsStartedState: true,
-            }}
-            theme={theme}
-          />
+          <CustomDatePickerStyles>
+            <SearchBar
+              searchBarId="searchbar"
+              PrimarySearchFields={PrimarySearchFields}
+              SecondarySearchFields={SecondarySearchFields}
+              FilterFields={Filters}
+              openMaxWidth={['none', '833px']}
+              initialValues={{
+                destination: '',
+                guests: '',
+                minPrice: '',
+                maxPrice: '',
+                beds: '',
+                baths: '',
+                [startDateProps.id]: '',
+                [endDateProps.id]: '',
+                nearbyActivities: '',
+                ...getInitialCheckFilters(),
+              }}
+              search={searchAndSetSession}
+              validationSchema={SearchSchema}
+              options={{
+                secondaryOpenBreakpoint: 1,
+                alwaysShowButtons: [false, true],
+                useIsStartedState: true,
+              }}
+              theme={theme}
+            />
+          </CustomDatePickerStyles>
         </ClientOnly>
       </Section>
       <Section tw={{ variant: 'features' }}>

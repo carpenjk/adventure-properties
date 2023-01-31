@@ -14,6 +14,7 @@ import ErrorContainer from './ErrorContainer';
 import InputGroup from './InputGroup';
 import InvoiceContent from './InvoiceContent';
 import InvoiceHeader from './InvoiceHeader';
+import CustomDatePickerStyles from '../datepicker/CustomDatePickerStyles';
 
 const StyledReserveWrapper = styled.div`
   position: relative;
@@ -110,22 +111,24 @@ const ReservationForm = (props) => {
         showTitle={showTitle}
       />
       <InputGroup heading="Dates">
-        <StyledDateRangeWrapper>
-          <DateRange
-            tw={{ variant: 'reservation' }}
-            endProps={endDateProps}
-            startProps={startDateProps}
-            filterStartDate={(dt) => isAvail(dt, availability)}
-            filterEndDate={(dt) =>
-              isValidDeparture(dt, arriveDate, availability)
-            }
-            displayVertical={false}
-            forceClose={false}
-            popperParent={formContainerRef}
-            showLabel
-            valueFunctions={{ get: getDate, set: setDate }}
-          />
-        </StyledDateRangeWrapper>
+        <CustomDatePickerStyles id="reservationFormDateInput">
+          <StyledDateRangeWrapper>
+            <DateRange
+              tw={{ variant: 'reservation' }}
+              endProps={endDateProps}
+              startProps={startDateProps}
+              filterStartDate={(dt) => isAvail(dt, availability)}
+              filterEndDate={(dt) =>
+                isValidDeparture(dt, arriveDate, availability)
+              }
+              displayVertical={false}
+              forceClose={false}
+              showLabel
+              valueFunctions={{ get: getDate, set: setDate }}
+              portalId="reservationFormDateInput"
+            />
+          </StyledDateRangeWrapper>
+        </CustomDatePickerStyles>
       </InputGroup>
       <Spacer vertical space={FORM_SPACING} />
       <InputGroup heading="Guests">

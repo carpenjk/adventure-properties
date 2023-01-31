@@ -32,6 +32,7 @@ const ResultMenuLayout = ({ ignoredLocation }) => {
 
   const isdestinationSearch = query.destination && true;
   const isDestinationSorted = currentSort.destination && !ignoredLocation;
+  const isDestinationSortDisabled = !isdestinationSearch || ignoredLocation;
 
   async function handlePriceSort() {
     // if price is current sort, toggle sort
@@ -48,12 +49,14 @@ const ResultMenuLayout = ({ ignoredLocation }) => {
   }
 
   async function handleDestinationSort() {
-    if (!isDestinationSorted) {
-      searchState.search({
-        ...searchState.values,
-        sortBy: { destination: 1 },
-        page: 1,
-      });
+    if (!isDestinationSortDisabled) {
+      if (!isDestinationSorted) {
+        searchState.search({
+          ...searchState.values,
+          sortBy: { destination: 1 },
+          page: 1,
+        });
+      }
     }
   }
 
@@ -87,6 +90,7 @@ const ResultMenuLayout = ({ ignoredLocation }) => {
           tw={{
             variant: 'contentNav',
           }}
+          isActive={isPriceSorted}
           onClick={handlePriceSort}
         >
           <img
@@ -101,7 +105,7 @@ const ResultMenuLayout = ({ ignoredLocation }) => {
         <ActionButton
           tw={{ variant: 'contentNav' }}
           isActive={isDestinationSorted && !ignoredLocation}
-          disabled={!isdestinationSearch || ignoredLocation}
+          disabled={isDestinationSortDisabled}
           onClick={handleDestinationSort}
         >
           <img

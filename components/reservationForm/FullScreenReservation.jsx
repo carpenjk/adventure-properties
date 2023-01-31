@@ -14,6 +14,7 @@ import FullScreenInputContainer from './FullScreenInputContainer';
 import InvoiceHeader from './InvoiceHeader';
 import InputGroup from './InputGroup';
 import ErrorContainer from './ErrorContainer';
+import CustomDatePickerStyles from '../datepicker/CustomDatePickerStyles';
 
 const StyledWrapper = styled.div`
   display: flex;
@@ -75,6 +76,11 @@ const FullScreenReservation = (props) => {
   const isLastSlide = slideState.currSlide === SLIDE_FIELDS.length - 1;
 
   const containerRef = useRef();
+  const dateRangeRef = useRef();
+
+  function handleDateFocus(e) {
+    e.target.blur();
+  }
 
   function handleSave() {
     const isValid = validate({
@@ -126,26 +132,30 @@ const FullScreenReservation = (props) => {
     >
       <StyledWrapper ref={containerRef}>
         <InvoiceHeader unit={unit} price={price.avg} title={title} showTitle />
-        <InputSlide slideState={slideState} index={0}>
-          <InputGroup heading="Dates">
-            <StyledDateRangeWrapper>
-              <DateRange
-                tw={{ variant: 'reservation' }}
-                endProps={endDateProps}
-                startProps={startDateProps}
-                displayVertical={false}
-                filterStartDate={(dt) => isAvail(dt, availability)}
-                filterEndDate={(dt) =>
-                  isValidDeparture(dt, arriveDate, availability)
-                }
-                forceClose={false}
-                popperParent={containerRef}
-                showLabel
-                valueFunctions={{ get: getDate, set: setDate }}
-              />
-            </StyledDateRangeWrapper>
-          </InputGroup>
-        </InputSlide>
+        <CustomDatePickerStyles id="fullscreenDateInput">
+          <InputSlide slideState={slideState} index={0}>
+            <InputGroup heading="Dates">
+              <StyledDateRangeWrapper>
+                <DateRange
+                  tw={{ variant: 'reservation' }}
+                  endProps={endDateProps}
+                  startProps={startDateProps}
+                  displayVertical={false}
+                  filterStartDate={(dt) => isAvail(dt, availability)}
+                  filterEndDate={(dt) =>
+                    isValidDeparture(dt, arriveDate, availability)
+                  }
+                  forceClose={false}
+                  portalId="fullscreenDateInput"
+                  showLabel
+                  valueFunctions={{ get: getDate, set: setDate }}
+                  ref={dateRangeRef}
+                  onFocus={handleDateFocus}
+                />
+              </StyledDateRangeWrapper>
+            </InputGroup>
+          </InputSlide>
+        </CustomDatePickerStyles>
         <InputSlide slideState={slideState} index={1}>
           <InputGroup heading="Guests">
             <CustomSelect
