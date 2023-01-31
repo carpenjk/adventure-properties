@@ -1,9 +1,9 @@
 import { useTheme } from 'styled-components';
+import { useBreakpoints } from '@carpenjk/use-breakpoints';
 import { FormikDateRange, FormikSelect } from '@carpenjk/base/input';
 import { gtDateOnly, isNotPast } from '@carpenjk/date-utils';
 import { startDateProps, endDateProps, guestOptions } from '../../data/input';
 import 'react-datepicker/dist/react-datepicker.css';
-import { useBreakpoints } from '@carpenjk/use-breakpoints';
 
 const SecondarySearchFields = (props) => {
   const {
