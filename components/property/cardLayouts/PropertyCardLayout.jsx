@@ -94,10 +94,18 @@ const PropertyCardLayout = (props) => {
       scale={scale}
     >
       <PhotoLayout
-        property={property}
+        beds={property.beds}
+        baths={property.baths}
+        guests={property.guests}
+        city={property.city}
+        state={property.state}
+        propertyType={property.propertyType}
+        title={property.title}
+        nearbyActivities={property.nearbyActivities}
         currSymbol={property.currSymbol}
         price={property.displayPrice}
         unit={property.unit}
+        photo={property.mainPhoto}
       />
       <StyledDescWrapper display={getDescDisplay(showDescription)}>
         <PropertyDescription description={property.description} />

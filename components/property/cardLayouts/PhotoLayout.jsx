@@ -48,13 +48,9 @@ const StyledContainer = styled.div`
 const IMG_WIDTH = 325;
 const IMG_HEIGHT = 217;
 
-const buildPicUrl = (property) => {
-  if (property && property.mainPhoto) {
-    return `http:${property.mainPhoto.fields.file.url}?fit=fill&w=325&h=217&q=80`;
-  }
-  return undefined;
-};
-const PhotoLayout = ({ property, price, unit, currSymbol }) => {
+const buildPicUrl = (photo) =>
+  `https:${photo.fields.file.url}?fit=fill&w=325&h=217&q=80`;
+const PhotoLayout = (props) => {
   const {
     beds,
     baths,
@@ -62,12 +58,16 @@ const PhotoLayout = ({ property, price, unit, currSymbol }) => {
     city,
     state,
     propertyType,
+    photo,
+    price,
+    unit,
+    currSymbol,
     title,
     nearbyActivities,
-  } = property;
+  } = props;
 
   const cityState = `${city}, ${state}`;
-  const url = buildPicUrl(property);
+  const url = buildPicUrl(photo);
 
   return (
     <StyledContainer>
