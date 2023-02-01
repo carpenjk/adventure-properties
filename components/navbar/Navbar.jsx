@@ -12,7 +12,7 @@ import {
   getPaddingBottom,
   getPaddingLeft,
 } from '@carpenjk/themeweaver';
-import { TwMobileMenu } from 'tw-mobile-menu';
+import { TwMobileMenu } from '@carpenjk/tw-mobile-menu';
 import { useEffect, useRef } from 'react';
 import { useScrollBarWidth } from '@carpenjk/hooks';
 import { Media } from '../../Media';
