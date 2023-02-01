@@ -30,12 +30,18 @@ const ReservationCardLayout = (props) => {
     <StyledContainer ref={innerRef} scale={scale}>
       <ReservationCardDetails reservation={reservation} />
       <PhotoLayout
-        property={property}
+        beds={property.beds}
+        baths={property.baths}
+        guests={property.guests}
+        city={property.city}
+        state={property.state}
+        propertyType={property.propertyType}
+        title={property.title}
+        nearbyActivities={property.nearbyActivities}
+        photo={property.mainPhoto}
         currSymbol={currSymbol}
         price={avgPrice}
         unit={unit}
-        innerRef={cardRef}
-        variant="large"
       />
     </StyledContainer>
   );

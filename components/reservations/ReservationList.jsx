@@ -29,6 +29,7 @@ const StyledItem = styled.li`
 const ReservationList = ({ reservations }) => (
   <StyledList>
     {reservations &&
+      reservations.length &&
       reservations.map((res) => (
         <StyledItem key={res._id}>
           <ReservationCard

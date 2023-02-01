@@ -44,7 +44,9 @@ export async function getServerSideProps(context) {
 }
 
 const Reservations = ({ reservations, session }) => {
-  const res = reservations ? withDates(reservations) : undefined;
+  const reservationWithDates = reservations
+    ? withDates(reservations)
+    : undefined;
   return (
     <>
       <Head>
@@ -62,7 +64,10 @@ const Reservations = ({ reservations, session }) => {
         {!session && <Login />}
         {session && (
           <StyledContent>
-            <ReservationsContent reservations={res} itemsPerPage={5} />
+            <ReservationsContent
+              reservations={reservationWithDates}
+              itemsPerPage={5}
+            />
           </StyledContent>
         )}
       </Section>
