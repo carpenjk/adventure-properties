@@ -11,8 +11,14 @@ const SecondarySearchFields = (props) => {
     inputRefs,
     searchState: { isSearchBarFocused, values },
   } = props;
+  const theme = useTheme();
+  const br = useBreakpoints(theme.breakpoints);
+
   const handleDateFocus = (e) => {
-    e.target.blur();
+    const isSmallScreen = br.indexOfLower < 1;
+    if (isSmallScreen) {
+      e.target.blur();
+    }
     onInputFocus(e);
   };
 
@@ -23,9 +29,6 @@ const SecondarySearchFields = (props) => {
     }
   };
 
-  const theme = useTheme();
-  const br = useBreakpoints(theme);
-  const isSmallScreen = br.indexOfLower < 1;
   return (
     <>
       <FormikDateRange
@@ -36,7 +39,7 @@ const SecondarySearchFields = (props) => {
         filterEndDate={(dt) => gtDateOnly(dt, values[startDateProps.id])}
         startProps={startDateProps}
         endProps={endDateProps}
-        onFocus={isSmallScreen ? handleDateFocus : onInputFocus}
+        onFocus={handleDateFocus}
         onCalendarClose={handleCalendarClose}
         ref={(el) => (inputRefs.current[0] = el)}
         portalId="searchbar"
