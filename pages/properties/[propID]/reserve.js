@@ -56,7 +56,7 @@ const Reserve = ({ property }) => {
     (response && response.error && true) || (error && true);
   const isComplete = response && response.message && true;
 
-  const mainUrl = `http:${property.mainPhoto.fields.file.url}`;
+  const mainUrl = `https:${property.mainPhoto.fields.file.url}`;
 
   function handleReserve() {
     setLoadingMessage('Completing Reservation');
