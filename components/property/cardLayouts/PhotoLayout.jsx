@@ -51,7 +51,6 @@ const IMG_HEIGHT = 217;
 const buildPicUrl = (photo) =>
   `https:${photo.fields.file.url}?fit=fill&w=325&h=217&q=80`;
 const PhotoLayout = (props) => {
-  console.log('🚀 ~ file: PhotoLayout.jsx:54 ~ PhotoLayout ~ props', props);
   const {
     beds,
     baths,
