@@ -80,7 +80,7 @@ const ToggleFooterContent = ({
       )}
       <StyledWrapper ref={drawerRef}>
         <StyledFooterContent ref={drawerRef}>
-          <span>&copy; 2021</span>
+          <span>&copy; 2023</span>
           <span>
             <ToggleButton isOpen={isOpen} onClick={control.toggle}>
               Jeremy Carpenter
