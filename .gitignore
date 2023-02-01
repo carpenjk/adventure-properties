@@ -20,7 +20,6 @@
 
 # misc
 /utils/_properties.js
-/utils/_contentful.js
 .DS_Store
 /.vscode
 
