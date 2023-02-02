@@ -15,6 +15,7 @@ import {
 import { TwMobileMenu } from '@carpenjk/tw-mobile-menu';
 import { useEffect, useRef } from 'react';
 import { useScrollBarWidth } from '@carpenjk/hooks';
+import { breakpoint } from '@carpenjk/prop-x/css';
 import { Media } from '../../Media';
 // components
 import WideNavbarLayout from './WideNavbarLayout';
@@ -42,6 +43,19 @@ const StyledNavbar = styled.div`
   > * {
     width: 100%;
   }
+  ${breakpoint(1)`
+      height: ${getHeight('nav.main', 'auto')};
+      max-height: ${getMaxHeight('nav.main', 'none')};
+      background-color: ${getBackgroundColor('nav.main', 'none')};
+      margin-top: ${getMarginTop('nav.main', '0')};
+      margin-right: ${getMarginRight('nav.main', '0')};
+      margin-bottom: ${getMarginBottom('nav.main', '0')};
+      margin-left: ${getMarginLeft('nav.main', '0')};
+      padding-top: ${getPaddingTop('nav.main', '0')};
+      padding-right: ${getPaddingRight('nav.main', '20px')};
+      padding-bottom: ${getPaddingBottom('nav.main', '0')};
+      padding-left: ${getPaddingLeft('nav.main', '20px')};
+  `}
 `;
 const DEFAULT_TW = { semKey: 'nav', variant: 'main' };
 const Navbar = () => {
