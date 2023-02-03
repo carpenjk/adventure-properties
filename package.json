@@ -19,7 +19,7 @@
     "@carpenjk/popup-modal": "git+https://github.com/carpenjk/popup-modal",
     "@carpenjk/prop-x": "^3.0.1",
     "@carpenjk/scroll-lock": "git+https://github.com/carpenjk/scroll-lock",
-    "@carpenjk/searchbar": "^5.1.1",
+    "@carpenjk/searchbar": "^5.1.2",
     "@carpenjk/themeweaver": "^1.0.2",
     "@carpenjk/tw-mobile-menu": "^1.0.1",
     "@carpenjk/use-breakpoints": "^1.0.0",
