@@ -7,7 +7,7 @@
     "@artsy/fresnel": "^3.5.0",
     "@babel/core": "^7.16.0",
     "@babel/preset-react": "^7.16.0",
-    "@carpenjk/base": "git+https://github.com/carpenjk/base",
+    "@carpenjk/base": "github:carpenjk/base",
     "@carpenjk/client-only": "git+https://github.com/carpenjk/client-only",
     "@carpenjk/date-utils": "git+https://github.com/carpenjk/date-utils",
     "@carpenjk/hero": "git+https://github.com/carpenjk/hero",
