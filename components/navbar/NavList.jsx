@@ -69,9 +69,6 @@ const NavList = () => {
               <NavLink tw={{ variant: 'user' }} href="/reservations">
                 My Adventures
               </NavLink>
-              <NavLink tw={{ variant: 'user' }} href="/">
-                Favorites
-              </NavLink>
               <NavLink
                 tw={{ variant: 'user' }}
                 href="/"
