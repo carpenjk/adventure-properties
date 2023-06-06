@@ -5,12 +5,11 @@ import { ThemeProvider } from 'styled-components';
 import { CookiesProvider } from 'react-cookie';
 import Spinner from '../components/spinner/Spinner';
 import { SpinnerProvider } from '../components/spinner/SpinnerContext';
-import { ConfigProvider } from '../contexts/context';
 import { MediaContextProvider } from '../Media';
 import Layout from '../components/Layout';
 import { theme } from '../theme/theme';
 import '../styles/global/datepicker.css';
-import { ReservationProvider } from '../contexts/ReservationContext';
+import { ReservationProvider } from '../controllers/reservation/ReservationContext';
 
 export default function MyApp({ Component, pageProps }) {
   const [loading, setLoading] = useState(false);
@@ -36,16 +35,14 @@ export default function MyApp({ Component, pageProps }) {
       <SessionProvider session={pageProps.session} refetchInterval={5 * 60}>
         <ThemeProvider theme={theme}>
           <MediaContextProvider>
-            <ConfigProvider>
-              <ReservationProvider>
-                <SpinnerProvider>
-                  <Layout>
-                    {loading && <Spinner delay={900} />}
-                    <Component {...pageProps} />
-                  </Layout>
-                </SpinnerProvider>
-              </ReservationProvider>
-            </ConfigProvider>
+            <ReservationProvider>
+              <SpinnerProvider>
+                <Layout>
+                  {loading && <Spinner delay={900} />}
+                  <Component {...pageProps} />
+                </Layout>
+              </SpinnerProvider>
+            </ReservationProvider>
           </MediaContextProvider>
         </ThemeProvider>
       </SessionProvider>

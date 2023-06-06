@@ -1,5 +1,5 @@
-import clientPromise from '../mongodb';
-import { fetchProperties } from '../../components/adapters/property/property';
+import clientPromise from '../../utils/mongodb';
+import { fetchProperties } from '../property/property';
 
 const DEFAULT_PER_PAGE = 5;
 export async function fetchReservations(params) {
@@ -49,4 +49,37 @@ export async function fetchReservationsWithProperty(params) {
     count,
     message: count === 0 ? message : undefined,
   };
+}
+
+export default async function saveReservation(reservation) {
+  const client = await clientPromise;
+  // create reservation document
+  try {
+    await client.db().collection('reservations').insertOne(reservation);
+  } catch (error) {
+    throw new Error('Error making reservation', { cause: error });
+  }
+
+  // mark make availability date as booked
+  try {
+    await client
+      .db()
+      .collection('properties')
+      .updateOne(
+        { cmsID: reservation.cmsID },
+        { $set: { 'availability.$[isBooked].booked': true } },
+        {
+          arrayFilters: [
+            {
+              'isBooked.date': {
+                $gte: reservation.arriveDate,
+                $lt: reservation.departDate,
+              },
+            },
+          ],
+        }
+      );
+  } catch (error) {
+    throw new Error('Error booking availability', { cause: error });
+  }
 }

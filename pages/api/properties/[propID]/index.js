@@ -1,7 +1,7 @@
 import {
   fetchProperties,
   fetchProperty,
-} from '../../../../components/adapters/property/property';
+} from '../../../../controllers/property/property';
 
 export default async function handler(req, res) {
   const { propID } = req.query;

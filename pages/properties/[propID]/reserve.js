@@ -8,7 +8,7 @@ import {
   CenterWithContent,
 } from '@carpenjk/base/layout';
 import { SpinnerContext } from '../../../components/spinner/SpinnerContext';
-import { fetchProperty } from '../../../components/adapters/property/property';
+import { fetchProperty } from '../../../controllers/property/property';
 import cmsClient from '../../../Contentful';
 import { mediaStyles } from '../../../Media';
 import useReservation from '../../../components/reservationForm/UseReservation';

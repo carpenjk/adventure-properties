@@ -11,10 +11,10 @@ import {
   SearchSchema,
 } from '../../data/validation/search';
 import { mediaStyles } from '../../Media';
-import { search } from '../../utils/search/search';
-import { processParams } from '../../utils/search/params';
+import { search } from '../../controllers/search/search';
+import { processParams } from '../../controllers/search/params';
 import SearchResultLayout from '../../components/searchResults/SearchResultLayout';
-import useSearch from '../../utils/search/UseSearch';
+import useSearch from '../../controllers/search/UseSearch';
 
 const blankParams = {
   destination: '',

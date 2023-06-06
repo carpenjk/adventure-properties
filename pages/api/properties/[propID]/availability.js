@@ -1,4 +1,4 @@
-import fetchAvailability from '../../../../utils/adapters/availability';
+import fetchAvailability from '../../../../controllers/availability/availability';
 
 export default async function handler(req, res) {
   const { propID } = req.query;

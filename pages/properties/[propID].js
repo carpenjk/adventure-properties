@@ -8,7 +8,7 @@ import ClientOnly from '@carpenjk/client-only';
 import NXBackButton from '../../components/buttons/NXBackButton';
 import OverlayButton from '../../components/buttons/OverlayButton';
 import { SpinnerContext } from '../../components/spinner/SpinnerContext';
-import { fetchProperty } from '../../components/adapters/property/property';
+import { fetchProperty } from '../../controllers/property/property';
 import useReservation from '../../components/reservationForm/UseReservation';
 import { Media, mediaStyles } from '../../Media';
 import cmsClient from '../../Contentful';

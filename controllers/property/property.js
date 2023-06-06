@@ -1,7 +1,7 @@
-import clientPromise from '../../../utils/mongodb';
-import { search } from '../../../utils/search/search';
+import clientPromise from '../../utils/mongodb';
+import { search } from '../search/search';
 
-const cmsClient = require('../../../utils/_contentful');
+const cmsClient = require('../../utils/_contentful');
 
 export function withPropertyUrl(property) {
   return { ...property, url: `/properties/${property.cmsID}` };

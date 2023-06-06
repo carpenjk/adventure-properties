@@ -1,8 +1,8 @@
 import React, { useState, useCallback, useMemo } from 'react';
 
-import useReservationSession from '../components/adapters/reservation/UseReservationSession';
+import useReservationSession from './UseReservationSession';
 
-import { startDateProps, endDateProps, guestOptions } from '../data/input';
+import { startDateProps, endDateProps, guestOptions } from '../../data/input';
 
 // context object
 const ReservationContext = React.createContext();

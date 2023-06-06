@@ -1,13 +1,13 @@
 import { getSession } from 'next-auth/react';
 import * as yup from 'yup';
 import { dateReviver } from '@carpenjk/date-utils';
-import { fetchProperty } from '../../../../../../components/adapters/property/property';
+import { fetchProperty } from '../../../../../../controllers/property/property';
 import {
   checkSession,
   isValidDeparture,
   isAvail,
 } from '../../../../../../data/validation/reservation';
-import saveReservation from '../../../../../../utils/adapters/reserve';
+import saveReservation from '../../../../../../controllers/reservation/reservation';
 
 export default async function handler(req, res) {
   const { propID, userID } = req.query;

@@ -8,8 +8,8 @@ import {
   isAvail,
 } from '../../data/validation/reservation';
 
-import { ReservationContext } from '../../contexts/ReservationContext';
-import useAvailability from '../adapters/property/UseAvailability';
+import { ReservationContext } from '../../controllers/reservation/ReservationContext';
+import useAvailability from '../../controllers/availability/UseAvailability';
 import {
   calcTotalPrice,
   calcUnitAmount,

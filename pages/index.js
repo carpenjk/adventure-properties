@@ -15,13 +15,13 @@ import {
 } from '../data/validation/search';
 
 //* configs
-import { fetchFeaturedProperties } from '../components/adapters/property/property';
+import { fetchFeaturedProperties } from '../controllers/property/property';
 import PrimarySearchFields from '../components/searchbar/PrimarySearchFields';
 import SecondarySearchFields from '../components/searchbar/SecondarySearchFields';
 import { endDateProps, startDateProps } from '../data/input';
 
-import { getSortByValue } from '../utils/search/utils';
-import useSearch from '../utils/search/UseSearch';
+import { getSortByValue } from '../controllers/search/utils';
+import useSearch from '../controllers/search/UseSearch';
 import HomeBannerLayout from '../components/hero/HomeBannerLayout';
 import CustomDatePickerStyles from '../components/datepicker/CustomDatePickerStyles';
 

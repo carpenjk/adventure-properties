@@ -6,7 +6,7 @@ import { Section } from '@carpenjk/base/semantic';
 import { mediaStyles } from '../Media';
 import ReservationsContent from '../components/reservations/ReservationsContent';
 import Login from '../components/Login';
-import { fetchReservationsWithProperty } from '../utils/adapters/reservations';
+import { fetchReservationsWithProperty } from '../controllers/reservation/reservation';
 
 const StyledContent = styled.div`
   padding: ${({ theme }) => theme.space[2]}px;

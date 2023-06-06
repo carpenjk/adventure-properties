@@ -1,4 +1,4 @@
-import { fetchActivities } from '../../utils/adapters/activities';
+import { fetchActivities } from '../../controllers/activities/activities';
 
 export default async function handler(req, res) {
   const { q } = req.query;

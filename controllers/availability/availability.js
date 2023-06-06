@@ -1,4 +1,4 @@
-import clientPromise from '../mongodb';
+import clientPromise from '../../utils/mongodb';
 
 export default async function fetchAvailability(id) {
   const client = await clientPromise;

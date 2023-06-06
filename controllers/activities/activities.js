@@ -1,4 +1,4 @@
-import clientPromise from '../mongodb';
+import clientPromise from '../../utils/mongodb';
 
 export async function fetchActivities(q) {
   const client = await clientPromise;

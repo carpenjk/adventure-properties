@@ -1,6 +1,6 @@
 import { diffDays } from '@carpenjk/date-utils';
 import { pMap, hasContents, processParams, removeUndefined } from './params';
-import clientPromise from '../mongodb';
+import clientPromise from '../../utils/mongodb';
 import { SearchSchema } from '../../data/validation/search';
 
 const DEFAULT_SEARCH_DAYS = 365;
